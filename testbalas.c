@@ -133,7 +133,7 @@ int main(void) {
     vector_t p1 = {2,5};
     ListadeBalas = addBala(ListadeBalas, p1, 1);
     p1.x++;
-    ListadeBalas = addBala(ListadeBalas, p1, 1);
+    ListadeBalas = addBala(ListadeBalas, p1, 2);
     p1.x++;
     ListadeBalas = addBala(ListadeBalas, p1, 1);
     p1.x++;
@@ -143,14 +143,19 @@ int main(void) {
     bala_t* prueba = ListadeBalas;
 ;
     while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
         i++;
         prueba = prueba -> next;
     }
-
+    prueba = moveBalaEnemy(prueba, 1);
+     while(prueba != NULL){
+        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        i++;
+        prueba = prueba -> next;
+    }
 //****************************************************************************************************************************************
 
-    removeAlienList(listAlien);
+    removeAlienList(ListadeBalas);
 
     return 0;
 }

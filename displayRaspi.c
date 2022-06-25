@@ -40,6 +40,7 @@ void drawEnemy(dcoord_t p, enemy_t alien){
             }
         }
     }
+    disp_update();
 }
 
 void cleanEnemy(dcoord_t p){
@@ -52,12 +53,15 @@ void cleanEnemy(dcoord_t p){
             disp_write(pAux ,D_OFF);
         }
     }
+    disp_update();
 }
 
 
 
 int main (void){
     dcoord_t p = {5,5};
+    disp_init();
+    disp_clear();
     drawEnemy(p,daniel1);
     usleep(500*1000);
     cleanEnemy(p);
