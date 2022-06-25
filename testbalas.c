@@ -130,16 +130,20 @@ int vidas;      //Indica las vidas restantes del usuario puede ser un campo del 
 
 int main(void) {
     bala_t * ListadeBalas = NULL;
-    ListadeBalas = addBala(ListadeBalas, {3,2}, 1);
-    ListadeBalas = addBala(ListadeBalas, {5,9}, 1);
-    ListadeBalas = addBala(ListadeBalas, {7,7}, 1);
-    ListadeBalas = addBala(ListadeBalas, {6,6}, 1);
+    vector_t p1 = {2,5};
+    ListadeBalas = addBala(ListadeBalas, p1, 1);
+    p1.x++;
+    ListadeBalas = addBala(ListadeBalas, p1, 1);
+    p1.x++;
+    ListadeBalas = addBala(ListadeBalas, p1, 1);
+    p1.x++;
+    ListadeBalas = addBala(ListadeBalas, p1, 1);
 //************************************* Esta seccion del codigo se usa para probar que funcionen las BALAS *****************************
     int i = 1;
-    bala_t* prueba =     bala_t * ListadeBalas = NULL;
+    bala_t* prueba = ListadeBalas;
 ;
     while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d ; %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
+        printf("BALA %d: x: %d ; y: %d ; tipo: %d", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
         i++;
         prueba = prueba -> next;
     }

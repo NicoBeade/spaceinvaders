@@ -182,7 +182,6 @@ void * timer(){
 /* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 100mS luego el resto de los
     threads utilizan esta variable para determinar cuando se deben ejecutar.
 */
-    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     timerTick = 5;
     printf("Timer set\n");
     while(1){
