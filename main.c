@@ -243,3 +243,4 @@ void moveAlien (alien_t* alien, int direccion){
         }
     }
 }
+*/
