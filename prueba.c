@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
+#include <unistd.h>
 
 
 /*******************************************************************************************************************************************
@@ -27,7 +28,7 @@ typedef struct ALIEN{//Cada uno de los aliens sera una estructura de este tipo. 
 
 typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. Todas las balas estan en una lista
     vector_t pos;//Posicion de la bala
-    int type;//Tipo de bala, coincide con la nave que lo disparo.
+    //int type;//Tipo de bala
     struct BALA * next;//Puntero al siguiente alien de la lista.
 }bala_t;
 /*******************************************************************************************************************************************
@@ -50,20 +51,20 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 #define DERECHA 1
 #define ABAJO 2
 
+//*************TIMER
+#define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
+
 //*************Definidas en INPUT.h
 
 //*************Definidas en DISPLAY.h
-#define X_MAX 7              //Ancho maximo de la pantalla
-#define Y_MAX 7              //Alto maximo de la pantalla
+#define X_MAX 20              //Ancho maximo de la pantalla
+#define Y_MAX 20              //Alto maximo de la pantalla
 
-#define MARGEN_X 4          //Margen horizontal en el display
+#define MARGEN_X 1          //Margen horizontal en el display
 #define MARGEN_Y 1          //Margen vertical en el display
 
 #define DESPLAZAMIENTO_X 1  //Indica cuanto de debe mover una nave en la coordenada x.
 #define DESPLAZAMIENTO_Y 1  //Indica cuanto se debe mover una nave en la coordenada y.
-
-#define BULLET_UP -1         //Indica cuanto se debe mover una bala aliada en Y
-#define BULLET_DOWN 1      //Indica cuanto se debe mover una bala enemiga en Y
 
 #define ESP_ALIENS_X 1      //Espacio vacio entre los aliens en la coordenada X.
 #define TAM_ALIENS_X 3      //Tamano que ocupan los aliens en la coordenada X.
@@ -90,19 +91,15 @@ enum alienTypes {NODRIZA, SUPERIOR, MEDIO, INFERIOR};
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
+void * timer();     //Funcion encargada de controlar el tiempo del juego.
+
 alien_t * addAlien(alien_t * firstAlien, vector_t setPos, int setType, int setLives);    //Agrega un alien a la lista.
 alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos);               //Inicializa la lista completa de aliens usando addAlien.
 void removeAlienList(alien_t* listAlien);                                               //Elimina de heap la lista creada.
 
-void moveAlien (alien_t* alieN);            //Se encarga de modificar la posicion de los aliens.
+void * moveAlien(void* alien);            //Se encarga de modificar la posicion de los aliens.
 static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
 int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
-
-bala_t* addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
-bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType);          //Mueve una unidad todas las balas enemigas del tipo indicado
-bala_t * moveBalaUsr(bala_t * ListBalaUsr);                             //Mueve una unidad la bala del usuario
-bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destruye una bala, recibe puntero a la lista y a la bala que se quiere destruir
-//Todas las funciones devuelven puntero a la lista, en el caso de que sea la ultima bala elimina la lista devolviendo NULL
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -116,12 +113,12 @@ bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destru
                                                                                                                                                       
  * 
  ******************************************************************************************************************************************/
-//int timerTick;  //Esta variable es un "contador" que se decrementa cada cierto tiempo y con ella se controla cada cuanto tiempo se
+unsigned int timerTick;  //Esta variable es un "contador" que se decrementa cada cierto tiempo y con ella se controla cada cuanto tiempo se
                 //ejecuta cada accion del programa.
 
-//int velAliens;  //Determina que tan rapido se moveran los aliens
+int velAliens = 10;  //Determina que tan rapido se moveran los aliens
 
-int vidas;      //Indica las vidas restantes del usuario puede ser un campo del struct
+unsigned int vidas;      //Indica las vidas restantes del usuario puede ser un campo del struct
 
 //int aliensRestantes;    //Indica cuantos aliens quedan en la partida
 
@@ -129,28 +126,72 @@ int vidas;      //Indica las vidas restantes del usuario puede ser un campo del 
 *******************************************************************************************************************************************/
 
 int main(void) {
-    bala_t * ListadeBalas = NULL;
-    ListadeBalas = addBala(ListadeBalas, {3,2}, 1);
-    ListadeBalas = addBala(ListadeBalas, {5,9}, 1);
-    ListadeBalas = addBala(ListadeBalas, {7,7}, 1);
-    ListadeBalas = addBala(ListadeBalas, {6,6}, 1);
-//************************************* Esta seccion del codigo se usa para probar que funcionen las BALAS *****************************
+
+    srand(time(NULL));
+
+    pthread_t timerT, moveAlienT;
+    
+    int aliensTotales = 12;
+    int filasAliens = 4;
+
+    vector_t firstAlienPos = {DIST_INICIAL_X, DIST_INICIAL_Y};
+
+    alien_t* listAlien;
+
+    listAlien = initAliens(aliensTotales, filasAliens, firstAlienPos);
+
+//************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
     int i = 1;
-    bala_t* prueba =     bala_t * ListadeBalas = NULL;
-;
+    alien_t* prueba = listAlien;
     while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d ; %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
+        printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
         i++;
         prueba = prueba -> next;
     }
 
 //****************************************************************************************************************************************
+    if( pthread_create(&timerT, NULL, timer, NULL) ){
+        printf("No se pudo crear el thread timer\n");
+    }
+
+    sleep(3);
+
+
+    if( pthread_create(&moveAlienT, NULL, moveAlien, (void*) listAlien) ){
+        printf("No se pudo crear el thread moveAlien\n");
+    }
+
+    pthread_join(timerT, NULL);
+    pthread_join(moveAlienT, NULL);
 
     removeAlienList(listAlien);
 
     return 0;
 }
 
+
+/*******************************************************************************************************************************************
+ * 
+                                                 _____   _                     
+                                                |_   _| (_)  _ __    ___   _ _ 
+                                                  | |   | | | '  \  / -_) | '_|
+                                                  |_|   |_| |_|_|_| \___| |_|  
+ * 
+ ******************************************************************************************************************************************/
+void * timer(){
+/* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 100mS luego el resto de los
+    threads utilizan esta variable para determinar cuando se deben ejecutar.
+*/
+    timerTick = 5;
+    printf("Timer set\n");
+    while(1){
+        sleep(1); //Sleep 100mS.
+        timerTick -= 1;
+    }
+}
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
 
 
 /*******************************************************************************************************************************************
@@ -226,15 +267,17 @@ void removeAlienList(alien_t* listAlien){
     }
 }
 
-void moveAlien (alien_t* alien){
-/* Esta funcion se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
+void * moveAlien(void* alien){
+/* Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     Recibe como parametro el puntero al primer alien de la lista.
 */
     int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
-
-    //while(1){
-        //if( !(timerTick % velAliens)){
+    int i;
+    alien_t* prueba;
+    while(1){
+        usleep(100 * U_SEC2M_SEC);
+        if( !timerTick ){
 
             direccion = detectarDireccion(direccion, alien); //Modifica la variable de direccion en funcion al estado actual de la direccion
 
@@ -254,7 +297,7 @@ void moveAlien (alien_t* alien){
                 default:
                     break;
             }
-            alien_t* auxiliar = alien;
+            alien_t* auxiliar = (alien_t*) alien;
             while (auxiliar != NULL){//Mueve los aliens uno por uno
 
                 auxiliar->pos.x += vx;//Modifica su posicion en x e y
@@ -263,8 +306,19 @@ void moveAlien (alien_t* alien){
                 auxiliar = auxiliar -> next;
             }
             
-        //}
-    //}
+        }
+    //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
+        i = 1;
+        prueba = (alien_t*) alien;
+        while(prueba != NULL){
+            printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
+            i++;
+            prueba = prueba -> next;
+        }
+
+    //****************************************************************************************************************************************
+    }
+    return alien;
 }
 
 
@@ -329,107 +383,4 @@ int tocaBorde(alien_t* alien){
         alien = alien -> next;
     }
     return borde;
-}
-
-
-
-
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-
-/*******************************************************************************************************************************************
- * 
-                     ___                      _                                _           ___          _        
-                    | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | _ )  __ _  | |  __ _ 
-                    | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   | _ \ / _` | | | / _` |
-                    |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   |___/ \__,_| |_| \__,_|
-                                                                                              
- * 
- ******************************************************************************************************************************************/
-
-
- 
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
-/* Esta funcion se encarga de agregar una nueva bala a la lista, inicializando su posicion.
-    Devuelve un puntero al primer elemento de la lista.
-*/	
-	bala_t * newBala = malloc(sizeof(bala_t));//Agrega el nuevo alien
-
-	if(newBala == NULL){//Si no se puede hacer el malloc indica error.
-		printf( "No se ha podido agregar el elemento a la lista.\n");
-		return NULL; //error
-	}
-
-    if(firstBala != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        bala_t * lastBala = firstBala;//Se almacena el puntero al primer elemento.
-
-		while(lastBala -> next != NULL){
-			lastBala = lastBala -> next;
-		}
-        lastBala -> next = newBala;
-	}
-    else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstBala = newBala;
-    }
-
-	newBala -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
-    newBala -> type = setType; 
-    newBala -> next = NULL;
-
-	return firstBala;//Devuelve un puntero al primer elemento.
-}
-
-
-bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
-    bala_t * Bala = ListBalasEnemy;
-    if(Bala != NULL){                 //Si las balas enemigas existen
-        do{
-            if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
-                if(Bala -> pos.y > (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
-                    Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
-                }
-                else{                                       //Si la bala se fue del display se elimina
-                Bala = destroyBala(ListBalasEnemy, Bala);
-                }
-            }
-        } while (Bala -> next != NULL);                 //Recorre todas las balas
-    }
-    return Bala;
-}
-
-bala_t * moveBalaUsr(bala_t * ListBalaUsr){
-    bala_t * ListBala = ListBalaUsr;
-    if(ListBala != NULL){                    //Si la bala aliada existe
-        if(ListBala -> pos.y < BULLET_UP){      //Si la bala esta en el limite del mapa
-            free(ListBala);                  //Se elimina la bala
-            ListBala = NULL;                //Se elimina la lista
-        }
-        else{                                                 //Si la bala esta dentro de los limites, se mueve
-            ListBalaUsr -> pos.y += BULLET_UP;                
-        }
-    }
-    return ListBala;                        //Devuelve la lista
-}
-
-bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
-    bala_t * Bala = ListBala;
-    if(Bala != NULL && RipBala != NULL){        //Si la lista y la bala existe
-        if(Bala != RipBala){                    //Si la bala no es la unica en la lista
-            bala_t * PreBala = Bala;            //Bala anterior a la que se va a eliminar
-            while(PreBala -> next != RipBala){     //Recorre la lista hasta encontrar la bala anterior a la que se quiere destruir
-                PreBala = PreBala -> next;
-            }
-            PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
-            free(RipBala);                          //Se libera la memoria de la bala
-        }
-        else{                                       //Si hay una unica baña
-            free(RipBala);
-            Bala = NULL;                            //Devuelve puntero a una lista vacia
-        }
-    }
-    return Bala;
 }

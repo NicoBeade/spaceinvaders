@@ -27,7 +27,7 @@ typedef struct ALIEN{//Cada uno de los aliens sera una estructura de este tipo. 
 
 typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. Todas las balas estan en una lista
     vector_t pos;//Posicion de la bala
-    //int type;//Tipo de bala
+    int type;//Tipo de bala, coincide con la nave que lo disparo.
     struct BALA * next;//Puntero al siguiente alien de la lista.
 }bala_t;
 /*******************************************************************************************************************************************
@@ -62,6 +62,9 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 #define DESPLAZAMIENTO_X 1  //Indica cuanto de debe mover una nave en la coordenada x.
 #define DESPLAZAMIENTO_Y 1  //Indica cuanto se debe mover una nave en la coordenada y.
 
+#define BULLET_UP -1         //Indica cuanto se debe mover una bala aliada en Y
+#define BULLET_DOWN 1      //Indica cuanto se debe mover una bala enemiga en Y
+
 #define ESP_ALIENS_X 1      //Espacio vacio entre los aliens en la coordenada X.
 #define TAM_ALIENS_X 3      //Tamano que ocupan los aliens en la coordenada X.
 #define ESP_ALIENS_Y 1      //Espacio vacio entre los aliens en la coordenada Y.
@@ -94,6 +97,12 @@ void removeAlienList(alien_t* listAlien);                                       
 void moveAlien (alien_t* alieN);            //Se encarga de modificar la posicion de los aliens.
 static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
 int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
+
+bala_t* addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
+bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType);          //Mueve una unidad todas las balas enemigas del tipo indicado
+bala_t * moveBalaUsr(bala_t * ListBalaUsr);                             //Mueve una unidad la bala del usuario
+bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destruye una bala, recibe puntero a la lista y a la bala que se quiere destruir
+//Todas las funciones devuelven puntero a la lista, en el caso de que sea la ultima bala elimina la lista devolviendo NULL
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -348,7 +357,7 @@ int tocaBorde(alien_t* alien){
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
-bala_t* addBala(bala_t * firstBala, vector_t setPos){
+bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 /* Esta funcion se encarga de agregar una nueva bala a la lista, inicializando su posicion.
     Devuelve un puntero al primer elemento de la lista.
 */	
@@ -372,10 +381,59 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos){
     }
 
 	newBala -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
+    newBala -> type = setType; 
     newBala -> next = NULL;
 
 	return firstBala;//Devuelve un puntero al primer elemento.
 }
 
 
+bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
+    bala_t * Bala = ListBalasEnemy;
+    if(Bala != NULL){                 //Si las balas enemigas existen
+        do{
+            if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
+                if(Bala -> pos.y > (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
+                    Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
+                }
+                else{                                       //Si la bala se fue del display se elimina
+                Bala = destroyBala(ListBalasEnemy, Bala);
+                }
+            }
+        } while (Bala -> next != NULL);                 //Recorre todas las balas
+    }
+    return Bala;
+}
 
+bala_t * moveBalaUsr(bala_t * ListBalaUsr){
+    bala_t * ListBala = ListBalaUsr;
+    if(ListBala != NULL){                    //Si la bala aliada existe
+        if(ListBala -> pos.y < BULLET_UP){      //Si la bala esta en el limite del mapa
+            free(ListBala);                  //Se elimina la bala
+            ListBala = NULL;                //Se elimina la lista
+        }
+        else{                                                 //Si la bala esta dentro de los limites, se mueve
+            ListBalaUsr -> pos.y += BULLET_UP;                
+        }
+    }
+    return ListBala;                        //Devuelve la lista
+}
+
+bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
+    if(ListBala != NULL && RipBala != NULL){        //Si la lista y la bala existe
+        if(ListBala != RipBala){                    //Si la bala no es la unica en la lista
+            bala_t * PreBala = ListBala;            //Bala anterior a la que se va a eliminar
+            while(PreBala -> next != RipBala){     //Recorre la lista hasta encontrar la bala anterior a la que se quiere destruir
+                PreBala = PreBala -> next;
+            }
+            PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
+            free(RipBala);                          //Se libera la memoria de la bala
+            return ListBala;
+        }
+        else{                                       //Si hay una unica baña
+            free(RipBala);
+            return NULL;                            //Devuelve puntero a una lista vacia
+        }
+
+    }
+}
