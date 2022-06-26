@@ -3,6 +3,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sched.h>
 
 
 /*******************************************************************************************************************************************
@@ -150,14 +151,38 @@ int main(void) {
     }
 
 //****************************************************************************************************************************************
-    if( pthread_create(&timerT, NULL, timer, NULL) ){
+
+    pthread_attr_t tattr;
+
+    pthread_attr_init (&tattr);
+
+    struct sched_param param;
+
+    pthread_attr_getschedparam (&tattr, &param);
+
+    param.sched_priority = 20;
+
+    pthread_attr_setschedparam (&tattr, &param);
+    
+
+    if( pthread_create(&timerT, &tattr, timer, NULL) ){
         printf("No se pudo crear el thread timer\n");
     }
+
+    pthread_attr_t tattr1;
+
+    pthread_attr_init (&tattr1);
+
+    struct sched_param param1;
+
+    param.sched_priority = 1;
+
+    pthread_attr_setschedparam (&tattr1, &param1);
 
     sleep(3);
 
 
-    if( pthread_create(&moveAlienT, NULL, moveAlien, (void*) listAlien) ){
+    if( pthread_create(&moveAlienT, &tattr1, moveAlien, (void*) listAlien) ){
         printf("No se pudo crear el thread moveAlien\n");
     }
 
@@ -182,7 +207,7 @@ void * timer(){
 /* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 100mS luego el resto de los
     threads utilizan esta variable para determinar cuando se deben ejecutar.
 */
-    timerTick = 5;
+    timerTick = 100;
     printf("Timer set\n");
     while(1){
         sleep(1); //Sleep 100mS.
@@ -276,7 +301,6 @@ void * moveAlien(void* alien){
     int i;
     alien_t* prueba;
     while(1){
-        usleep(100 * U_SEC2M_SEC);
         if( !timerTick ){
 
             direccion = detectarDireccion(direccion, alien); //Modifica la variable de direccion en funcion al estado actual de la direccion
