@@ -12,23 +12,23 @@
     -disp_update(void), actualiza el display
 */
 
-typedef uint8_t enemy_t [2][3];
+typedef uint8_t enemy_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
 
 
-void drawEnemy(dcoord_t, enemy_t);
+void drawEnemy(dcoord_t, enemy_t); //prototipos  de dibujar y limpiar enemigos
 void cleanEnemy(dcoord_t);
 
-enemy_t daniel1 = {{1,0,1},{1,1,1}};
+enemy_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 enemy_t daniel2 = {{1,1,1},{1,0,1}};
 
-enemy_t pablo1 ={{1,1,0},{0,1,1}};
-enemy_t pablo2 ={{1,0,1},{1,0,1}};
+enemy_t pablo1 ={{1,1,0},{1,0,1}};
+enemy_t pablo2 ={{0,1,1},{1,0,1}};
 
 enemy_t nicolas1 ={{1,0,1},{0,1,0}};
 enemy_t nicolas2 ={{0,1,0},{1,0,1}};
 
 
-void drawEnemy(dcoord_t p, enemy_t alien){
+void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
     for (i=0 ; i<=2 ; i++){
@@ -36,29 +36,29 @@ void drawEnemy(dcoord_t p, enemy_t alien){
             if (alien [j][i] == 1){
                 pAux.x = p.x+i;
                 pAux.y = p.y+j;
-                disp_write(pAux,D_ON);
+                disp_write(pAux,D_ON); //Actualiza el buffer
             }
         }
     }
-    disp_update();
+    disp_update(); //Se imprime per se
 }
 
-void cleanEnemy(dcoord_t p){
+void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
     for (i=0 ; i<=2 ; i++){
         for(j=0 ; j<=1 ; j++){
             pAux.x = p.x+i;
             pAux.y = p.y+j;
-            disp_write(pAux ,D_OFF);
+            disp_write(pAux ,D_OFF); //Actualiza el buffer
         }
     }
-    disp_update();
+    disp_update(); //Borra per se
 }
 
 
 
-int main (void){
+/*int main (void){
     dcoord_t p = {5,5};
     disp_init();
     disp_clear();
@@ -82,3 +82,4 @@ int main (void){
     cleanEnemy(p);
     return 0;
 }
+*/ //Ejemplo de main 
