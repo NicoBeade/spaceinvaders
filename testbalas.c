@@ -54,7 +54,7 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 
 //*************Definidas en DISPLAY.h
 #define X_MAX 7              //Ancho maximo de la pantalla
-#define Y_MAX 7              //Alto maximo de la pantalla
+#define Y_MAX 7             //Alto maximo de la pantalla
 
 #define MARGEN_X 4          //Margen horizontal en el display
 #define MARGEN_Y 1          //Margen vertical en el display
@@ -98,7 +98,7 @@ void moveAlien (alien_t* alieN);            //Se encarga de modificar la posicio
 static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
 int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
 
-bala_t* addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
+bala_t * addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType);          //Mueve una unidad todas las balas enemigas del tipo indicado
 bala_t * moveBalaUsr(bala_t * ListBalaUsr);                             //Mueve una unidad la bala del usuario
 bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destruye una bala, recibe puntero a la lista y a la bala que se quiere destruir
@@ -147,7 +147,8 @@ int main(void) {
         i++;
         prueba = prueba -> next;
     }
-    prueba = moveBalaEnemy(prueba, 1);
+    ListadeBalas = moveBalaEnemy(ListadeBalas, 1);
+    prueba = ListadeBalas;
      while(prueba != NULL){
         printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
         i++;
@@ -395,18 +396,17 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
     bala_t * Bala = ListBalasEnemy;
-    if(Bala != NULL){                 //Si las balas enemigas existen
-        do{
-            if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
-                if(Bala -> pos.y > (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
-                    Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
-                }
-                else{                                       //Si la bala se fue del display se elimina
-                Bala = destroyBala(ListBalasEnemy, Bala);
-                }
+    do{
+        if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
+            if((Bala -> pos.y) >= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
+                Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
             }
-        } while (Bala -> next != NULL);                 //Recorre todas las balas
-    }
+            else{                                       //Si la bala se fue del display se elimina
+            Bala = destroyBala(ListBalasEnemy, Bala);
+            }
+        }
+        Bala = Bala ->next;
+    } while ((Bala != NULL) && (Bala -> next != NULL));                 //Recorre todas las balas
     return Bala;
 }
 
@@ -435,9 +435,9 @@ bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
             PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
             free(RipBala);                          //Se libera la memoria de la bala
         }
-        else{                                       //Si hay una unica baña
+        else{                                       //Si la bala a eliminar es la primera
             free(RipBala);
-            Bala = NULL;                            //Devuelve puntero a una lista vacia
+            Bala = RipBala -> next;                 //Devuelve puntero a la segunda bala si es que existe
         }
     }
     return Bala;
