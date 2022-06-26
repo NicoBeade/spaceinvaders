@@ -54,7 +54,7 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 
 //*************Definidas en DISPLAY.h
 #define X_MAX 7              //Ancho maximo de la pantalla
-#define Y_MAX 7              //Alto maximo de la pantalla
+#define Y_MAX 7             //Alto maximo de la pantalla
 
 #define MARGEN_X 4          //Margen horizontal en el display
 #define MARGEN_Y 1          //Margen vertical en el display
@@ -130,31 +130,45 @@ int vidas;      //Indica las vidas restantes del usuario puede ser un campo del 
 
 int main(void) {
     bala_t * ListadeBalas = NULL;
-    vector_t p1 = {2,5};
+    vector_t p1 = {2,4};
     ListadeBalas = addBala(ListadeBalas, p1, 1);
+    printf("%p", ListadeBalas);
     p1.x++;
+    p1.y++;
     ListadeBalas = addBala(ListadeBalas, p1, 2);
     p1.x++;
+    p1.y=17;
     ListadeBalas = addBala(ListadeBalas, p1, 1);
     p1.x++;
+    p1.y=3;
     ListadeBalas = addBala(ListadeBalas, p1, 1);
 //************************************* Esta seccion del codigo se usa para probar que funcionen las BALAS *****************************
     int i = 1;
     bala_t* prueba = ListadeBalas;
 ;
     while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        printf("\nBALA %d: x: %d ; y: %d ; tipo: %d ; ADDRS: %p\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type,prueba);
         i++;
         prueba = prueba -> next;
     }
-    prueba = moveBalaEnemy(prueba, 1);
+    ListadeBalas = moveBalaEnemy(ListadeBalas, 1);
+    i=1;
+    putchar('\n');
+    prueba = ListadeBalas;
      while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        printf("\nBALA %d: x: %d ; y: %d ; tipo: %d ; ADDRS: %p\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type,prueba);
         i++;
         prueba = prueba -> next;
     }
 //****************************************************************************************************************************************
-
+    bala_t * nueva = addBala(NULL, p1,1);
+    nueva = addBala(nueva, p1, 2);
+    printf("%p\n", nueva);
+    printf("%p\n", nueva->next);
+    nueva = destroyBala(nueva, nueva -> next);
+    printf("%p\n", nueva);
+     nueva = destroyBala(nueva, nueva);
+    printf("%p\n", nueva);
     removeAlienList(ListadeBalas);
 
     return 0;
@@ -395,19 +409,21 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
     bala_t * Bala = ListBalasEnemy;
-    if(Bala != NULL){                 //Si las balas enemigas existen
+    bala_t * newList = ListBalasEnemy;
+    if(Bala != NULL){
         do{
-            if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
-                if(Bala -> pos.y > (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
+            if(Bala -> type == BalaType){
+                if((Bala -> pos.y) <= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
                     Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
                 }
                 else{                                       //Si la bala se fue del display se elimina
-                Bala = destroyBala(ListBalasEnemy, Bala);
+                    newList = destroyBala(ListBalasEnemy, Bala);
                 }
             }
-        } while (Bala -> next != NULL);                 //Recorre todas las balas
+            Bala = Bala -> next;
+        }while(Bala != NULL);
     }
-    return Bala;
+    return newList;
 }
 
 bala_t * moveBalaUsr(bala_t * ListBalaUsr){
@@ -435,9 +451,9 @@ bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
             PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
             free(RipBala);                          //Se libera la memoria de la bala
         }
-        else{                                       //Si hay una unica baña
+        else{                                       //Si la bala a eliminar es la primera
             free(RipBala);
-            Bala = NULL;                            //Devuelve puntero a una lista vacia
+            Bala = RipBala -> next;                 //Devuelve puntero a la segunda bala si es que existe
         }
     }
     return Bala;
