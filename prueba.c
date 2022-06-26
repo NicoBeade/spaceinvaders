@@ -281,7 +281,7 @@ void * moveAlien(void* alien){
     int i;
     alien_t* prueba;
     while(1){
-        usleep(10 * U_SEC2M_SEC);
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
 
             printf("timerT   ick = %d", timerTick);

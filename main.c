@@ -18,18 +18,13 @@ typedef struct{//Esta estructura define un vector para las coordenadas
     int y;
 }vector_t;
 
-typedef struct ALIEN{//Cada uno de los aliens sera una estructura de este tipo. Todos los aliens estan en una lista
-    vector_t pos;//Posicion del alien
-    int type;//Tipo de nave
-    int lives;//Cantidad de vidas del alien (Distintos tipos de alien pueden tener mas o menos vidas)
-    struct ALIEN * next;//Puntero al siguiente alien de la lista.
-}alien_t;
+typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
+    vector_t pos;//Posicion en x e y
+    int type;//Tipo de objeto y categoria dentro del tipo
+    int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
+    struct OBJECT * next;//Puntero al siguiente objeto de la lista.
+}object_t;
 
-typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. Todas las balas estan en una lista
-    vector_t pos;//Posicion de la bala
-    int type;//Tipo de bala, coincide con la nave que lo disparo.
-    struct BALA * next;//Puntero al siguiente alien de la lista.
-}bala_t;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -76,7 +71,7 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 #define CANT_MAX_ALIENS 12  //Cantidad maxima de aliens, dependiendo del nivel se muestra distinta cantidad, con este tope.
 #define CANT_MAX_FILAS 4    //CAntidad maxima de filas, dependiendo del nivel se muestra una cantidad distinta, con este tope.
 
-enum alienTypes {NODRIZA, SUPERIOR, MEDIO, INFERIOR};
+enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO};
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -90,18 +85,17 @@ enum alienTypes {NODRIZA, SUPERIOR, MEDIO, INFERIOR};
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
-alien_t * addAlien(alien_t * firstAlien, vector_t setPos, int setType, int setLives);    //Agrega un alien a la lista.
-alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos);               //Inicializa la lista completa de aliens usando addAlien.
-void removeAlienList(alien_t* listAlien);                                               //Elimina de heap la lista creada.
+object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives);   //Agrega un objeto a la lista
+object_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos);               //Inicializa la lista completa de aliens usando addObj.
+void removeList(object_t* list);                                               //Elimina de heap la lista creada.
 
-void moveAlien (alien_t* alieN);            //Se encarga de modificar la posicion de los aliens.
-static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
-int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
+void moveAlien (object_t* alien);            //Se encarga de modificar la posicion de los aliens.
+static int detectarDireccion(int direccion, object_t* alien);    //Detecta en que direccion se debe mover a los aliens.
+int tocaBorde(object_t* alien);  //Detecta si algun alien esta tocando un borde
 
-bala_t* addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
-bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType);          //Mueve una unidad todas las balas enemigas del tipo indicado
-bala_t * moveBalaUsr(bala_t * ListBalaUsr);                             //Mueve una unidad la bala del usuario
-bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destruye una bala, recibe puntero a la lista y a la bala que se quiere destruir
+object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity);                            //Mueve la bala
+object_t * destroyObj(object_t * ListObj, object_t * RipObj);            //Destruye una objeto, recibe puntero a la lista y al objeto que se quiere destruir
+
 //Todas las funciones devuelven puntero a la lista, en el caso de que sea la ultima bala elimina la lista devolviendo NULL
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -135,13 +129,13 @@ int main(void) {
 
     vector_t firstAlienPos = {DIST_INICIAL_X, DIST_INICIAL_Y};
 
-    alien_t* listAlien;
+    object_t* listAlien;
 
     listAlien = initAliens(aliensTotales, filasAliens, firstAlienPos);
 
 //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
     int i = 1;
-    alien_t* prueba = listAlien;
+    object_t* prueba = listAlien;
     while(prueba != NULL){
         printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
         i++;
@@ -150,7 +144,7 @@ int main(void) {
 
 //****************************************************************************************************************************************
 
-    removeAlienList(listAlien);
+    removeList(listAlien);
 
     return 0;
 }
@@ -167,48 +161,48 @@ int main(void) {
  * 
  ******************************************************************************************************************************************/
 
-alien_t* addAlien(alien_t * firstAlien, vector_t setPos, int setType, int setLives){
+object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives){
 /* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
     Devuelve un puntero al primer elemento de la lista.
 */	
-	alien_t * newAlien = malloc(sizeof(alien_t));//Agrega el nuevo alien
+	object_t * newObj = malloc(sizeof(object_t));//Agrega el nuevo alien
 
-	if(newAlien == NULL){//Si no se puede hacer el malloc indica error.
+	if(newObj == NULL){//Si no se puede hacer el malloc indica error.
 		printf( "No se ha podido agregar el elemento a la lista.\n");
 		return NULL; //error
 	}
 
-    if(firstAlien != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        alien_t * lastAlien = firstAlien;//Se almacena el puntero al primer elemento.
+    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
+        object_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
 
-		while(lastAlien -> next != NULL){
-			lastAlien = lastAlien -> next;
+		while(lastObj -> next != NULL){
+			lastObj = lastObj -> next;
 		}
-        lastAlien -> next = newAlien;
+        lastObj -> next = newObj;
 	}
     else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstAlien = newAlien;
+        firstObj = newObj;
     }
 
-	newAlien -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
-	newAlien -> type = setType;
-	newAlien -> lives = setLives;
-    newAlien -> next = NULL;
+	newObj -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
+	newObj -> type = setType;
+	newObj -> lives = setLives;
+    newObj -> next = NULL;
 
-	return firstAlien;//Devuelve un puntero al primer elemento.
+	return firstObj;//Devuelve un puntero al primer elemento.
 }
 
-alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos){
+object_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos){
 /*Utiliza la funcion addAlien para crear la lista con todos los aliesn al empezar un nivel. Devuelve un puntero al primer elemento de la lista.
     Recibe como parametros: el numero total de aliens, el numero de filas de aliens y la posicion inicial del primer alien.
 */
 	int row;//Variables para desplazamiento
 	int col;
 	vector_t alienPos = firstAlienPos;//Se almacena la posicion del primer alien. Porque la coordenada x de esta variable sera utilizada mas adelante en la funcion.
-	alien_t * alienList = NULL;
+	object_t * alienList = NULL;
 	for(row = 0; row < numRows; row++){//Realiza la inicializacion
 		for(col = 0; col < numAliens/numRows; col++){
-			alienList = addAlien(alienList, alienPos,row+1,numRows - row);//Agrega un alien a la lista.
+			alienList = addObj(alienList, alienPos,row+1,numRows - row);//Agrega un alien a la lista.
 			alienPos.x += TAM_ALIENS_X + ESP_ALIENS_X;//Avanza la coordenada X al siguiente alien
 		}
 		alienPos.y += TAM_ALIENS_Y + ESP_ALIENS_Y; //Cuando llega a un borde lateral aumenta la coordenada Y.
@@ -217,20 +211,20 @@ alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos){
 	return alienList;
 }
 
-void removeAlienList(alien_t* listAlien){
+void removeList(object_t* list){
 /*Esta funcion se encarga de liberar del heap la lista creada de los aliens*/
-    if(listAlien != NULL){
-        alien_t * lastAlien = listAlien; //Se crean dos punteros auxiliares
-        alien_t * nextAlien;
+    if(list != NULL){
+        object_t * lastObj = list; //Se crean dos punteros auxiliares
+        object_t * nextObj;
         do {
-            nextAlien = lastAlien -> next; //Se apunta al siguiente nodo
-            free(lastAlien); //Se libera la memoria dinamica del nodo a eliminar
-            lastAlien = nextAlien;
-        } while (nextAlien != NULL);
+            nextObj = lastObj -> next; //Se apunta al siguiente nodo
+            free(lastObj); //Se libera la memoria dinamica del nodo a eliminar
+            lastObj = nextObj;
+        } while (nextObj != NULL);
     }
 }
 
-void moveAlien (alien_t* alien){
+void moveAlien (object_t* alien){
 /* Esta funcion se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     Recibe como parametro el puntero al primer alien de la lista.
 */
@@ -258,7 +252,7 @@ void moveAlien (alien_t* alien){
                 default:
                     break;
             }
-            alien_t* auxiliar = alien;
+            object_t* auxiliar = alien;
             while (auxiliar != NULL){//Mueve los aliens uno por uno
 
                 auxiliar->pos.x += vx;//Modifica su posicion en x e y
@@ -272,7 +266,7 @@ void moveAlien (alien_t* alien){
 }
 
 
-static int detectarDireccion (int direccion, alien_t* alien){
+static int detectarDireccion (int direccion, object_t* alien){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
     esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
@@ -317,7 +311,7 @@ static int detectarDireccion (int direccion, alien_t* alien){
     return 0;
 }
 
-int tocaBorde(alien_t* alien){
+int tocaBorde(object_t* alien){
     int borde = 0;
     while ((alien->next != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         if (alien->pos.x <= 0 + MARGEN_X){ //deteccion borde izquierdo
@@ -336,23 +330,7 @@ int tocaBorde(alien_t* alien){
 }
 
 
-alien_t * destroyAlien(bala_t * listAlien, bala_t * ripAlien){
-    alien_t * alien = listAlien;
-    if(alien != NULL && ripAlien != NULL){        //Si la lista y el alien existe
-        if(alien != ripAlien){                    //Si el alien no es el primera de la lista
-            alien_t * preAlien = alien;            //alien anterior al que se va a eliminar
-            while(preAlien -> next != ripAlien){     //Recorre la lista hasta encontrar el alien anterior a la que se quiere destruir
-                preAlien = preAlien -> next;
-            }
-            preAlien -> next = ripAlien -> next;      //Se asigna el siguiente alien
-        }
-        else{                                       //Si el alien a eliminar es la primera
-            alien = ripAlien -> next;                 //Devuelve puntero al segundo alien si es que existe
-        }
-        free(ripAlien);                          //Se libera la memoria de la bala
-    }
-    return alien;
-}
+
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -372,50 +350,18 @@ alien_t * destroyAlien(bala_t * listAlien, bala_t * ripAlien){
  
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
-bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
-/* Esta funcion se encarga de agregar una nueva bala a la lista, inicializando su posicion.
-    Devuelve un puntero al primer elemento de la lista.
-*/	
-	bala_t * newBala = malloc(sizeof(bala_t));//Agrega el nuevo alien
-
-	if(newBala == NULL){//Si no se puede hacer el malloc indica error.
-		printf( "No se ha podido agregar el elemento a la lista.\n");
-		return NULL; //error
-	}
-
-    if(firstBala != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        bala_t * lastBala = firstBala;//Se almacena el puntero al primer elemento.
-
-		while(lastBala -> next != NULL){
-			lastBala = lastBala -> next;
-		}
-        lastBala -> next = newBala;
-	}
-    else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstBala = newBala;
-    }
-
-	newBala -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
-    newBala -> type = setType; 
-    newBala -> next = NULL;
-
-	return firstBala;//Devuelve un puntero al primer elemento.
-}
-
-
-bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
-    bala_t * Bala = ListBalasEnemy;
-    bala_t * newList = ListBalasEnemy;
+object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity){      //Mueve las balas de un tipo especifico.
+    object_t * Bala = ListBalasEnemy;
+    object_t * newList = ListBalasEnemy;
     if(Bala != NULL){
         do{
             if(Bala -> type == BalaType){
-                if((Bala -> pos.y) <= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
-                    Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
+                if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
+                    Bala -> pos.y += velocity;
                 }
-                else{                                       //Si la bala se fue del display se elimina
-                    newList = destroyBala(ListBalasEnemy, Bala);
-                }
+                else{                               //Si la bala se encuentra fuera (o en la frontera)
+                    newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
+                }                                                                                           
             }
             Bala = Bala -> next;
         }while(Bala != NULL);
@@ -423,54 +369,21 @@ bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las 
     return newList;
 }
 
-bala_t * moveBalaUsr(bala_t * ListBalaUsr){
-    bala_t * ListBala = ListBalaUsr;
-    if(ListBala != NULL){                    //Si la bala aliada existe
-        if(ListBala -> pos.y <= BULLET_UP){      //Si la bala esta en el limite del mapa
-            free(ListBala);                  //Se elimina la bala
-            ListBala = NULL;                //Se elimina la lista
-        }
-        else{                                                 //Si la bala esta dentro de los limites, se mueve
-            ListBalaUsr -> pos.y += BULLET_UP;                
-        }
-    }
-    return ListBala;                        //Devuelve la lista
-}
 
-bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
-    bala_t * Bala = ListBala;
-    if(Bala != NULL && RipBala != NULL){        //Si la lista y la bala existe
-        if(Bala != RipBala){                    //Si la bala no es la primera de la lista
-            bala_t * PreBala = Bala;            //Bala anterior a la que se va a eliminar
-            while(PreBala -> next != RipBala){     //Recorre la lista hasta encontrar la bala anterior a la que se quiere destruir
-                PreBala = PreBala -> next;
+object_t * destroyObj(object_t * ListObj, object_t * RipObj){
+    object_t * Obj = ListObj;
+    if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
+        if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
+            object_t * PreObj = Obj;            //Objeto anterior al que se va a eliminar
+            while(PreObj -> next != RipObj){     //Recorre la lista hasta encontrar el objeto anterior al que se quiere destruir
+                PreObj = PreObj -> next;
             }
-            PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
+            PreObj -> next = RipObj -> next;      //Se asigna el siguiente objeto
         }
-        else{                                       //Si la bala a eliminar es la primera
-            Bala = RipBala -> next;                 //Devuelve puntero a la segunda bala si es que existe
+        else{                                       //Si el objeto a eliminar es el primero
+            Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
         }
-        free(RipBala);                          //Se libera la memoria de la bala
+        free(RipObj);                          //Se libera la memoria del objeto eliminado
     }
-    return Bala;
-}
-
-
-typedef enum {NAVE, BALA, BARRERA, ALIEN} typeObj_t;
-
-void* deleteNode(void* pointerNode, typeObj_t typeObject){
-    switch(typeObject){
-        case ALIEN:
-            alien_t* nodo = (alien_t*) pointerNode;
-            break;
-        case BALA:
-            bala_t* nodo = (bala_t*) pointerNode;
-            break;
-    }
-
-
-
-
-
-    return nodo;
+    return Obj;             //Se devuelve la lista
 }
