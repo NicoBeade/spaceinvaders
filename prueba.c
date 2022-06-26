@@ -114,10 +114,11 @@ int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
                                                                                                                                                       
  * 
  ******************************************************************************************************************************************/
-unsigned int timerTick;  //Esta variable es un "contador" que se decrementa cada cierto tiempo y con ella se controla cada cuanto tiempo se
-                //ejecuta cada accion del programa.
+unsigned int timerTick = 1000000;  //Esta variable es un "contador" que se decrementa cada cierto tiempo y con ella se controla cada cuanto tiempo se
+                                    //ejecuta cada accion del programa.
 
-int velAliens = 10;  //Determina que tan rapido se moveran los aliens
+int velAliens = 200;  /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
+                                                                        Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
 
 unsigned int vidas;      //Indica las vidas restantes del usuario puede ser un campo del struct
 
@@ -130,16 +131,16 @@ int main(void) {
 
     srand(time(NULL));
 
-    pthread_t timerT, moveAlienT;
+    pthread_t timerT, moveAlienT;//Punteros de los threads
     
     int aliensTotales = 12;
     int filasAliens = 4;
 
-    vector_t firstAlienPos = {DIST_INICIAL_X, DIST_INICIAL_Y};
+    vector_t firstAlienPos = {DIST_INICIAL_X, DIST_INICIAL_Y};//Posicion inicial de los aliens.
 
-    alien_t* listAlien;
+    alien_t* listAlien = NULL;//Puntero al primer elemento de la lista de los aliens.
 
-    listAlien = initAliens(aliensTotales, filasAliens, firstAlienPos);
+    listAlien = initAliens(aliensTotales, filasAliens, firstAlienPos);//Inicializa la lista de los aliens
 
 //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
     int i = 1;
@@ -151,45 +152,22 @@ int main(void) {
     }
 
 //****************************************************************************************************************************************
-
-    pthread_attr_t tattr;
-
-    pthread_attr_init (&tattr);
-
-    struct sched_param param;
-
-    pthread_attr_getschedparam (&tattr, &param);
-
-    param.sched_priority = 20;
-
-    pthread_attr_setschedparam (&tattr, &param);
     
 
-    if( pthread_create(&timerT, &tattr, timer, NULL) ){
+    if( pthread_create(&timerT, NULL, timer, NULL) ){//Inicializa el thread timer.
         printf("No se pudo crear el thread timer\n");
     }
 
-    pthread_attr_t tattr1;
+    sleep(1);
 
-    pthread_attr_init (&tattr1);
-
-    struct sched_param param1;
-
-    param.sched_priority = 1;
-
-    pthread_attr_setschedparam (&tattr1, &param1);
-
-    sleep(3);
-
-
-    if( pthread_create(&moveAlienT, &tattr1, moveAlien, (void*) listAlien) ){
+    if( pthread_create(&moveAlienT, NULL, moveAlien, (void*) listAlien) ){//Inicializa el thread move alien.
         printf("No se pudo crear el thread moveAlien\n");
     }
 
     pthread_join(timerT, NULL);
     pthread_join(moveAlienT, NULL);
 
-    removeAlienList(listAlien);
+    removeAlienList(listAlien);//Borra del heap la lista de los aliens.
 
     return 0;
 }
@@ -204,15 +182,15 @@ int main(void) {
  * 
  ******************************************************************************************************************************************/
 void * timer(){
-/* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 100mS luego el resto de los
+/* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 10mS luego el resto de los
     threads utilizan esta variable para determinar cuando se deben ejecutar.
 */
-    timerTick = 100;
     printf("Timer set\n");
     while(1){
-        sleep(1); //Sleep 100mS.
+        usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
         timerTick -= 1;
     }
+    pthread_exit(0);
 }
 
 /*******************************************************************************************************************************************
@@ -279,6 +257,7 @@ alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos){
 	return alienList;
 }
 
+
 void removeAlienList(alien_t* listAlien){
 /*Esta funcion se encarga de liberar del heap la lista creada de los aliens*/
     if(listAlien != NULL){
@@ -292,6 +271,7 @@ void removeAlienList(alien_t* listAlien){
     }
 }
 
+//******************************************    Thread moveAlien    ***********************************************************
 void * moveAlien(void* alien){
 /* Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     Recibe como parametro el puntero al primer alien de la lista.
@@ -301,7 +281,10 @@ void * moveAlien(void* alien){
     int i;
     alien_t* prueba;
     while(1){
-        if( !timerTick ){
+        usleep(10 * U_SEC2M_SEC);
+        if( (timerTick % velAliens) == 0 ){
+
+            printf("timerT   ick = %d", timerTick);
 
             direccion = detectarDireccion(direccion, alien); //Modifica la variable de direccion en funcion al estado actual de la direccion
 
@@ -329,22 +312,22 @@ void * moveAlien(void* alien){
 
                 auxiliar = auxiliar -> next;
             }
+        //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
+            i = 1;
+            prueba = (alien_t*) alien;
+            while(prueba != NULL){
+                printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
+                i++;
+                prueba = prueba -> next;
+            }
+
+        //****************************************************************************************************************************************
             
         }
-    //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
-        i = 1;
-        prueba = (alien_t*) alien;
-        while(prueba != NULL){
-            printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
-            i++;
-            prueba = prueba -> next;
-        }
-
-    //****************************************************************************************************************************************
     }
-    return alien;
+    pthread_exit(0);
 }
-
+//*************************************************************************************************************************************
 
 static int detectarDireccion (int direccion, alien_t* alien){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.

@@ -53,7 +53,7 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 //*************Definidas en INPUT.h
 
 //*************Definidas en DISPLAY.h
-#define X_MAX 7              //Ancho maximo de la pantalla
+#define X_MAX 7              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
 #define Y_MAX 7              //Alto maximo de la pantalla
 
 #define MARGEN_X 4          //Margen horizontal en el display
@@ -336,7 +336,23 @@ int tocaBorde(alien_t* alien){
 }
 
 
-
+alien_t * destroyAlien(bala_t * listAlien, bala_t * ripAlien){
+    alien_t * alien = listAlien;
+    if(alien != NULL && ripAlien != NULL){        //Si la lista y el alien existe
+        if(alien != ripAlien){                    //Si el alien no es el primera de la lista
+            alien_t * preAlien = alien;            //alien anterior al que se va a eliminar
+            while(preAlien -> next != ripAlien){     //Recorre la lista hasta encontrar el alien anterior a la que se quiere destruir
+                preAlien = preAlien -> next;
+            }
+            preAlien -> next = ripAlien -> next;      //Se asigna el siguiente alien
+        }
+        else{                                       //Si el alien a eliminar es la primera
+            alien = ripAlien -> next;                 //Devuelve puntero al segundo alien si es que existe
+        }
+        free(ripAlien);                          //Se libera la memoria de la bala
+    }
+    return alien;
+}
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -410,7 +426,7 @@ bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las 
 bala_t * moveBalaUsr(bala_t * ListBalaUsr){
     bala_t * ListBala = ListBalaUsr;
     if(ListBala != NULL){                    //Si la bala aliada existe
-        if(ListBala -> pos.y < BULLET_UP){      //Si la bala esta en el limite del mapa
+        if(ListBala -> pos.y <= BULLET_UP){      //Si la bala esta en el limite del mapa
             free(ListBala);                  //Se elimina la bala
             ListBala = NULL;                //Se elimina la lista
         }
@@ -424,18 +440,37 @@ bala_t * moveBalaUsr(bala_t * ListBalaUsr){
 bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
     bala_t * Bala = ListBala;
     if(Bala != NULL && RipBala != NULL){        //Si la lista y la bala existe
-        if(Bala != RipBala){                    //Si la bala no es la unica en la lista
+        if(Bala != RipBala){                    //Si la bala no es la primera de la lista
             bala_t * PreBala = Bala;            //Bala anterior a la que se va a eliminar
             while(PreBala -> next != RipBala){     //Recorre la lista hasta encontrar la bala anterior a la que se quiere destruir
                 PreBala = PreBala -> next;
             }
             PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
-            free(RipBala);                          //Se libera la memoria de la bala
         }
         else{                                       //Si la bala a eliminar es la primera
-            free(RipBala);
             Bala = RipBala -> next;                 //Devuelve puntero a la segunda bala si es que existe
         }
+        free(RipBala);                          //Se libera la memoria de la bala
     }
     return Bala;
+}
+
+
+typedef enum {NAVE, BALA, BARRERA, ALIEN} typeObj_t;
+
+void* deleteNode(void* pointerNode, typeObj_t typeObject){
+    switch(typeObject){
+        case ALIEN:
+            alien_t* nodo = (alien_t*) pointerNode;
+            break;
+        case BALA:
+            bala_t* nodo = (bala_t*) pointerNode;
+            break;
+    }
+
+
+
+
+
+    return nodo;
 }
