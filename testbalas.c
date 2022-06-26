@@ -98,7 +98,7 @@ void moveAlien (alien_t* alieN);            //Se encarga de modificar la posicio
 static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
 int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
 
-bala_t * addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
+bala_t* addBala(bala_t * firstBala, vector_t setPos, int SetType);       //Añade una bala
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType);          //Mueve una unidad todas las balas enemigas del tipo indicado
 bala_t * moveBalaUsr(bala_t * ListBalaUsr);                             //Mueve una unidad la bala del usuario
 bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala);              //Destruye una bala, recibe puntero a la lista y a la bala que se quiere destruir
@@ -130,32 +130,45 @@ int vidas;      //Indica las vidas restantes del usuario puede ser un campo del 
 
 int main(void) {
     bala_t * ListadeBalas = NULL;
-    vector_t p1 = {2,5};
+    vector_t p1 = {2,4};
     ListadeBalas = addBala(ListadeBalas, p1, 1);
+    printf("%p", ListadeBalas);
     p1.x++;
+    p1.y++;
     ListadeBalas = addBala(ListadeBalas, p1, 2);
     p1.x++;
+    p1.y=17;
     ListadeBalas = addBala(ListadeBalas, p1, 1);
     p1.x++;
+    p1.y=3;
     ListadeBalas = addBala(ListadeBalas, p1, 1);
 //************************************* Esta seccion del codigo se usa para probar que funcionen las BALAS *****************************
     int i = 1;
     bala_t* prueba = ListadeBalas;
 ;
     while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        printf("\nBALA %d: x: %d ; y: %d ; tipo: %d ; ADDRS: %p\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type,prueba);
         i++;
         prueba = prueba -> next;
     }
     ListadeBalas = moveBalaEnemy(ListadeBalas, 1);
+    i=1;
+    putchar('\n');
     prueba = ListadeBalas;
      while(prueba != NULL){
-        printf("BALA %d: x: %d ; y: %d ; tipo: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type);
+        printf("\nBALA %d: x: %d ; y: %d ; tipo: %d ; ADDRS: %p\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type,prueba);
         i++;
         prueba = prueba -> next;
     }
 //****************************************************************************************************************************************
-
+    bala_t * nueva = addBala(NULL, p1,1);
+    nueva = addBala(nueva, p1, 2);
+    printf("%p\n", nueva);
+    printf("%p\n", nueva->next);
+    nueva = destroyBala(nueva, nueva -> next);
+    printf("%p\n", nueva);
+     nueva = destroyBala(nueva, nueva);
+    printf("%p\n", nueva);
     removeAlienList(ListadeBalas);
 
     return 0;
@@ -396,18 +409,21 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
     bala_t * Bala = ListBalasEnemy;
-    do{
-        if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
-            if((Bala -> pos.y) >= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
-                Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
+    bala_t * newList = ListBalasEnemy;
+    if(Bala != NULL){
+        do{
+            if(Bala -> type == BalaType){
+                if((Bala -> pos.y) <= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
+                    Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
+                }
+                else{                                       //Si la bala se fue del display se elimina
+                    newList = destroyBala(ListBalasEnemy, Bala);
+                }
             }
-            else{                                       //Si la bala se fue del display se elimina
-            Bala = destroyBala(ListBalasEnemy, Bala);
-            }
-        }
-        Bala = Bala ->next;
-    } while ((Bala != NULL) && (Bala -> next != NULL));                 //Recorre todas las balas
-    return Bala;
+            Bala = Bala -> next;
+        }while(Bala != NULL);
+    }
+    return newList;
 }
 
 bala_t * moveBalaUsr(bala_t * ListBalaUsr){

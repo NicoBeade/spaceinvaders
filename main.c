@@ -369,7 +369,7 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 	}
 
     if(firstBala != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        alien_t * lastBala = firstBala;//Se almacena el puntero al primer elemento.
+        bala_t * lastBala = firstBala;//Se almacena el puntero al primer elemento.
 
 		while(lastBala -> next != NULL){
 			lastBala = lastBala -> next;
@@ -390,19 +390,21 @@ bala_t* addBala(bala_t * firstBala, vector_t setPos, int setType){
 
 bala_t * moveBalaEnemy(bala_t * ListBalasEnemy, int BalaType){      //Mueve las balas enemigas de un tipo especifico.
     bala_t * Bala = ListBalasEnemy;
-    if(Bala != NULL){                 //Si las balas enemigas existen
+    bala_t * newList = ListBalasEnemy;
+    if(Bala != NULL){
         do{
-            if((Bala -> type) == BalaType){                  //Si la bala indexada es la del tipo indicado
-                if(Bala -> pos.y > (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
+            if(Bala -> type == BalaType){
+                if((Bala -> pos.y) <= (Y_MAX - BULLET_DOWN)){   //Si la bala continua dentro del display 
                     Bala -> pos.y += BULLET_DOWN;           //Se mueve la bala hacia abajo
                 }
                 else{                                       //Si la bala se fue del display se elimina
-                Bala = destroyBala(ListBalasEnemy, Bala);
+                    newList = destroyBala(ListBalasEnemy, Bala);
                 }
             }
-        } while (Bala -> next != NULL);                 //Recorre todas las balas
+            Bala = Bala -> next;
+        }while(Bala != NULL);
     }
-    return Bala;
+    return newList;
 }
 
 bala_t * moveBalaUsr(bala_t * ListBalaUsr){
@@ -420,20 +422,20 @@ bala_t * moveBalaUsr(bala_t * ListBalaUsr){
 }
 
 bala_t * destroyBala(bala_t * ListBala, bala_t * RipBala){
-    if(ListBala != NULL && RipBala != NULL){        //Si la lista y la bala existe
-        if(ListBala != RipBala){                    //Si la bala no es la unica en la lista
-            bala_t * PreBala = ListBala;            //Bala anterior a la que se va a eliminar
+    bala_t * Bala = ListBala;
+    if(Bala != NULL && RipBala != NULL){        //Si la lista y la bala existe
+        if(Bala != RipBala){                    //Si la bala no es la unica en la lista
+            bala_t * PreBala = Bala;            //Bala anterior a la que se va a eliminar
             while(PreBala -> next != RipBala){     //Recorre la lista hasta encontrar la bala anterior a la que se quiere destruir
                 PreBala = PreBala -> next;
             }
             PreBala -> next = RipBala -> next;      //Se asigna la siguiente bala
             free(RipBala);                          //Se libera la memoria de la bala
-            return ListBala;
         }
-        else{                                       //Si hay una unica baña
+        else{                                       //Si la bala a eliminar es la primera
             free(RipBala);
-            return NULL;                            //Devuelve puntero a una lista vacia
+            Bala = RipBala -> next;                 //Devuelve puntero a la segunda bala si es que existe
         }
-
     }
+    return Bala;
 }
