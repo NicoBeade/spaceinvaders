@@ -41,7 +41,7 @@
  * 
  ******************************************************************************************************************************************/
 
-object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives){
+object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setLives){
 /* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
     Devuelve un puntero al primer elemento de la lista.
 */	
@@ -75,6 +75,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 *******************************************************************************************************************************************/
 
 
+
 /*******************************************************************************************************************************************
  * 
                  ___                      _                                _             _     _   _                   
@@ -85,7 +86,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
  * 
  ******************************************************************************************************************************************/
 
-object_t * initAliens(object_t * listAliens, int xMax, int yMax, int distInicialX, int distInicialY, int saltoX, int saltoY, char * str, ...){      
+object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...){      
 /*Utiliza la funcion addAlien para crear la lista con todos los aliesn al empezar un nivel. Devuelve un puntero al primer elemento de la lista.
     Recibe como parametros:
         -listAliens: puntero al primer elemento de la lista.
@@ -106,29 +107,43 @@ object_t * initAliens(object_t * listAliens, int xMax, int yMax, int distInicial
     for(letra = 0; string[letra] != '\0'; letra++){     //Se recorre el string para revisar que la entrada sea correcta
         err = !CHECK_HEXA(string[letra]);               //Si la entrada no es un numero Hexa hubo error
     }
-    if((letra-1) > yMax/saltoY){                        //Si hubo mas letras que filas tambien hubo error
+    if((letra-1) > (levelSetting -> yMax)/(levelSetting -> saltoY)){                        //Si hubo mas letras que filas tambien hubo error
         err = 1;
     }                         
     
     if(err == 0){                   //Si no hubo error
-        vector_t alienPos = {distInicialX, distInicialY};
+        vector_t alienPos = {(levelSetting -> distInicialX), (levelSetting -> distInicialY)};
         object_t * newList = listAliens; 
         for(letra = 0; string[letra] != '\0'; letra++){     //Se recorre el string
             if(string[letra] != '0'){                       //Si no es 0 entonces rellena esa cantidad de aliens
                 int col;                //Contador de columnas (aliens rellenados en esa fila)
                 for(col = 0; col < ASCII2HEXA(string[letra]); col++){       //Recorre toda la fila
-                    int tipoActual = (int) va_arg(tipos, int);
-                    newList = addObj(newList, alienPos, tipoActual, tipoActual + 1);  /*Añade el alien a la lista con el tipo indicado en los arg variables
-                    Notese que cada tipo de alien tiene un valor mas de vida que el valor de su enum. Por ejemplo: DANIEL = 0 y tiene 1 vida, entoces vidas 
-                    de daniel = DANIEL + 1*/
-                    alienPos.x += saltoX;//Se desplaza en X
+                    int tipoActual = (int) va_arg(tipos, int);              //Toma el tipo ingresado para la fila correspondiente
+                    int vidaActual;                                         //Crea una variable que indica las vidas de cada tipo
+                    switch(tipoActual){                                     //Selecciona las vidas con las que inicializa esa fila
+                        case DANIEL:
+                            vidaActual = levelSetting -> initDanielLives;   //Dependiendo del tipo de alien se busca la vida correspondiente
+                            break;
+                        case PABLO:
+                            vidaActual = levelSetting -> initDanielLives;
+                            break;
+                        case NICOLAS:
+                            vidaActual = levelSetting -> initDanielLives;
+                            break;
+                        default:                                            //Si el tipo de nave no es valido se genera un error
+                            return NULL;
+                    }
+                    newList = addObj(newList, alienPos, tipoActual, vidaActual);
+                    int dirRelleno = (col%2) ? -1 : 1; //Si el proximo alien es un un numero par (Segundo, cuarto...) lo pone en la izquierda (-1)
+                    //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
+                    alienPos.x += (levelSetting -> saltoX)*dirRelleno*((col/2)+1) ;//Se desplaza en X. dirRelleno indica el lado para el que se va a mover y 
+                                        //col/2 +1 es un multiplicador que realiza la cuenta de separacion de los aliens respecto al centro
                 }
-                alienPos.x = distInicialX;//Reinicia el desplazamiento en X
-                alienPos.y += saltoY;//Y se desplaza en Y.
+                alienPos.x = levelSetting -> distInicialX;//Reinicia el desplazamiento en X
             }
-            alienPos.y += saltoY;     
+            alienPos.y += levelSetting -> saltoY;       //Se desplaza por fila
         }
-    va_end(tipos);
+    va_end(tipos);              //Se finalizan los argumentos variables
     }
 }   
 

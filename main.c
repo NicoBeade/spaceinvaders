@@ -20,7 +20,7 @@ typedef struct{//Esta estructura define un vector para las coordenadas
 
 typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
     vector_t pos;//Posicion en x e y
-    int type;//Tipo de objeto y categoria dentro del tipo
+    types_t type;//Tipo de objeto y categoria dentro del tipo
     int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
     struct OBJECT * next;//Puntero al siguiente objeto de la lista.
 }object_t;
@@ -71,7 +71,7 @@ typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se
 #define CANT_MAX_ALIENS 12  //Cantidad maxima de aliens, dependiendo del nivel se muestra distinta cantidad, con este tope.
 #define CANT_MAX_FILAS 4    //CAntidad maxima de filas, dependiendo del nivel se muestra una cantidad distinta, con este tope.
 
-enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO};
+typedef enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -85,7 +85,7 @@ enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS,
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
-object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives);   //Agrega un objeto a la lista
+object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setLives);   //Agrega un objeto a la lista
 object_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos);               //Inicializa la lista completa de aliens usando addObj.
 void removeList(object_t* list);                                               //Elimina de heap la lista creada.
 
