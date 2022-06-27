@@ -77,7 +77,7 @@ typedef struct BALA{//Cada uno de las balas sera una estructura de este tipo. To
 
 #define CANT_MAX_ALIENS 12  //Cantidad maxima de aliens, dependiendo del nivel se muestra distinta cantidad, con este tope.
 #define CANT_MAX_FILAS 4    //CAntidad maxima de filas, dependiendo del nivel se muestra una cantidad distinta, con este tope.
-
+#include "aliensYBalas.h"
 enum alienTypes {NODRIZA, SUPERIOR, MEDIO, INFERIOR};
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -93,14 +93,8 @@ enum alienTypes {NODRIZA, SUPERIOR, MEDIO, INFERIOR};
  * 
  ******************************************************************************************************************************************/
 void * timer();     //Funcion encargada de controlar el tiempo del juego.
+                                        //Elimina de heap la lista creada.
 
-alien_t * addAlien(alien_t * firstAlien, vector_t setPos, int setType, int setLives);    //Agrega un alien a la lista.
-alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos);               //Inicializa la lista completa de aliens usando addAlien.
-void removeAlienList(alien_t* listAlien);                                               //Elimina de heap la lista creada.
-
-void * moveAlien(void* alien);            //Se encarga de modificar la posicion de los aliens.
-static int detectarDireccion(int direccion, alien_t* alien);    //Detecta en que direccion se debe mover a los aliens.
-int tocaBorde(alien_t* alien);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -135,12 +129,21 @@ int main(void) {
     
     int aliensTotales = 12;
     int filasAliens = 4;
-
-    vector_t firstAlienPos = {DIST_INICIAL_X, DIST_INICIAL_Y};//Posicion inicial de los aliens.
-
+    level_setting_t settings;
+    settings.yMax = 15;
+    settings.yMin = 0;
+    settings.xMax = 15;
+    settings.xMin = 0;
+    settings.saltoX = 4;
+    settings.saltoY = 3;
+    settings.initDanielLives = 1;
+    settings.initNicolasLives = 2;
+    settings.initPabloLives = 3;
+    settings.distInicialX = 6;
+    settings.distInicialY = 2;
+    
     alien_t* listAlien = NULL;//Puntero al primer elemento de la lista de los aliens.
-
-    listAlien = initAliens(aliensTotales, filasAliens, firstAlienPos);//Inicializa la lista de los aliens
+    listAlien = initAliens(listAlien, &settings, "20403", PABLO, DANIEL, NICOLAS);
 
 //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
     int i = 1;
@@ -195,199 +198,3 @@ void * timer(){
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
-
-/*******************************************************************************************************************************************
- * 
-                 ___                      _                                _             _     _   _                   
-                | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___      /_\   | | (_)  ___   _ _    ___
-                | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)    / _ \  | | | | / -_) | ' \  (_-<
-                |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   /_/ \_\ |_| |_| \___| |_||_| /__/ 
-
- * 
- ******************************************************************************************************************************************/
-
-alien_t* addAlien(alien_t * firstAlien, vector_t setPos, int setType, int setLives){
-/* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
-    Devuelve un puntero al primer elemento de la lista.
-*/	
-	alien_t * newAlien = malloc(sizeof(alien_t));//Agrega el nuevo alien
-
-	if(newAlien == NULL){//Si no se puede hacer el malloc indica error.
-		printf( "No se ha podido agregar el elemento a la lista.\n");
-		return NULL; //error
-	}
-
-    if(firstAlien != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        alien_t * lastAlien = firstAlien;//Se almacena el puntero al primer elemento.
-
-		while(lastAlien -> next != NULL){
-			lastAlien = lastAlien -> next;
-		}
-        lastAlien -> next = newAlien;
-	}
-    else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstAlien = newAlien;
-    }
-
-	newAlien -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
-	newAlien -> type = setType;
-	newAlien -> lives = setLives;
-    newAlien -> next = NULL;
-
-	return firstAlien;//Devuelve un puntero al primer elemento.
-}
-
-alien_t * initAliens(int numAliens, int numRows, vector_t firstAlienPos){
-/*Utiliza la funcion addAlien para crear la lista con todos los aliesn al empezar un nivel. Devuelve un puntero al primer elemento de la lista.
-    Recibe como parametros: el numero total de aliens, el numero de filas de aliens y la posicion inicial del primer alien.
-*/
-	int row;//Variables para desplazamiento
-	int col;
-	vector_t alienPos = firstAlienPos;//Se almacena la posicion del primer alien. Porque la coordenada x de esta variable sera utilizada mas adelante en la funcion.
-	alien_t * alienList = NULL;
-	for(row = 0; row < numRows; row++){//Realiza la inicializacion
-		for(col = 0; col < numAliens/numRows; col++){
-			alienList = addAlien(alienList, alienPos,row+1,numRows - row);//Agrega un alien a la lista.
-			alienPos.x += TAM_ALIENS_X + ESP_ALIENS_X;//Avanza la coordenada X al siguiente alien
-		}
-		alienPos.y += TAM_ALIENS_Y + ESP_ALIENS_Y; //Cuando llega a un borde lateral aumenta la coordenada Y.
-		alienPos.x = firstAlienPos.x;//Y reinicio la coordenada X.
-	}
-	return alienList;
-}
-
-
-void removeAlienList(alien_t* listAlien){
-/*Esta funcion se encarga de liberar del heap la lista creada de los aliens*/
-    if(listAlien != NULL){
-        alien_t * lastAlien = listAlien; //Se crean dos punteros auxiliares
-        alien_t * nextAlien;
-        do {
-            nextAlien = lastAlien -> next; //Se apunta al siguiente nodo
-            free(lastAlien); //Se libera la memoria dinamica del nodo a eliminar
-            lastAlien = nextAlien;
-        } while (nextAlien != NULL);
-    }
-}
-
-//******************************************    Thread moveAlien    ***********************************************************
-void * moveAlien(void* alien){
-/* Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    Recibe como parametro el puntero al primer alien de la lista.
-*/
-    int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
-    int i;
-    alien_t* prueba;
-    while(1){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velAliens) == 0 ){
-
-            printf("timerT   ick = %d", timerTick);
-
-            direccion = detectarDireccion(direccion, alien); //Modifica la variable de direccion en funcion al estado actual de la direccion
-
-            switch (direccion){//Primero detecta en que sentido debemos mover las naves.
-                case IZQUIERDA:
-                    vx = -DESPLAZAMIENTO_X;
-                    vy = 0;
-                    break;
-                case DERECHA:
-                    vx = DESPLAZAMIENTO_X;
-                    vy = 0;
-                    break;
-                case ABAJO:
-                    vx = 0;
-                    vy = DESPLAZAMIENTO_Y;
-                    break;
-                default:
-                    break;
-            }
-            alien_t* auxiliar = (alien_t*) alien;
-            while (auxiliar != NULL){//Mueve los aliens uno por uno
-
-                auxiliar->pos.x += vx;//Modifica su posicion en x e y
-                auxiliar->pos.y += vy;
-
-                auxiliar = auxiliar -> next;
-            }
-        //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
-            i = 1;
-            prueba = (alien_t*) alien;
-            while(prueba != NULL){
-                printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
-                i++;
-                prueba = prueba -> next;
-            }
-
-        //****************************************************************************************************************************************
-            
-        }
-    }
-    pthread_exit(0);
-}
-//*************************************************************************************************************************************
-
-static int detectarDireccion (int direccion, alien_t* alien){
-/* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
-    Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
-    esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
-    Se va a implementar una maquina de estados que en base al estado actual de la direccion y del borde tocado, deduce la direccion resultante.
-    Los estados son las direcciones y ya estan definidos en un enum previo.
-*/
-    switch(direccion){
-        
-        case DERECHA: //Si se viene moviendo para la derecha
-            if (tocaBorde(alien) == DERECHA){ //y toca el borde derecho
-                return ABAJO; //se mueve hacia abajo
-            }
-            else {
-                return DERECHA; //si no, sigue moviendose para la derecha
-            }
-            break;
-
-        case IZQUIERDA: //Si se viene moviendo para la izquierda
-            if (tocaBorde(alien) == IZQUIERDA){ //y toca el borde izquierdo
-                return ABAJO; //se mueve hacia abajo
-            }
-            else {
-                return IZQUIERDA; //si no, sigue moviendose para la izquierda
-            }
-            break;
-
-        case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(alien) == ABAJO){ //Si algun alien toca el suelo, el jugador pierde la partida
-                vidas = 0;
-            }
-            if (tocaBorde(alien) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
-                return IZQUIERDA;
-            }
-            else {
-                return DERECHA; //si no, esta tocando el borde izquierdo, por lo que se mueve hacia la derecha
-            }
-            break;
-
-        default: //default, nunca deberia llegar a este punto
-            break;
-    } 
-    return 0;
-}
-
-int tocaBorde(alien_t* alien){
-    int borde = 0;
-    while ((alien->next != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
-        if (alien->pos.x <= 0 + MARGEN_X){ //deteccion borde izquierdo
-            borde = IZQUIERDA;
-        }
-        else if (alien->pos.x >= X_MAX - MARGEN_X){ //deteccion borde derecho
-            printf("Llego al borde");
-            borde = DERECHA;
-        }
-        if (alien->pos.y >= Y_MAX - MARGEN_Y){ //deteccion de suelo
-        borde = ABAJO;
-        }
-        alien = alien -> next;
-    }
-    return borde;
-}

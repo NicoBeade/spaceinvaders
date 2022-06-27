@@ -25,6 +25,8 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
+typedef enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
+
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
     int y;
@@ -32,10 +34,13 @@ typedef struct{//Esta estructura define un vector para las coordenadas
 
 typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
     vector_t pos;//Posicion en x e y
-    int type;//Tipo de objeto y categoria dentro del tipo
+    types_t type;//Tipo de objeto y categoria dentro del tipo
     int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
     struct OBJECT * next;//Puntero al siguiente objeto de la lista.
 }object_t;
+
+
+//DANIEL tiene 1 vida, PABLO 2 vidas y NICOLAS 3 vidas.
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
