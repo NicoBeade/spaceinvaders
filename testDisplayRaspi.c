@@ -38,7 +38,8 @@ void * timer(){
 
 
 int main (void){
-    
+    disp_init();
+    printf("se inicializo el display\n");
     object_t * listAliens = NULL;
 
     level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 1, 1, 3, 1, 1, 1, {1,1}};

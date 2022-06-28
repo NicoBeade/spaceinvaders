@@ -74,6 +74,7 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
                 if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
                 disp_write(pAux,D_ON); //Actualiza el buffer
                 printf("se imprimio un led\n");
+                disp_update();
                 usleep(1000*1000);
             }
         }
@@ -89,6 +90,7 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
             pAux.y = p.y+j;
             if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
             disp_write(pAux ,D_OFF); //Actualiza el buffer
+            disp_update();
         }
     }
 }
@@ -107,8 +109,6 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-    disp_init();
-    printf("se inicializo el display\n");
     dcoord_t punto={0,0}; //punto del display a escribir
     while(1){
 
@@ -117,6 +117,7 @@ void* displayRPI (void* argDisplayRPI){
             pthread_mutex_lock(&mutex);
             disp_clear(); //limpio el buffer            
             disp_write(punto,D_ON);
+            disp_update();
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
