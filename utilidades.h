@@ -50,22 +50,23 @@ typedef struct {//Cada alien, barrera, bala es un struct de este tipo y se los o
 //DANIEL tiene 1 vida, PABLO 2 vidas y NICOLAS 3 vidas.
 
 typedef struct{
-    int xMin;               //-xMax: coordenada maxima en x alcanzable.
-    int xMax;               //-xMin: coordenada minima en x alcanzable.
-    int yMin;               //-YMax: coordenada maxima en Y alcanzable.
-    int yMax;               //-YMin: coordenada minima en Y alcanzable.
-    int saltoX;             //-saltoX: distancia entre naves en x
-    int saltoY;             //-saltoy: distancia entre naves en y (linea)
-    int maxEnemyBullets;    //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
-    int shootProbDani;      //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
-    int shootProbPablo;     //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
-    int shootProbNico;      //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
-    int distInicialX;       //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;       //-distInicialY: coordenada en Y de la nave del centro de la primera fila
-    int initUsrLives;       //-initUsrLives: Vidas del usuario en ese nivel
-    int initDanielLives;    //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
-    int initPabloLives;     //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
-    int initNicolasLives;   //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
+    int xMin;                   //-xMax: coordenada maxima en x alcanzable.
+    int xMax;                   //-xMin: coordenada minima en x alcanzable.
+    int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
+    int yMax;                   //-YMin: coordenada minima en Y alcanzable.
+    int saltoX;                 //-saltoX: distancia entre naves en x
+    int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
+    int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
+    int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
+    int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
+    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
+    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+    int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
+    int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
+    int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
+    int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
+    vector_t centerNaveOffset   //-centerOffset: distancia de offset desde la esquina superior izq de la nave hasta el centro
     //ESPACIO PARA BARRERAS
     //AAA BARRERAS
 }level_setting_t;

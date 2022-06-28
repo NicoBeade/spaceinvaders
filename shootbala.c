@@ -38,7 +38,7 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
                 probabilidad = levelSetting->shootProbNico;
         }
         if((rand()%100) >= probabilidad){
-            bala = addObj(listaBalas, nave.pos,);
+            bala = addObj(listaBalas, nave.pos+levelSetting,);
         }
     }
 }
@@ -50,10 +50,4 @@ unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una 
         lista = lista -> next;     //Se apunta al siguiente nodo
     }
     return nodosCant;                           //Se devuelve la cantidad de nodos
-}
-
-vector_t getObjCenter(object_t * nodo, level_setting_t * levelSetting){
-    if(nodo != NULL){
-        
-    }
 }

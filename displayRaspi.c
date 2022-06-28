@@ -111,9 +111,7 @@ void* displayRPI (void* argDisplayRPI){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
-            printf("entro al thread de display\n");
             disp_clear(); //limpio el buffer
-            printf("se limpio el buffer del display\n");
             dcoord_t punto; //punto del display a escribir
 
             //Actualizo el buffer con la nueva posicion de los aliens
@@ -124,6 +122,7 @@ void* displayRPI (void* argDisplayRPI){
                 if (punto.x>15||punto.y>15){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
+                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
                 switch(aliens->type){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
                     case DANIEL:
                         if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
