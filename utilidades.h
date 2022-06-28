@@ -25,7 +25,7 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
-typedef enum objectTypes {DANIEL, PABLO, NICOLAS, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
+typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
 
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;

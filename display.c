@@ -7,12 +7,12 @@
 
 #define FPS 60
 
-void threadDisplay(void) {
+int main(void) {
     
     ALLEGRO_DISPLAY * display = NULL;
     ALLEGRO_EVENT_QUEUE * event_queue = NULL;
 
-    bool redraw = false;
+    bool redraw = true;
     bool close_display = false;
     bool fail= false;
 
@@ -116,8 +116,6 @@ void threadDisplay(void) {
      *********************************************************************************************************/
 
     al_destroy_display(display); 
-
-    al_destroy_timer(timer);
 
     al_destroy_event_queue(event_queue);
 

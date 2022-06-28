@@ -26,9 +26,9 @@
 
 #define BGCOLOR 0,0,0       //Color del background (negro)
 
-typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
+//typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
 
-char * images[]= {"alien1.png", "alien2.png", "alien3.png", "nave.png", "escudo.png"};
+char * images[]= {"sprites/alien1.png", "sprites/alien2.png", "sprites/alien3.png", "sprites/nave.png", "sprites/escudo.png"};
 
 int showEntity(object_t * entity);
 
