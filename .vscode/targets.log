@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jun 28 16:56:52 2022
+# Make data base, printed on Tue Jun 28 17:07:37 2022
 
 # Variables
 
@@ -235,9 +237,9 @@ VSCODE_PID = 3595
 
 # Directories
 
-# . (device 66309, inode 4330770): 39 files, no impossibilities.
+# . (device 66309, inode 4330770): 36 files, no impossibilities.
 
-# 39 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -257,26 +259,26 @@ aliensYBalas.o: aliensYBalas.h aliensYBalas.c utilidades.h
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 5):
-	gcc -c aliensYBalas.c -Wall -g
+	gcc -c aliensYBalas.c -Wall 
 
 displayRaspi.o: displayRaspi.h displayRaspi.c utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 11):
-	gcc -c displayRaspi.c -Wall -g 
+	gcc -c displayRaspi.c -Wall 
 
 testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 8):
-	gcc -c testDisplayRaspi.c -Wall -g
+	gcc -c testDisplayRaspi.c -Wall 
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-28 16:56:03.739202391
+#  Last modified 2022-06-28 16:58:07.30729228
 #  File has been updated.
 #  Successfully updated.
 
@@ -287,9 +289,6 @@ aliensYBalas.c:
 #  File has not been updated.
 
 # Not a target:
- 
-make: *** No rule to make target 'all'.  Stop.
-
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -325,12 +324,13 @@ displayRaspi.h:
 #  Modification time never checked.
 #  File has not been updated.
 
+ 
 main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -g -o prueba
+	gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -o prueba
 
 # files hash-table stats:
 # Load=14/1024=1%, Rehash=0, Collisions=0/40=0%
@@ -343,9 +343,9 @@ main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o
 # strcache buffers: 1 (0) / strings = 45 / storage = 529 B / avg = 11 B
 # current buf: size = 8162 B / used = 529 B / count = 45 / avg = 11 B
 
-# strcache performance: lookups = 69 / hit rate = 34%
+# strcache performance: lookups = 66 / hit rate = 31%
 # hash-table stats:
-# Load=45/8192=1%, Rehash=0, Collisions=1/69=1%
-# Finished Make data base on Tue Jun 28 16:56:52 2022
+# Load=45/8192=1%, Rehash=0, Collisions=1/66=2%
+# Finished Make data base on Tue Jun 28 17:07:37 2022
 
  

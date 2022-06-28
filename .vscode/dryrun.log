@@ -1,5 +1,8 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/home/nicolas/Documents/spaceinvaders'
-gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -g -o prueba
+gcc -c aliensYBalas.c -Wall 
+gcc -c displayRaspi.c -Wall 
+gcc -c testDisplayRaspi.c -Wall 
+gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -o prueba
 make: Leaving directory '/home/nicolas/Documents/spaceinvaders'
  

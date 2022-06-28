@@ -79,11 +79,13 @@ int main (void){
 
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
 
-    pthread_t TmoveAliens, TdisplayRaspi;
+    pthread_t Ttimer, TmoveAliens, TdisplayRaspi;
 
     argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
 
     printf("Anashe 1\n");
+
+    pthread_create(&Ttimer, NULL, timer, NULL);
 
     pthread_create(&TdisplayRaspi, NULL, displayRPI, &argumentosDisplayRPI);
 
@@ -91,6 +93,7 @@ int main (void){
 
     printf("Anashe 2\n");
 
+    pthread_join(Ttimer, NULL);
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
 
