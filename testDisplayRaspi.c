@@ -89,5 +89,7 @@ int main (void){
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
 
+    removeAlienList(listAliens);
+
     return 0;
 }
