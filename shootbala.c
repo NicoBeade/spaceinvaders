@@ -9,13 +9,8 @@
 
 int shootBalaUsr(nave_t * naveUsr){
     //Se cuenta la cantidad de balas del usuari
-    object_t * listaBalasAux = naveUsr -> listaBalasUsr;
     nave_t * usuario = naveUsr;
-    int balasActuales = 0;
-    while(listaBalasAux != NULL){
-        balasActuales++;
-        listaBalasAux = listaBalasAux -> next;
-    }
+    unsigned int balasActuales = counterBala(naveUsr -> listaBalasUsr);
     if(balasActuales < maxBullets){
         naveUsr -> listaBalasUsr = addObj(naveUsr -> listaBalasUsr, naveUsr -> pos, BALA_USUARIO, 1);
         return 0;
@@ -26,12 +21,14 @@ int shootBalaUsr(nave_t * naveUsr){
 }
 
 object_t * shootBalaEnemy(object_t listaNaves, object_t listaBalas){
-
+    unsigned 
 }
 
-unsigned int counterBala(){
-    while(listaBalasAux != NULL){
-        balasActuales++;
-        listaBalasAux = listaBalasAux -> next;
+unsigned int counterBala(object_t listaBalas){  //Cuenta la cantidad de balas de una lista de balas
+    unsigned int balasCant = 0;                 //Se inicializa la variable cantidad de balas
+    while(listaBalas != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
+        balasCant++;                            //Se cuenta el nodo
+        listaBalas = listaBalasAux -> next;     //Se apunta al siguiente nodo
     }
+    return balasCant;                           //Se devuelve la cantidad de balas
 }
