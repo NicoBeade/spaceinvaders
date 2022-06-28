@@ -18,8 +18,7 @@
 #include <allegro5/allegro_image.h>
 #include <pthread.h>
 #include <stdio.h>
-#include "utilidades.h"
-#include "display.h"
+#include "displayAllegro.h"
 
 //En esta array se guardan las direcciones a los sprites
 static char * images[]= {"sprites/alien1.png", 
