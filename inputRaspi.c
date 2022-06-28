@@ -14,6 +14,7 @@
 *   la raspberry.
  **********************************************************************************************************************************************************/
 
+#include <stdio.h>
 #include "joydrv.h"
 #include "utilidades.h"
 #include "inputRaspi.h"
@@ -31,6 +32,7 @@
         if( (timerTick % velInput) == 0 ){
 
             coordJoy = joy_get_coord();
+            printf("Joystick coord: %d", coordJoy.x);
 
             if( ((coordJoy.x <= JOY_ACTIVE_NEG) || (coordJoy.x >= JOY_ACTIVE_POS)) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
                 
