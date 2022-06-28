@@ -22,26 +22,38 @@ int shootBalaUsr(nave_t * naveUsr){
 }
 
 object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting,){
-    unsigned int balasActuales = counterBala(listaBalas);
+    unsigned int balasActuales = countList(listaBalas);
     int balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
     object_t * nave = listaNaves;
     object_t * bala = listaBalas;
     srand(time(NULL));
+    int probabilidad;
     while(balasDisponibles > 0 && nave != NULL){
         switch(nave -> type){
-            
+            case DANIEL:
+                probabilidad = levelSetting->shootProbDani;
+            case PABLO:
+                probabilidad = levelSetting->shootProbPablo;
+            case NICOLAS:
+                probabilidad = levelSetting->shootProbNico;
         }
-        if((rand()%100) >= levelSetting.shootProbability;){
+        if((rand()%100) >= probabilidad){
             bala = addObj(listaBalas, nave.pos,);
         }
     }
 }
 
-unsigned int counterBala(object_t * listaBalas){  //Cuenta la cantidad de balas de una lista de balas
-    unsigned int balasCant = 0;                 //Se inicializa la variable cantidad de balas
-    while(listaBalas != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
-        balasCant++;                            //Se cuenta el nodo
-        listaBalas = listaBalas -> next;     //Se apunta al siguiente nodo
+unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
+    unsigned int nodosCant = 0;                 //Se inicializa la variable cantidad de nodos
+    while(lista != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
+        nodosCant++;                            //Se cuenta el nodo
+        lista = lista -> next;     //Se apunta al siguiente nodo
     }
-    return balasCant;                           //Se devuelve la cantidad de balas
+    return nodosCant;                           //Se devuelve la cantidad de nodos
+}
+
+vector_t getObjCenter(object_t * nodo, level_setting_t * levelSetting){
+    if(nodo != NULL){
+        
+    }
 }
