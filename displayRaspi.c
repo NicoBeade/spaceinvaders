@@ -115,8 +115,9 @@ void* displayRPI (void* argDisplayRPI){
             dcoord_t punto; //punto del display a escribir
 
             //Actualizo el buffer con la nueva posicion de los aliens
-
+            printf("esta por entrar al while\n");
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
+                printf("entro al while\n");
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
                 printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
