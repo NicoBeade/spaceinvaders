@@ -119,10 +119,11 @@ void* displayRPI (void* argDisplayRPI){
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
+                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
                 if (punto.x>15||punto.y>15){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
-                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
+                
                 switch(aliens->type){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
                     case DANIEL:
                         if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien

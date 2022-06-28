@@ -12,7 +12,7 @@ int shootBalaUsr(nave_t * naveUsr){
     //Se cuenta la cantidad de balas del usuari
     nave_t * usuario = naveUsr;
     unsigned int balasActuales = counterBala(naveUsr -> listaBalasUsr);
-    if(balasActuales < naveUsr.maxBullets){
+    if(balasActuales < naveUsr -> maxBullets){
         naveUsr -> listaBalasUsr = addObj(naveUsr -> listaBalasUsr, naveUsr -> pos, BALA_USUARIO, 1);
         return 0;
     }
@@ -22,7 +22,7 @@ int shootBalaUsr(nave_t * naveUsr){
 }
 
 object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting,){
-    unsigned int balasActuales = countList(listaBalas);
+    int balasActuales = countList(listaBalas);
     int balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
     object_t * nave = listaNaves;
     object_t * bala = listaBalas;
@@ -33,14 +33,19 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
         switch(nave -> type){
             case DANIEL:
                 probabilidad = levelSetting->shootProbDani;
+                tipoNave = BALA_DANIEL;
             case PABLO:
                 probabilidad = levelSetting->shootProbPablo;
+                tipoNave = BALA_PABLO;
             case NICOLAS:
                 probabilidad = levelSetting->shootProbNico;
+                tipoNave = BALA_NICOLAS;
         }
         if((rand()%100) >= probabilidad){
-            bala = addObj(listaBalas, nave.pos+levelSetting->centerNaveOffset,);
+            bala = addObj(listaBalas, nave->pos + levelSetting->centerNaveOffset,tipoNave);
+            balasDisponibles--;
         }
+        nave = nave -> next;
     }
 }
 
