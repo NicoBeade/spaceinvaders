@@ -20,7 +20,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-
  void* updateInputGame(void* argUpdateInputGame){
 
     int velUsuario = 50;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 

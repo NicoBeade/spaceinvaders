@@ -7,7 +7,7 @@
 #include "utilidades.h"
 
 int timerTick = 1000000;
-
+int velInput = 1;
 int main(void){
 
     object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
