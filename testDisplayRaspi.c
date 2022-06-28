@@ -79,7 +79,7 @@ int main (void){
 
     pthread_t TmoveAliens, TdisplayRaspi;
 
-    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
+     argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
 
     pthread_create(&TdisplayRaspi, NULL, displayRPI, &argumentosDisplayRPI);
 

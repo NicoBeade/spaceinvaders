@@ -55,6 +55,7 @@ typedef struct{
     int yMax;               //-YMin: coordenada minima en Y alcanzable.
     int saltoX;             //-saltoX: distancia entre naves en x
     int saltoY;             //-saltoy: distancia entre naves en y (linea)
+    int maxEnemyBullets;    //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
     int distInicialX;       //-distInicialX: coordenada en X de la nave del centro de la primera fila
     int distInicialY;       //-distInicialY: coordenada en Y de la nave del centro de la primera fila
     int initUsrLives;       //-initUsrLives: Vidas del usuario en ese nivel
