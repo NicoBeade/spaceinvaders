@@ -108,7 +108,8 @@ int main (void){
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
 
-    sem_destroy(&semaforo);
+    sem_destroy(&semaforo1);
+    sem_destroy(&semaforo2);
 
     removeAlienList(listAliens);
 
