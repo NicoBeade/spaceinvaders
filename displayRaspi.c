@@ -153,11 +153,11 @@ void* displayRPI (void* argDisplayRPI){
                         }
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
-                }
-                aliens=aux;
+                }    
                 printf("se termino de imprimir el alien\n");
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
+            aliens=aux;
             printf("se imprimieron todos los aliens de la lista\n");
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
