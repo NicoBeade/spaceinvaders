@@ -48,23 +48,7 @@ typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
 }argMoveAlien_t;
 
 
-typedef struct{
-    int xMin;               //-xMax: coordenada maxima en x alcanzable.
-    int xMax;               //-xMin: coordenada minima en x alcanzable.
-    int yMin;               //-YMax: coordenada maxima en Y alcanzable.
-    int yMax;               //-YMin: coordenada minima en Y alcanzable.
-    int saltoX;             //-saltoX: distancia entre naves en x
-    int saltoY;             //-saltoy: distancia entre naves en y (linea)
-    int maxEnemyBullets;    //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
-    int distInicialX;       //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;       //-distInicialY: coordenada en Y de la nave del centro de la primera fila
-    int initUsrLives;       //-initUsrLives: Vidas del usuario en ese nivel
-    int initDanielLives;    //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
-    int initPabloLives;     //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
-    int initNicolasLives;   //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    //ESPACIO PARA BARRERAS
-    //AAA BARRERAS
-}level_setting_t;
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -100,7 +84,6 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
 void * moveAlien(void* alien);                                                                                                 //Se encarga de modificar la posicion de los aliens.
-static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
 int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);                                   //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
