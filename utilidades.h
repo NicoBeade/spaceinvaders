@@ -66,7 +66,7 @@ typedef struct{
     int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
     int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
     int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    vector_t centerNaveOffset   //-centerOffset: distancia de offset desde la esquina superior izq de la nave hasta el centro
+    vector_t centerNaveOffset;  //-centerOffset: distancia de offset desde la esquina superior izq de la nave hasta el centro
     //ESPACIO PARA BARRERAS
     //AAA BARRERAS
 }level_setting_t;
