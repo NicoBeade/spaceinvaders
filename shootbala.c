@@ -28,6 +28,7 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
     object_t * bala = listaBalas;
     srand(time(NULL));
     int probabilidad;
+    int tipoNave;
     while(balasDisponibles > 0 && nave != NULL){
         switch(nave -> type){
             case DANIEL:
@@ -38,7 +39,7 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
                 probabilidad = levelSetting->shootProbNico;
         }
         if((rand()%100) >= probabilidad){
-            bala = addObj(listaBalas, nave.pos+levelSetting,);
+            bala = addObj(listaBalas, nave.pos+levelSetting->centerNaveOffset,);
         }
     }
 }
