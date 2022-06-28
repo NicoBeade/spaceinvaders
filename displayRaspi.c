@@ -109,18 +109,19 @@ void* displayRPI (void* argDisplayRPI){
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
     disp_init();
     printf("se inicializo el display\n");
+    dcoord_t punto={0,0}; //punto del display a escribir
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             pthread_mutex_lock(&mutex);
-            disp_clear(); //limpio el buffer
-            dcoord_t punto; //punto del display a escribir
-
+            disp_clear(); //limpio el buffer            
+            disp_write(punto,D_ON);
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
                 printf("entro al while\n");
+                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
                 printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
