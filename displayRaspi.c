@@ -72,13 +72,13 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
                 pAux.x = p.x+i;
                 pAux.y = p.y+j;
                 if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
-                disp_write(pAux,D_ON); //Actualiza el buffer
-                printf("se imprimio un led\n");
-                disp_update();
-                usleep(1000*1000);
+                disp_write(pAux,D_ON); //Actualiza el buffer          
             }
         }
     }
+    printf("se imprimio un alien\n");
+    disp_update();
+    usleep(1000*1000);
 }
 
 void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
@@ -109,23 +109,21 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-    dcoord_t punto={0,0}; //punto del display a escribir
+    dcoord_t punto; //punto del display a escribir
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             pthread_mutex_lock(&mutex);
             disp_clear(); //limpio el buffer            
-            disp_write(punto,D_ON);
-            disp_update();
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
                 printf("entro al while\n");
-                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
+                printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
-                printf("x: %d ; y: %d", aliens->pos.x, aliens->pos.y);
+                printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
                 if (punto.x>15||punto.y>15){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
