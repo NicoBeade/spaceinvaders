@@ -183,7 +183,8 @@ void * moveAlien(void* argMoveAlien){
 
             direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> alien, ((argMoveAlien_t*)argMoveAlien) -> xMax,
                                           ((argMoveAlien_t*)argMoveAlien) -> margenX, ((argMoveAlien_t*)argMoveAlien) -> yMax,
-                                          ((argMoveAlien_t*)argMoveAlien) -> margenY); //Modifica la variable de direccion en funcion al estado actual de la direccion
+                                          ((argMoveAlien_t*)argMoveAlien) -> margenY, ((argMoveAlien_t*)argMoveAlien) -> tamAlienX); 
+                                          //Modifica la variable de direccion en funcion al estado actual de la direccion
 
             switch (direccion){//Primero detecta en que sentido debemos mover las naves.
                 case IZQUIERDA:
@@ -206,19 +207,9 @@ void * moveAlien(void* argMoveAlien){
 
                 auxiliar->pos.x += vx;//Modifica su posicion en x e y
                 auxiliar->pos.y += vy;
-
+                auxiliar->animationStatus++;
                 auxiliar = auxiliar -> next;
             }
-        //************************************* Esta seccion del codigo se usa para probar que funcionen las listas *****************************
-            i = 1;
-            prueba = ((argMoveAlien_t*)argMoveAlien) -> alien;
-            while(prueba != NULL){
-                printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
-                i++;
-                prueba = prueba -> next;
-            }
-
-        //****************************************************************************************************************************************
             
         }
     }
@@ -226,7 +217,7 @@ void * moveAlien(void* argMoveAlien){
 }
 //*************************************************************************************************************************************
 
-static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY){
+static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
     esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
@@ -242,7 +233,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
     switch(direccion){
         
         case DERECHA: //Si se viene moviendo para la derecha
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY) == DERECHA){ //y toca el borde derecho
+            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -251,7 +242,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
             break;
 
         case IZQUIERDA: //Si se viene moviendo para la izquierda
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY) == IZQUIERDA){ //y toca el borde izquierdo
+            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == IZQUIERDA){ //y toca el borde izquierdo
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -260,10 +251,10 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY) == ABAJO){ //Si algun alien toca el suelo, el jugador pierde la partida
-                vidas = 0;
+            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == ABAJO){ //Si algun alien toca el suelo, el jugador pierde la partida
+                alien -> lives = 0;
             }
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
+            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
                 return IZQUIERDA;
             }
             else {
@@ -277,7 +268,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
     return 0;
 }
 
-int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY){
+int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
 /* Esta funcion detecta si alguna de las naves toco algun borde, teniendo en cuenta todas las posibles combinaciones.
     Devuelve que borde fue tocado. Recibe como parametros:
         -alien: puntero al primer elemento de la lista de los aliens.
@@ -291,7 +282,7 @@ int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY){
         if (alien->pos.x <= 0 + margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x >= xMax - margenX){ //deteccion borde derecho
+        else if (alien->pos.x >= xMax - margenX - tamAlienX){ //deteccion borde derecho
             printf("Llego al borde");
             borde = DERECHA;
         }

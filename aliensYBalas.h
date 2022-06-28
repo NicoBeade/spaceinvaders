@@ -44,6 +44,7 @@ typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
     int margenX;//Margen maxiom al que pueden llegar las naves respecto del borde del display.
     int yMax;
     int margenY;
+    int tamAlienX;//Hitbox del alien en la coordenada X.
 }argMoveAlien_t;
 
 
@@ -94,12 +95,12 @@ typedef struct{
  ******************************************************************************************************************************************/
 
 object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setLives);   //Agrega un objeto a la lista
-object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...) //Inicializa la lista completa de aliens usando addObj.
+object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
-void * moveAlien(void* alien);                                                                                  //Se encarga de modificar la posicion de los aliens.
-static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY);    //Detecta en que direccion se debe mover a los aliens.
-int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY);                                   //Detecta si algun alien esta tocando un borde
+void * moveAlien(void* alien);                                                                                                 //Se encarga de modificar la posicion de los aliens.
+static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
+int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);                                   //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -134,11 +135,10 @@ extern int timerTick;   //Variable del timer utilizada para saber cuando se debe
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
                                                                         Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
 
-extern int vidas;       //Indica las vidas restantes del usuario.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
 
  #endif//aliensYBalas.h
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
-object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity)
+object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity);

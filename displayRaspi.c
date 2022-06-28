@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "utilidades.h"
 #include <pthread.h>
-
+#include "displayRaspi.h"
 
 /*
  Se usaran los siguientes recursos de la libreria del display
@@ -30,61 +30,6 @@
 */ //Ejemplo de main 
 
 /*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-/*******************************************************************************************************************************************
- * 
-                                 _____   _                          _           ___           _              
-                                |_   _| (_)  _ __   ___   ___    __| |  ___    |   \   __ _  | |_   ___   ___
-                                  | |   | | | '_ \ / _ \ (_-<   / _` | / -_)   | |) | / _` | |  _| / _ \ (_-<
-                                  |_|   |_| | .__/ \___/ /__/   \__,_| \___|   |___/  \__,_|  \__| \___/ /__/
-                                            |_|                                                          
- * 
- ******************************************************************************************************************************************/
-
-typedef uint8_t enemy_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
-typedef struct{
-    char animationStatus;
-    object_t* balas;
-    object_t* aliens;
-    //faltan los punteros a barreras y user
-}argDisplayRPI_t;
-
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-/*******************************************************************************************************************************************
- * 
-                                             ___         _                           
-                                            | __| __ __ | |_   ___   _ _   _ _    ___
-                                            | _|  \ \ / |  _| / -_) | '_| | ' \  (_-<
-                                            |___| /_\_\  \__| \___| |_|   |_||_| /__/                                                                                                                      
- * 
- ******************************************************************************************************************************************/
-
-extern int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
-
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-/*******************************************************************************************************************************************
- * 
-                                 ___               _           _     _                   
-                                | _ \  _ _   ___  | |_   ___  | |_  (_)  _ __   ___   ___
-                                |  _/ | '_| / _ \ |  _| / _ \ |  _| | | | '_ \ / _ \ (_-<
-                                |_|   |_|   \___/  \__| \___/  \__| |_| | .__/ \___/ /__/
-                                                                        |_|                                                            
- * 
- ******************************************************************************************************************************************/
-
-void drawEnemy(dcoord_t, enemy_t); //prototipos  de dibujar y limpiar enemigos
-void cleanEnemy(dcoord_t);
-void* displayRPI (void* argDisplayRPI);
-
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-/*******************************************************************************************************************************************
  * 
                                      ___                     _                   _              
                                     / __|  ___   _ _    ___ | |_   __ _   _ _   | |_   ___   ___
@@ -93,7 +38,7 @@ void* displayRPI (void* argDisplayRPI);
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 100
+#define FRAMERATE 4 //tasa de refresco del display
 
 enemy_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 enemy_t daniel2 = {{1,1,1},{1,0,1}};
@@ -161,11 +106,12 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 void* displayRPI (void* argDisplayRPI){
     object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-    char animationStatus = ((argDisplayRPI_t*)argDisplayRPI)->animationStatus; //Estado de la animacion, necesito saber si es par o impar
+
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
+
             disp_clear(); //limpio el buffer
             dcoord_t punto; //punto del display a escribir
 
@@ -177,7 +123,7 @@ void* displayRPI (void* argDisplayRPI){
                 if (punto.x>15||punto.y>15)printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 switch(aliens->type){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
                     case DANIEL:
-                        if (animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
+                        if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
                             drawEnemy(punto,daniel1);
                         }
                         else{
@@ -185,7 +131,7 @@ void* displayRPI (void* argDisplayRPI){
                         }
                         break;
                     case NICOLAS:
-                        if (animationStatus%2){
+                        if (aliens->animationStatus%2){
                             drawEnemy(punto,nicolas1);
                         }
                         else{
@@ -193,7 +139,7 @@ void* displayRPI (void* argDisplayRPI){
                         }
                         break;
                     case PABLO:
-                        if (animationStatus%2){
+                        if (aliens->animationStatus%2){
                             drawEnemy(punto,nicolas1);
                         }
                         else{
@@ -204,13 +150,13 @@ void* displayRPI (void* argDisplayRPI){
                 }
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
-            while (balas!=NULL){ //mientras no se haya llegado al final de la lista
+           /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
                 punto.y=balas->pos.y;
                 if (punto.x>15||punto.y>15)printf("Fuera de rango de impresion en la bala/n"); //chequeo de pixel a imprimir
                 disp_write(punto,  D_ON); //como las balas son pixeles, se imprime el pixel donde se encuentra la bala
                 balas=balas->next; //se pasa a la siguiente bala de la lista
-            }
+            }*/
             disp_update(); //se transfiere del buffer al display de la RPI
         }
     }
