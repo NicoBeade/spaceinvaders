@@ -173,8 +173,7 @@ void * moveAlien(void* argMoveAlien){
 */
     int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
-    int i;
-    object_t* prueba;
+
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
