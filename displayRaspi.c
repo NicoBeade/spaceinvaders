@@ -158,7 +158,7 @@ void* displayRPI (void* argDisplayRPI){
                 printf("se termino de imprimir el alien\n");
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
-            printf("se imprimieron todos los aliens de la lista");
+            printf("se imprimieron todos los aliens de la lista\n");
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
                 punto.y=balas->pos.y;

@@ -193,6 +193,7 @@ void * moveAlien(void* argMoveAlien){
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
+            printf("Movealiens\n");
             pthread_mutex_lock(&mutex);
             printf("timerTick = %d", timerTick);
 
