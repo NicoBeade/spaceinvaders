@@ -76,9 +76,7 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
             }
         }
     }
-    printf("se imprimio un alien\n");
     disp_update();
-    usleep(1000*1000);
 }
 
 void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
@@ -88,7 +86,9 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
         for(j=0 ; j<=1 ; j++){
             pAux.x = p.x+i; 
             pAux.y = p.y+j;
-            if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
+            if(pAux.x>15||pAux.y>15){
+            printf("Fuera de ranfo de impresion en algun pixel de la nave");
+            }
             disp_write(pAux ,D_OFF); //Actualiza el buffer
             disp_update();
         }
@@ -147,10 +147,10 @@ void* displayRPI (void* argDisplayRPI){
                         break;
                     case PABLO:
                         if (aliens->animationStatus%2){
-                            drawEnemy(punto,nicolas1);
+                            drawEnemy(punto,pablo1);
                         }
                         else{
-                            drawEnemy(punto,nicolas2);
+                            drawEnemy(punto,pablo2);
                         }
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
@@ -158,6 +158,7 @@ void* displayRPI (void* argDisplayRPI){
                 printf("se termino de imprimir el alien\n");
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
+            printf("se imprimieron todos los aliens de la lista");
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
                 punto.y=balas->pos.y;
@@ -167,6 +168,7 @@ void* displayRPI (void* argDisplayRPI){
             }*/
             disp_update(); //se transfiere del buffer al display de la RPI
             pthread_mutex_unlock(&mutex);
+            printf("Se salio del mutex\n");
         }
     }
     pthread_exit(0);
