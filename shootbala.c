@@ -27,7 +27,9 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
     object_t * nave = listaNaves;
     srand(time(NULL));
     while(balasDisponibles > 0 && nave != NULL){
-        if((rand()%100))
+        if((rand()%100) >= levelSetting.shootprobability;){
+
+        }
     }
 }
 
