@@ -23,11 +23,14 @@ int shootBalaUsr(nave_t * naveUsr){
 
 object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting,){
     unsigned int balasActuales = counterBala(listaBalas);
-    int balasDisponibles = levelSetting.maxEnemyBullets - balasActuales;
+    int balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
     object_t * nave = listaNaves;
     object_t * bala = listaBalas;
     srand(time(NULL));
     while(balasDisponibles > 0 && nave != NULL){
+        switch(nave -> type){
+            
+        }
         if((rand()%100) >= levelSetting.shootProbability;){
             bala = addObj(listaBalas, nave.pos,);
         }

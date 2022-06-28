@@ -57,7 +57,9 @@ typedef struct{
     int saltoX;             //-saltoX: distancia entre naves en x
     int saltoY;             //-saltoy: distancia entre naves en y (linea)
     int maxEnemyBullets;    //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
-    int shootProbability;   //-shootProbability: probabilidad de disparo de naves enemigas en cada tick en procentaje
+    int shootProbDani;      //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
+    int shootProbPablo;     //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
+    int shootProbNico;      //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
     int distInicialX;       //-distInicialX: coordenada en X de la nave del centro de la primera fila
     int distInicialY;       //-distInicialY: coordenada en Y de la nave del centro de la primera fila
     int initUsrLives;       //-initUsrLives: Vidas del usuario en ese nivel
