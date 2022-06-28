@@ -73,6 +73,7 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
                 pAux.y = p.y+j;
                 if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
                 disp_write(pAux,D_ON); //Actualiza el buffer
+                usleep(1000*1000);
             }
         }
     }
