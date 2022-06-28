@@ -103,7 +103,7 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 
 
 void* displayRPI (void* argDisplayRPI){
-    object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
+    //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
 
     while(1){

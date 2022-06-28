@@ -6,7 +6,8 @@
 #include <stdarg.h>
 #include "aliensYBalas.h"
 #include "utilidades.h"
-
+#include "stdlib.h"
+#include "time.h"
 int shootBalaUsr(nave_t * naveUsr){
     //Se cuenta la cantidad de balas del usuari
     nave_t * usuario = naveUsr;
@@ -22,9 +23,11 @@ int shootBalaUsr(nave_t * naveUsr){
 
 object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting,){
     unsigned int balasActuales = counterBala(listaBalas);
-    object_t * listaNavesAux = listaNaves;
-    if(balasActuales < levelSetting->maxEnemyBullets){
-        
+    int balasDisponibles = levelSetting.maxEnemyBullets - balasActuales;
+    object_t * nave = listaNaves;
+    srand(time(NULL));
+    while(balasDisponibles > 0 && nave != NULL){
+        if((rand()%100))
     }
 }
 

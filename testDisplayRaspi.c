@@ -6,7 +6,6 @@
 #include <stdarg.h>
 #include "aliensYBalas.h"
 #include "utilidades.h"
-#include "aliensYBalas.h"
 #include "displayRaspi.h"
 
 
@@ -76,15 +75,21 @@ int main (void){
 
     char filas[] = "444";
 
+    printf("Anashe\n");
+
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
 
     pthread_t TmoveAliens, TdisplayRaspi;
 
-     argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
+    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
+
+    printf("Anashe 1\n");
 
     pthread_create(&TdisplayRaspi, NULL, displayRPI, &argumentosDisplayRPI);
 
     pthread_create(&TmoveAliens, NULL, moveAlien, &argMoveAlien);
+
+    printf("Anashe 2\n");
 
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
