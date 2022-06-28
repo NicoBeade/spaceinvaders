@@ -31,6 +31,7 @@
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velInput) == 0 ){
 
+            joy_update();
             coordJoy = joy_get_coord();
             printf("Joystick coord: %d", coordJoy.x);
 

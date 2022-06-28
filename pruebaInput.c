@@ -5,6 +5,7 @@
 #include "inputRaspi.h"
 #include <unistd.h>
 #include "utilidades.h"
+#include "joydrv.h"
 
 int timerTick = 1000000;
 int velInput = 1;
