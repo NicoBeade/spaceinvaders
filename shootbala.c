@@ -22,7 +22,7 @@ int shootBalaUsr(nave_t * naveUsr){
 
 object_t * shootBalaEnemy(object_t listaNaves, object_t listaBalas, level_setting_t * levelSetting,){
     unsigned int balasActuales = counterBala(listaBalas);
-    
+
 }
 
 unsigned int counterBala(object_t listaBalas){  //Cuenta la cantidad de balas de una lista de balas
