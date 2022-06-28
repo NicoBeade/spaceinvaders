@@ -22,9 +22,8 @@ int main(void){
     pthread_create(&TupdateInputGame, NULL, updateInputGame, &updateInput);
 
     while(1){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
 
-        printf("x: %d ; y: %d", naveUsuario -> pos.x, naveUsuario -> pos.y);
+        printf("x: %d\n", naveUsuario -> pos.x);
     }
 
     pthread_join(TupdateInputGame, NULL);

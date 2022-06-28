@@ -32,7 +32,7 @@
 
             coordJoy = joy_get_coord();
 
-            if( (coordJoy.x >= JOY_ACTIVE_NEG) && (coordJoy.x <= JOY_ACTIVE_POS) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
+            if( ((coordJoy.x <= JOY_ACTIVE_NEG) || (coordJoy.x >= JOY_ACTIVE_POS)) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
                 
                 if( !((  ( coordJoy.x <= JOY_ACTIVE_NEG ) && ( NAVE_USUARIO_X == 0 )  ) || (  ( coordJoy.x >= JOY_ACTIVE_POS ) && ( NAVE_USUARIO_X == X_MAX - TAM_X_NAVE)  )) ){
                     //Chequea que no se vaya fuera del limite.
