@@ -5,10 +5,13 @@
 #include "inputRaspi.h"
 #include <unistd.h>
 #include "utilidades.h"
+#include "joydrv.h"
 
 int timerTick = 1000000;
-
+int velInput = 1;
 int main(void){
+
+    joy_init();
 
     object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
 
@@ -22,9 +25,8 @@ int main(void){
     pthread_create(&TupdateInputGame, NULL, updateInputGame, &updateInput);
 
     while(1){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-
-        printf("x: %d ; y: %d", naveUsuario -> pos.x, naveUsuario -> pos.y);
+        usleep(10 * U_SEC2M_SEC);
+        printf("x: %d\n", naveUsuario -> pos.x);
     }
 
     pthread_join(TupdateInputGame, NULL);

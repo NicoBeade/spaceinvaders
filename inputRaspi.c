@@ -14,12 +14,12 @@
 *   la raspberry.
  **********************************************************************************************************************************************************/
 
-#include <joydrv.h>
+#include <stdio.h>
+#include "joydrv.h"
 #include "utilidades.h"
 #include "inputRaspi.h"
 #include <pthread.h>
 #include <unistd.h>
-
 
  void* updateInputGame(void* argUpdateInputGame){
 
@@ -31,9 +31,11 @@
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velInput) == 0 ){
 
+            joy_update();
             coordJoy = joy_get_coord();
+            printf("Joystick coord: %d", coordJoy.x);
 
-            if( (coordJoy.x >= JOY_ACTIVE_NEG) && (coordJoy.x <= JOY_ACTIVE_POS) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
+            if( ((coordJoy.x <= JOY_ACTIVE_NEG) || (coordJoy.x >= JOY_ACTIVE_POS)) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
                 
                 if( !((  ( coordJoy.x <= JOY_ACTIVE_NEG ) && ( NAVE_USUARIO_X == 0 )  ) || (  ( coordJoy.x >= JOY_ACTIVE_POS ) && ( NAVE_USUARIO_X == X_MAX - TAM_X_NAVE)  )) ){
                     //Chequea que no se vaya fuera del limite.

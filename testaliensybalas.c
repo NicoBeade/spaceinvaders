@@ -130,12 +130,13 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
                         default:                                            //Si el tipo de nave no es valido se genera un error
                             return NULL;
                     }
+                int dirRelleno; //Si el proximo alien es un un numero par (Segundo, cuarto...) lo pone en la izquierda (-1)
+                //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
                 for(col = 0; col < ASCII2HEXA(string[letra]); col++){       //Recorre toda la fila
                     newList = addObj(newList, alienPos, tipoActual, vidaActual);
-                    int dirRelleno = (col%2) ? -1 : 1; //Si el proximo alien es un un numero par (Segundo, cuarto...) lo pone en la izquierda (-1)
-                    //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
-                    alienPos.x += (levelSetting -> saltoX)*dirRelleno*((col/2)+1) ;//Se desplaza en X. dirRelleno indica el lado para el que se va a mover y 
-                                        //col/2 +1 es un multiplicador que realiza la cuenta de separacion de los aliens respecto al centro
+                    dirRelleno = (col%2) ? 1 : -1;
+                    alienPos.x += (levelSetting -> saltoX)*dirRelleno*(col+1) ;//Se desplaza en X. dirRelleno indica el lado para el que se va a mover y 
+                                                        //col +1 es un multiplicador que realiza la cuenta de separacion de los aliens respecto al centro
                 }
                 alienPos.x = levelSetting -> distInicialX;//Reinicia el desplazamiento en X
             }
@@ -147,7 +148,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
     else{
         return NULL;
     }
-}   
+}  
 
 
 void removeAlienList(object_t* listAlien){
