@@ -8,8 +8,7 @@
 #include "utilidades.h"
 
 int shootBalaUsr(nave_t * naveUsr){
-    //Se cuenta la cantidad de balas del usuario
-    int canShoot;
+    //Se cuenta la cantidad de balas del usuari
     object_t * listaBalasAux = naveUsr -> listaBalasUsr;
     nave_t * usuario = naveUsr;
     int balasActuales = 0;
@@ -19,6 +18,14 @@ int shootBalaUsr(nave_t * naveUsr){
     }
     if(balasActuales < maxBullets){
         naveUsr -> listaBalasUsr = addObj(naveUsr -> listaBalasUsr, naveUsr -> pos, BALA_USUARIO, 1);
+        return 0;
     }
+    else{
+        return -1;
+    }
+}
+
+object_t * shootBalaEnemy(object_t listaNaves, object_t listaBalas){
+
 }
 
