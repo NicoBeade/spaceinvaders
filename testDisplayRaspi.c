@@ -8,7 +8,7 @@
 #include "utilidades.h"
 #include "aliensYBalas.h"
 #include "displayRaspi.h"
-#include <stdint.h>
+
 
 int velAliens = 50;
 

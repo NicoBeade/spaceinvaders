@@ -1,6 +1,4 @@
 #include <stdint.h>
-#include "disdrv.h"
-#include "termlib.h"
 #include <unistd.h>
 #include "utilidades.h"
 #include <pthread.h>

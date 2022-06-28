@@ -1,6 +1,8 @@
 #ifndef DISPLAY_RASPI_H
 #define DISPLAY_RASPI_H
-
+#include <stdint.h>
+#include "disdrv.h"
+#include "termlib.h"
 
 /*******************************************************************************************************************************************
  * 
