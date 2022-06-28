@@ -194,7 +194,8 @@ void * moveAlien(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             printf("Movealiens\n");
-            sem_wait(&semaforo);
+            sem_wait(&semaforo2);
+            sem_trywait(&semaforo1);
             printf("timerTick = %d", timerTick);
 
             direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> alien, ((argMoveAlien_t*)argMoveAlien) -> xMax,
@@ -226,7 +227,7 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar->animationStatus++;
                 auxiliar = auxiliar -> next;
             }
-        sem_post(&semaforo);
+        sem_post(&semaforo1);
         }
     }
     pthread_exit(0);

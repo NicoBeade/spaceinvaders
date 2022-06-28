@@ -9,7 +9,7 @@
 #include "displayRaspi.h"
 #include <semaphore.h>
 
-sem_t semaforo;
+sem_t semaforo1, semaforo2;
 
 int velAliens = 50;
 unsigned int timerTick = 1000000;
@@ -93,7 +93,8 @@ int main (void){
 
     printf("Anashe 1\n");
 
-    sem_init(&semaforo, 1, 1);
+    sem_init(&semaforo1, 1, 1);
+    sem_init(&semaforo2, 1, 0);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
 
@@ -106,6 +107,8 @@ int main (void){
     pthread_join(Ttimer, NULL);
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
+
+    sem_destroy(&semaforo);
 
     removeAlienList(listAliens);
 

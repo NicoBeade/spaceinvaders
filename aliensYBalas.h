@@ -120,7 +120,8 @@ int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
                                                                         Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
-extern sem_t semaforo;
+extern sem_t semaforo1;
+extern sem_t semaforo2;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
