@@ -22,7 +22,7 @@ int main(void){
     pthread_create(&TupdateInputGame, NULL, updateInputGame, &updateInput);
 
     while(1){
-
+        usleep(10 * U_SEC2M_SEC);
         printf("x: %d\n", naveUsuario -> pos.x);
     }
 
