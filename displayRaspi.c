@@ -154,6 +154,7 @@ void* displayRPI (void* argDisplayRPI){
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
                 }
+                printf("se termino de imprimir el alien\n");
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
