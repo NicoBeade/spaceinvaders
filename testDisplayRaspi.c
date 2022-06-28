@@ -37,7 +37,7 @@ void * timer(){
 
 
 int main (void){
-    disp_init();
+    
     object_t * listAliens = NULL;
 
     level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 1, 1, 3, 1, 1, 1};

@@ -105,13 +105,15 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-
+    disp_init();
+    printf("se inicializo el display\n");
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
-
+            printf("entro al thread de display\n");
             disp_clear(); //limpio el buffer
+            printf("se limpio el buffer del display\n");
             dcoord_t punto; //punto del display a escribir
 
             //Actualizo el buffer con la nueva posicion de los aliens
