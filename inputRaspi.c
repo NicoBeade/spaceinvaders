@@ -14,7 +14,7 @@
 *   la raspberry.
  **********************************************************************************************************************************************************/
 
-#include <joydrv.h>
+#include "joydrv.h"
 #include "utilidades.h"
 #include "inputRaspi.h"
 #include <pthread.h>
