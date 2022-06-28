@@ -116,6 +116,7 @@ void* displayRPI (void* argDisplayRPI){
             disp_clear(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
+            object_t* aux = aliens;
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
                 printf("entro al while\n");
                 printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
@@ -153,6 +154,7 @@ void* displayRPI (void* argDisplayRPI){
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
                 }
+                aliens=aux;
                 printf("se termino de imprimir el alien\n");
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
