@@ -42,11 +42,12 @@ object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_se
                 tipoNave = BALA_NICOLAS;
         }
         if((rand()%100) >= probabilidad){
-            bala = addObj(listaBalas, nave->pos + levelSetting->centerNaveOffset,tipoNave);
+            bala = addObj(bala, nave->pos + levelSetting->centerNaveOffset,tipoNave);
             balasDisponibles--;
         }
         nave = nave -> next;
     }
+    return bala;
 }
 
 unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
@@ -69,3 +70,4 @@ unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una 
 //}object_t;
 
 
+object_t initBarreras(int cantBarreras)

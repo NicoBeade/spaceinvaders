@@ -93,7 +93,7 @@ int main (void){
 
     printf("Anashe 1\n");
 
-    sem_init(&semaforo, 0, 1);
+    sem_init(&semaforo, 1, 1);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
 

@@ -368,4 +368,3 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
     }
     return Obj;             //Se devuelve la lista
 }
-
