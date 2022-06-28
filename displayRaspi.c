@@ -111,6 +111,7 @@ void* displayRPI (void* argDisplayRPI){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
+            pthread_mutex_lock(&mutex);
             disp_clear(); //limpio el buffer
             dcoord_t punto; //punto del display a escribir
 
@@ -162,6 +163,7 @@ void* displayRPI (void* argDisplayRPI){
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
             disp_update(); //se transfiere del buffer al display de la RPI
+            pthread_mutex_unlock(&mutex);
         }
     }
     pthread_exit(0);

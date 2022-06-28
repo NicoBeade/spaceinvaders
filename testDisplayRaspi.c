@@ -8,6 +8,7 @@
 #include "utilidades.h"
 #include "displayRaspi.h"
 
+pthread_mutex_t mutex;
 
 int velAliens = 50;
 unsigned int timerTick = 1000000;
@@ -89,6 +90,8 @@ int main (void){
     argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
 
     printf("Anashe 1\n");
+
+    pthread_mutex_init(&mutex, NULL);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
 

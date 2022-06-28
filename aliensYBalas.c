@@ -193,7 +193,7 @@ void * moveAlien(void* argMoveAlien){
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
-
+            pthread_mutex_lock(&mutex);
             printf("timerT   ick = %d", timerTick);
 
             direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> alien, ((argMoveAlien_t*)argMoveAlien) -> xMax,
@@ -225,7 +225,7 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar->animationStatus++;
                 auxiliar = auxiliar -> next;
             }
-            
+        pthread_mutex_unlock(&mutex);  
         }
     }
     pthread_exit(0);
