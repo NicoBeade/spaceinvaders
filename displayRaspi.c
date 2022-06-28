@@ -76,7 +76,6 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
             }
         }
     }
-    disp_update();
 }
 
 void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
@@ -90,7 +89,6 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
             printf("Fuera de ranfo de impresion en algun pixel de la nave");
             }
             disp_write(pAux ,D_OFF); //Actualiza el buffer
-            disp_update();
         }
     }
 }
@@ -114,7 +112,7 @@ void* displayRPI (void* argDisplayRPI){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
-            pthread_mutex_lock(&mutex);
+            sem_wait(&semaforo);
             disp_clear(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
@@ -167,7 +165,7 @@ void* displayRPI (void* argDisplayRPI){
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
             disp_update(); //se transfiere del buffer al display de la RPI
-            pthread_mutex_unlock(&mutex);
+            sem_post(&semaforo);
             printf("Se salio del mutex\n");
         }
     }

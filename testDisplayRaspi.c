@@ -7,8 +7,9 @@
 #include "aliensYBalas.h"
 #include "utilidades.h"
 #include "displayRaspi.h"
+#include <semaphore.h>
 
-pthread_mutex_t mutex;
+sem_t semaforo;
 
 int velAliens = 50;
 unsigned int timerTick = 1000000;
@@ -92,7 +93,7 @@ int main (void){
 
     printf("Anashe 1\n");
 
-    pthread_mutex_init(&mutex, NULL);
+    sem_init(&semaforo, 0, 1);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
 
