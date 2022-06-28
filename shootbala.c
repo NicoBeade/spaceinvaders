@@ -29,3 +29,9 @@ object_t * shootBalaEnemy(object_t listaNaves, object_t listaBalas){
 
 }
 
+unsigned int counterBala(){
+    while(listaBalasAux != NULL){
+        balasActuales++;
+        listaBalasAux = listaBalasAux -> next;
+    }
+}
