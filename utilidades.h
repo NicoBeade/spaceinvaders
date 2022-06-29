@@ -36,18 +36,9 @@ typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se
     vector_t pos;//Posicion en x e y
     types_t type;//Tipo de objeto y categoria dentro del tipo
     int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
-    int ancho;//Ancho del box del objeto
-    int alto;//Alto del box del objeto
     char animationStatus;//Estado de la animacion de cada nave, puede ser distinto para cada nave
     struct OBJECT * next;//Puntero al siguiente objeto de la lista.
 }object_t;
-
-typedef struct {//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
-    vector_t pos;//Posicion en x e y
-    types_t type;//Tipo de objeto y categoria dentro del tipo
-    unsigned char maxBullets;//Cantidad maxima de balas
-    object_t * listaBalasUsr;
-}nave_t;
 
 //DANIEL tiene 1 vida, PABLO 2 vidas y NICOLAS 3 vidas.
 

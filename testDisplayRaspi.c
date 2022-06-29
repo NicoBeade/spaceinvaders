@@ -8,11 +8,14 @@
 #include "utilidades.h"
 #include "displayRaspi.h"
 #include <semaphore.h>
+#include "inputRaspi.h"
+#include "joydrv.h"
 
 sem_t semaforo;
 
-int velAliens = 50;
+int velAliens = 200;
 unsigned int timerTick = 1000000;
+int velInput = 1;
 
 /*******************************************************************************************************************************************
  * 
@@ -40,8 +43,23 @@ void * timer(){
 
 int main (void){
     disp_init();
+    joy_init();
     printf("se inicializo el display\n");
     object_t * listAliens = NULL;
+
+    object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
+
+    if(naveUsuario == NULL){\
+        printf("no se pudo crear al usuario por malloc \n");
+    }
+
+    naveUsuario -> pos.x = 6;   //Inicializa la nave del usuario.
+    naveUsuario -> pos.y = 14;
+    naveUsuario -> type = NAVE;
+    naveUsuario -> lives = 1;
+    naveUsuario -> next = NULL;
+
+    argUpdateInputGame_t updateInput = { naveUsuario, 15, 3, 1 };
 
     level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 6, 1, 3, 1, 1, 1, {1,1}};
 /*
@@ -87,27 +105,25 @@ int main (void){
 
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
 
-    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 1, 15, 1, 3};
+    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 0, 15, 0, 3};
 
-    printf("alienList: %p", listAliens);
+    pthread_t Ttimer, TmoveAliens, TdisplayRaspi, TupdateInputGame;
 
-    pthread_t Ttimer, TmoveAliens, TdisplayRaspi;
-
-    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
+    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens, naveUsuario};
 
     printf("Anashe 1\n");
 
     sem_init(&semaforo, 0, 1);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
-
     pthread_create(&TdisplayRaspi, NULL, displayRPI, &argumentosDisplayRPI);
-
+    pthread_create(&TupdateInputGame, NULL, updateInputGame, &updateInput);
     pthread_create(&TmoveAliens, NULL, moveAlien, &argMoveAlien);
 
     printf("Anashe 2\n");
 
     pthread_join(Ttimer, NULL);
+    pthread_join(TupdateInputGame, NULL);
     pthread_join(TdisplayRaspi, NULL);
     pthread_join(TmoveAliens, NULL);
 

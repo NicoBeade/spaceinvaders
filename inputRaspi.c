@@ -23,21 +23,20 @@
 
  void* updateInputGame(void* argUpdateInputGame){
 
-    int velUsuario = 50;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
+    int velUsuario = 5;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
         cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.*/
     jcoord_t coordJoy;
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velInput) == 0 ){
-	sem_wait(&semaforo);
 
             joy_update();
             coordJoy = joy_get_coord();
 
             if( ((coordJoy.x <= JOY_ACTIVE_NEG) || (coordJoy.x >= JOY_ACTIVE_POS)) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
                 
-                if( !((  ( coordJoy.x <= JOY_ACTIVE_NEG ) && ( NAVE_USUARIO_X == 0 )  ) || (  ( coordJoy.x >= JOY_ACTIVE_POS ) && ( NAVE_USUARIO_X == X_MAX - TAM_X_NAVE)  )) ){
+                if( !((  ( coordJoy.x <= JOY_ACTIVE_NEG ) && ( NAVE_USUARIO_X == 0 )  ) || (  ( coordJoy.x >= JOY_ACTIVE_POS ) && ( NAVE_USUARIO_X == X_MAX - TAM_X_NAVE + 1)  )) ){
                     //Chequea que no se vaya fuera del limite.
 
                     if(coordJoy.x < 0){//Desplaza para la izquierda
@@ -48,7 +47,6 @@
                     }
                 }
             }
-	sem_post(&semaforo);
         }
     }
  }

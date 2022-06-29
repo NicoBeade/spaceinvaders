@@ -18,11 +18,11 @@
     dcoord_t p = {5,5};
     disp_init();
     disp_clear();
-    drawEnemy(p,daniel1);
+    drawSprite(p,daniel1);
     disp_update()
     usleep(500*1000);
     cleanEnemy(p);
-    drawEnemy(p,daniel2);
+    drawSprite(p,daniel2);
     disp_update();
     return 0;
 }
@@ -39,14 +39,16 @@
  ******************************************************************************************************************************************/
 #define FRAMERATE 4 //tasa de refresco del display
 
-enemy_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
-enemy_t daniel2 = {{1,1,1},{1,0,1}};
+sprite_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
+sprite_t daniel2 = {{1,1,1},{1,0,1}};
 
-enemy_t pablo1 ={{1,1,0},{1,0,1}};
-enemy_t pablo2 ={{0,1,1},{1,0,1}};
+sprite_t pablo1 ={{1,1,0},{1,0,1}};
+sprite_t pablo2 ={{0,1,1},{1,0,1}};
 
-enemy_t nicolas1 ={{1,0,1},{0,1,0}};
-enemy_t nicolas2 ={{0,1,0},{1,0,1}};
+sprite_t nicolas1 ={{1,0,1},{0,1,0}};
+sprite_t nicolas2 ={{0,1,0},{1,0,1}};
+
+sprite_t nave = {{0,1,0},{1,1,1}};
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -63,7 +65,7 @@ enemy_t nicolas2 ={{0,1,0},{1,0,1}};
 
 //IMPORTANTE: AL DIBUJAR O LIMPIAR EL DISPLAY HAY QUE LLAMAR A disp_update() Y DEBE HABER SIDO INICIALIZADO CON disp_init()
 
-void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
+void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
     for (i=0 ; i<=2 ; i++){
@@ -78,7 +80,7 @@ void drawEnemy(dcoord_t p, enemy_t alien){ //Esta funcion imprime en display un 
     }
 }
 
-void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
+void cleanSprite(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
     for (i=0 ; i<=2 ; i++){
@@ -119,6 +121,7 @@ void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprit
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
+    object_t* naveUser = ((argDisplayRPI_t*)argDisplayRPI)->naveUser; //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
     while(1){
 
@@ -130,11 +133,10 @@ void* displayRPI (void* argDisplayRPI){
             printf("esta por entrar al while\n");
             object_t* aux = aliens;
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
-                printf("entro al while\n");
-                printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
+
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
-                printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
+
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
@@ -142,36 +144,40 @@ void* displayRPI (void* argDisplayRPI){
                 switch(aliens->type){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
                     case DANIEL:
                         if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
-                            drawEnemy(punto,daniel1);
+                            drawSprite(punto,daniel1);
                         }
                         else{
-                            drawEnemy(punto,daniel2);
+                            drawSprite(punto,daniel2);
                         }
                         break;
                     case NICOLAS:
                         if (aliens->animationStatus%2){
-                            drawEnemy(punto,nicolas1);
+                            drawSprite(punto,nicolas1);
                         }
                         else{
-                            drawEnemy(punto,nicolas2);
+                            drawSprite(punto,nicolas2);
                         }
                         break;
                     case PABLO:
                         if (aliens->animationStatus%2){
-                            drawEnemy(punto,pablo1);
+                            drawSprite(punto,pablo1);
                         }
                         else{
-                            drawEnemy(punto,pablo2);
+                            drawSprite(punto,pablo2);
                         }
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
-                }    
-                printf("se termino de imprimir el alien\n");
+                    
+                }   
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
-            aliens=aux;
-            printf("alienList displayRaspi: %p", aliens);
-            printf("se imprimieron todos los aliens de la lista\n");
+            aliens=aux; //devuelve aliens al principio de la lista
+            
+            punto.x=naveUser->pos.x; //posicion en x y en y de la nave
+            punto.y=naveUser->pos.y;
+            drawSprite(punto,nave); //copia la nave en el buffer
+            
+            //aux = balas;//Guarda el puntero al primer elemento de la lista de las balas
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
                 punto.y=balas->pos.y;
@@ -179,9 +185,11 @@ void* displayRPI (void* argDisplayRPI){
                 disp_write(punto,  D_ON); //como las balas son pixeles, se imprime el pixel donde se encuentra la bala
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
+            //balas = aux;
+
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&semaforo);
-            printf("Se salio del mutex\n");
+
         }
     }
     pthread_exit(0);

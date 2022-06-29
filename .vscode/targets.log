@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jun 28 17:07:37 2022
+# Make data base, printed on Wed Jun 29 14:54:51 2022
 
 # Variables
 
@@ -237,15 +237,22 @@ VSCODE_PID = 3595
 
 # Directories
 
-# . (device 66309, inode 4330770): 36 files, no impossibilities.
+# . (device 66309, inode 4330770): 37 files, no impossibilities.
 
-# 36 files, no impossibilities in 1 directories.
+# 37 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+inputRaspi.o: inputRaspi.c inputRaspi.h utilidades.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 14):
+	gcc -c inputRaspi.c -Wall
 
 # Not a target:
 all:
@@ -278,9 +285,21 @@ testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-28 16:58:07.30729228
+#  Last modified 2022-06-29 14:53:36.17638409
 #  File has been updated.
 #  Successfully updated.
+
+# Not a target:
+inputRaspi.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+inputRaspi.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 aliensYBalas.c:
@@ -313,6 +332,7 @@ aliensYBalas.h:
 #  File has not been updated.
 
 # Not a target:
+ 
 utilidades.h:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -324,28 +344,27 @@ displayRaspi.h:
 #  Modification time never checked.
 #  File has not been updated.
 
- 
-main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o
+main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -o prueba
+	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
 
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/40=0%
+# Load=17/1024=2%, Rehash=0, Collisions=0/48=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 45 / storage = 529 B / avg = 11 B
-# current buf: size = 8162 B / used = 529 B / count = 45 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 47 / storage = 552 B / avg = 11 B
+# current buf: size = 8162 B / used = 552 B / count = 47 / avg = 11 B
 
-# strcache performance: lookups = 66 / hit rate = 31%
+# strcache performance: lookups = 73 / hit rate = 35%
 # hash-table stats:
-# Load=45/8192=1%, Rehash=0, Collisions=1/66=2%
-# Finished Make data base on Tue Jun 28 17:07:37 2022
+# Load=47/8192=1%, Rehash=0, Collisions=1/73=1%
+# Finished Make data base on Wed Jun 29 14:54:51 2022
 
  
