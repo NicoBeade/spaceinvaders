@@ -106,7 +106,7 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
-    object_t* aliens; //Puntero a la lista de aliens
+    object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
     dcoord_t punto; //punto del display a escribir
     while(1){
 
@@ -114,7 +114,6 @@ void* displayRPI (void* argDisplayRPI){
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&semaforo1);
             sem_trywait(&semaforo2);
-            aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens;
             disp_clear(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
@@ -160,6 +159,7 @@ void* displayRPI (void* argDisplayRPI){
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
             aliens=aux;
+            printf("alienList: %p", aliens);
             printf("se imprimieron todos los aliens de la lista\n");
            /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
                 punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas

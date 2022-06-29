@@ -87,6 +87,8 @@ int main (void){
 
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
 
+    printf("alienList: %p", listAliens);
+
     pthread_t Ttimer, TmoveAliens, TdisplayRaspi;
 
     argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
