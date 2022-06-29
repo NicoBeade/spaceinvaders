@@ -82,7 +82,7 @@ typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
  * 
  ******************************************************************************************************************************************/
 
-extern int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
+extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velInput;    /*Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta 
                                                                 cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.*/
 extern sem_t semaforo;
