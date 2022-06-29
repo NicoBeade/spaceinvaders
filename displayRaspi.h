@@ -15,10 +15,11 @@
  * 
  ******************************************************************************************************************************************/
 
-typedef uint8_t enemy_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
+typedef uint8_t sprite_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
 typedef struct{
     object_t* balas;
     object_t* aliens;
+    object_t* naveUser;
     //faltan los punteros a barreras y user
 }argDisplayRPI_t;
 
@@ -50,9 +51,10 @@ extern sem_t semaforo;
  * 
  ******************************************************************************************************************************************/
 
-void drawEnemy(dcoord_t, enemy_t); //prototipos  de dibujar y limpiar enemigos
+void drawEnemy(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
 void cleanEnemy(dcoord_t);
 void* displayRPI (void* argDisplayRPI);
+void clearBuffer(void);
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
