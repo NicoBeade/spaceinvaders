@@ -67,7 +67,7 @@ int main (void){
     //AAA BARRERAS
     }level_setting_t;
 */
-    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 1, 15, 1, 3};
+    
 /*
     typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
     object_t * alien;//Necesita un puntero al primer elemento de la lista de los aliens.
@@ -86,6 +86,8 @@ int main (void){
     printf("Anashe\n");
 
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
+
+    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 1, 15, 1, 3};
 
     printf("alienList: %p", listAliens);
 
