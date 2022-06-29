@@ -23,7 +23,7 @@ static char * images[]= {"sprites/alien1.png",
                          "sprites/alien2.png", 
                          "sprites/alien3.png", 
                          "sprites/nave.png", 
-                         "sprites/escudo.png"};
+                         "sprites/barrera.png"};
 
 //Timer tick
 extern int timerTick;
@@ -78,8 +78,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
         if(*data->displayFlag){
 
-            al_clear_to_color(al_map_rgb(BGCOLOR));
-            showEntity(data->nave);
+            
+            showLista(data->nave);
             *data->displayFlag= false;
         }
     }
@@ -112,7 +112,7 @@ int showEntity(object_t * entity){
 
     al_draw_bitmap(image, entity->pos.x, entity->pos.y, 0);     //Se dibuja en el display
 
-    al_flip_display();
+    
 
     al_destroy_bitmap(image);       //Se eleimina la imagen
 
@@ -122,6 +122,8 @@ int showEntity(object_t * entity){
 //      Show Lista
 
 int showLista(object_t * inicial){
+
+    al_clear_to_color(al_map_rgb(BGCOLOR));
 
     //punter al primer objeto de la lista
     object_t * puntero = inicial;
@@ -141,6 +143,8 @@ int showLista(object_t * inicial){
             showEntity(puntero);
         }
     }
+
+    al_flip_display();
     
     return 0;
 }

@@ -15,9 +15,12 @@ typedef struct {
     ALLEGRO_EVENT * ev; 
 
     object_t * object;    
-    bool * close_display;
-    bool * keyboardFlag;
+    
+    bool * keyboardDownFlag;
+    bool * keyboardUpFlag;
+    int * keycode;
     bool * displayFlag; 
+    bool * close_display;
 
 } eventH_data_t;
 
@@ -35,17 +38,19 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
         if (al_get_next_event(event_queue, evp)) 
         {    
-            if ((*evp).type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+            if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
                 *data->close_display = true;
             }
-            else if((*evp).type == ALLEGRO_EVENT_TIMER){
+            else if(evp->type  == ALLEGRO_EVENT_TIMER){
                 *data->displayFlag=true;
             }
-            else if ((*evp).type == ALLEGRO_EVENT_KEY_DOWN){
-                *data->keyboardFlag=true;
+            else if (evp->type == ALLEGRO_EVENT_KEY_DOWN){
+                *data->keycode = evp->keyboard.keycode;
+                *data->keyboardDownFlag=true;
             }
-            else if ((*evp).type == ALLEGRO_EVENT_KEY_UP){
-                *data->keyboardFlag=true;
+            else if (evp->type == ALLEGRO_EVENT_KEY_UP){
+                *data->keycode = evp->keyboard.keycode;
+                *data->keyboardUpFlag=true;
             }
 
         }
@@ -65,14 +70,18 @@ int main (void){
 
     bool fail = false;
     bool close_display = false;
-    bool keybordFlag = false;
+    bool keybordDownFlag = false;
+    bool keybordUpFlag = false;
+    int keycode = 0;
     bool displayFlag = false; 
 
-    object_t nave = {{100,100}, NAVE, 1, 1, 1, 1, NULL};
+    object_t alien2 = {{400,100}, DANIEL, 1, 1,  NULL};
+    object_t alien = {{300,100}, DANIEL, 1, 1,  &alien2};
+    object_t nave = {{X_MAX/2 - NAVEX, Y_MAX - NAVEY - 10}, NAVE, 1, 1,  &alien};
 
-    eventH_data_t dataH = {&event_queue, &ev, &nave, &close_display, &keybordFlag, &displayFlag};
+    eventH_data_t dataH = {&event_queue, &ev, &nave, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
     display_data_t dataD = {&event_queue, &nave, &close_display, &displayFlag};
-    keyboard_data_t dataK = {&event_queue, &ev, &nave, &close_display, &keybordFlag};
+    keyboard_data_t dataK = {&event_queue, &ev, &nave, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
 
     al_init();
     timer = al_create_timer(1.0/60.0);

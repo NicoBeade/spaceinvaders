@@ -30,7 +30,9 @@
 
     object_t * object;    
     bool * close_display;
-    bool * keyboardFlag;
+    bool * keyboardDownFlag;
+    bool * keyboardUpFlag;
+    int * keycode;
 
 } keyboard_data_t;
 

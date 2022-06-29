@@ -93,6 +93,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
 #define X_MAX 840              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
 #define Y_MAX 480              //Alto maximo de la pantalla
 
+#define NAVEX 63               //Tamaño en X del sprite de la nave
+#define NAVEY 38               //Tamaño en Y del sprite de la nave
+
 #define MARGEN_X 4          //Margen horizontal en el display
 #define MARGEN_Y 1          //Margen vertical en el display
 
