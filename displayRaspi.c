@@ -125,7 +125,7 @@ void* displayRPI (void* argDisplayRPI){
     dcoord_t punto; //punto del display a escribir
     while(1){
 
-        usleep(1 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&semaforo);
             clearBuffer(); //limpio el buffer            

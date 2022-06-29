@@ -28,7 +28,7 @@
     jcoord_t coordJoy;
     while(1){
 
-        usleep(1 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velInput) == 0 ){
 
             joy_update();

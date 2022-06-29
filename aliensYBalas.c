@@ -192,7 +192,7 @@ void * moveAlien(void* argMoveAlien){
     int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
 
     while(1){
-        usleep(1 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
 
             sem_wait(&semaforo);

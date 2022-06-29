@@ -31,7 +31,7 @@ void * timer(){
 */
     printf("Timer set\n");
     while(1){
-        usleep(1 * U_SEC2M_SEC); //Sleep 10mS.
+        usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
         timerTick -= 1;
     }
     pthread_exit(0);
