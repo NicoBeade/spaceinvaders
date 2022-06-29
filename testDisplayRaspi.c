@@ -13,7 +13,7 @@
 
 sem_t semaforo;
 
-int velAliens = 2000;
+int velAliens = 200;
 unsigned int timerTick = 1000000;
 int velInput = 1;
 

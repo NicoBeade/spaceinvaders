@@ -37,7 +37,7 @@
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 40 //tasa de refresco del display
+#define FRAMERATE 4 //tasa de refresco del display
 
 sprite_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 sprite_t daniel2 = {{1,1,1},{1,0,1}};
@@ -125,7 +125,7 @@ void* displayRPI (void* argDisplayRPI){
     dcoord_t punto; //punto del display a escribir
     while(1){
 
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        usleep(1 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&semaforo);
             clearBuffer(); //limpio el buffer            
