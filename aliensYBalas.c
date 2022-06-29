@@ -388,5 +388,17 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
     }   
 }
 
+/* IDEA
+void * moveUsuario(object_t * naveUsuario){
+
+    if(naveUsuario->animationStatus == 'D'){
+        moveNaveUsuario(naveUsuario, DERECHAX);
+    }
+    if(naveUsuario->animationStatus == 'I')[
+        moveNaveUsuario(naveUsuario, IZQUIERDAX);
+    ]
+}
+*/
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
