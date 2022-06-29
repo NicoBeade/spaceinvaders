@@ -93,6 +93,18 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
     }
 }
 
+void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
+    uint8_t i,j;
+    dcoord_t pAux;
+    for (i=0 ; i<16 ; i++){
+        for(j=0 ; j<16 ; j++){
+            pAux.x = i;
+            pAux.y = j;
+            disp_write(pAux, D_OFF); //Actualiza el buffer          
+        }
+    }
+}
+
 /******************************************************************************************************************************************
  * 
   _____   _                            _        _         _        _   _               _                   ___   ___   ___ 
@@ -114,7 +126,7 @@ void* displayRPI (void* argDisplayRPI){
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&semaforo1);
             sem_trywait(&semaforo2);
-            disp_clear(); //limpio el buffer            
+            clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
             object_t* aux = aliens;
