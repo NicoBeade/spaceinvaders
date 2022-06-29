@@ -183,6 +183,7 @@ void removeAlienList(object_t* listAlien){
 }
 
 //******************************************    Thread moveAlien    ***********************************************************
+
 void * moveAlien(void* argMoveAlien){
 /* Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     Recibe como parametro el puntero al primer alien de la lista.
@@ -194,6 +195,7 @@ void * moveAlien(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             printf("Movealiens\n");
+            getchar();
             sem_wait(&semaforo2);
             sem_trywait(&semaforo1);
             printf("timerTick = %d", timerTick);
@@ -228,6 +230,7 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar = auxiliar -> next;
             }
         sem_post(&semaforo1);
+        sem_post(&semaforo2);
         }
     }
     pthread_exit(0);
