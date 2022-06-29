@@ -59,100 +59,31 @@ int showLista(object_t * inicial);
  * 
  * ********************************************************************************************************************************************************/
 
-void * display(void * dataIn) {
+void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
+
+    display_data_t * data = (display_data_t *) dataIn;
+
+    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
+
+    ALLEGRO_DISPLAY * display = NULL;
+
+    display = al_create_display(X_MAX,Y_MAX);
+
+    al_init_image_addon();
     
-    //Se castea el puntero de datos y se almacena en data
-
-    display_data_t * data = (display_data_t *) dataIn; 
-
-    //      OBJETOS DE ALLEGRO    
-
-    ALLEGRO_DISPLAY * display = NULL;                        //Display
-    ALLEGRO_EVENT_QUEUE * event_queue = data->event_queue;   //Cola de eventos
-
-    //      FLAGS
-
-    bool close_display = false;         //Cuando el display se cierra se prende
-    bool fail= false;                   //Cuando la inicializacion de allegro falla se prende
-
-    /**********************************************************************************************************
-     *  
-     *                                          INICIALIZACION
-     * 
-     * *******************************************************************************************************/
-
-    //inicializacion para las imagenes
-
-    if (!al_init_image_addon() && !fail) {  
-        fprintf(stderr, "failed to initialize image addon !\n");
-        fail = true;
-    }
-
-    //inicializacion del display
-
-    if (!(display = al_create_display(X_MAX, Y_MAX)) && !fail) {
-        fprintf(stderr, "failed to create display!\n");     
-        fail = true;
-    }
-
-    //Si falla la inicializacion
-
-    if (fail){
-        al_destroy_event_queue(event_queue);
-        al_shutdown_image_addon();
-        pthread_exit(NULL);
-    }
-
-    //Se registra el display en la cola de eventos
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
-    /*********************************************************************************************************/
+    while(!*data->close_display){
 
-    /**********************************************************************************************************
-     * 
-     *                                          DIBUJO EN DISPLAY
-     * 
-     *********************************************************************************************************/
+        if(*data->displayFlag){
 
-    //Mientras el usuario no cierre el display
-
-    while(!data->close_display){
-
-        //Cada cierto tiempo deteminado por el refresh rate , se actualiza la imagen
-
-        if (data->displayFlag){
-
-            //Se limpia la pantalla
-
-            al_clear_to_color(al_map_rgb(BGCOLOR)); 
-
-            //Se dibujan las entidades
-
-            showLista(data->aliens);
-            showLista(data->nave);
-            showLista(data->balasAliens);
-            showLista(data->balasUsuario);
-            showLista(data->barrera);
-                
-            //Se muestra en pantalla
-
-            al_flip_display();
-
+            al_clear_to_color(al_map_rgb(BGCOLOR));
+            showEntity(data->nave);
+            *data->displayFlag= false;
         }
-    }    
+    }
 
-    /*********************************************************************************************************/
-
-    //      DESTRUCCION DE OBJETOS
-
-    al_destroy_display(display); 
-    al_destroy_event_queue(event_queue);
-    al_shutdown_image_addon();
-
-    /*********************************************************************************************************/
-
-    pthread_exit(0);
 }
 
 /**********************************************************************************************************************************************************/
@@ -180,6 +111,8 @@ int showEntity(object_t * entity){
     }
 
     al_draw_bitmap(image, entity->pos.x, entity->pos.y, 0);     //Se dibuja en el display
+
+    al_flip_display();
 
     al_destroy_bitmap(image);       //Se eleimina la imagen
 

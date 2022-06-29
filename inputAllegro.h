@@ -17,17 +17,22 @@
  #ifndef INPUT_ALLEGRO_H
  #define INPUT_ALLEGRO_H
 
+ #include <allegro5/allegro.h>
+ #include <allegro5/allegro_image.h>
+ #include "utilidades.h"
+
  #define EVENTO (*(data->ev))
 
  typedef struct {
 
-    ALLEGRO_EVENT_QUEUE * event_queue;
+    ALLEGRO_EVENT_QUEUE ** event_queue;
     ALLEGRO_EVENT * ev; 
-    
-    bool * close_display;
-    bool * keybordFlag;
 
-} keybord_data_t;
+    object_t * object;    
+    bool * close_display;
+    bool * keyboardFlag;
+
+} keyboard_data_t;
 
 
 /*******************************************************************************************************************************************
@@ -40,7 +45,7 @@
  * 
  ******************************************************************************************************************************************/
 
-void * keybord(void * arg);
+void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn);
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
