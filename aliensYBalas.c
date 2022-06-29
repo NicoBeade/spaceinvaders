@@ -298,7 +298,7 @@ int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int
         if (alien->pos.x <= 0 + margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x >= xMax - margenX - tamAlienX){ //deteccion borde derecho
+        else if (alien->pos.x > xMax - margenX - tamAlienX){ //deteccion borde derecho
             printf("Llego al borde");
             borde = DERECHA;
         }
