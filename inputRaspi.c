@@ -23,7 +23,7 @@
 
  void* updateInputGame(void* argUpdateInputGame){
 
-    int velUsuario = 50;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
+    int velUsuario = 25;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
         cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.*/
     jcoord_t coordJoy;
     while(1){
