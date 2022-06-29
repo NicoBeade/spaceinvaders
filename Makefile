@@ -1,5 +1,5 @@
 main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
-	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -o prueba
+	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
 
 aliensYBalas.o: aliensYBalas.h aliensYBalas.c utilidades.h
 	gcc -c aliensYBalas.c -Wall 
