@@ -37,7 +37,7 @@
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 1 //tasa de refresco del display
+#define FRAMERATE 40 //tasa de refresco del display
 
 enemy_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 enemy_t daniel2 = {{1,1,1},{1,0,1}};
