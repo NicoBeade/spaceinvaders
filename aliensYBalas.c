@@ -196,6 +196,7 @@ void * moveAlien(void* argMoveAlien){
         if( (timerTick % velAliens) == 0 ){
             printf("Movealiens\n");
             getchar();
+            printf("alienList: %p", ((argMoveAlien_t*)argMoveAlien) -> alien);
             sem_wait(&semaforo2);
             sem_trywait(&semaforo1);
             printf("timerTick = %d", timerTick);
