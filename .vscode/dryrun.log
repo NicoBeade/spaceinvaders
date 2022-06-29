@@ -3,6 +3,7 @@ make: Entering directory '/home/nicolas/Documents/spaceinvaders'
 gcc -c aliensYBalas.c -Wall 
 gcc -c displayRaspi.c -Wall 
 gcc -c testDisplayRaspi.c -Wall 
-gcc disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o -pthread -Wall -o prueba
+gcc -c inputRaspi.c -Wall
+gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
 make: Leaving directory '/home/nicolas/Documents/spaceinvaders'
  

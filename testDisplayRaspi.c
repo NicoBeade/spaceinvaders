@@ -49,6 +49,10 @@ int main (void){
 
     object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
 
+    if(naveUsuario == NULL){\
+        printf("no se pudo crear al usuario por malloc \n");
+    }
+
     naveUsuario -> pos.x = 6;   //Inicializa la nave del usuario.
     naveUsuario -> pos.y = 1;
     naveUsuario -> type = NAVE;
@@ -105,7 +109,7 @@ int main (void){
 
     pthread_t Ttimer, TmoveAliens, TdisplayRaspi, TupdateInputGame;
 
-    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens};
+    argDisplayRPI_t argumentosDisplayRPI = {0, listAliens, naveUsuario};
 
     printf("Anashe 1\n");
 
