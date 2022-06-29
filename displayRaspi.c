@@ -37,7 +37,7 @@
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 1 //tasa de refresco del display
+#define FRAMERATE 4 //tasa de refresco del display
 
 enemy_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 enemy_t daniel2 = {{1,1,1},{1,0,1}};
@@ -106,7 +106,7 @@ void cleanEnemy(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen 
 
 void* displayRPI (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
-    object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
+    object_t* aliens; //Puntero a la lista de aliens
     dcoord_t punto; //punto del display a escribir
     while(1){
 
@@ -114,6 +114,7 @@ void* displayRPI (void* argDisplayRPI){
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&semaforo1);
             sem_trywait(&semaforo2);
+            aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens;
             disp_clear(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
@@ -124,7 +125,7 @@ void* displayRPI (void* argDisplayRPI){
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
                 punto.y=aliens->pos.y;
                 printf("x: %d ; y: %d\n", aliens->pos.x, aliens->pos.y);
-                if (punto.x>15||punto.y>15){
+                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
                 
