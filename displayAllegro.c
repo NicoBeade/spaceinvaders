@@ -14,8 +14,6 @@
 *
  **********************************************************************************************************************************************************/
 
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
 #include <pthread.h>
 #include <stdio.h>
 #include "displayAllegro.h"
@@ -28,7 +26,7 @@ static char * images[]= {"sprites/alien1.png",
                          "sprites/escudo.png"};
 
 //Timer tick
-extern int timerTick = 1000000;
+extern int timerTick;
 
 /***********************************************************************************************************************************************************
  * 
@@ -61,16 +59,16 @@ int showLista(object_t * inicial);
  * 
  * ********************************************************************************************************************************************************/
 
-void * display(void * arg) {
+void * display(void * dataIn) {
     
-    //      OBJETOS DE ALLEGRO
-
-    ALLEGRO_DISPLAY * display = NULL;           //Display
-    ALLEGRO_EVENT_QUEUE * event_queue = NULL;   //Cola de eventos
-    ALLEGRO_EVENT ev;                           //Evento
-
     //Se castea el puntero de datos y se almacena en data
-    display_data_t * data = (display_data_t *) arg;
+
+    display_data_t * data = (display_data_t *) dataIn; 
+
+    //      OBJETOS DE ALLEGRO    
+
+    ALLEGRO_DISPLAY * display = NULL;                        //Display
+    ALLEGRO_EVENT_QUEUE * event_queue = data->event_queue;   //Cola de eventos
 
     //      FLAGS
 
@@ -82,20 +80,6 @@ void * display(void * arg) {
      *                                          INICIALIZACION
      * 
      * *******************************************************************************************************/
-
-    //inicilizacion de allegro
-
-    if (!al_init()) { 
-        fprintf(stderr, "failed to initialize allegro!\n");
-        fail= true;
-    }
- 
-    //inicializacion de la cola de eventos
-    
-    if (!(event_queue = al_create_event_queue()) && !fail) {
-        fprintf(stderr, "failed to create event_queue!\n");
-        fail= true;
-    }
 
     //inicializacion para las imagenes
 
@@ -133,19 +117,11 @@ void * display(void * arg) {
 
     //Mientras el usuario no cierre el display
 
-    while(!close_display){
-
-        //Si se cierra la pestaña se prende el flag
-
-        if (al_get_next_event( event_queue, &ev)) 
-        {    
-            if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-                close_display = true;
-        }
+    while(!data->close_display){
 
         //Cada cierto tiempo deteminado por el refresh rate , se actualiza la imagen
 
-        if (!(timerTick % REFRESHRATE) && al_is_event_queue_empty(event_queue) ){
+        if (data->displayFlag){
 
             //Se limpia la pantalla
 

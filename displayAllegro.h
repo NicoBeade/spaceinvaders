@@ -20,6 +20,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 #include "utilidades.h"
 
 /*******************************************************************************************************************************************
@@ -43,6 +45,12 @@
 
 typedef struct 
 {
+    ALLEGRO_EVENT_QUEUE * event_queue;
+    ALLEGRO_DISPLAY * display;
+    
+    bool * close_display;
+    bool * displayFlag;
+
     object_t * aliens;
     object_t * nave;
     object_t * barrera;

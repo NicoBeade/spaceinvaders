@@ -16,16 +16,19 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <pthread.h>
+#include <stdio.h>
 
-static enum MYKEYS { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT };
+#include "inputAllegro.h"
 
-void keybord(void * arg){
+static enum MYKEYS { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT};
+
+void * keybord(void * dataIn){
     
-    ALLEGRO_EVENT_QUEUE * event_queue = * (ALLEGRO_EVENT_QUEUE *) arg;
-    ALLEGRO_EVENT ev;
+    keybord_data_t * data = (keybord_data_t *) dataIn; 
+
+    ALLEGRO_EVENT_QUEUE * event_queue = data->event_queue;
 
     bool fail = false;
-    bool do_exit = false;
     bool key_pressed[4] = {false, false, false, false};
 
     /**********************************************************************************************************
@@ -47,18 +50,17 @@ void keybord(void * arg){
 
     //Se registra el display en la cola de eventos
 
-    al_register_event_source(event_queue, al_get_keyboard_event_source());
-    while (!do_exit) {
+    al_register_event_source(data->event_queue, al_get_keyboard_event_source());
 
-        if (al_get_next_event(event_queue, &ev)) 
-        {
-            if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-                do_exit = true;
+    while (!data->close_display) {
 
-            else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-                switch (ev.keyboard.keycode) {
+        if (data->keybordFlag){
+           
+            if (EVENTO.type == ALLEGRO_EVENT_KEY_DOWN) {
+                switch (EVENTO.keyboard.keycode) {
                     case ALLEGRO_KEY_UP:
                         key_pressed[KEY_UP] = true;
+                        printf("hola");
                         break;
 
                     case ALLEGRO_KEY_DOWN:
@@ -75,8 +77,8 @@ void keybord(void * arg){
                 }
             }
 
-            else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
-                switch (ev.keyboard.keycode) {
+            else if (EVENTO.type == ALLEGRO_EVENT_KEY_UP) {
+                switch (EVENTO.keyboard.keycode) {
                     case ALLEGRO_KEY_UP:
                         key_pressed[KEY_UP] = false;
                         break;
@@ -94,10 +96,12 @@ void keybord(void * arg){
                         break;
 
                     case ALLEGRO_KEY_ESCAPE:
-                        do_exit = true;
+                        *data->close_display = true;
                         break;
                 }
             }
+
+            *data->keybordFlag = false;
         }
 
     }
