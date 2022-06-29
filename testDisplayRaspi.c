@@ -13,7 +13,7 @@
 
 sem_t semaforo;
 
-int velAliens = 200;
+int velAliens = 2000;
 unsigned int timerTick = 1000000;
 int velInput = 1;
 
@@ -31,7 +31,7 @@ void * timer(){
 */
     printf("Timer set\n");
     while(1){
-        usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
+        usleep(1 * U_SEC2M_SEC); //Sleep 10mS.
         timerTick -= 1;
     }
     pthread_exit(0);
