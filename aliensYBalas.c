@@ -196,8 +196,8 @@ void * moveAlien(void* argMoveAlien){
         if( (timerTick % velAliens) == 0 ){
             printf("Movealiens\n");
 
-            sem_wait(&semaforo2);
-            sem_trywait(&semaforo1);
+            sem_wait(&semaforo);
+
             printf("timerTick = %d", timerTick);
 
             direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> alien, ((argMoveAlien_t*)argMoveAlien) -> xMax,
@@ -229,8 +229,7 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar->animationStatus++;
                 auxiliar = auxiliar -> next;
             }
-        sem_post(&semaforo1);
-        sem_post(&semaforo2);
+        sem_post(&semaforo);
         }
     }
     pthread_exit(0);

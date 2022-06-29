@@ -124,8 +124,7 @@ void* displayRPI (void* argDisplayRPI){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
-            sem_wait(&semaforo1);
-            sem_trywait(&semaforo2);
+            sem_wait(&semaforo);
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             printf("esta por entrar al while\n");
@@ -181,8 +180,7 @@ void* displayRPI (void* argDisplayRPI){
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
             disp_update(); //se transfiere del buffer al display de la RPI
-            sem_post(&semaforo1);
-            sem_post(&semaforo2);
+            sem_post(&semaforo);
             printf("Se salio del mutex\n");
         }
     }
