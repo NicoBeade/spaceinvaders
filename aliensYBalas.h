@@ -81,12 +81,19 @@ typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
  * 
  ******************************************************************************************************************************************/
 
+//*****************ALIENS
 object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setLives);   //Agrega un objeto a la lista
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
-void * moveAlien(void* alien);                                                                                                 //Se encarga de modificar la posicion de los aliens.
-int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);                                   //Detecta si algun alien esta tocando un borde
+void * moveAlien(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
+int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
+
+//*****************BALAS
+
+
+//*****************USUARIO
+void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuario
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
