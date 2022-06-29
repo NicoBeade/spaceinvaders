@@ -195,8 +195,7 @@ void * moveAlien(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             printf("Movealiens\n");
-            getchar();
-            printf("alienList moveAlien: %p", ((argMoveAlien_t*)argMoveAlien) -> alien);
+
             sem_wait(&semaforo2);
             sem_trywait(&semaforo1);
             printf("timerTick = %d", timerTick);

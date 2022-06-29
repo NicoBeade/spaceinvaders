@@ -43,7 +43,7 @@ int main (void){
     printf("se inicializo el display\n");
     object_t * listAliens = NULL;
 
-    level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 8, 1, 3, 1, 1, 1, {1,1}};
+    level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 6, 1, 3, 1, 1, 1, {1,1}};
 /*
     typedef struct{
     int xMin;                   //-xMax: coordenada maxima en x alcanzable.
@@ -81,7 +81,7 @@ int main (void){
     }argMoveAlien_t;
 */
 
-    char filas[] = "444";
+    char filas[] = "333";
 
     printf("Anashe\n");
 
