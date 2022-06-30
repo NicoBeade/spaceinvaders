@@ -42,7 +42,7 @@ typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se
 
 //DANIEL tiene 1 vida, PABLO 2 vidas y NICOLAS 3 vidas.
 
-typedef struct{
+typedef struct{//Datos necesarios para iniciar un nivel.
     int xMin;                   //-xMax: coordenada maxima en x alcanzable.
     int xMax;                   //-xMin: coordenada minima en x alcanzable.
     int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
@@ -64,6 +64,14 @@ typedef struct{
     //AAA BARRERAS
 }level_setting_t;
 
+typedef struct{//Datos utilizados al estar en algun menu.
+    int x;//Movimiento en X e Y.
+    int y;
+    char press;// Presion del boton.
+    int cantOpciones;//Cantidad total de opciones en el menu.
+    void (*changeOption)(int);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*selectOption)(int);//Callback a la funcion que selecciona la opcion seleccionada.
+}punteroMenu_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

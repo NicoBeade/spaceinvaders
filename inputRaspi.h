@@ -35,6 +35,7 @@ typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
     int xMax;//Limites de la pantalla.
     int tamXNave;//Tamano en x de la nave.
     int desplazamiento;//India de a cuantos saltos en la coordenada X se mueve la nave.
+    void * (*threadDisplayPausa)(void*);//Puntero al thread que gestiona la pausa en el display.
 }argUpdateInputGame_t;
 
 /*******************************************************************************************************************************************
@@ -50,8 +51,9 @@ typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
- void* updateInputGame(void* argUpdateInputGame);
+void* updateInputGame(void* argUpdateInputGame);  //Se encarga de leer el input durante la ejecucion del juego.
 
+void* inputMenu(void* punteroOpciones);          //Se encarga de leer el input durante la pausa.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -109,6 +111,8 @@ extern sem_t semaforo;
 #define DESPLAZAMIENTO ((argUpdateInputGame_t*)argUpdateInputGame) -> desplazamiento //Acceso al desplazamiento.
 
 #define MOOVE_NAVE_USUARIO ((argUpdateInputGame_t*)argUpdateInputGame) -> moveNaveUsuario  //Acceso al callback que mueve la nave del usuario.
+
+#define THREAD_DISPLAY_PAUSA ((argUpdateInputGame_t*)argUpdateInputGame) -> threadDisplayPausa  //Acceso al callback que mueve la nave del usuario.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

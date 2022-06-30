@@ -1,19 +1,43 @@
+
+/**********************************************************************************************************************************************************
+ * 
+                                    _   _               _                 ___                      _          
+                                 __| | (_)  ___  _ __  | |  __ _   _  _  | _ \  __ _   ___  _ __  (_)      __ 
+                                / _` | | | (_-< | '_ \ | | / _` | | || | |   / / _` | (_-< | '_ \ | |  _  / _|
+                                \__,_| |_| /__/ | .__/ |_| \__,_|  \_, | |_|_\ \__,_| /__/ | .__/ |_| (_) \__|
+                                                |_|                |__/                    |_|                
+
+* 
+ ***********************************************************************************************************************************************************
+*   
+*   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas al manejo del display RPI
+*   Contiene los siguientes threads:
+*       -displayRPI: se encarga de realizar la actualizacion del display durante la ejecucion del juego. 
+*            Para ello utiliza las siguientes funciones:
+*               -drawSprite
+*               -cleanSprite
+*               -clearBuffer
+*
+*                                        Se usaran los siguientes recursos de la libreria del display
+*                                             -dcoord_t, tipo de dato: struct con un campo x y un campo y
+*                                             -disp_init(void), inicializa el display
+*                                             -disp_clear(void), limpia el display
+*                                             -disp_write(dcoord_t,dlevel_t), escribe en el display
+*                                             -D_OFF,D_ON, ctes de prendido y apagado del display
+*                                             -disp_update(void), actualiza el display
+*
+*
+ **********************************************************************************************************************************************************/
+
+
 #include <stdint.h>
 #include <unistd.h>
 #include "utilidades.h"
 #include <pthread.h>
 #include "displayRaspi.h"
 #include <stdio.h>
+#include "sprites.h"
 
-/*
- Se usaran los siguientes recursos de la libreria del display
-    -dcoord_t, tipo de dato: struct con un campo x y un campo y
-    -disp_init(void), inicializa el display
-    -disp_clear(void), limpia el display
-    -disp_write(dcoord_t,dlevel_t), escribe en el display
-    -D_OFF,D_ON, ctes de prendido y apagado del display
-    -disp_update(void), actualiza el display
-*/
 /*int main (void){
     dcoord_t p = {5,5};
     disp_init();
@@ -38,17 +62,6 @@
  * 
  ******************************************************************************************************************************************/
 #define FRAMERATE 4 //tasa de refresco del display
-
-sprite_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
-sprite_t daniel2 = {{1,1,1},{1,0,1}};
-
-sprite_t pablo1 ={{1,1,0},{1,0,1}};
-sprite_t pablo2 ={{0,1,1},{1,0,1}};
-
-sprite_t nicolas1 ={{1,0,1},{0,1,0}};
-sprite_t nicolas2 ={{0,1,0},{1,0,1}};
-
-sprite_t nave = {{0,1,0},{1,1,1}};
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -106,6 +119,8 @@ void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprit
         }
     }
 }
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
 
 /******************************************************************************************************************************************
  * 
@@ -194,3 +209,48 @@ void* displayRPI (void* argDisplayRPI){
     }
     pthread_exit(0);
 }
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+/******************************************************************************************************************************************
+ * 
+         _____   _                            _     ___    _                 ___                               ___   ___   ___ 
+        |_   _| | |_    _ _   ___   __ _   __| |   |   \  (_)  ___  _ __    | _ \  __ _   _  _   ___  __ _    | _ \ | _ \ |_ _|
+          | |   | ' \  | '_| / -_) / _` | / _` |   | |) | | | (_-< | '_ \   |  _/ / _` | | || | (_-< / _` |   |   / |  _/  | | 
+          |_|   |_||_| |_|   \___| \__,_| \__,_|   |___/  |_| /__/ | .__/   |_|   \__,_|  \_,_| /__/ \__,_|   |_|_\ |_|   |___|
+                                                                   |_|                    
+ * 
+ ******************************************************************************************************************************************/
+
+void* dispMenu(void* punteroPausa){
+
+    punteroMenu_t menuDisplay = {0,0,0};
+
+    while(1){
+
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % FRAMERATE) == 0 ){
+
+            if( ((punteroMenu_t*)punteroPausa) -> x != 0 ){//Si se movio el joistick
+                menuDisplay.x += ((punteroMenu_t*)punteroPausa) -> x;
+                if(menuDisplay.x < 0){//estos if estan para que se pueda "dar la vuelta" en las opciones.
+                    menuDisplay.x = cantOpciones - 1;//Si nos pasamos por la izquierda vamos a la ultima opcion.
+                }
+                else if(menuDisplay.x > (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1){
+                    menuDisplay.x = 0;//Si nos pasamos por la derecha vamos a la primera opcion.
+                }
+
+                (((punteroMenu_t*)punteroPausa) -> changeOption)(pausaDisplay.x);//Llama a la funcion que se encarga de mostrar en pantalla la opcion indicada
+            }
+
+            menuDisplay.press = ((punteroMenu_t*)punteroPausa) -> press;
+            if(menuDisplay.press != 0){
+                (((punteroMenu_t*)punteroPausa) -> selectOption)(pausaDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
+            }
+        }
+    }
+}
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/

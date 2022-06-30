@@ -26,6 +26,8 @@
     int velUsuario = 5;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
         cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.*/
     jcoord_t coordJoy;
+    pthread_t TdisplayPausa, TinputPausa;
+    punteroMenu_t punteroPausa = {0,0,0};
     while(1){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
@@ -43,6 +45,57 @@
                     MOOVE_NAVE_USUARIO(NAVE_USUARIO, DESPLAZAMIENTO, X_MAX, TAM_X_NAVE);
                 }
             }
+
+            if(joy_get_switch() == J_PRESS){
+
+                sem_wait(&semaforo);
+                pthread_create(&TdisplayPausa, NULL, THREAD_DISPLAY_PAUSA, &punteroPausa);//Inicializa el thread que gestiona el display durante la pausa.
+                pthread_create(&TinputPausa, NULL, inputMenu, &punteroPausa);//Inicializa el thread que gestiona el input durante la pausa.
+
+                pthread_join(TdisplayPausa, NULL);
+                punteroPausa.x = -2;
+                pthread_join(TinputPausa, NULL);
+
+                sem_post(&semaforo);
+            }
+        }
+    }
+}
+
+
+void* inputMenu(void* punteroPausa){
+
+    jcoord_t coordJoy;
+
+    while(((punteroMenu_t*)punteroPausa) -> x != -2){
+
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velInput) == 0 ){
+
+            joy_update();
+            coordJoy = joy_get_coord();
+
+            if(coordJoy.x >= JOY_ACTIVE_NEG && coordJoy.x <= JOY_ACTIVE_POS){//Si el joystick esta en el centro en X
+                ((punteroMenu_t*)punteroPausa) -> x = 0;
+            }
+            else if(coordJoy.x <= JOY_ACTIVE_NEG){//Si el joistick esta para la izquierda en X
+                ((punteroMenu_t*)punteroPausa) -> x = -1;
+            }
+            else if(coordJoy.x >= JOY_ACTIVE_POS){//Si el joistick esta para la derecha en X
+                ((punteroMenu_t*)punteroPausa) -> x = 1;
+            }
+
+            if(coordJoy.y >= JOY_ACTIVE_NEG && coordJoy.y <= JOY_ACTIVE_POS){//Si el joystick esta en el centro en Y
+                ((punteroMenu_t*)punteroPausa) -> y = 0;
+            }
+            else if(coordJoy.y <= JOY_ACTIVE_NEG){//Si el joistick esta para la izquierda en Y
+                ((punteroMenu_t*)punteroPausa) -> y = -1;
+            }
+            else if(coordJoy.y >= JOY_ACTIVE_POS){//Si el joistick esta para la derecha en Y
+                ((punteroMenu_t*)punteroPausa) -> y = 1;
+            }
+
+            ((punteroMenu_t*)punteroPausa) -> press = (joy_get_coord == J_NOPRESS) ? 0 : 1;
         }
     }
 }
