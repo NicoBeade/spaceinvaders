@@ -43,6 +43,7 @@
 
 static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
 static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
+static unsigned int countList(object_t * lista);    //Contador de objetos de una lista
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -457,7 +458,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
 }
 
 
-unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
+static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
     unsigned int nodosCant = 0;                 //Se inicializa la variable cantidad de nodos
     while(lista != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
         nodosCant++;                            //Se cuenta el nodo
