@@ -36,6 +36,8 @@ typedef const uint8_t sprite_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
 typedef const uint8_t fullDisp_t [16][16]; //matriz de 16x16, para imprimir sobre todo el display
 typedef const uint8_t caracteres_t [8][4];
 
+
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -585,7 +587,7 @@ caracteres_t letraEspacio ={
 };
 
 
-caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
+caracteres_t (* alfabeto) [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
 &letraU,&letraV,&letraW,&letraX,&letraY,&letraZ,&letra0,&letra1,&letra2,&letra3,&letra4,&letra5,
 &letra6,&letra7,&letra8,&letra9,&letraGuion,&letraPunto,&letraEspacio,&alienChar1,&alienChar2,alienChar3};
