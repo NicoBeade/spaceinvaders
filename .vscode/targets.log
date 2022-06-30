@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun 29 14:54:51 2022
+# Make data base, printed on Thu Jun 30 01:22:15 2022
 
 # Variables
 
@@ -237,9 +237,9 @@ VSCODE_PID = 3595
 
 # Directories
 
-# . (device 66309, inode 4330770): 37 files, no impossibilities.
+# . (device 66309, inode 4330770): 39 files, no impossibilities.
 
-# 37 files, no impossibilities in 1 directories.
+# 39 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -268,6 +268,12 @@ aliensYBalas.o: aliensYBalas.h aliensYBalas.c utilidades.h
 #  recipe to execute (from 'Makefile', line 5):
 	gcc -c aliensYBalas.c -Wall 
 
+# Not a target:
+sprites.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 displayRaspi.o: displayRaspi.h displayRaspi.c utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -275,6 +281,7 @@ displayRaspi.o: displayRaspi.h displayRaspi.c utilidades.h
 #  recipe to execute (from 'Makefile', line 11):
 	gcc -c displayRaspi.c -Wall 
 
+ 
 testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -285,7 +292,7 @@ testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-29 14:53:36.17638409
+#  Last modified 2022-06-30 01:20:05.68288328
 #  File has been updated.
 #  Successfully updated.
 
@@ -306,6 +313,20 @@ aliensYBalas.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+testAnim: testAnim.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 18):
+	gcc testAnim.o disdrv.o -o pruebaAnim -Wall
+
+testAnim.o: testAnim.c sprites.h disdrv.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 21):
+	gcc -c testAnim.c -Wall
 
 # Not a target:
 .DEFAULT:
@@ -332,8 +353,13 @@ aliensYBalas.h:
 #  File has not been updated.
 
 # Not a target:
- 
 utilidades.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+disdrv.h:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -351,20 +377,26 @@ main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
 #  recipe to execute (from 'Makefile', line 2):
 	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
 
+# Not a target:
+testAnim.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/48=0%
+# Load=22/1024=2%, Rehash=0, Collisions=0/58=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 47 / storage = 552 B / avg = 11 B
-# current buf: size = 8162 B / used = 552 B / count = 47 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 51 / storage = 593 B / avg = 11 B
+# current buf: size = 8162 B / used = 593 B / count = 51 / avg = 11 B
 
-# strcache performance: lookups = 73 / hit rate = 35%
+# strcache performance: lookups = 83 / hit rate = 38%
 # hash-table stats:
-# Load=47/8192=1%, Rehash=0, Collisions=1/73=1%
-# Finished Make data base on Wed Jun 29 14:54:51 2022
+# Load=51/8192=1%, Rehash=0, Collisions=1/83=1%
+# Finished Make data base on Thu Jun 30 01:22:15 2022
 
  
