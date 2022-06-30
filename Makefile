@@ -12,3 +12,10 @@ displayRaspi.o: displayRaspi.h displayRaspi.c utilidades.h
 
 inputRaspi.o: inputRaspi.c inputRaspi.h utilidades.h
 	gcc -c inputRaspi.c -Wall
+
+
+testAnim: testAnim.o
+	gcc testAnim.o disdrv.o -o pruebaAnim -Wall
+
+testAnim.o: testAnim.c sprites.h disdrv.h
+	gcc -c testAnim.c -Wall
