@@ -22,13 +22,13 @@
 extern sem_t semaforo;
 
 //En esta array se guardan las direcciones a los sprites
+
 static char * images[]= {"sprites/alien1.png", 
                          "sprites/alien2.png", 
                          "sprites/alien3.png", 
                          "sprites/nave.png", 
                          "sprites/barrera.png"};
-
-
+    
 
 /***********************************************************************************************************************************************************
  * 
@@ -78,8 +78,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     while(!*data->close_display){
 
+        usleep(10 * U_SEC2M_SEC);    
+
         if(*data->displayFlag){
+
             sem_wait(&semaforo);
+
+            al_clear_to_color(al_map_rgb(BGCOLOR));
 
             showLista(data->punteros->nave);
             showLista(data->punteros->aliens);
@@ -87,11 +92,15 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             showLista(data->punteros->balasUsuario);
             showLista(data->punteros->barreras);
 
+            al_flip_display();
+
             *data->displayFlag= false;
+
             sem_post(&semaforo);
         }
     }
 
+    pthread_exit(0);
 }
 
 /**********************************************************************************************************************************************************/
@@ -120,8 +129,6 @@ int showEntity(object_t * entity){
 
     al_draw_bitmap(image, entity->pos.x, entity->pos.y, 0);     //Se dibuja en el display
 
-    
-
     al_destroy_bitmap(image);       //Se eleimina la imagen
 
     return 0;
@@ -130,8 +137,6 @@ int showEntity(object_t * entity){
 //      Show Lista
 
 int showLista(object_t * inicial){
-
-    al_clear_to_color(al_map_rgb(BGCOLOR));
 
     //punter al primer objeto de la lista
     object_t * puntero = inicial;
@@ -151,8 +156,6 @@ int showLista(object_t * inicial){
             showEntity(puntero);
         }
     }
-
-    al_flip_display();
     
     return 0;
 }

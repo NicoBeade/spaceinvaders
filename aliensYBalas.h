@@ -137,5 +137,3 @@ extern sem_t semaforo;
 
 
  #endif//aliensYBalas.h
-object_t * destroyObj(object_t * ListObj, object_t * RipObj);
-object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity);

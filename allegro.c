@@ -30,7 +30,7 @@ typedef struct {
 } eventH_data_t;
 
 /*******************************************************/
-void * main (void * dataIn){
+void * allegroThread (void * dataIn){
 
     /*************************************************************************************************************
      * 
@@ -50,7 +50,6 @@ void * main (void * dataIn){
     ALLEGRO_EVENT_QUEUE * event_queue = NULL;
     ALLEGRO_EVENT ev;
     ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard; 
-    ALLEGRO_TIMER * timer = NULL;
 
     /**************************************************************
      * 
@@ -58,7 +57,6 @@ void * main (void * dataIn){
      * 
      * ***********************************************************/
 
-    bool fail = false;
     bool close_display = false;
     bool keybordDownFlag = false;
     bool keybordUpFlag = false;
@@ -75,7 +73,7 @@ void * main (void * dataIn){
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
-    punteros_t punteros = {data->nave, data->aliens, data->balasAliens,  data->balasUsuario, data->barreras, data->menu};
+    punteros_t punteros = {data->nave, data->aliens, data->balasAliens,  data->balasUsuario, data->barreras};
 
     display_data_t dataD = {&event_queue, &punteros, &close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, &punteros, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
@@ -119,6 +117,8 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
     while(!*data->close_display){
 
+        usleep(10 * U_SEC2M_SEC);
+
         if (al_get_next_event(event_queue, evp)) 
         {    
             if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
@@ -135,10 +135,12 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
         }
 
-        if (timerTick % FPS){
+        if (timerTick % FPS == 0){
             *data->displayFlag = true;
         }
 
     }
+
+    pthread_exit(0);
 
 }

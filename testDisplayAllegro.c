@@ -8,10 +8,12 @@
 #include "utilidades.h"
 #include <semaphore.h>
 #include "allegro.h"
+#include "displayAllegro.h"
+#include "inputAllegro.h"
 
 sem_t semaforo;
 
-int velAliens = 200;
+int velAliens = 100;
 unsigned int timerTick = 1000000;
 
 /*******************************************************************************************************************************************
@@ -49,12 +51,12 @@ int main (void){
     }
 
     naveUsuario -> pos.x = 6;   //Inicializa la nave del usuario.
-    naveUsuario -> pos.y = 14;
+    naveUsuario -> pos.y = Y_MAX - NAVEY - 10;
     naveUsuario -> type = NAVE;
     naveUsuario -> lives = 1;
     naveUsuario -> next = NULL;
 
-    level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 6, 1, 3, 1, 1, 1, {1,1}};
+    level_setting_t levelSettings = {0, X_MAX, 0, Y_MAX, 49 + 30 , 49 + 10, 10, 50, 50, 50, 6, X_MAX/2, 20, 1, 1, 1, {1,1}};
 /*
     typedef struct{
     int xMin;                   //-xMax: coordenada maxima en x alcanzable.
@@ -78,8 +80,15 @@ int main (void){
     //AAA BARRERAS
     }level_setting_t;
 */
-    
-/*
+
+    char filas[] = "666";
+
+    printf("Anashe\n");
+
+    listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
+
+    argMoveAlien_t argMoveAlien = {listAliens, 15, 15, X_MAX , 20, Y_MAX, 20, 49};
+    /*
     typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
     object_t * alien;//Necesita un puntero al primer elemento de la lista de los aliens.
     int desplazamientoX;//Y cuanto se deben mover las naves en cada tick.
@@ -90,17 +99,11 @@ int main (void){
     int margenY;
     int tamAlienX;//Hitbox del alien en la coordenada X.
     }argMoveAlien_t;
-*/
+    */
 
-    char filas[] = "333";
+    data_allegro_t dataAllegro = {naveUsuario, listAliens, NULL, NULL, NULL};
 
-    printf("Anashe\n");
-
-    listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
-
-    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 0, 15, 0, 3};
-
-    pthread_t Ttimer, TmoveAliens, TdisplayRaspi, TupdateInputGame;
+    pthread_t Ttimer, TmoveAliens, TdisplayRaspi, TupdateInputGame, Tallegro;
 
 
     printf("Anashe 1\n");
@@ -108,15 +111,13 @@ int main (void){
     sem_init(&semaforo, 0, 1);
 
     pthread_create(&Ttimer, NULL, timer, NULL);
-    
-    
+    pthread_create(&Tallegro, NULL, allegroThread, &dataAllegro);
     pthread_create(&TmoveAliens, NULL, moveAlien, &argMoveAlien);
 
     printf("Anashe 2\n");
 
     pthread_join(Ttimer, NULL);
-    
-    
+    pthread_join(Tallegro, NULL);
     pthread_join(TmoveAliens, NULL);
 
     sem_destroy(&semaforo);
