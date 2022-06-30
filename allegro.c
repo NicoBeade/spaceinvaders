@@ -76,7 +76,7 @@ void * allegroThread (void * dataIn){
     punteros_t punteros = {data->nave, data->aliens, data->balasAliens,  data->balasUsuario, data->barreras};
 
     display_data_t dataD = {&event_queue, &punteros, &close_display, &displayFlag};
-    keyboard_data_t dataK = {&event_queue, &ev, &punteros, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
+    keyboard_data_t dataK = {&event_queue, &ev, &punteros, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode, data->levelSettings};
 
     /*************************************************************************************************************
      * 
@@ -103,6 +103,8 @@ void * allegroThread (void * dataIn){
     al_destroy_thread(tdisplay);
     al_destroy_thread(tkeyboard);
 
+    pthread_exit(0);
+    
 }
 
 /*******************************************************/

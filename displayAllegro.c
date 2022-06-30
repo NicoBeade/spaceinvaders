@@ -19,15 +19,16 @@
 #include "displayAllegro.h"
 #include <semaphore.h>
 
+#define SNAVE "sprites/nave.png"
+#define SALIEN1 "sprites/alien1.png"
+#define SALIEN2 "sprites/alien2.png"
+#define SALIEN3 "sprites/alien3.png"
+#define SBARRERA "sprites/nave.png"
+#define SBALA "sprites/bala.png"
+
 extern sem_t semaforo;
 
 //En esta array se guardan las direcciones a los sprites
-
-static char * images[]= {"sprites/alien1.png", 
-                         "sprites/alien2.png", 
-                         "sprites/alien3.png", 
-                         "sprites/nave.png", 
-                         "sprites/barrera.png"};
     
 
 /***********************************************************************************************************************************************************
@@ -89,7 +90,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             showLista(data->punteros->nave);
             showLista(data->punteros->aliens);
             showLista(data->punteros->balasAliens);
-            showLista(data->punteros->balasUsuario);
+            showLista(*data->punteros->balasUsuario);
             showLista(data->punteros->barreras);
 
             al_flip_display();
@@ -117,7 +118,41 @@ int showEntity(object_t * entity){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
 
-    char * sprite = images[entity->type];       //Se busca la direccion del sprite
+    //Se busca la direccion del sprite
+    char * sprite;
+
+    switch (entity->type){
+        case NAVE:
+            sprite = SNAVE;
+            break;
+
+        case DANIEL:
+            sprite = SALIEN1;
+            break;
+
+        case PABLO:
+            sprite = SALIEN2;
+            break;
+
+        case NICOLAS:
+            sprite = SALIEN3;
+            break;    
+
+        case BALA_DANIEL:
+        case BALA_NICOLAS:
+        case BALA_PABLO:
+        case BALA_USUARIO:
+            sprite = SBALA;
+            break;
+
+        case BARRERA:
+            sprite = SBARRERA;
+            break;
+
+        default:
+            break;
+    }
+           
 
     image = al_load_bitmap(sprite);    //Se carga en el bitmap
 

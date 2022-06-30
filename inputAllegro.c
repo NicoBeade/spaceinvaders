@@ -20,6 +20,7 @@
 #include "inputAllegro.h"
 #include "utilidades.h"
 #include "displayAllegro.h"
+#include <semaphore.h>
 
 /*
     LEFT 82
@@ -33,6 +34,8 @@
 #define KEYCODE ALLEGRO_KEY_DOWN-*data->keycode
 
 enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
+
+extern sem_t semaforo;
 
 extern unsigned int timerTick;
 
@@ -80,11 +83,12 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
         if(timerTick % FPS == 0 ){
 
             if(key_pressed[UP]){
-
-
+                sem_wait(&semaforo);
+                *data->punteros->balasUsuario = shootBala(data->punteros->nave, *data->punteros->balasUsuario, data->levelSettings);
+                key_pressed[UP]=false;
+                sem_post(&semaforo);
             }
             if(key_pressed[DOWN]){
-
                 
             }
             if(key_pressed[RIGHT]){
@@ -97,6 +101,6 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
         }
     }
-    
+
     pthread_exit(0); 
 }
