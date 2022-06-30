@@ -37,6 +37,11 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
     //faltan los punteros a barreras y user
 }argDisplayRPI_t;
 
+typedef struct{
+    char textoPausa [10]; //10 letras maximas por mensaje a mostrarse en la parte inferior del display
+    const uint8_t (*spritePausa) [8][16];
+};
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -54,7 +59,10 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
 //*************CANTIDAD DE OPCIONES
 #define CANT_OPCIONES_PAUSA 3   //Determina la cantidad total de opciones en el menu de pausa
 
-enum OPTIONSPAUSA = {RESUME, VOLUMEN, HOME, RESTART, SCORE};
+enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
+
+
+
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

@@ -145,7 +145,7 @@ void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barrien
         for (j=0; j<16; j++){
             punto.x=j;
             punto.y=i;
-            if (displaySprite [i][j]==1){
+            if (displaySprite[i][j]==1){
                 disp_write(punto,D_ON);
             }
             else{
@@ -306,15 +306,20 @@ void* dispMenu(void* punteroPausa){
 void changeOptionPausa(int actualOption){
     switch(actualOption){
         case RESUME://Volver al juego
-
+            printHalfDisp(halfDispResume);
+            swipeTextDisp("RESUME");
         case VOLUMEN://Modificar el volumen
-
+            printHalfDisp(halfDispResume);
+            swipeTextDisp("RESUME");
         case HOME://Volver al menu de inicio
-
+            printHalfDisp(halfDispResume);
+            swipeTextDisp("RESUME");
         case RESTART://Reiniciar el nivel
-
+            printHalfDisp(halfDispResume);
+            swipeTextDisp("RESUME");
         case SCORE://Ver el puntaje actual
-
+            printHalfDisp(halfDispResume);
+            swipeTextDisp("RESUME");
         default:
     }
 }

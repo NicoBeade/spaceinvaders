@@ -467,14 +467,52 @@ static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos 
     return nodosCant;                           //Se devuelve la cantidad de nodos
 }
 
-
-//typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
-//    vector_t pos;//Posicion en x e y
-//    types_t type;//Tipo de objeto y categoria dentro del tipo
- //   int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
- // int ancho
- // int alto
-//    char animationStatus;//Estado de la animacion de cada nave, puede ser distinto para cada nave
- //   struct OBJECT * next;//Puntero al siguiente objeto de la lista.
-//}object_t;
+object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...){
+    int vidaMini = levelSetting -> miniBarreraLives;   //Cantidad de vidas de cada minibarrera
+    int anchoMini = levelSetting -> anchoMiniBarrera;     //Espacio que ocupa cada minibarrera en x
+    int altoMini = levelSetting -> altoMiniBarrera;         //Espacio que ocupa cada minibarrera en y
+    int espacioX = ((levelSetting->xMax - levelSetting->xMin + 1)-2*(levelSetting->barreraInicialX) - cantBarreras*anchoMini)/cantBarreras;
+    if(((levelSetting->barreraInicialY)*(miniBarrerasY) > levelSetting->yMax) || espacioX <= 0){
+        printf("Err Barrier Out Of Bounds");
+        return NULL;
+    }
+    vector_t posicionBarrera = {levelSetting->barreraInicialX,levelSetting->barreraInicialY};         //Se crea variable que almacenara pos de minibarreras
+    va_list typeMiniBarrera;        //Puntero a argumentos variables
+    va_start(typeMiniBarrera, miniBarrerasX);    //Se inicializan los argumentos variables, tipo de minibarrera
+    object_t * barreras = NULL;               //Se crea variable que almacenara la lista de barreras
+    int barrera;                                        //Contador de barreras
+    int columna;                                   //Contador de minibarreras en una fila
+    int fila;                                      //Contador de filas de minibarreras
+    types_t tipoMini;                        //Tipo de minibarrera
+    types_t tiposArray[MAXCANTINPUT];        //Array de tipos de minibarrera ingresados en orden inicializado en 0
+    for(barrera=0; barrera < cantBarreras; barrera++){    //Por cada barrera
+        for(fila = 0; fila < miniBarrerasY; fila++){      //Por cada fila de minibarreras
+            for(columna = 0; columna < miniBarrerasX; columna++){   //Por cada minibarrera
+                if(barrera == 0){                           //Si es la primera barrera
+                    tipoMini = va_arg(typeMiniBarrera, int);    //Se toma el tipo de los argumentos variables de entrada
+                    tiposArray[columna+fila*miniBarrerasX] = tipoMini;    //Se agrega a la lista el tipo
+                }
+                else{
+                    tipoMini = tiposArray[columna+fila*miniBarrerasX];      //Si no es la primera, se recupera el tipo desde el array
+                }
+                switch(tipoMini){                                           //Para cada tipo de barrera
+                    case BARRERA_ESQUINA_INF_IZQ:
+                    case BARRERA_ESQUINA_INF_DER:
+                    case BARRERA_ESQUINA_SUP_IZQ:
+                    case BARRERA_ESQUINA_SUP_DER:
+                    case BARRERA_INTERNO:
+                        barreras = addObj(barreras, posicionBarrera, tipoMini, vidaMini);       //Si es un tipo valido lo añade a la lista
+                        break;
+                    default:
+                        break;                                                                  //De lo contrario deja vacio ese espacio
+                }
+                posicionBarrera.x += anchoMini;                                                 //Se agrega la siguiente minibarrera a la derecha
+            }
+            posicionBarrera.y += altoMini;                                                      //Se pasa a la fila de abajo
+        }
+        posicionBarrera.y = levelSetting->barreraInicialY;                                      //Por cada barrera se resetea la posicion en Y
+        posicionBarrera.x += espacioX;                                                          //Por cada barrera se añade un salto en x
+    }
+    return barreras;                                                                            //Se devuelve la lista de barreras
+}  
 

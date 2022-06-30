@@ -116,7 +116,7 @@ int main (void){
 
     pthread_join(Ttimer, NULL);
     
-    
+
     pthread_join(TmoveAliens, NULL);
 
     sem_destroy(&semaforo);
