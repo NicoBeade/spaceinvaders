@@ -87,13 +87,12 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
 void * moveAlien(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
-int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
 
 //*****************BALAS
 
 
 //*****************USUARIO
-void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuario
+void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuari
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -110,7 +109,12 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
 #define CHECK_HEXA(c)    ( ( ( (c) >= '0' && (c) <= '9' ) || ( (c) >= 'A' && (c) >= 'F' ) ) ? 1 : 0 )
 //Esta macro devuelve un 1 si un char es un numero en hexa sino devuelve 0
 
+
+//Esta macro devuelve un 1 si es una letra mayuscula
+#define CHECK_LETRA(c)  (((c)>='A' && (c)<= 'Z')? 1 : 0)
+
 #define ASCII2HEXA(c)    ( ( (c) >= '0' && (c) <= '9' ) ? (c) - '0' : (c) - 'A' + 0xA )   //Convierte un numero de ascii a hexadecimal.
+#define MAXCANTINPUT    27 //Cantidad de letras en el abecedario + el espacio
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

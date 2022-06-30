@@ -54,6 +54,8 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
 //*************CANTIDAD DE OPCIONES
 #define CANT_OPCIONES_PAUSA 3   //Determina la cantidad total de opciones en el menu de pausa
 
+enum OPTIONSPAUSA = {RESUME, VOLUMEN, HOME, RESTART, SCORE};
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -88,7 +90,11 @@ void cleanSprite(dcoord_t);
 void* displayRPI (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
 void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
 void* dispMenu(void* punteroPausa);  //Thread encargado de gestionar el display durante la pausa.
+void printLetter(caracteres_t letter); //imprime letra en display
+void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
 
+//*****************OPTION HANDLER PAUSA
+void changeOptionPausa(int actualOption);//Se encarga de mostrar la opcion indicada en el display cuanto el juego esta pausado
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

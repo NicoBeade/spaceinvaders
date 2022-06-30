@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 
-void printLetter(caracteres_t letter){
+void printLetter(caracteres_t letter){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
     int i,j;
     dcoord_t punto;
     for (i=0; i<8; i++){
@@ -23,7 +23,7 @@ void printLetter(caracteres_t letter){
     disp_update();
 }
 
-void printFullDisp(fullDisp_t displaySprite){
+void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barriendo los 256 pixeles de una matriz de 16x16
     int i,j;
     dcoord_t punto;
     for (i=0; i<16; i++){
@@ -38,24 +38,5 @@ void printFullDisp(fullDisp_t displaySprite){
             }
         }
     }
-    disp_update();
-}
-
-
-/*int main (){
-    disp_init();
-    int i;
-    for (i=0;i<42;i++){
-        disp_clear();
-        printLetter(*(*(alfabeto+i)));
-        usleep(500*1000);
-    }
-    return 0;
-
-}*/ //main para mostrar letras
-
-int main (){
-    disp_init();
-    printFullDisp(alienSpaceInvaders1);
     disp_update();
 }

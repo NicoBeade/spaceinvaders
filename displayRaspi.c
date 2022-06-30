@@ -119,6 +119,42 @@ void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprit
         }
     }
 }
+
+void printLetter(caracteres_t letter){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
+    int i,j;
+    dcoord_t punto;
+    for (i=0; i<8; i++){
+        for (j=0; j<4; j++){
+            punto.x=j;
+            punto.y=i;
+            if (letter [i][j]==1){
+                disp_write(punto,D_ON);
+            }
+            else{
+                disp_write(punto,D_OFF);
+            }
+        }
+    }
+    disp_update();
+}
+
+void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barriendo los 256 pixeles de una matriz de 16x16
+    int i,j;
+    dcoord_t punto;
+    for (i=0; i<16; i++){
+        for (j=0; j<16; j++){
+            punto.x=j;
+            punto.y=i;
+            if (displaySprite [i][j]==1){
+                disp_write(punto,D_ON);
+            }
+            else{
+                disp_write(punto,D_OFF);
+            }
+        }
+    }
+    disp_update();
+}
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -215,11 +251,11 @@ void* displayRPI (void* argDisplayRPI){
 
 /******************************************************************************************************************************************
  * 
-         _____   _                            _     ___    _                 ___                               ___   ___   ___ 
-        |_   _| | |_    _ _   ___   __ _   __| |   |   \  (_)  ___  _ __    | _ \  __ _   _  _   ___  __ _    | _ \ | _ \ |_ _|
-          | |   | ' \  | '_| / -_) / _` | / _` |   | |) | | | (_-< | '_ \   |  _/ / _` | | || | (_-< / _` |   |   / |  _/  | | 
-          |_|   |_||_| |_|   \___| \__,_| \__,_|   |___/  |_| /__/ | .__/   |_|   \__,_|  \_,_| /__/ \__,_|   |_|_\ |_|   |___|
-                                                                   |_|                    
+             _____   _                            _        _   _               __  __                         ___   ___   ___ 
+            |_   _| | |_    _ _   ___   __ _   __| |    __| | (_)  ___  _ __  |  \/  |  ___   _ _    _  _    | _ \ | _ \ |_ _|
+              | |   | ' \  | '_| / -_) / _` | / _` |   / _` | | | (_-< | '_ \ | |\/| | / -_) | ' \  | || |   |   / |  _/  | | 
+              |_|   |_||_| |_|   \___| \__,_| \__,_|   \__,_| |_| /__/ | .__/ |_|  |_| \___| |_||_|  \_,_|   |_|_\ |_|   |___|
+                                                                       |_|                                                         
  * 
  ******************************************************************************************************************************************/
 
@@ -227,7 +263,9 @@ void* dispMenu(void* punteroPausa){
 
     punteroMenu_t menuDisplay = {0,0,0};
 
-    while(1){
+    int exitThread = 1;//Se utiliza para saber si hay que salir del thread.
+
+    while(exitThread){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
@@ -240,17 +278,49 @@ void* dispMenu(void* punteroPausa){
                 else if(menuDisplay.x > (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1){
                     menuDisplay.x = 0;//Si nos pasamos por la derecha vamos a la primera opcion.
                 }
-
                 (((punteroMenu_t*)punteroPausa) -> changeOption)(menuDisplay.x);//Llama a la funcion que se encarga de mostrar en pantalla la opcion indicada
             }
 
             menuDisplay.press = ((punteroMenu_t*)punteroPausa) -> press;
             if(menuDisplay.press != 0){
-                (((punteroMenu_t*)punteroPausa) -> selectOption)(menuDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
+                exitThread = (((punteroMenu_t*)punteroPausa) -> selectOption)(menuDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
             }
         }
     }
 }
 
 /*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+/******************************************************************************************************************************************
+ * 
+                          _     _                _  _                    _   _                 ___                           
+             ___   _ __  | |_  (_)  ___   _ _   | || |  __ _   _ _    __| | | |  ___   _ _    | _ \  __ _   _  _   ___  __ _ 
+            / _ \ | '_ \ |  _| | | / _ \ | ' \  | __ | / _` | | ' \  / _` | | | / -_) | '_|   |  _/ / _` | | || | (_-< / _` |
+            \___/ | .__/  \__| |_| \___/ |_||_| |_||_| \__,_| |_||_| \__,_| |_| \___| |_|     |_|   \__,_|  \_,_| /__/ \__,_|
+                  |_|                                                                                                                                                             
+ * 
+ ******************************************************************************************************************************************/
+
+void changeOptionPausa(int actualOption){
+    switch(actualOption){
+        case RESUME://Volver al juego
+
+        case VOLUMEN://Modificar el volumen
+
+        case HOME://Volver al menu de inicio
+
+        case RESTART://Reiniciar el nivel
+
+        case SCORE://Ver el puntaje actual
+
+        default:
+    }
+}
+
+
+
+
+ /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

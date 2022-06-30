@@ -42,6 +42,7 @@
  ******************************************************************************************************************************************/
 
 static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
+static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -284,7 +285,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
     return 0;
 }
 
-int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
+static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
 /* Esta funcion detecta si alguna de las naves toco algun borde, teniendo en cuenta todas las posibles combinaciones.
     Devuelve que borde fue tocado. Recibe como parametros:
         -alien: puntero al primer elemento de la lista de los aliens.
@@ -477,14 +478,35 @@ unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una 
 //}object_t;
 
 
-object_t initBarreras(level_setting_t * levelSetting, int cantBarreras, int cantMiniBarreras, ...){
+object_t initBarreras(level_setting_t * levelSetting, int cantBarreras, char * str, ...){
     va_list typeMiniBarrera;        //Puntero a argumentos variables
-    va_start(typeMiniBarrera, cantMiniBarreras);    //Se inicializan los argumentos variables, tipo de minibarrera
+    va_start(typeMiniBarrera, str);    //Se inicializan los argumentos variables, tipo de minibarrera
     object_t * barreras = NULL;               //Se crea variable que almacenara la lista de barreras
-    vector_t posicionBarrera = {levelSetting->barreraInicialX,levelSetting->barreraInicialY};                       //Se crea variable que almacenara pos de minibarreras
-    int barrera;                                      //Contador de barreras
+    vector_t posicionBarrera = {levelSetting->barreraInicialX,levelSetting->barreraInicialY};         //Se crea variable que almacenara pos de minibarreras
+    int barrera;                                        //Contador de barreras
     int miniBarrera;                                    //Contador de minibarreras
-    types_t tipoMini = NONE;                                       //Tipo de minibarrera
+    char * string = str;                                //String de entrada
+    types_t tipoMini = NONE;                            //Tipo de minibarrera
+    int columnas = 0;                                   //Cantidad de minibarreras en una fila
+    int filas = 1;                                      //Cantidad de filas de minibarreras
+    int err = 0;                                        //Variable de error (0 no hubo error)
+    miniBarrierType_t tipos[MAXCANTINPUT];              //Array auxiliar de tipos y sus identificadores de letras
+    for(letra = 0; string[letra] != '\0'; letra++){     //Se recorre el string para revisar que la entrada sea correcta
+        char caracter = string[letra];
+        err = !(CHECK_LETRA(caracter) || caracter == '\n' || caracter == ' ');               //Si la entrada no es valida hubo error
+        if(err == 0){                                   //Si no hay error
+            if(caracter == '\n'){                  //Si el caracter es un enter
+                filas++;                                //Se agrega una fila
++           }
+            else{                                       //Si no es un enter
+                char letra ;
+                for(int c; caracter != tipos[c].id c<MAXCANTINPUT; c++){        //Chequea si el tipo fue agregado al array auxiliar
+                    
+                }
+            }
+        }
+    }
+
     for(barrera=0; barrera < cantBarreras; barrera++){    //Por cada barrera
         for(miniBarrera = 0; miniBarrera < cantMiniBarreras; miniBarrera++){    //Por cada minibarrera
             tipoMini = va_arg(typeMiniBarrera);
@@ -505,3 +527,8 @@ object_t initBarreras(level_setting_t * levelSetting, int cantBarreras, int cant
     }
     return barreras;
 }
+
+typedef struct MINIBARRIERTYPE{
+    char id;
+    types_t tipo;
+}miniBarrierType_t
