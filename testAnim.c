@@ -14,19 +14,35 @@ void printLetter(caracteres_t letter){
             punto.y=i;
             if (letter [i][j]==1){
                 disp_write(punto,D_ON);
-                putchar('*');
             }
-            else {
-                putchar(' ');
+            else{
+                disp_write(punto,D_OFF);
             }
         }
-        putchar('\n');
+    }
+    disp_update();
+}
+
+void printFullDisp(fullDisp_t displaySprite){
+    int i,j;
+    dcoord_t punto;
+    for (i=0; i<16; i++){
+        for (j=0; j<16; j++){
+            punto.x=j;
+            punto.y=i;
+            if (displaySprite [i][j]==1){
+                disp_write(punto,D_ON);
+            }
+            else{
+                disp_write(punto,D_OFF);
+            }
+        }
     }
     disp_update();
 }
 
 
-int main (){
+/*int main (){
     disp_init();
     int i;
     for (i=0;i<42;i++){
@@ -36,4 +52,10 @@ int main (){
     }
     return 0;
 
+}*/ //main para mostrar letras
+
+int main (){
+    disp_init();
+    printFullDisp(alienSpaceInvaders1);
+    disp_update();
 }
