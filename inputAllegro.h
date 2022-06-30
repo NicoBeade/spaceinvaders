@@ -37,6 +37,8 @@
     bool * keyboardUpFlag;
     int * keycode;
 
+    level_setting_t * levelSettings;
+
 } keyboard_data_t;
 
 

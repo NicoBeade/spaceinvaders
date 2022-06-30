@@ -45,7 +45,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
 static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
+static unsigned int countList(object_t * lista);
 
 
 /*******************************************************************************************************************************************
@@ -87,6 +87,33 @@ object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setL
     newObj -> next = NULL;
 
 	return firstObj;//Devuelve un puntero al primer elemento.
+}
+
+object_t * destroyObj(object_t * ListObj, object_t * RipObj){
+    object_t * Obj = ListObj;
+    if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
+        if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
+            object_t * PreObj = Obj;            //Objeto anterior al que se va a eliminar
+            while(PreObj -> next != RipObj){     //Recorre la lista hasta encontrar el objeto anterior al que se quiere destruir
+                PreObj = PreObj -> next;
+            }
+            PreObj -> next = RipObj -> next;      //Se asigna el siguiente objeto
+        }
+        else{                                       //Si el objeto a eliminar es el primero
+            Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
+        }
+        free(RipObj);                          //Se libera la memoria del objeto eliminado
+    }
+    return Obj;             //Se devuelve la lista
+}
+
+static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
+    unsigned int nodosCant = 0;                 //Se inicializa la variable cantidad de nodos
+    while(lista != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
+        nodosCant++;                            //Se cuenta el nodo
+        lista = lista -> next;     //Se apunta al siguiente nodo
+    }
+    return nodosCant;                           //Se devuelve la cantidad de nodos
 }
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -219,7 +246,7 @@ void * moveAlien(void* argMoveAlien){
                 default:
                     break;
             }
-            object_t* auxiliar = ((argMoveAlien_t*)argMoveAlien) -> alien;
+            object_t* auxiliar = *(((argMoveAlien_t*)argMoveAlien) -> alien);
             while (auxiliar != NULL){//Mueve los aliens uno por uno
 
                 auxiliar->pos.x += vx;//Modifica su posicion en x e y
@@ -227,11 +254,17 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar->animationStatus++;
                 auxiliar = auxiliar -> next;
             }
-        sem_post(&semaforo);
+
+            
+            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_DANIEL, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
+            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_NICOLAS, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
+            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_PABLO, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
+            sem_post(&semaforo);
         }
     }
     pthread_exit(0);
 }
+
 //*************************************************************************************************************************************
 
 static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
@@ -314,40 +347,70 @@ static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int marge
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
+
 /*******************************************************************************************************************************************
  * 
-             ___                      _                                _           _   _                            _       
-            | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | | | |  ___  _  _   __ _   _ _  (_)  ___ 
-            | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   | |_| | (_-< | || | / _` | | '_| | | / _ \
-            |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|    \___/  /__/  \_,_| \__,_| |_|   |_| \___/                                                                                        
+                     ___                      _                                _           ___          _        
+                    | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | _ )  __ _  | |  __ _ 
+                    | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   | _ \ / _` | | | / _` |
+                    |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   |___/ \__,_| |_| \__,_|                                                                                   
  * 
  ******************************************************************************************************************************************/
 
-void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamNaveX){
-/* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
-    la posicion de la nave del usuario.
-*/
+void * moveBalaThread(void * argMoveBala){
 
-    if( !((naveUsuario -> pos.x <= 10 && desplazamiento < 0) || ((naveUsuario -> pos.x >= xMax - tamNaveX -10 ) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
-        naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
-    }   
+    while(1){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velBalas) == 0 ){
+            sem_wait(&semaforo);
+            object_t * balas = NULL;
+            //printf("%d   %d", ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin);
+            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);.
+           //printf("GEORGE %p   ",  ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala( *(((argMoveBala_t*) argMoveBala) -> balasEnemigas), NICOLAS, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
+            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasEnemigas), BALA_PABLO, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
+            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasEnemigas), BALA_DANIEL, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
+            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            *(((argMoveBala_t*) argMoveBala) -> balasUsr) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasUsr), BALA_USUARIO, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
+            //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
+            sem_post(&semaforo);
+        } 
+    }
 }
 
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
+object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity){      //Mueve las balas de un tipo especifico.
+    object_t * Bala = ListBalasEnemy;
+    object_t * newList = ListBalasEnemy;
+    if(Bala != NULL){
+        do{
+            if(Bala -> type == BalaType){
+                if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
+                    Bala -> pos.y += velocity;
+                }
+                else{                               //Si la bala se encuentra fuera (o en la frontera)
+                    newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
+                }                                                                                           
+            }
+            Bala = Bala -> next;
+        }while(Bala != NULL);
+    }
+    return newList;
+}
 
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
-    int balasActuales = countList(listaBalas);
-    int balasDisponibles;
-    if(listaNaves -> type == NAVE){
-        balasDisponibles = levelSetting -> maxUsrBullets - balasActuales;
+    int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
+    int balasDisponibles;                                       //Se crea una variable con la cantidad de balas que se puede disparar
+    if(listaNaves -> type == NAVE){                             //Si es una nave de usuario
+        balasDisponibles = levelSetting -> maxUsrBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     }
-    else{
-        balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
+    else{                                                       //Si es una nave enemiga
+        balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales; //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     }
-    object_t * nave = listaNaves;
-    object_t * bala = listaBalas;
-    int probabilidad;
+    object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
+    object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
+    int probabilidad;                                           //
     int tipoBala;
     while(balasDisponibles > 0 && nave != NULL){
         switch(nave -> type){
@@ -388,15 +451,33 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
     return bala;
 }
 
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
 
-static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
-    unsigned int nodosCant = 0;                 //Se inicializa la variable cantidad de nodos
-    while(lista != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
-        nodosCant++;                            //Se cuenta el nodo
-        lista = lista -> next;     //Se apunta al siguiente nodo
-    }
-    return nodosCant;                           //Se devuelve la cantidad de nodos
+
+/*******************************************************************************************************************************************
+ * 
+             ___                      _                                _           _   _                            _       
+            | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | | | |  ___  _  _   __ _   _ _  (_)  ___ 
+            | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   | |_| | (_-< | || | / _` | | '_| | | / _ \
+            |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|    \___/  /__/  \_,_| \__,_| |_|   |_| \___/                                                                                        
+ * 
+ ******************************************************************************************************************************************/
+
+void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamNaveX){
+/* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
+    la posicion de la nave del usuario.
+*/
+
+    if( !((naveUsuario -> pos.x <= 10 && desplazamiento < 0) || ((naveUsuario -> pos.x >= xMax - tamNaveX -10 ) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
+        naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
+    }   
 }
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
 
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...){
     int vidaMini = levelSetting -> miniBarreraLives;   //Cantidad de vidas de cada minibarrera

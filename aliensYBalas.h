@@ -39,7 +39,7 @@
  * 
  ******************************************************************************************************************************************/
 typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
-    object_t * alien;//Necesita un puntero al primer elemento de la lista de los aliens.
+    object_t ** alien;//Necesita un puntero al primer elemento de la lista de los aliens.
     int desplazamientoX;//Y cuanto se deben mover las naves en cada tick.
     int desplazamientoY;
     int xMax;//Coordenadas maximas del display.
@@ -47,8 +47,20 @@ typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
     int yMax;
     int margenY;
     int tamAlienX;//Hitbox del alien en la coordenada X.
+	object_t ** listBalaAliens;//Puntero a la lista de las balas de los aliens.
+	level_setting_t * levelSettings;//Puntero a las settings del nivel.
 }argMoveAlien_t;
 
+typedef struct{
+	object_t ** balasUsr;
+	object_t ** balasEnemigas;
+	int velocidadPablo;
+	int velocidadDaniel;
+	int velocidadNicolas;
+	int velocidadUsr;
+	int yMax;
+	int yMin;
+}argMoveBala_t;
 
 
 /*******************************************************************************************************************************************
@@ -93,8 +105,11 @@ object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int mi
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
 object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity);
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting);
+void * moveBalaThread(void * argMoveBala);
 //*****************USUARIO
 void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuari
+
+void * moveBalaThread(void * argMoveBala);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -133,6 +148,7 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
                                                                         Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
+extern int velBalas;	//Velocidad a la que se mueven las balas.
 extern sem_t semaforo;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
