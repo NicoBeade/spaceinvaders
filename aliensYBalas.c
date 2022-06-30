@@ -385,8 +385,20 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
 
     if( !((naveUsuario -> pos.x == 0 && desplazamiento < 0) || ((naveUsuario -> pos.x == xMax - tamNaveX + 1) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
         naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
-    }
+    }   
 }
+
+/* IDEA
+void * moveUsuario(object_t * naveUsuario){
+
+    if(naveUsuario->animationStatus == 'D'){
+        moveNaveUsuario(naveUsuario, DERECHAX);
+    }
+    if(naveUsuario->animationStatus == 'I')[
+        moveNaveUsuario(naveUsuario, IZQUIERDAX);
+    ]
+}
+*/
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

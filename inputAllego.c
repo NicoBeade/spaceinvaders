@@ -13,98 +13,92 @@
 *   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas a recibir input del usuario cuando el juego se ejecuta a.
 *
  **********************************************************************************************************************************************************/
-#include <stdio.h>
-#include <allegro5/allegro.h>
-#include <pthread.h>
-#include <stdio.h>
 
+#include <stdio.h>
+#include <time.h>
+#include "aliensYBalas.h"
 #include "inputAllegro.h"
+#include "utilidades.h"
+#include "displayAllegro.h"
 
-static enum MYKEYS { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT};
+/*
+    LEFT 82
+    RIGTH 83
+    UP 84
+    DOWN 85
+    SPACE 75
 
-void * keybord(void * dataIn){
-    
-    keybord_data_t * data = (keybord_data_t *) dataIn; 
+*/
 
-    ALLEGRO_EVENT_QUEUE * event_queue = data->event_queue;
+#define KEYCODE ALLEGRO_KEY_DOWN-*data->keycode
 
-    bool fail = false;
-    bool key_pressed[4] = {false, false, false, false};
+enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
 
-    /**********************************************************************************************************
-     *  
-     *                                          INICIALIZACION
-     * 
-     * *******************************************************************************************************/
+void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamNaveX){
+/* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
+    la posicion de la nave del usuario.
+*/
 
-    if (!al_install_keyboard() && !fail) {
-        fprintf(stderr, "failed to initialize the keyboard!\n");
-        fail = true;
-    }
+    if( !((naveUsuario -> pos.x == 0 && desplazamiento < 0) || ((naveUsuario -> pos.x == xMax - tamNaveX + 1) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
+        naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
+    }   
+}
 
-    //Si falla la inicializacion
+void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
-    if (fail){
-        pthread_exit(NULL);
-    }
+    keyboard_data_t * data = (keyboard_data_t *) dataIn;
 
-    //Se registra el display en la cola de eventos
+    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
 
-    al_register_event_source(data->event_queue, al_get_keyboard_event_source());
+    ALLEGRO_EVENT * evp = data->ev;
 
-    while (!data->close_display) {
+    bool key_pressed[5] = {false, false, false, false, false};
 
-        if (data->keybordFlag){
-           
-            if (EVENTO.type == ALLEGRO_EVENT_KEY_DOWN) {
-                switch (EVENTO.keyboard.keycode) {
-                    case ALLEGRO_KEY_UP:
-                        key_pressed[KEY_UP] = true;
-                        printf("hola");
-                        break;
+    al_install_keyboard();
 
-                    case ALLEGRO_KEY_DOWN:
-                        key_pressed[KEY_DOWN] = true;
-                        break;
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
 
-                    case ALLEGRO_KEY_LEFT:
-                        key_pressed[KEY_LEFT] = true;
-                        break;
+    while(!*data->close_display){
 
-                    case ALLEGRO_KEY_RIGHT:
-                        key_pressed[KEY_RIGHT] = true;
-                        break;
-                }
+        if(*data->keyboardDownFlag){
+
+            if(*data->keycode == ALLEGRO_KEY_SPACE){
+                key_pressed[SPACE]= true;
+            }     
+            else{
+                key_pressed[KEYCODE]= true;
             }
 
-            else if (EVENTO.type == ALLEGRO_EVENT_KEY_UP) {
-                switch (EVENTO.keyboard.keycode) {
-                    case ALLEGRO_KEY_UP:
-                        key_pressed[KEY_UP] = false;
-                        break;
+            *data->keyboardDownFlag= false;       
+        }
+        else if(*data->keyboardUpFlag){
 
-                    case ALLEGRO_KEY_DOWN:
-                        key_pressed[KEY_DOWN] = false;
-                        break;
-
-                    case ALLEGRO_KEY_LEFT:
-                        key_pressed[KEY_LEFT] = false;
-                        break;
-
-                    case ALLEGRO_KEY_RIGHT:
-                        key_pressed[KEY_RIGHT] = false;
-                        break;
-
-                    case ALLEGRO_KEY_ESCAPE:
-                        *data->close_display = true;
-                        break;
-                }
+            if(*data->keycode == ALLEGRO_KEY_SPACE){
+                key_pressed[SPACE]= false;
+            }     
+            else{
+                key_pressed[KEYCODE]= false;
             }
 
-            *data->keybordFlag = false;
+            *data->keyboardUpFlag= false;       
         }
 
-    }
+        usleep(10000);
 
-    pthread_exit(NULL);
+        if(key_pressed[UP]){
+
+
+        }
+        if(key_pressed[DOWN]){
+
+            
+        }
+        if(key_pressed[RIGHT]){
+            moveNaveUsuario(data->object, DESPLAZAMIENTO_X, X_MAX, NAVEX);
+            
+        }
+        if(key_pressed[LEFT]){
+            moveNaveUsuario(data->object, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
+        }
+    } 
 }

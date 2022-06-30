@@ -45,17 +45,12 @@
 
 typedef struct 
 {
-    ALLEGRO_EVENT_QUEUE * event_queue;
-    ALLEGRO_DISPLAY * display;
-    
+    ALLEGRO_EVENT_QUEUE ** event_queue;
+
+    object_t * nave;
+
     bool * close_display;
     bool * displayFlag;
-
-    object_t * aliens;
-    object_t * nave;
-    object_t * barrera;
-    object_t * balasUsuario;
-    object_t * balasAliens;
 
 } display_data_t;
 
@@ -80,7 +75,7 @@ typedef struct
         
     ***************************************************************************/
 
-void * display(void * arg);
+void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -95,8 +90,11 @@ void * display(void * arg);
  * 
  ******************************************************************************************************************************************/
 
-#define X_MAX 640              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
+#define X_MAX 840              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
 #define Y_MAX 480              //Alto maximo de la pantalla
+
+#define NAVEX 63               //Tamaño en X del sprite de la nave
+#define NAVEY 38               //Tamaño en Y del sprite de la nave
 
 #define MARGEN_X 4          //Margen horizontal en el display
 #define MARGEN_Y 1          //Margen vertical en el display
