@@ -76,8 +76,8 @@ typedef struct{//Datos utilizados al estar en algun menu.
     int y;
     char press;// Presion del boton.
     int cantOpciones;//Cantidad total de opciones en el menu.
-    void (*changeOption)(int);//Callback a la funcion que cambia la opcion seleccionada.
-    void (*selectOption)(int);//Callback a la funcion que selecciona la opcion seleccionada.
+    void (*changeOption)(int opcionActual);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*selectOption)(int opcionActual);//Callback a la funcion que selecciona la opcion seleccionada.
 }punteroMenu_t;
 
 /*******************************************************************************************************************************************

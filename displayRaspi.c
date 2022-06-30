@@ -235,18 +235,18 @@ void* dispMenu(void* punteroPausa){
             if( ((punteroMenu_t*)punteroPausa) -> x != 0 ){//Si se movio el joistick
                 menuDisplay.x += ((punteroMenu_t*)punteroPausa) -> x;
                 if(menuDisplay.x < 0){//estos if estan para que se pueda "dar la vuelta" en las opciones.
-                    menuDisplay.x = cantOpciones - 1;//Si nos pasamos por la izquierda vamos a la ultima opcion.
+                    menuDisplay.x = (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1;//Si nos pasamos por la izquierda vamos a la ultima opcion.
                 }
                 else if(menuDisplay.x > (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1){
                     menuDisplay.x = 0;//Si nos pasamos por la derecha vamos a la primera opcion.
                 }
 
-                (((punteroMenu_t*)punteroPausa) -> changeOption)(pausaDisplay.x);//Llama a la funcion que se encarga de mostrar en pantalla la opcion indicada
+                (((punteroMenu_t*)punteroPausa) -> changeOption)(menuDisplay.x);//Llama a la funcion que se encarga de mostrar en pantalla la opcion indicada
             }
 
             menuDisplay.press = ((punteroMenu_t*)punteroPausa) -> press;
             if(menuDisplay.press != 0){
-                (((punteroMenu_t*)punteroPausa) -> selectOption)(pausaDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
+                (((punteroMenu_t*)punteroPausa) -> selectOption)(menuDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
             }
         }
     }
