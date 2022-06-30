@@ -19,7 +19,6 @@
 #include "aliensYBalas.h"
 #include "inputAllegro.h"
 #include "utilidades.h"
-#include "aliensYBalas.h"
 #include "displayAllegro.h"
 
 /*
@@ -35,13 +34,15 @@
 
 enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
 
+extern unsigned int timerTick;
+
+#define FPS 5
+
 void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
     keyboard_data_t * data = (keyboard_data_t *) dataIn;
 
     ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
-
-    ALLEGRO_EVENT * evp = data->ev;
 
     bool key_pressed[6] = {false, false, false, false, false, false};
 
@@ -50,6 +51,8 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 
     while(!*data->close_display){
+
+        usleep(10 * U_SEC2M_SEC);
 
         if(*data->keyboardDownFlag){
 
@@ -74,22 +77,26 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
             *data->keyboardUpFlag= false;       
         }
 
-        usleep(10000);
+        if(timerTick % FPS == 0 ){
 
-        if(key_pressed[UP]){
+            if(key_pressed[UP]){
 
+
+            }
+            if(key_pressed[DOWN]){
+
+                
+            }
+            if(key_pressed[RIGHT]){
+                moveNaveUsuario(data->punteros->nave, DESPLAZAMIENTO_X, X_MAX, NAVEX);
+                
+            }
+            if(key_pressed[LEFT]){
+                moveNaveUsuario(data->punteros->nave, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
+            }
 
         }
-        if(key_pressed[DOWN]){
-
-            
-        }
-        if(key_pressed[RIGHT]){
-            moveNaveUsuario(data->punteros->nave, DESPLAZAMIENTO_X, X_MAX, NAVEX);
-            
-        }
-        if(key_pressed[LEFT]){
-            moveNaveUsuario(data->punteros->nave, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
-        }
-    } 
+    }
+    
+    pthread_exit(0); 
 }

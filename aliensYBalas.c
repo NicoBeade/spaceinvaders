@@ -43,7 +43,6 @@
 
 static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
 static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
-static unsigned int countList(object_t * lista);    //Contador de objetos de una lista
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -315,62 +314,6 @@ static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int marge
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
-
-/*******************************************************************************************************************************************
- * 
-                     ___                      _                                _           ___          _        
-                    | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | _ )  __ _  | |  __ _ 
-                    | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   | _ \ / _` | | | / _` |
-                    |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   |___/ \__,_| |_| \__,_|
-                                                                                              
- * 
- ******************************************************************************************************************************************/
-
-
- 
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity){      //Mueve las balas de un tipo especifico.
-    object_t * Bala = ListBalasEnemy;
-    object_t * newList = ListBalasEnemy;
-    if(Bala != NULL){
-        do{
-            if(Bala -> type == BalaType){
-                if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
-                    Bala -> pos.y += velocity;
-                }
-                else{                               //Si la bala se encuentra fuera (o en la frontera)
-                    newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
-                }                                                                                           
-            }
-            Bala = Bala -> next;
-        }while(Bala != NULL);
-    }
-    return newList;
-}
-
-
-object_t * destroyObj(object_t * ListObj, object_t * RipObj){
-    object_t * Obj = ListObj;
-    if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
-        if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
-            object_t * PreObj = Obj;            //Objeto anterior al que se va a eliminar
-            while(PreObj -> next != RipObj){     //Recorre la lista hasta encontrar el objeto anterior al que se quiere destruir
-                PreObj = PreObj -> next;
-            }
-            PreObj -> next = RipObj -> next;      //Se asigna el siguiente objeto
-        }
-        else{                                       //Si el objeto a eliminar es el primero
-            Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
-        }
-        free(RipObj);                          //Se libera la memoria del objeto eliminado
-    }
-    return Obj;             //Se devuelve la lista
-}
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-
 /*******************************************************************************************************************************************
  * 
              ___                      _                                _           _   _                            _       
@@ -385,22 +328,10 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
     la posicion de la nave del usuario.
 */
 
-    if( !((naveUsuario -> pos.x == 0 && desplazamiento < 0) || ((naveUsuario -> pos.x == xMax - tamNaveX + 1) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
+    if( !((naveUsuario -> pos.x <= 10 && desplazamiento < 0) || ((naveUsuario -> pos.x >= xMax - tamNaveX -10 ) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
         naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
     }   
 }
-
-/* IDEA
-void * moveUsuario(object_t * naveUsuario){
-
-    if(naveUsuario->animationStatus == 'D'){
-        moveNaveUsuario(naveUsuario, DERECHAX);
-    }
-    if(naveUsuario->animationStatus == 'I')[
-        moveNaveUsuario(naveUsuario, IZQUIERDAX);
-    ]
-}
-*/
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

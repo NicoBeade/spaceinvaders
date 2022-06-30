@@ -20,19 +20,10 @@
  #include <allegro5/allegro.h>
  #include <allegro5/allegro_image.h>
  #include "utilidades.h"
+#include "displayAllegro.h"
 
  #define EVENTO (*(data->ev))
 
-typedef struct{
-
-    object_t * nave;
-    object_t * aliens;
-    object_t * balasAliens;
-    object_t * balasUsuario;
-    object_t * barreras;
-    menu_t * menu;
-
-} punteros_t;
 
  typedef struct {
 
@@ -40,7 +31,7 @@ typedef struct{
     ALLEGRO_EVENT * ev; 
 
     punteros_t * punteros;
-        
+
     bool * close_display;
     bool * keyboardDownFlag;
     bool * keyboardUpFlag;
