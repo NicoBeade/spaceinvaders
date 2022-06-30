@@ -27,7 +27,7 @@ int main (){
     for (i=0;i<42;i++){
         disp_clear();
         printLetter(*(alfabeto+i));
-        usleep(200*1000);
+        usleep(500*1000);
     }
     return 0;
 
