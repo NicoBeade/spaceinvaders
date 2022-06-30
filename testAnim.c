@@ -14,8 +14,13 @@ void printLetter(caracteres_t* letter){
             punto.y=i;
             if ((*letter) [j][i]==1){
                 disp_write(punto,D_ON);
+                putchar('*');
+            }
+            else {
+                putchar(' ');
             }
         }
+        putchar('\n');
     }
     disp_update();
 }
