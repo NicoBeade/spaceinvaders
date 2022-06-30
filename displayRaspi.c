@@ -309,17 +309,17 @@ void changeOptionPausa(int actualOption){
             printHalfDisp(halfDispResume);
             swipeTextDisp("RESUME");
         case VOLUMEN://Modificar el volumen
-            printHalfDisp(halfDispResume);
-            swipeTextDisp("RESUME");
+            printHalfDisp(halfDispVolume);
+            swipeTextDisp("VOLUME");
         case HOME://Volver al menu de inicio
-            printHalfDisp(halfDispResume);
-            swipeTextDisp("RESUME");
+            printHalfDisp(halfDispAlienSpaceInvaders);
+            swipeTextDisp("HOME");
         case RESTART://Reiniciar el nivel
-            printHalfDisp(halfDispResume);
-            swipeTextDisp("RESUME");
+            printHalfDisp(halfDispRestart);
+            swipeTextDisp("RESTART");
         case SCORE://Ver el puntaje actual
-            printHalfDisp(halfDispResume);
-            swipeTextDisp("RESUME");
+            printHalfDisp(halfDispTrophy);
+            swipeTextDisp("SCORE");
         default:
     }
 }

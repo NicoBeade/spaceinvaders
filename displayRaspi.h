@@ -38,7 +38,7 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
 }argDisplayRPI_t;
 
 typedef struct{
-    char textoPausa [10]; //10 letras maximas por mensaje a mostrarse en la parte inferior del display
+    char* textoPausa;
     const uint8_t (*spritePausa) [8][16];
 };
 
