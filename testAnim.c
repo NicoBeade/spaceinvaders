@@ -12,7 +12,7 @@ void printLetter(caracteres_t letter){
         for (j=0; j<4; j++){
             punto.x=j;
             punto.y=i;
-            if (letter [j][i]==1){
+            if (letter [i][j]==1){
                 disp_write(punto,D_ON);
                 putchar('*');
             }
