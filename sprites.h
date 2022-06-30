@@ -585,10 +585,10 @@ caracteres_t letraEspacio ={
 };
 
 
-
-caracteres_t* alfabeto [42] = {&letraA,&letraB,&letraC,&letraD,&}
-
-
+caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
+&letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
+&letraU,&letraV,&letraW,&letraX,&letraY,&letraZ,&letra0,&letra1,&letra2,&letra3,&letra4,&letra5,
+&letra6,&letra7,&letra8,&letra9,&letraGuion,&letraPunto,&letraEspacio,&alienChar1,&alienChar2,alienChar3};
 
 
 /*******************************************************************************************************************************************
