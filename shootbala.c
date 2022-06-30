@@ -7,8 +7,7 @@
 #include "aliensYBalas.h"
 #include "utilidades.h"
 #include "stdlib.h"
-#include "time.h"
-int shootBalaUsr(nave_t * naveUsr){
+/*int shootBalaUsr(nave_t * naveUsr){
     //Se cuenta la cantidad de balas del usuari
     nave_t * usuario = naveUsr;
     unsigned int balasActuales = counterBala(naveUsr -> listaBalasUsr);
@@ -19,30 +18,52 @@ int shootBalaUsr(nave_t * naveUsr){
     else{
         return -1;
     }
-}
+}*/
 
-object_t * shootBalaEnemy(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting,){
+object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
     int balasActuales = countList(listaBalas);
-    int balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
+    if(nave -> type == NAVE){
+        int balasDisponibles = levelSetting -> maxUsrBullets - balasActuales;
+    }
+    else{
+        int balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales;
+    }
     object_t * nave = listaNaves;
     object_t * bala = listaBalas;
-    srand(time(NULL));
     int probabilidad;
-    int tipoNave;
+    int tipoBala;
     while(balasDisponibles > 0 && nave != NULL){
         switch(nave -> type){
             case DANIEL:
                 probabilidad = levelSetting->shootProbDani;
-                tipoNave = BALA_DANIEL;
+                tipoBala = BALA_DANIEL;
+                break;
             case PABLO:
                 probabilidad = levelSetting->shootProbPablo;
-                tipoNave = BALA_PABLO;
+                tipoBala = BALA_PABLO;
+                break;
             case NICOLAS:
                 probabilidad = levelSetting->shootProbNico;
-                tipoNave = BALA_NICOLAS;
+                tipoBala = BALA_NICOLAS;
+                break;
+            case NAVE:
+                probablidad = 100;
+                tipoBala = BALA_USUARIO;
+                break;
+            default:
+                return NULL;
         }
-        if((rand()%100) >= probabilidad){
-            bala = addObj(bala, nave->pos + levelSetting->centerNaveOffset,tipoNave);
+        if((rand()%100) < probabilidad){
+            vector_t posicionBala;
+            if(tipoBala == BALA_USUARIO){
+                posicionBala.x = nave->pos.x - (levelSetting->anchoUsr)/2;
+                posicionBala.y = nave->pos.y - (levelSetting->altoUsr)/2;
+            }
+            else{
+                posicionBala.x = nave->pos.x + (levelSetting->anchoNave)/2;
+                posicionBala.y = nave->pos.y + (levelSetting->altoNave)/2;
+            }
+            bala = addObj(bala, nave->pos + posicionBala,tipoNave);
             balasDisponibles--;
         }
         nave = nave -> next;
