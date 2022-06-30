@@ -25,7 +25,7 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
-typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO} types_t;
+typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO, BARRERA_ESQUINA_SUP_IZQ, BARRERA_ESQUINA_SUP_DER, BARRERA_INTERNO, BARRERA_ESQUINA_INF_IZQ, BARRERA_ESQUINA_INF_DER, NONE} types_t;
 
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
@@ -49,19 +49,26 @@ typedef struct{//Datos necesarios para iniciar un nivel.
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
     int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
     int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
     int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
     int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
     int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
     int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+    int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
+    int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
     int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
     int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
     int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
     int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    vector_t centerNaveOffset;  //-centerOffset: distancia de offset desde la esquina superior izq de la nave hasta el centro
-    //ESPACIO PARA BARRERAS
-    //AAA BARRERAS
+    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int altoUsr;                //-altoUsr: Alto de la nave del usuario
+    int anchoNave;              //-anchoNave: Ancho de las naves enemigas
+    int altoNave;               //-altoNave: Alto de las naves enemigas
+    int anchoMiniBarrera;       //-anchoMiniBarrera: Ancho de las minibarreras
+    int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
+    int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
 }level_setting_t;
 
 typedef struct{//Datos utilizados al estar en algun menu.
