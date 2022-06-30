@@ -23,12 +23,24 @@
 
  #define EVENTO (*(data->ev))
 
+typedef struct{
+
+    object_t * nave;
+    object_t * aliens;
+    object_t * balasAliens;
+    object_t * balasUsuario;
+    object_t * barreras;
+    menu_t * menu;
+
+} punteros_t;
+
  typedef struct {
 
     ALLEGRO_EVENT_QUEUE ** event_queue;
     ALLEGRO_EVENT * ev; 
 
-    object_t * object;    
+    punteros_t * punteros;
+        
     bool * close_display;
     bool * keyboardDownFlag;
     bool * keyboardUpFlag;

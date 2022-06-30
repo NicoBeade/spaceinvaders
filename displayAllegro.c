@@ -17,6 +17,9 @@
 #include <pthread.h>
 #include <stdio.h>
 #include "displayAllegro.h"
+#include <semaphore.h>
+
+extern sem_t semaforo;
 
 //En esta array se guardan las direcciones a los sprites
 static char * images[]= {"sprites/alien1.png", 
@@ -25,8 +28,7 @@ static char * images[]= {"sprites/alien1.png",
                          "sprites/nave.png", 
                          "sprites/barrera.png"};
 
-//Timer tick
-extern int timerTick;
+
 
 /***********************************************************************************************************************************************************
  * 
@@ -77,10 +79,16 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     while(!*data->close_display){
 
         if(*data->displayFlag){
+            sem_wait(&semaforo);
 
-            
-            showLista(data->nave);
+            showLista(data->punteros->nave);
+            showLista(data->punteros->aliens);
+            showLista(data->punteros->balasAliens);
+            showLista(data->punteros->balasUsuario);
+            showLista(data->punteros->barreras);
+
             *data->displayFlag= false;
+            sem_post(&semaforo);
         }
     }
 

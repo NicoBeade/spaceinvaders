@@ -19,6 +19,7 @@
 #include "aliensYBalas.h"
 #include "inputAllegro.h"
 #include "utilidades.h"
+#include "aliensYBalas.h"
 #include "displayAllegro.h"
 
 /*
@@ -34,16 +35,6 @@
 
 enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
 
-void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamNaveX){
-/* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
-    la posicion de la nave del usuario.
-*/
-
-    if( !((naveUsuario -> pos.x == 0 && desplazamiento < 0) || ((naveUsuario -> pos.x == xMax - tamNaveX + 1) && desplazamiento > 0)) ){//Chequea que no este en los bordes.
-        naveUsuario -> pos.x += desplazamiento;//Desplaza la nave
-    }   
-}
-
 void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
     keyboard_data_t * data = (keyboard_data_t *) dataIn;
@@ -52,7 +43,7 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
     ALLEGRO_EVENT * evp = data->ev;
 
-    bool key_pressed[5] = {false, false, false, false, false};
+    bool key_pressed[6] = {false, false, false, false, false, false};
 
     al_install_keyboard();
 
@@ -94,11 +85,11 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
             
         }
         if(key_pressed[RIGHT]){
-            moveNaveUsuario(data->object, DESPLAZAMIENTO_X, X_MAX, NAVEX);
+            moveNaveUsuario(data->punteros->nave, DESPLAZAMIENTO_X, X_MAX, NAVEX);
             
         }
         if(key_pressed[LEFT]){
-            moveNaveUsuario(data->object, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
+            moveNaveUsuario(data->punteros->nave, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
         }
     } 
 }
