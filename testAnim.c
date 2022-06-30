@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 
-void printLetter(caracteres_t* letter){
+void printLetter(caracteres_t letter){
     int i,j;
     dcoord_t punto;
     for (i=0; i<8; i++){
@@ -31,7 +31,7 @@ int main (){
     int i;
     for (i=0;i<42;i++){
         disp_clear();
-        printLetter(*(alfabeto+i));
+        printLetter(*(*(alfabeto+i)));
         usleep(500*1000);
     }
     return 0;
