@@ -124,12 +124,6 @@ typedef struct{//Datos utilizados al estar en algun menu.
 #define DESPLAZAMIENTO_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> desplazamientoY)
 #define DESPLAZAMIENTO_USR_L(levelSettings)     (((level_setting_t *)levelSettings) -> desplazamientoUsr)
 
-#define ALIEN_LIST_L(levelSettings)             (*( ((level_setting_t *)levelSettings) -> alienList ))    //Utilizando esta macro se accede directamente al pujntero, no es necesario desreferenciar.
-#define USER_LIST_L(levelSettings)              (*( ((level_setting_t *)levelSettings) -> userList ))
-#define BALAS_USR_L(levelSettings)              (*( ((level_setting_t *)levelSettings) -> balasUsr ))
-#define BALAS_ENEMIGAS_L(levelSettings)         (*( ((level_setting_t *)levelSettings) -> balasEnemigas ))
-#define BARRERAS_L(levelSettings)               (*( ((level_setting_t *)levelSettings) -> barreras ))
-
 /******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
