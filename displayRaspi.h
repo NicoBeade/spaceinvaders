@@ -93,13 +93,13 @@ extern sem_t semaforo;
  * 
  ******************************************************************************************************************************************/
 
-void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
+//void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
 void cleanSprite(dcoord_t);
 void* displayRPI (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
 void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
 void* dispMenu(void* punteroPausa);  //Thread encargado de gestionar el display durante la pausa.
-void printLetter(caracteres_t letter); //imprime letra en display
-void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
+//void printLetter(caracteres_t letter); //imprime letra en display
+//void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
 
 //*****************OPTION HANDLER PAUSA
 void changeOptionPausa(int actualOption);//Se encarga de mostrar la opcion indicada en el display cuanto el juego esta pausado

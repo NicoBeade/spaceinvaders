@@ -540,12 +540,28 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
     return 1;
 }
 
-objectType_t * getObjType(int id){
-    int index;
-    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);
-    if(index == MAX_CANT_OBJTIPOS){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
-        printf("Err in gameLib, getObjType function: objectType with "%d" id not found\n", id);
-        return ;
+int delObjType(int id){
+    if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
+        printf("Err in gameLib, delObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
+        return 0;
     }
-
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
+    if(index == MAX_CANT_OBJTIPOS){             //Si no se encontro 
+        printf("Err in gameLib, delObjType function: objectType with "%d" id not found\n", id);     //Se devuelve un error
+        return 0;
+    }
+       
 }
+
+objectType_t * getObjType(int id){
+    int index;      //Se crea un contador
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
+    if(index == MAX_CANT_OBJTIPOS){             //Si no se encontro 
+        printf("Err in gameLib, getObjType function: objectType with "%d" id not found\n", id);     //Se devuelve un error
+        return NULL;
+    }
+    else{   //Si no hubo error
+        return &(objtypes[id]); //Se devuelve un puntero a ese object type
+    }
+}
+
