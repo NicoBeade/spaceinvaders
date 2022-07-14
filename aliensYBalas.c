@@ -544,7 +544,8 @@ objectType_t * getObjType(int id){
     int index;
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);
     if(index == MAX_CANT_OBJTIPOS){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
-        printf("Err in gameLib, getObjType function: overflow of objtypes array, too many objectTypes = %d\n", MAX_CANT_OBJTIPOS);
-        return 0;
+        printf("Err in gameLib, getObjType function: objectType with "%d" id not found\n", id);
+        return ;
     }
+
 }

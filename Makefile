@@ -11,7 +11,7 @@ mainAllegro: aliensYBalas.o testDisplayAllegro.o allegro.o displayAllegro.o inpu
 
 
 CopiaAliensYBalas.o: aliensYBalas.h CopiaAliensYBalas.c utilidades.h
-	gcc -c aliensYBalas.c -Wall 
+	gcc -c CopiaAliensYBalas.c -Wall 
 
 testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.h
 	gcc -c testDisplayRaspi.c -Wall 
