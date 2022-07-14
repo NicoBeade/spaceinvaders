@@ -16,6 +16,8 @@
  #ifndef UTILIDADES_H
  #define UTILIDADES_H
 
+ #include "aliensYBalas.h"
+
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
@@ -32,7 +34,7 @@ typedef struct{//Esta estructura define un vector para las coordenadas
     int y;
 }vector_t;
 
-typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se los organizara en listas en funcion de cual de estos es
+typedef struct OBJECT{//Cada alien, barrera, bala y la nave del usuario es un struct de este tipo y se los organizara en listas en funcion de cual de estos es.
     vector_t pos;//Posicion en x e y
     types_t type;//Tipo de objeto y categoria dentro del tipo
     int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
@@ -40,36 +42,7 @@ typedef struct OBJECT{//Cada alien, barrera, bala es un struct de este tipo y se
     struct OBJECT * next;//Puntero al siguiente objeto de la lista.
 }object_t;
 
-//DANIEL tiene 1 vida, PABLO 2 vidas y NICOLAS 3 vidas.
 
-typedef struct{//Datos necesarios para iniciar un nivel.
-    int xMin;                   //-xMax: coordenada maxima en x alcanzable.
-    int xMax;                   //-xMin: coordenada minima en x alcanzable.
-    int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
-    int yMax;                   //-YMin: coordenada minima en Y alcanzable.
-    int saltoX;                 //-saltoX: distancia entre naves en x
-    int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
-    int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
-    int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
-    int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
-    int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
-    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
-    int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
-    int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
-    int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
-    int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
-    int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
-    int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
-    int altoUsr;                //-altoUsr: Alto de la nave del usuario
-    int anchoNave;              //-anchoNave: Ancho de las naves enemigas
-    int altoNave;               //-altoNave: Alto de las naves enemigas
-    int anchoMiniBarrera;       //-anchoMiniBarrera: Ancho de las minibarreras
-    int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
-    int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
-}level_setting_t;
 
 typedef struct{//Datos utilizados al estar en algun menu.
     int x;//Movimiento en X e Y.
@@ -105,5 +78,60 @@ typedef struct{//Datos utilizados al estar en algun menu.
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
+
+
+/*******************************************************************************************************************************************
+ * 
+                                             __  __                              
+                                            |  \/  |  __ _   __   _ _   ___   ___
+                                            | |\/| | / _` | / _| | '_| / _ \ (_-<
+                                            |_|  |_| \__,_| \__| |_|   \___/ /__/                                                    
+ * 
+ ******************************************************************************************************************************************/
+
+//--------------------------------------------------------------------Macros para acceder a los campos de levelSettings:
+//Estas macros se utilizan para desreferenciar de forma mas sencilla al utilizar levelSettings en un thread.
+#define X_MIN_L(levelSettings)                  (((level_setting_t *)levelSettings) -> xMin)
+#define X_MAX_L(levelSettings)                  (((level_setting_t *)levelSettings) -> xMax)
+#define Y_MIN_L(levelSettings)                  (((level_setting_t *)levelSettings) -> yMin)
+#define Y_MAX_L(levelSettings)                  (((level_setting_t *)levelSettings) -> yMax)
+#define SALTO_X_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoX)
+#define SALTO_Y_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoY)
+#define DISTINICIAL_X_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialX)
+#define DISTINICIAL_X_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialY)
+#define BARRERAINICIAL_X_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialX)
+#define BARRERAINICIAL_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialY)
+#define ANCHO_USR_L(levelSettings)              (((level_setting_t *)levelSettings) -> anchoUsr)
+#define ALTO_USR_L(levelSettings)               (((level_setting_t *)levelSettings) -> altoUsr)
+#define ANCHO_ALIEN_L(levelSettings)            (((level_setting_t *)levelSettings) -> anchoAlien)
+#define ALTO_ALIEN_L(levelSettings)             (((level_setting_t *)levelSettings) -> altoAlien)
+#define ANCHO_MINI_BARRERA_L(levelSettings)     (((level_setting_t *)levelSettings) -> anchoMiniBarrera)
+#define ALTO_MINI_BARRERA_L(levelSettings)      (((level_setting_t *)levelSettings) -> altoMiniBarrera)
+#define MARGEN_X_L(levelSettings)               (((level_setting_t *)levelSettings) -> margenX)
+#define MARGEN_Y_L(levelSettings)               (((level_setting_t *)levelSettings) -> margenY)
+
+#define MAX_USR_BULLETS_L(levelSettings)        (((level_setting_t *)levelSettings) -> maxUsrBullets)         
+#define MAX_ENEMY_BULLETS_L(levelSettings)      (((level_setting_t *)levelSettings) -> maxEnemyBullets)  
+#define SHOOT_PROB_DANI_L(levelSettings)        (((level_setting_t *)levelSettings) -> shootProbDani)        
+#define SHOOT_PROB_PABLO_L(levelSettings)       (((level_setting_t *)levelSettings) -> shootProbPablo)   
+#define SHOOT_PROB_NICO_L(levelSettings)        (((level_setting_t *)levelSettings) -> shootProbNico)         
+#define INIT_USR_LIVES_L(levelSettings)         (((level_setting_t *)levelSettings) -> initUsrLives)        
+#define INIT_DANIEL_LIVES_L(levelSettings)      (((level_setting_t *)levelSettings) -> initDanielLives)    
+#define INIT_PABLO_LIVES_L(levelSettings)       (((level_setting_t *)levelSettings) -> initPabloLives)         
+#define INIT_NICOLAS_LIVES_L(levelSettings)     (((level_setting_t *)levelSettings) -> initNicolasLives)       
+#define MINI_BARRERA_LIVES(levelSettings)       (((level_setting_t *)levelSettings) -> miniBarreraLives)
+#define DESPLAZAMIENTO_X_L(levelSettings)       (((level_setting_t *)levelSettings) -> desplazamientoX)
+#define DESPLAZAMIENTO_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> desplazamientoY)
+#define DESPLAZAMIENTO_USR_L(levelSettings)     (((level_setting_t *)levelSettings) -> desplazamientoUsr)
+
+#define ALIEN_LIST_L(levelSettings)             (*( ((level_setting_t *)levelSettings) -> alienList ))    //Utilizando esta macro se accede directamente al pujntero, no es necesario desreferenciar.
+#define USER_LIST_L(levelSettings)              (*( ((level_setting_t *)levelSettings) -> userList ))
+#define BALAS_USR_L(levelSettings)              (*( ((level_setting_t *)levelSettings) -> balasUsr ))
+#define BALAS_ENEMIGAS_L(levelSettings)         (*( ((level_setting_t *)levelSettings) -> balasEnemigas ))
+#define BARRERAS_L(levelSettings)               (*( ((level_setting_t *)levelSettings) -> barreras ))
+
+/******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
 
  #endif//utilidades.h

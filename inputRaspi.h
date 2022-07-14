@@ -29,13 +29,11 @@
  * 
  ******************************************************************************************************************************************/
 typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
-    object_t * naveUsuario;//Necesita un puntero a la lista de la nave del usuario.
+    level_setting_t * levelSettings;//Informacion del nivel
+    object_t ** naveUsuario;//Necesita un puntero a la lista de la nave del usuario.
     //object_t * (*fireUsuario)(object_t *);//Puntero a la funcion que dispara una bala del usuario.
     void (*moveNaveUsuario)(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX);//Puntero a la funcion que se encarga de modificar la posicion del usuario.
-    int xMax;//Limites de la pantalla.
-    int tamXNave;//Tamano en x de la nave.
-    int desplazamiento;//India de a cuantos saltos en la coordenada X se mueve la nave.
-    void * (*threadDisplayPausa)(void*);//Puntero al thread que gestiona la pausa en el display.
+    //void * (*threadDisplayPausa)(void*);//Puntero al thread que gestiona la pausa en el display.
 }argUpdateInputGame_t;
 
 /*******************************************************************************************************************************************
@@ -51,9 +49,9 @@ typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
-void* updateInputGame(void* argUpdateInputGame);  //Se encarga de leer el input durante la ejecucion del juego.
+void* updateInputGameThread(void* argUpdateInputGame);  //Se encarga de leer el input durante la ejecucion del juego.
 
-void* inputMenu(void* punteroOpciones);          //Se encarga de leer el input durante la pausa.
+void* inputMenuThread(void* punteroOpciones);          //Se encarga de leer el input durante la pausa.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -103,12 +101,6 @@ extern sem_t semaforo;
  ******************************************************************************************************************************************/
 
 #define NAVE_USUARIO ((argUpdateInputGame_t*)argUpdateInputGame) -> naveUsuario //Acceso a la nave del usuario.
-
-#define X_MAX ((argUpdateInputGame_t*)argUpdateInputGame) -> xMax   //Aceceso a la coordenada maxima de x.
-
-#define TAM_X_NAVE ((argUpdateInputGame_t*)argUpdateInputGame) -> tamXNave  //Acceso al tamano de la nave en la coordenada X.
-
-#define DESPLAZAMIENTO ((argUpdateInputGame_t*)argUpdateInputGame) -> desplazamiento //Acceso al desplazamiento.
 
 #define MOOVE_NAVE_USUARIO ((argUpdateInputGame_t*)argUpdateInputGame) -> moveNaveUsuario  //Acceso al callback que mueve la nave del usuario.
 

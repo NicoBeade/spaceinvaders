@@ -38,20 +38,67 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
-typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
-    object_t ** alien;//Necesita un puntero al primer elemento de la lista de los aliens.
-    int desplazamientoX;//Y cuanto se deben mover las naves en cada tick.
-    int desplazamientoY;
-    int xMax;//Coordenadas maximas del display.
-    int margenX;//Margen maxiom al que pueden llegar las naves respecto del borde del display.
-    int yMax;
-    int margenY;
-    int tamAlienX;//Hitbox del alien en la coordenada X.
-	object_t ** listBalaAliens;//Puntero a la lista de las balas de los aliens.
-	level_setting_t * levelSettings;//Puntero a las settings del nivel.
-}argMoveAlien_t;
+
+typedef struct{//Esta estructura define un vector para las coordenadas
+    int x;
+    int y;
+}vector_t;
+
+typedef struct OBJECT{//Cada alien, barrera, bala y la nave del usuario es un struct de este tipo y se los organizara en listas en funcion de cual de estos es.
+    vector_t pos;//Posicion en x e y
+    types_t type;//Tipo de objeto y categoria dentro del tipo
+    int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
+    char animationStatus;//Estado de la animacion de cada nave, puede ser distinto para cada nave
+    struct OBJECT * next;//Puntero al siguiente objeto de la lista.
+}object_t;
+
+
+//-----------------------------------------------------------------LEVEL SETTINGS---------------------------------------------------------------------------------
+// Este struct contiene toda la informacion necesaria para crear un nivel.
+typedef struct{
+    //Informaciones de tamaño (definido por el front end)
+    int xMin;                   //-xMax: coordenada maxima en x alcanzable.
+    int xMax;                   //-xMin: coordenada minima en x alcanzable.
+    int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
+    int yMax;                   //-YMin: coordenada minima en Y alcanzable.
+    int saltoX;                 //-saltoX: distancia entre naves en x
+    int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
+    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+    int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
+    int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
+    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int altoUsr;                //-altoUsr: Alto de la nave del usuario
+    int anchoAlien;             //-anchoNave: Ancho de las naves enemigas
+    int altoAlien;              //-altoNave: Alto de las naves enemigas
+    int anchoMiniBarrera;       //-anchoMiniBarrera: Ancho de las minibarreras
+    int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
+    int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+
+    //Datos para la jugabilidad
+    int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
+    int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
+    int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
+    int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
+    int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
+    int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
+    int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
+    int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
+    int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
+    int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
+    int desplazamientoX;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda X en cada tick
+    int desplazamientoY;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda Y en cada tick
+    int desplazamientoUsr;      //-desplazamientoUsr: distancia que se puede mover la nave del usuario en cada tick
+
+}level_setting_t;
 
 typedef struct{
+	level_setting_t * levelSettings;
+	object_t ** alienList;
+}argMoveAlien_t;
+
+/*typedef struct{
 	object_t ** balasUsr;
 	object_t ** balasEnemigas;
 	int velocidadPablo;
@@ -60,8 +107,26 @@ typedef struct{
 	int velocidadUsr;
 	int yMax;
 	int yMin;
+}argMoveBala_t;*/
+
+
+typedef struct{
+	level_setting_t * levelSettings;
+	object_t ** balasEnemigas;
+	object_t ** balasUsr;
 }argMoveBala_t;
 
+
+typedef struct{
+	int ID;
+	int velocidad;
+	int ancho;
+	int alto;
+	int initLives;
+	int shootProb;
+	int distInicialX;
+	int distInicialY;
+}objectType_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -77,11 +142,9 @@ typedef struct{
  * 
  ******************************************************************************************************************************************/
 
-//*************TIPOS DE OBJETOS
-
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
+#define MAX_CANT_OBJTIPOS 30 // Maxima cantidad de tipos de objetos que se pueden ingresar
 
 /*******************************************************************************************************************************************
  * 
@@ -98,14 +161,16 @@ object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setL
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
-void * moveAlien(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
+void * moveAlienThread(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
 
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
 object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity);
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting);
+
 void * moveBalaThread(void * argMoveBala);
+
 //*****************USUARIO
 void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuari
 

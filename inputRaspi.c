@@ -21,7 +21,9 @@
 #include <pthread.h>
 #include <unistd.h>
 
- void* updateInputGame(void* argUpdateInputGame){
+ void* updateInputGameThread(void* argUpdateInputGame){
+
+    level_setting_t * infoNivel = ((argUpdateInputGame_t*)argUpdateInputGame) -> levelSettings;
 
     int velUsuario = 5;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
         cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.*/
@@ -39,10 +41,10 @@
             if( ((coordJoy.x <= JOY_ACTIVE_NEG) || (coordJoy.x >= JOY_ACTIVE_POS)) && (timerTick % velUsuario == 0) ){//If para limitar la velocidad de la nave.
 
                 if(coordJoy.x < 0){//Desplaza para la izquierda
-                    MOOVE_NAVE_USUARIO(NAVE_USUARIO, -DESPLAZAMIENTO, X_MAX, TAM_X_NAVE);
+                    MOOVE_NAVE_USUARIO(NAVE_USUARIO, -DESPLAZAMIENTO_USR_L(infoNivel), X_MAX_L(infoNivel), ANCHO_USR_L(infoNivel));
                 }
                 else if(coordJoy.x > 0){//Desplaza para la derecha
-                    MOOVE_NAVE_USUARIO(NAVE_USUARIO, DESPLAZAMIENTO, X_MAX, TAM_X_NAVE);
+                    MOOVE_NAVE_USUARIO(NAVE_USUARIO, -DESPLAZAMIENTO_USR_L(infoNivel), X_MAX_L(infoNivel), ANCHO_USR_L(infoNivel));
                 }
             }
 
@@ -50,7 +52,7 @@
 
                 sem_wait(&semaforo);
                 pthread_create(&TdisplayPausa, NULL, THREAD_DISPLAY_PAUSA, &punteroPausa);//Inicializa el thread que gestiona el display durante la pausa.
-                pthread_create(&TinputPausa, NULL, inputMenu, &punteroPausa);//Inicializa el thread que gestiona el input durante la pausa.
+                pthread_create(&TinputPausa, NULL, inputMenuThread, &punteroPausa);//Inicializa el thread que gestiona el input durante la pausa.
 
                 pthread_join(TdisplayPausa, NULL);
                 punteroPausa.x = -2;
@@ -63,7 +65,7 @@
 }
 
 
-void* inputMenu(void* punteroPausa){
+void* inputMenuThread(void* punteroPausa){
 
     jcoord_t coordJoy;
 

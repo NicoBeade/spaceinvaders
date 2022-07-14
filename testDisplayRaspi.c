@@ -59,45 +59,48 @@ int main (void){
     naveUsuario -> lives = 1;
     naveUsuario -> next = NULL;
 
-    argUpdateInputGame_t updateInput = { naveUsuario, 15, 3, 1 };
-
-    level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 10, 50, 50, 50, 6, 1, 3, 1, 1, 1, {1,1}};
+    level_setting_t levelSettings = {0, 15, 0, 15, 4, 3, 8, 1, 0, 0, 3, 2, 3, 2, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 1, 1};
 /*
-    typedef struct{
+typedef struct{
+    //Informaciones de tamaño (definido por el front end)
     int xMin;                   //-xMax: coordenada maxima en x alcanzable.
     int xMax;                   //-xMin: coordenada minima en x alcanzable.
     int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
+    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+    int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
+    int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
+    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int altoUsr;                //-altoUsr: Alto de la nave del usuario
+    int anchoAlien;             //-anchoNave: Ancho de las naves enemigas
+    int altoAlien;              //-altoNave: Alto de las naves enemigas
+    int anchoMiniBarrera;       //-anchoMiniBarrera: Ancho de las minibarreras
+    int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
+    int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+
+    //Datos para la jugabilidad
+    int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
     int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
     int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
     int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
     int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
-    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
     int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
     int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
     int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
     int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    vector_t centerNaveOffset;  //-centerOffset: distancia de offset desde la esquina superior izq de la nave hasta el centro
-    //ESPACIO PARA BARRERAS
-    //AAA BARRERAS
-    }level_setting_t;
+    int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
+    int desplazamientoX;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda X en cada tick
+    int desplazamientoY;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda Y en cada tick
+    int desplazamientoUsr;      //-desplazamientoUsr: distancia que se puede mover la nave del usuario en cada tick
+
+}level_setting_t;
 */
-    
-/*
-    typedef struct{//Este es el tipo de dato que recibe el thread de moveAlien
-    object_t * alien;//Necesita un puntero al primer elemento de la lista de los aliens.
-    int desplazamientoX;//Y cuanto se deben mover las naves en cada tick.
-    int desplazamientoY;
-    int xMax;//Coordenadas maximas del display.
-    int margenX;//Margen maxiom al que pueden llegar las naves respecto del borde del display.
-    int yMax;
-    int margenY;
-    int tamAlienX;//Hitbox del alien en la coordenada X.
-    }argMoveAlien_t;
-*/
+
+    argUpdateInputGame_t updateInput = { &levelSettings, &naveUsuario, moveNaveUsuario};
 
     char filas[] = "333";
 
@@ -105,7 +108,7 @@ int main (void){
 
     listAliens = initAliens(listAliens, &levelSettings, filas, DANIEL, PABLO, NICOLAS);//Inicializa la lista de los aliens
 
-    argMoveAlien_t argMoveAlien = {listAliens, 1, 1, 15, 0, 15, 0, 3};
+    argMoveAlien_t argMoveAlien = { &levelSettings, &listAliens };
 
     pthread_t Ttimer, TmoveAliens, TdisplayRaspi, TupdateInputGame;
 
@@ -117,8 +120,8 @@ int main (void){
 
     pthread_create(&Ttimer, NULL, timer, NULL);
     pthread_create(&TdisplayRaspi, NULL, displayRPI, &argumentosDisplayRPI);
-    pthread_create(&TupdateInputGame, NULL, updateInputGame, &updateInput);
-    pthread_create(&TmoveAliens, NULL, moveAlien, &argMoveAlien);
+    pthread_create(&TupdateInputGame, NULL, updateInputGameThread, &updateInput);
+    pthread_create(&TmoveAliens, NULL, moveAlienThread, &argMoveAlien);
 
     printf("Anashe 2\n");
 
