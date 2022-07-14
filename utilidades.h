@@ -98,7 +98,7 @@ typedef struct{//Datos utilizados al estar en algun menu.
 #define SALTO_X_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoX)
 #define SALTO_Y_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoY)
 #define DISTINICIAL_X_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialX)
-#define DISTINICIAL_X_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialY)
+#define DISTINICIAL_Y_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialY)
 #define BARRERAINICIAL_X_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialX)
 #define BARRERAINICIAL_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialY)
 #define ANCHO_USR_L(levelSettings)              (((level_setting_t *)levelSettings) -> anchoUsr)

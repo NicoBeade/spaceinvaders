@@ -525,7 +525,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
     int index;  //Se crea un contador
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);     //Se recorre el array hasta encontrar el primer elemento vacio
     if(index == MAX_CANT_OBJTIPOS){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
-        printf("Err in gameLib, addObjType function: overflow of objtypes array, too many objectTypes\n");
+        printf("Err in gameLib, addObjType function: overflow of objtypes array, too many objectTypes = %d\n", MAX_CANT_OBJTIPOS);
         return 0;
     }
     else{       //Si no hubo error, rellena el elemento del array
@@ -540,3 +540,11 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
     return 1;
 }
 
+objectType_t * getObjType(int id){
+    int index;
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);
+    if(index == MAX_CANT_OBJTIPOS){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
+        printf("Err in gameLib, getObjType function: overflow of objtypes array, too many objectTypes = %d\n", MAX_CANT_OBJTIPOS);
+        return 0;
+    }
+}

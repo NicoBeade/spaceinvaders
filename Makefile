@@ -1,7 +1,7 @@
 COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 --libs --cflags)
 
-main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
-	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
+main: CopiaAliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
+	gcc joydrv.o disdrv.o CopiaAliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
 
 
 mainAllegro: aliensYBalas.o testDisplayAllegro.o allegro.o displayAllegro.o inputAllegro.o
@@ -10,7 +10,7 @@ mainAllegro: aliensYBalas.o testDisplayAllegro.o allegro.o displayAllegro.o inpu
 
 
 
-aliensYBalas.o: aliensYBalas.h aliensYBalas.c utilidades.h
+CopiaAliensYBalas.o: aliensYBalas.h CopiaAliensYBalas.c utilidades.h
 	gcc -c aliensYBalas.c -Wall 
 
 testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.h
