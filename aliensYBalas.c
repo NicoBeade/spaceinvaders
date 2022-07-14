@@ -41,8 +41,8 @@
  * 
  ******************************************************************************************************************************************/
 
-static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);    //Detecta en que direccion se debe mover a los aliens.
-static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX);  //Detecta si algun alien esta tocando un borde
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens);    //Detecta en que direccion se debe mover a los aliens.
+static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 static unsigned int countList(object_t * lista);
@@ -212,10 +212,11 @@ void removeAlienList(object_t* listAlien){
 
 //******************************************    Thread moveAlien    ***********************************************************
 
-void * moveAlien(void* argMoveAlien){
-/* Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    Recibe como parametro el puntero al primer alien de la lista.
+void * moveAlienThread(void* argMoveAlien){
+/* 
+    Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 */
+    object_t * auxiliar;
     int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
 
@@ -225,28 +226,25 @@ void * moveAlien(void* argMoveAlien){
 
             sem_wait(&semaforo);
 
-            direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> alien, ((argMoveAlien_t*)argMoveAlien) -> xMax,
-                                          ((argMoveAlien_t*)argMoveAlien) -> margenX, ((argMoveAlien_t*)argMoveAlien) -> yMax,
-                                          ((argMoveAlien_t*)argMoveAlien) -> margenY, ((argMoveAlien_t*)argMoveAlien) -> tamAlienX); 
-                                          //Modifica la variable de direccion en funcion al estado actual de la direccion
+            direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> levelSettings, *(((argMoveAlien_t*)argMoveAlien) -> alienList) );  //Modifica la variable de direccion en funcion al estado actual de la direccion
 
             switch (direccion){//Primero detecta en que sentido debemos mover las naves.
                 case IZQUIERDA:
-                    vx = -( ((argMoveAlien_t*)argMoveAlien) -> desplazamientoX );
+                    vx = - DESPLAZAMIENTO_X_L(argMoveAlien);
                     vy = 0;
                     break;
                 case DERECHA:
-                    vx = ( ((argMoveAlien_t*)argMoveAlien) -> desplazamientoX );
+                    vx = DESPLAZAMIENTO_X_L(argMoveAlien);
                     vy = 0;
                     break;
                 case ABAJO:
                     vx = 0;
-                    vy = ( ((argMoveAlien_t*)argMoveAlien) -> desplazamientoY );
+                    vy = DESPLAZAMIENTO_Y_L(argMoveAlien);
                     break;
                 default:
                     break;
             }
-            object_t* auxiliar = *(((argMoveAlien_t*)argMoveAlien) -> alien);
+            auxiliar = *(((argMoveAlien_t*)argMoveAlien) -> alienList);
             while (auxiliar != NULL){//Mueve los aliens uno por uno
 
                 auxiliar->pos.x += vx;//Modifica su posicion en x e y
@@ -255,10 +253,6 @@ void * moveAlien(void* argMoveAlien){
                 auxiliar = auxiliar -> next;
             }
 
-            
-            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_DANIEL, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
-            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_NICOLAS, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
-            *(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens) = moveBala(*(((argMoveAlien_t*) argMoveAlien) -> listBalaAliens), BALA_PABLO, ((argMoveAlien_t*)argMoveAlien) -> yMax, 0, 1);
             sem_post(&semaforo);
         }
     }
@@ -267,23 +261,17 @@ void * moveAlien(void* argMoveAlien){
 
 //*************************************************************************************************************************************
 
-static int detectarDireccion (int direccion, object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
     esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
     Se va a implementar una maquina de estados que en base al estado actual de la direccion y del borde tocado, deduce la direccion resultante.
-    Los estados son las direcciones y ya estan definidos en un enum previo. Recibe como parametros:
-        -direccion: variable donde se almacena la direccion en la que se deben mover los aliens
-        -alien: puntero al primer elemento de la lista de los aliens.
-        -xMax: coordenada maxima de x del mapa
-        -margenX: distancia maxima a la que pueden llegar los aliens respecto de los bordes laterales.
-        -yMax: coordenada maxima de y del mapa
-        -margenY: distancia maxima a la que pueden llegar los aliens respecto de los bordes verticales.
+    Los estados son las direcciones y ya estan definidos en un enum previo.
 */
     switch(direccion){
         
         case DERECHA: //Si se viene moviendo para la derecha
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == DERECHA){ //y toca el borde derecho
+            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -292,7 +280,7 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
             break;
 
         case IZQUIERDA: //Si se viene moviendo para la izquierda
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == IZQUIERDA){ //y toca el borde izquierdo
+            if (tocaBorde(levelSettings, listAliens) == IZQUIERDA){ //y toca el borde izquierdo
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -301,10 +289,9 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == ABAJO){ //Si algun alien toca el suelo, el jugador pierde la partida
-                alien -> lives = 0;
+            if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
             }
-            if (tocaBorde(alien, xMax, margenX, yMax, margenY, tamAlienX) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
+            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
                 return IZQUIERDA;
             }
             else {
@@ -318,25 +305,20 @@ static int detectarDireccion (int direccion, object_t* alien, int xMax, int marg
     return 0;
 }
 
-static int tocaBorde(object_t* alien, int xMax, int margenX, int yMax, int margenY, int tamAlienX){
+static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
 /* Esta funcion detecta si alguna de las naves toco algun borde, teniendo en cuenta todas las posibles combinaciones.
-    Devuelve que borde fue tocado. Recibe como parametros:
-        -alien: puntero al primer elemento de la lista de los aliens.
-        -xMax: coordenada maxima de x del mapa
-        -margenX: distancia maxima a la que pueden llegar los aliens respecto de los bordes laterales.
-        -yMax: coordenada maxima de y del mapa
-        -margenY: distancia maxima a la que pueden llegar los aliens respecto de los bordes verticales.
+    Devuelve que borde fue tocado.
 */
     int borde = 0;
     while ((alien->next != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
-        if (alien->pos.x <= 0 + margenX){ //deteccion borde izquierdo
+        if (alien->pos.x <= 0 + MARGEN_X_L(levelSettings)){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x > xMax - margenX - tamAlienX){ //deteccion borde derecho
+        else if (alien->pos.x > X_MAX_L(levelSettings) - MARGEN_X_L(levelSettings) - ANCHO_ALIEN_L(levelSettings)){ //deteccion borde derecho
             printf("Llego al borde");
             borde = DERECHA;
         }
-        if (alien->pos.y >= yMax - margenY){ //deteccion de suelo
+        if (alien->pos.y >= Y_MAX_L(levelSettings) - MARGEN_Y_L(levelSettings)){ //deteccion de suelo
         borde = ABAJO;
         }
         alien = alien -> next;
@@ -364,15 +346,15 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 ){
             sem_wait(&semaforo);
             object_t * balas = NULL;
-            //printf("%d   %d", ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin);
-            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);.
-           //printf("GEORGE %p   ",  ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala( *(((argMoveBala_t*) argMoveBala) -> balasEnemigas), NICOLAS, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
-            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasEnemigas), BALA_PABLO, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
+            //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
+            //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
+            //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala( BALAS_ENEMIGAS_L(argMoveBala), NICOLAS, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_PABLO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
             //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            *(((argMoveBala_t*) argMoveBala) -> balasEnemigas) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasEnemigas), BALA_DANIEL, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_DANIEL, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
             //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            *(((argMoveBala_t*) argMoveBala) -> balasUsr) = moveBala(*(((argMoveBala_t*) argMoveBala) -> balasUsr), BALA_USUARIO, ((argMoveBala_t*) argMoveBala) -> yMax, ((argMoveBala_t*) argMoveBala) -> yMin, ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
+            BALAS_USR_L(argMoveBala) = moveBala(BALAS_USR_L(argMoveBala), BALA_USUARIO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             sem_post(&semaforo);
@@ -528,3 +510,11 @@ object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int mi
     return barreras;                                                                            //Se devuelve la lista de barreras
 }  
 
+
+
+
+//FUNCIONES DE ROLES
+
+static objtypes[MAX_CANT_OBJTIPOS];
+
+int addObjType();
