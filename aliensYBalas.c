@@ -226,6 +226,10 @@ void * moveAlienThread(void* argMoveAlien){
 
             sem_wait(&semaforo);
 
+            if(*(((argMoveAlien_t*)argMoveAlien) -> alienList) == NULL){
+                printf("Error. AlienList cannot be NULL pointer in thread ""moveAlien"".\n");
+            }
+
             direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> levelSettings, *(((argMoveAlien_t*)argMoveAlien) -> alienList) );  //Modifica la variable de direccion en funcion al estado actual de la direccion
 
             switch (direccion){//Primero detecta en que sentido debemos mover las naves.
@@ -523,9 +527,13 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         return 0;
     }
     int index;  //Se crea un contador
-    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);     //Se recorre el array hasta encontrar el primer elemento vacio
-    if(index == MAX_CANT_OBJTIPOS){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
+    for(index = 0; index<(MAX_CANT_OBJTIPOS-1) && (objtypes[index]).id != NONEOBJTYPEID && (objtypes[index]).id != id; index++);     //Se recorre el array hasta encontrar el primer elemento vacio
+    if(index == MAX_CANT_OBJTIPOS-1){             //Si se excede la cantidad maxima de tipos de objetos, se muestra y se devuele un error
         printf("Err in gameLib, addObjType function: overflow of objtypes array, too many objectTypes = %d\n", MAX_CANT_OBJTIPOS);
+        return 0;
+    }
+    else if((objtypes[index]).id == id){
+        printf("Err in gameLib, addObjType function: an object type with the same id = %d was found\n", id);
         return 0;
     }
     else{       //Si no hubo error, rellena el elemento del array
@@ -536,6 +544,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).shootProb=shootProb;
         (objtypes[index]).distInicialX=distInitX;
         (objtypes[index]).distInicialY=distInitY;
+        (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
     }
     return 1;
 }
@@ -545,23 +554,36 @@ int delObjType(int id){
         printf("Err in gameLib, delObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
     }
-    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
+    int index;      //Se crea un contador
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID && (objtypes[index]).id != id; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
     if(index == MAX_CANT_OBJTIPOS){             //Si no se encontro 
-        printf("Err in gameLib, delObjType function: objectType with "%d" id not found\n", id);     //Se devuelve un error
+        printf("Err in gameLib, delObjType function: objectType with %d id not found\n", id);     //Se devuelve un error
         return 0;
     }
-       
+    else{       //Si se encontro el objtype a eliminar
+        while(index < (MAX_CANT_OBJTIPOS-1) && (objtypes[index]).id != NONEOBJTYPEID){  //Se recorren los ultimos elementos del array (menos el ultimo)
+            objtypes[index] = objtypes[index+1];    //Se arrastra el array
+            index++;    //Siguiente par de elementos
+        }
+        return 1;   //Fin de la funcion si no hubo error
+    }   
 }
 
 objectType_t * getObjType(int id){
     int index;      //Se crea un contador
-    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != id; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
     if(index == MAX_CANT_OBJTIPOS){             //Si no se encontro 
-        printf("Err in gameLib, getObjType function: objectType with "%d" id not found\n", id);     //Se devuelve un error
+        printf("Err in gameLib, getObjType function: objectType with %d id not found\n", id);     //Se devuelve un error
         return NULL;
     }
     else{   //Si no hubo error
-        return &(objtypes[id]); //Se devuelve un puntero a ese object type
+        return &(objtypes[index]); //Se devuelve un puntero a ese object type
     }
 }
 
+void imprimirARRAY(void){
+    int index;
+    for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++){      //Se recorre el arreglo hasta encontrar el object type indicado
+        printf("TIPO N: %d\n\tID: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tDISTINITX: %d\n\tDISTINITY: %d\n",index, (objtypes[index]).id, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb, (objtypes[index]).distInicialX, (objtypes[index]).distInicialY);
+    }
+}

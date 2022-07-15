@@ -301,7 +301,7 @@ void* dispMenu(void* punteroPausa){
                   |_|                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-
+/*
 void changeOptionPausa(int actualOption){
     switch(actualOption){
         case RESUME://Volver al juego
@@ -322,7 +322,7 @@ void changeOptionPausa(int actualOption){
         default:
     }
 }
-
+*/
 
 
 
