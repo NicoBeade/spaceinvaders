@@ -1,14 +1,14 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target 'all'.  Stop.
 
-# GNU Make 4.2.1
+# GNU Make 4.1
 # Built for x86_64-pc-linux-gnu
-# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# Copyright (C) 1988-2014 Free Software Foundation, Inc.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun 30 01:22:15 2022
+# Make data base, printed on Thu Jun 30 18:32:49 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ DESKTOP_SESSION = ubuntu
 # default
 .SHELLFLAGS := -c
 # environment
-XDG_SESSION_CLASS = user
+SNAP_COMMON = /var/snap/code/common
 # environment
 XDG_SESSION_TYPE = x11
 # environment
@@ -31,7 +31,7 @@ VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-IM_CONFIG_PHASE = 1
+IM_CONFIG_PHASE = 2
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -41,29 +41,31 @@ GDMSESSION = ubuntu
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/nicolas/Documents/spaceinvaders
+CURDIR := /home/estanislao/Desktop/programas/tpf/hola
 # makefile
 SHELL = /bin/sh
 # environment
+SNAP_DATA = /var/snap/code/99
+# environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/share/code/code
-# environment
-JOURNAL_STREAM = 8:47730
+_ = /snap/code/99/usr/share/code/code
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# environment
+SNAP_INSTANCE_NAME = code
+# environment
+SNAP_ARCH = amd64
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
+GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.desktop
 # environment
-USERNAME = nicolas
+USERNAME = estanislao
 # environment
 MAKELEVEL := 0
-# environment
-MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
@@ -71,13 +73,15 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1640
+CLUTTER_IM_MODULE = xim
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 LC_NAME = es_AR.UTF-8
 # environment
-VSCODE_CWD = /home/nicolas
+VSCODE_CWD = /home/estanislao
+# environment
+GSETTINGS_SCHEMA_DIR = /snap/code/99/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -85,19 +89,27 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-GJS_DEBUG_OUTPUT = stderr
-# environment
-SESSION_MANAGER = local/nicompu:@/tmp/.ICE-unix/1872,unix/nicompu:/tmp/.ICE-unix/1872
+SESSION_MANAGER = local/estanislao-VirtualBox:@/tmp/.ICE-unix/1013,unix/estanislao-VirtualBox:/tmp/.ICE-unix/1013
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GDK_PIXBUF_MODULE_FILE = /home/estanislao/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+# environment
+TEXTDOMAIN = im-config
+# environment
+SNAP = /snap/code/99
+# environment
+SNAP_VERSION = 30d9c6cd
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
 VSCODE_LOG_STACK = false
 # environment
+DISABLE_WAYLAND = 1
+# environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 4c9101684166409e8a1da86ca426e4e7
+GDK_PIXBUF_MODULEDIR = /snap/code/99/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -107,19 +119,23 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3595
+GIO_LAUNCHED_DESKTOP_FILE_PID = 1551
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
 # environment
+GTK_IM_MODULE = ibus
+# environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /home/nicolas/Documents/spaceinvaders
-# default
-.LOADED := 
+SNAP_INSTANCE_KEY = 
 # environment
-SSH_AGENT_PID = 1835
+PWD = /home/estanislao/Desktop/programas/tpf/hola
+# environment
+XDG_SEAT = seat0
+# environment
+SSH_AGENT_PID = 1091
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -127,41 +143,61 @@ GTK_MODULES = gail:atk-bridge
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /home/nicolas
+HOME = /home/estanislao
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
-VSCODE_CODE_CACHE_PATH = /home/nicolas/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CLI = 1
 # environment
-LOGNAME = nicolas
+VSCODE_CODE_CACHE_PATH = /home/estanislao/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+LOGNAME = estanislao
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
+# environment
+SNAP_CONTEXT = Ig1qbpiMrrqgSQqLC5BbuuyWtnSfP1O-EdfAAlfsuYHeixgdVrZN
 # automatic
 +F = $(notdir $+)
 # environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+SNAP_USER_COMMON = /home/estanislao/snap/code/common
+# environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+MAKE_VERSION := 4.1
 # environment
 GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
+XDG_VTNR = 1
+# environment
 LC_TIME = es_AR.UTF-8
+# environment
+SNAP_REAL_HOME = /home/estanislao
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-QT_IM_MODULE = ibus
+QT_IM_MODULE = xim
 # environment
-SHLVL = 0
+SNAP_USER_DATA = /home/estanislao/snap/code/99
+# environment
+SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-723536e1-25ee-4676-96a9-976a0010c8f0.sock
-# default
-MAKE_VERSION := 4.2.1
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-4de407fe-daab-4c05-9f29-bfac50174fbd.sock
 # environment
-USER = nicolas
+XDG_SESSION_ID = 1
+# environment
+USER = estanislao
+# environment
+SNAP_REVISION = 99
 # environment
 LC_MONETARY = es_AR.UTF-8
 # makefile
@@ -179,7 +215,9 @@ MAKE_COMMAND := make
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-0ed59228-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-c3164e92-1.68.1-main.sock
+# environment
+BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -193,11 +231,17 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = es_AR.UTF-8
 # environment
+LC_IDENTIFICATION = es_AR.UTF-8
+# makefile (from 'Makefile', line 1)
+COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 --libs --cflags)
+# environment
 QT_ACCESSIBILITY = 1
 # environment
-DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
+TEXTDOMAINDIR = /usr/share/locale/
 # default
 MAKEFILES := 
+# environment
+SNAP_COOKIE = Ig1qbpiMrrqgSQqLC5BbuuyWtnSfP1O-EdfAAlfsuYHeixgdVrZN
 # environment
 LC_NUMERIC = es_AR.UTF-8
 # automatic
@@ -205,7 +249,11 @@ LC_NUMERIC = es_AR.UTF-8
 # environment
 LC_MEASUREMENT = es_AR.UTF-8
 # environment
+SNAP_NAME = code
+# environment
 LC_ALL = C
+# environment
+QT4_IM_MODULE = xim
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # automatic
@@ -213,13 +261,15 @@ GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # default
 SUFFIXES := 
 # environment
+SNAP_REEXEC = 
+# environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
-WINDOWPATH = 2
+WINDOWPATH = 1
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-LC_IDENTIFICATION = es_AR.UTF-8
+GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
@@ -227,9 +277,10 @@ LC_ADDRESS = es_AR.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3595
+VSCODE_PID = 1606
 # variable set hash-table stats:
-# Load=108/1024=11%, Rehash=0, Collisions=18/133=14%
+# Load=133/1024=13%, Rehash=0, Collisions=24/158=15%
+ 
 
 # Pattern-specific Variable Values
 
@@ -237,9 +288,9 @@ VSCODE_PID = 3595
 
 # Directories
 
-# . (device 66309, inode 4330770): 39 files, no impossibilities.
+# . (device 2049, inode 543396): 47 files, no impossibilities.
 
-# 39 files, no impossibilities in 1 directories.
+# 47 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -247,11 +298,17 @@ VSCODE_PID = 3595
 
 # Files
 
+# Not a target:
+allegro.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 inputRaspi.o: inputRaspi.c inputRaspi.h utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 14):
+#  recipe to execute (from 'Makefile', line 23):
 	gcc -c inputRaspi.c -Wall
 
 # Not a target:
@@ -261,11 +318,18 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
+inputAllegro.o: inputAllegro.c inputAllegro.h utilidades.h aliensYBalas.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 44):
+	gcc -c inputAllegro.c -Wall $(COMPILACION_ALLEGRO)
+
 aliensYBalas.o: aliensYBalas.h aliensYBalas.c utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
+#  recipe to execute (from 'Makefile', line 14):
 	gcc -c aliensYBalas.c -Wall 
 
 # Not a target:
@@ -278,21 +342,20 @@ displayRaspi.o: displayRaspi.h displayRaspi.c utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 11):
+#  recipe to execute (from 'Makefile', line 20):
 	gcc -c displayRaspi.c -Wall 
 
- 
 testDisplayRaspi.o: testDisplayRaspi.c displayRaspi.h aliensYBalas.h utilidades.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 8):
+#  recipe to execute (from 'Makefile', line 17):
 	gcc -c testDisplayRaspi.c -Wall 
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-30 01:20:05.68288328
+#  Last modified 2022-06-30 15:05:09.103867848
 #  File has been updated.
 #  Successfully updated.
 
@@ -301,6 +364,40 @@ inputRaspi.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+displayAllegro.o: displayAllegro.c displayAllegro.h utilidades.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 41):
+	gcc -c displayAllegro.c -Wall $(COMPILACION_ALLEGRO)
+
+testDisplayAllegro.o: testDisplayAllegro.c utilidades.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 35):
+	gcc -c testDisplayAllegro.c -Wall
+
+mainAllegro: aliensYBalas.o testDisplayAllegro.o allegro.o displayAllegro.o inputAllegro.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 8):
+	gcc testDisplayAllegro.o aliensYBalas.o allegro.o displayAllegro.o inputAllegro.o -o testDisplayAllegro $(COMPILACION_ALLEGRO) -pthread
+
+# Not a target:
+inputAllegro.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+allegro.o: allegro.c allegro.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 38):
+	gcc -c allegro.c -Wall $(COMPILACION_ALLEGRO)
 
 # Not a target:
 inputRaspi.h:
@@ -318,14 +415,14 @@ testAnim: testAnim.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 18):
+#  recipe to execute (from 'Makefile', line 27):
 	gcc testAnim.o disdrv.o -o pruebaAnim -Wall
 
 testAnim.o: testAnim.c sprites.h disdrv.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 21):
+#  recipe to execute (from 'Makefile', line 30):
 	gcc -c testAnim.c -Wall
 
 # Not a target:
@@ -342,6 +439,12 @@ displayRaspi.c:
 
 # Not a target:
 testDisplayRaspi.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+inputAllegro.h:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -365,7 +468,19 @@ disdrv.h:
 #  File has not been updated.
 
 # Not a target:
+displayAllegro.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 displayRaspi.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+testDisplayAllegro.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -374,8 +489,20 @@ main: aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 2):
+#  recipe to execute (from 'Makefile', line 4):
 	gcc joydrv.o disdrv.o aliensYBalas.o displayRaspi.o testDisplayRaspi.o inputRaspi.o -pthread -Wall -o prueba
+
+# Not a target:
+allegro.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+displayAllegro.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 testAnim.c:
@@ -384,19 +511,19 @@ testAnim.c:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=22/1024=2%, Rehash=0, Collisions=0/58=0%
+# Load=34/1024=3%, Rehash=0, Collisions=3/90=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 51 / storage = 593 B / avg = 11 B
-# current buf: size = 8162 B / used = 593 B / count = 51 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 59 / storage = 719 B / avg = 12 B
+# current buf: size = 8162 B / used = 719 B / count = 59 / avg = 12 B
 
-# strcache performance: lookups = 83 / hit rate = 38%
+# strcache performance: lookups = 117 / hit rate = 49%
 # hash-table stats:
-# Load=51/8192=1%, Rehash=0, Collisions=1/83=1%
-# Finished Make data base on Thu Jun 30 01:22:15 2022
+# Load=59/8192=1%, Rehash=0, Collisions=7/117=6%
+# Finished Make data base on Thu Jun 30 18:32:49 2022
 
  
