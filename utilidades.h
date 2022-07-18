@@ -32,8 +32,9 @@
 
 typedef struct{//Contiene el estado del juego.
 
-    unsigned char pantallaActual;//Indica que pantalla se esta ejecutando en cada momento.
+    unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
     unsigned char nivelActual;//Indica el nivel que esta en juego.
+    unsigned char menuActual;//Indica el menu que esta corriendo.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
 }gameStatus_t;
 

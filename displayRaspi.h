@@ -31,9 +31,10 @@
  ******************************************************************************************************************************************/
 
 typedef struct{ //argumentos a recibir por el thread del display en juego RPI
-    object_t* balas;
-    object_t* aliens;
-    object_t* naveUser;
+    object_t** balasEnemigas;
+    object_t** balasUsr;
+    object_t** aliens;
+    object_t** naveUser;
     //faltan los punteros a barreras y user
 }argDisplayRPI_t;
 
@@ -99,7 +100,7 @@ extern sem_t SEM_GAME;
 
 //void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
 void cleanSprite(dcoord_t);
-void* displayRPI (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
+void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
 void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
 void* dispMenu(void* punteroPausa);  //Thread encargado de gestionar el display durante la pausa.
 //void printLetter(caracteres_t letter); //imprime letra en display

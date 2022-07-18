@@ -18,11 +18,19 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include "utilidades.h"
-#include "menues.h"
+#include "aliensYBalas.h"
 
 #define RASPI
 
+#ifdef RASPI
+#include "displayRaspi.h"
+#endif
+
+#ifdef ALLEGRO
+#include "displayAllegro.h"
+#endif
 
 /*******************************************************************************************************************************************
  * 
@@ -49,16 +57,24 @@
  ******************************************************************************************************************************************/
 
 #ifdef RASPI
-#define SIGUIENTE ((*(menu->keys))->x == 1)
-#define ANTERIOR  ((*(menu->keys))->x == -1)
+
+#define DISPLAY_THREAD_GAME displayRPIThread
+
+#define SIGUIENTE ((menu->keys)->x == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
+#define ANTERIOR  ((menu->keys)->x == -1)
+
 #endif
 
 #ifdef ALLEGRO
-#define SIGUIENTE ((*(menu->keys))->y == 1)
-#define ANTERIOR  ((*(menu->keys))->y == -1)
+
+#define DISPLAY_THREAD_GAME displayt
+
+#define SIGUIENTE ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
+#define ANTERIOR  ((menu->keys)->y == -1)
 #endif
 
-#define PRESS     ((*(menu->keys))->press == 1)
+
+#define PRESS     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -73,7 +89,7 @@
  * 
  ******************************************************************************************************************************************/
 
-enum PANTALLAS { MENU_INICIO , IN_GAME , MENU_PAUSA , MENU_VOLUMEN , MENU_LOST };//Determinan un valor para cada pantalla
+enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -88,7 +104,7 @@ enum PANTALLAS { MENU_INICIO , IN_GAME , MENU_PAUSA , MENU_VOLUMEN , MENU_LOST }
  * 
  ******************************************************************************************************************************************/
 
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU_INICIO, .nivelActual = 0 , .exitStatus = 1};
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .exitStatus = 1};
 
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
@@ -107,17 +123,77 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
  * 
  ******************************************************************************************************************************************/
 
+menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
+
+
 int main(void){
 
-    pthread_t menuHandlerT, levelHandlerT;
+    pthread_t menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
 
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
-            case MENU_INICIO:
-                pthread_create(&menuHandlerT, NULL, menuHandlerThread, NULL);
+            case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
+                sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
+                pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
 
+                pthread_join(menuHandlerT, NULL);
+                sem_post(&SEM_GAME);
+
+                break;
+            
+            case START_LEVEL://Entra a este caso cuando se crea un nivel.
+
+                object_t* alienList;//Se crea la lista de los aliens.
+                alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
+                object_t* listBalasEnemigas;//Lista de las balas de los aliens.
+                object_t* listBalasUsr;//Lista de las balas del usuario.
+
+                object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
+
+                if(naveUsuario == NULL){\
+                    printf("no se pudo crear al usuario por malloc \n");
+                }
+
+                naveUsuario -> pos.x = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrX;   //Inicializa la nave del usuario.
+                naveUsuario -> pos.y = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrY;
+                naveUsuario -> type = NAVE;
+                naveUsuario -> lives = 1;
+                naveUsuario -> next = NULL;
+
+                #ifdef RASPI
+                argDisplayRPI_t argDisplay = { .balasEnemigas = &listBalasEnemigas , .balasUsr = &listBalasUsr , .aliens = &alienList , .naveUser = & naveUsuario };
+                #endif
+
+                #ifdef ALLEGRO
+                //aca hay que crear el argumento que recibe el thread del display de allegro.
+                #endif
+
+                pthread_create(&displayT, NULL, DISPLAY_THREAD_GAME, &argDisplay);//Inicializa el thead del display.
+
+                pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
+                
+                argMoveAlien_t argMoveAlien = { .levelSettings = LEVELS[GAME_STATUS.nivelActual] , .alienList = &alienList };//Inicializa el thread Move Alien.
+                pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
+
+                argMoveBala_t argMoveBala = { .levelSettings = LEVELS[GAME_STATUS.nivelActual] , .balasEnemigas = &listBalasEnemigas, .balasUsr = &listBalasUsr };//Inicializa el thread Move Bala.
+                pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
+
+                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
+
+                break;
+
+            case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
+                pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
+
+                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
+
+                break;
+
+            case DESTROY_LEVEL://Entra a este caso cuando se debe salir de un nivel, como cuando el usuario pierde o se desea volver al menu de inicio.
+                //Aca hay que liberar del heap todas las listas y parar los threads que ejecutan el juego.
 
             default:
                 break;
@@ -130,84 +206,64 @@ int main(void){
 *******************************************************************************************************************************************/
 
 
-
-
+/*******************************************************************************************************************************************
+ * 
+             __  __                                  _                        _     _  _                    _   _             
+            |  \/  |  ___   _ _    _  _     _  _    | |     ___  __ __  ___  | |   | || |  __ _   _ _    __| | | |  ___   _ _ 
+            | |\/| | / -_) | ' \  | || |   | || |   | |__  / -_) \ V / / -_) | |   | __ | / _` | | ' \  / _` | | | / -_) | '_|
+            |_|  |_| \___| |_||_|  \_,_|    \_, |   |____| \___|  \_/  \___| |_|   |_||_| \__,_| |_||_| \__,_| |_| \___| |_|  
+                                            |__/                                                                                                                                                                                                               
+ * 
+ ******************************************************************************************************************************************/
 
 static void* menuHandlerThread(void * data){
-
+/*Este thread es el encargado de manejar los menues.
+*/
 	menu_t * menu = (menu_t *) data;
 
-    int select = 0;
+    int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
     while(menu -> exitStatus){
 
-        if (SIGUIENTE){
-            //Animacion
+        if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+
             select += 1;
-            if(menu->selectOption[select] == NULL){
+            if(menu->selectOption[select] == NULL){//Si llegamos a la ultima opcion pasamos a la primera
                 select = 0;
             }
             (menu -> changeOption)(1);
         }
 
-        if (ANTERIOR){
-            //Animacion
+        if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+
             select -= 1;
-            if(select < 0){
+            if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                 select = (menu -> cantOpciones) - 1;
             }
             (menu -> changeOption)(-1);
         }
 
-        if (PRESS){
-            menu -> exitStatus = (menu->selectOption[select])();
+        if (PRESS){//Si se selecciona la opcion
+            menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
         }
     }
     
     pthread_exit(0);
 }
 
-//Reset
-
-    //Salir al nivel reseteado
-
-//Resume
-
-    //Salir al nivel
-
-//Volume
-
-    //Salir al menu de volumen
-
-//Home
-
-    //Salir al menu principal
-
-//Score
-
-    //Mostrar en pantalla el puntaje
-
-/*
-
-    thread (handler)
-    struct de los datos de thread
-    punteros para mostrar las cosas
 
 
-
-
-static void* levelHandler(void * data){
+static void* levelHandlerThread(void * data){
 
 	menu_t * menu = (menu_t *) data;
 
-	opcion_t * opcionActual = menu->opciones[0];
 
 	if (DISPARAR){
 		//Animacion
 		disparar();
 	}
 
-	if (MOVDERECHA){
+	if (MOVER){
 		//Animacion
 		moverder();
 	}
@@ -217,5 +273,5 @@ static void* levelHandler(void * data){
 	}
 
 }
-
-*/
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/

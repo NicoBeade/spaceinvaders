@@ -168,7 +168,7 @@ void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barrien
  ******************************************************************************************************************************************/
 
 
-void* displayRPI (void* argDisplayRPI){
+void* displayRPIThread (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
     object_t* naveUser = ((argDisplayRPI_t*)argDisplayRPI)->naveUser; //Puntero a la nave del usuario

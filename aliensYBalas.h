@@ -75,6 +75,8 @@ typedef struct{
     int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
     int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
     int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
+    int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
 
     //Datos para la jugabilidad
     int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
