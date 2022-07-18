@@ -162,22 +162,8 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
             if(string[letra] != '0'){                       //Si no es 0 entonces rellena esa cantidad de aliens
                 int col;                //Contador de columnas (aliens rellenados en esa fila)
                 int tipoActual = (int) va_arg(tipos, int);              //Toma el tipo ingresado para la fila correspondiente
-                objectType_t * ObjectType = getObjType(tipoActual);     //Crea un puntero al tipo de objeto de esa fila
-                    int vidaActual;                                         //Crea una variable que indica las vidas de cada tipo
-                    switch(tipoActual){                                     //Selecciona las vidas con las que inicializa esa fila
-                        case DANIEL:
-                            vidaActual = levelSetting -> initDanielLives;   //Dependiendo del tipo de alien se busca la vida correspondiente
-                            break;
-                        case PABLO:
-                            vidaActual = levelSetting -> initDanielLives;
-                            break;
-                        case NICOLAS:
-                            vidaActual = levelSetting -> initDanielLives;
-                            break;
-                        default:                                            //Si el tipo de nave no es valido se genera un error
-                            return NULL;
-                    }
-
+                objectType_t * ObjectTypeActual = getObjType(tipoActual);     //Crea un puntero al tipo de objeto de esa fila
+                int vidaActual =  ObjectTypeActual -> initLives;                           //Crea una variable que indica las vidas de cada tipo
                 int dirRelleno; //Si el proximo alien es un un numero par (Segundo, cuarto...) lo pone en la izquierda (-1)
                 //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
                 for(col = 0; col < ASCII2HEXA(string[letra]); col++){       //Recorre toda la fila
