@@ -78,7 +78,11 @@ enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
  ******************************************************************************************************************************************/
 
 extern unsigned int timerTick;   //Variables utilizadas para saber cuando se deben ejecutar los threads.
-extern sem_t semaforo; 
+
+extern keys_t KEYS;
+extern gameStatus_t GAME_STATUS;
+
+extern sem_t SEM_GAME; 
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -103,6 +107,9 @@ void* dispMenu(void* punteroPausa);  //Thread encargado de gestionar el display 
 
 //*****************OPTION HANDLER PAUSA
 void changeOptionPausa(int actualOption);//Se encarga de mostrar la opcion indicada en el display cuanto el juego esta pausado
+
+//*****************MENU DE INICIO
+int selectPlayInicio(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

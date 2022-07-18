@@ -13,10 +13,11 @@
 *
  **********************************************************************************************************************************************************/
 
- #ifndef UTILIDADES_H
- #define UTILIDADES_H
+#ifndef UTILIDADES_H
+#define UTILIDADES_H
 
- #include "aliensYBalas.h"
+#include <stdint.h>
+#include "aliensYBalas.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -27,17 +28,33 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
-typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO, BARRERA_ESQUINA_SUP_IZQ, BARRERA_ESQUINA_SUP_DER, BARRERA_INTERNO, BARRERA_ESQUINA_INF_IZQ, BARRERA_ESQUINA_INF_DER, NONE} types_t;
+//typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO, BARRERA_ESQUINA_SUP_IZQ, BARRERA_ESQUINA_SUP_DER, BARRERA_INTERNO, BARRERA_ESQUINA_INF_IZQ, BARRERA_ESQUINA_INF_DER, NONE} types_t;
 
+typedef struct{//Contiene el estado del juego.
 
-typedef struct{//Datos utilizados al estar en algun menu.
-    int x;//Movimiento en X e Y.
-    int y;
-    char press;// Presion del boton.
-    int cantOpciones;//Cantidad total de opciones en el menu.
-    void (*changeOption)(int opcionActual);//Callback a la funcion que cambia la opcion seleccionada.
-    int (*selectOption)(int opcionActual);//Callback a la funcion que selecciona la opcion seleccionada.
-}punteroMenu_t;
+    unsigned char pantallaActual;//Indica que pantalla se esta ejecutando en cada momento.
+    unsigned char nivelActual;//Indica el nivel que esta en juego.
+    unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
+}gameStatus_t;
+
+typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
+
+	uint8_t x;
+	uint8_t y;
+	uint8_t press;
+} keys_t;
+
+typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar
+                                //una opcion en un menu.
+
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
+
+	keys_t * keys;
+	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    int cantOpciones;//Cantidad de opciones del menu.
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+    void (*changeOption)(int direccion);//Callback a la funcion que cambia la opcion seleccionada.
+} menu_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -75,40 +92,6 @@ typedef struct{//Datos utilizados al estar en algun menu.
  * 
  ******************************************************************************************************************************************/
 
-//--------------------------------------------------------------------Macros para acceder a los campos de levelSettings:
-//Estas macros se utilizan para desreferenciar de forma mas sencilla al utilizar levelSettings en un thread.
-#define X_MIN_L(levelSettings)                  (((level_setting_t *)levelSettings) -> xMin)
-#define X_MAX_L(levelSettings)                  (((level_setting_t *)levelSettings) -> xMax)
-#define Y_MIN_L(levelSettings)                  (((level_setting_t *)levelSettings) -> yMin)
-#define Y_MAX_L(levelSettings)                  (((level_setting_t *)levelSettings) -> yMax)
-#define SALTO_X_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoX)
-#define SALTO_Y_L(levelSettings)                (((level_setting_t *)levelSettings) -> saltoY)
-#define DISTINICIAL_X_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialX)
-#define DISTINICIAL_Y_L(levelSettings)          (((level_setting_t *)levelSettings) -> distInicialY)
-#define BARRERAINICIAL_X_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialX)
-#define BARRERAINICIAL_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> barreraInicialY)
-#define ANCHO_USR_L(levelSettings)              (((level_setting_t *)levelSettings) -> anchoUsr)
-#define ALTO_USR_L(levelSettings)               (((level_setting_t *)levelSettings) -> altoUsr)
-#define ANCHO_ALIEN_L(levelSettings)            (((level_setting_t *)levelSettings) -> anchoAlien)
-#define ALTO_ALIEN_L(levelSettings)             (((level_setting_t *)levelSettings) -> altoAlien)
-#define ANCHO_MINI_BARRERA_L(levelSettings)     (((level_setting_t *)levelSettings) -> anchoMiniBarrera)
-#define ALTO_MINI_BARRERA_L(levelSettings)      (((level_setting_t *)levelSettings) -> altoMiniBarrera)
-#define MARGEN_X_L(levelSettings)               (((level_setting_t *)levelSettings) -> margenX)
-#define MARGEN_Y_L(levelSettings)               (((level_setting_t *)levelSettings) -> margenY)
-
-#define MAX_USR_BULLETS_L(levelSettings)        (((level_setting_t *)levelSettings) -> maxUsrBullets)         
-#define MAX_ENEMY_BULLETS_L(levelSettings)      (((level_setting_t *)levelSettings) -> maxEnemyBullets)  
-#define SHOOT_PROB_DANI_L(levelSettings)        (((level_setting_t *)levelSettings) -> shootProbDani)        
-#define SHOOT_PROB_PABLO_L(levelSettings)       (((level_setting_t *)levelSettings) -> shootProbPablo)   
-#define SHOOT_PROB_NICO_L(levelSettings)        (((level_setting_t *)levelSettings) -> shootProbNico)         
-#define INIT_USR_LIVES_L(levelSettings)         (((level_setting_t *)levelSettings) -> initUsrLives)        
-#define INIT_DANIEL_LIVES_L(levelSettings)      (((level_setting_t *)levelSettings) -> initDanielLives)    
-#define INIT_PABLO_LIVES_L(levelSettings)       (((level_setting_t *)levelSettings) -> initPabloLives)         
-#define INIT_NICOLAS_LIVES_L(levelSettings)     (((level_setting_t *)levelSettings) -> initNicolasLives)       
-#define MINI_BARRERA_LIVES(levelSettings)       (((level_setting_t *)levelSettings) -> miniBarreraLives)
-#define DESPLAZAMIENTO_X_L(levelSettings)       (((level_setting_t *)levelSettings) -> desplazamientoX)
-#define DESPLAZAMIENTO_Y_L(levelSettings)       (((level_setting_t *)levelSettings) -> desplazamientoY)
-#define DESPLAZAMIENTO_USR_L(levelSettings)     (((level_setting_t *)levelSettings) -> desplazamientoUsr)
 
 /******************************************************************************************************************************************
 *******************************************************************************************************************************************/

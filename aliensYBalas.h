@@ -87,10 +87,8 @@ typedef struct{
     int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
     int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
     int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
-    int desplazamientoX;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda X en cada tick
-    int desplazamientoY;        //-desplazamientoX: distancia que se mueven las naves enemigas en la coordenda Y en cada tick
-    int desplazamientoUsr;      //-desplazamientoUsr: distancia que se puede mover la nave del usuario en cada tick
-
+    int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
+    int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
 }level_setting_t;
 
 typedef struct{
@@ -118,14 +116,15 @@ typedef struct{
 
 
 typedef struct{
-	int id;
-	int velocidad;
-	int ancho;
-	int alto;
-	int initLives;
-	int shootProb;
-	int distInicialX;
-	int distInicialY;
+	int id;             //Identificador del tipo de objeto
+    int velocidad;      //Cantidad de distancia que se mueve el objeto
+	int ancho;          //Ancho del objeto
+	int alto;           //Alto del objeto
+	int initLives;      //Vidas iniciales del tipo de objeto
+	int shootProb;      //Probabilidad de disparo del tipo de objeto
+    int maxBullets;     //Cantidad maxima de balas del escuadron
+    int hijoID;         //ID del tipo "hijo"
+    char * sprite;
 }objectType_t;
 
 /*******************************************************************************************************************************************
@@ -142,10 +141,11 @@ typedef struct{
  * 
  ******************************************************************************************************************************************/
 
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
 #define MAX_CANT_OBJTIPOS 30 // Maxima cantidad de tipos de objetos que se pueden ingresar
 #define NONEOBJTYPEID 100	//	Tipo de objeto nulo/terminador 
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
 /*******************************************************************************************************************************************
  * 
                                  ___               _           _     _                   
@@ -157,11 +157,13 @@ typedef struct{
  ******************************************************************************************************************************************/
 
 //*****************ALIENS
-object_t* addObj(object_t * firstObj, vector_t setPos, types_t setType, int setLives);   //Agrega un objeto a la lista
+object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
 void * moveAlienThread(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
+void moveAlien(level_setting_t*  levelSettings, object_t * alienList, int direccion, int vx, int vy);//Esta funcion es llamada por el thread y es la
+                                                                                                     //la encargada de modificar la posicion de los aliens.
 
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
@@ -179,7 +181,7 @@ void * moveBalaThread(void * argMoveBala);
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int distInitX, int distInitY)	//Añade un tipo de objeto
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets);	//Añade un tipo de objeto
 int delObjType(int id);																								//Elimina un tipo de objeto
 
 /*******************************************************************************************************************************************
@@ -221,7 +223,7 @@ extern unsigned int timerTick;   //Variable del timer utilizada para saber cuand
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
                                                                         Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
 extern int velBalas;	//Velocidad a la que se mueven las balas.
-extern sem_t semaforo;
+extern sem_t SEM_GAME;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

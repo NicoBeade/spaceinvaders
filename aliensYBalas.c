@@ -168,7 +168,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
                 //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
                 for(col = 0; col < ASCII2HEXA(string[letra]); col++){       //Recorre toda la fila
                     newList = addObj(newList, alienPos, tipoActual, vidaActual);
-                    dirRelleno = (col%2) ? 1 : -1;
+                    dirRelleno = (col%2) ? 1 : -1;      //Se rellena a izquierda/derecha/izquierda/derecha
                     alienPos.x += (levelSetting -> saltoX)*dirRelleno*(col+1) ;//Se desplaza en X. dirRelleno indica el lado para el que se va a mover y 
                                                         //col +1 es un multiplicador que realiza la cuenta de separacion de los aliens respecto al centro
                 }
@@ -177,9 +177,9 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
             alienPos.y += levelSetting -> saltoY;       //Se desplaza por fila
         }
     va_end(tipos);              //Se finalizan los argumentos variables
-    return newList;
+    return newList;     //Si no hubo error devuelve la lista de aliens
     }
-    else{
+    else{               //Si hubo error devuelve NULL
         return NULL;
     }
 }     
@@ -204,53 +204,54 @@ void * moveAlienThread(void* argMoveAlien){
 /* 
     Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 */
-    object_t * auxiliar;
     int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
-
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
 
-            sem_wait(&semaforo);
+            sem_wait(&SEM_GAME);
 
-            if(*(((argMoveAlien_t*)argMoveAlien) -> alienList) == NULL){
-                printf("Error. AlienList cannot be NULL pointer in thread ""moveAlien"".\n");
-            }
+            moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  *(((argMoveAlien_t*)argMoveAlien) -> alienList), direccion);
 
-            direccion = detectarDireccion(direccion, ((argMoveAlien_t*)argMoveAlien) -> levelSettings, *(((argMoveAlien_t*)argMoveAlien) -> alienList) );  //Modifica la variable de direccion en funcion al estado actual de la direccion
-
-            switch (direccion){//Primero detecta en que sentido debemos mover las naves.
-                case IZQUIERDA:
-                    vx = - DESPLAZAMIENTO_X_L(argMoveAlien);
-                    vy = 0;
-                    break;
-                case DERECHA:
-                    vx = DESPLAZAMIENTO_X_L(argMoveAlien);
-                    vy = 0;
-                    break;
-                case ABAJO:
-                    vx = 0;
-                    vy = DESPLAZAMIENTO_Y_L(argMoveAlien);
-                    break;
-                default:
-                    break;
-            }
-            auxiliar = *(((argMoveAlien_t*)argMoveAlien) -> alienList);
-            while (auxiliar != NULL){//Mueve los aliens uno por uno
-
-                auxiliar->pos.x += vx;//Modifica su posicion en x e y
-                auxiliar->pos.y += vy;
-                auxiliar->animationStatus++;
-                auxiliar = auxiliar -> next;
-            }
-
-            sem_post(&semaforo);
+            sem_post(&SEM_GAME);
         }
     }
     pthread_exit(0);
 }
 
+void moveAlien(level_setting_t*  levelSettings, object_t * alienList, int direccion){
+    if(alienList == NULL){
+        printf("Error. AlienList cannot be NULL pointer in thread ""moveAlien"".\n");
+    }
+    object_t * auxiliar;
+    direccion = detectarDireccion(direccion, levelSettings, alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
+    int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
+
+    switch (direccion){//Primero detecta en que sentido debemos mover las naves.
+        case IZQUIERDA:
+            vx = - levelSettings -> desplazamientoX;
+            vy = 0;
+            break;
+        case DERECHA:
+            vx = levelSettings -> desplazamientoX;
+            vy = 0;
+            break;
+        case ABAJO:
+            vx = 0;
+            vy = levelSettings -> desplazamientoY;
+            break;
+        default:
+            break;
+    }
+    auxiliar = alienList;
+    while (auxiliar != NULL){//Mueve los aliens uno por uno
+
+        auxiliar->pos.x += vx;//Modifica su posicion en x e y
+        auxiliar->pos.y += vy;
+        auxiliar->animationStatus++;
+        auxiliar = auxiliar -> next;
+    }
+}
 //*************************************************************************************************************************************
 
 static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
@@ -336,7 +337,7 @@ void * moveBalaThread(void * argMoveBala){
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
-            sem_wait(&semaforo);
+            sem_wait(&SEM_GAME);
             object_t * balas = NULL;
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
@@ -349,24 +350,25 @@ void * moveBalaThread(void * argMoveBala){
             BALAS_USR_L(argMoveBala) = moveBala(BALAS_USR_L(argMoveBala), BALA_USUARIO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
-            sem_post(&semaforo);
+            sem_post(&SEM_GAME);
         } 
     }
 }
 
-object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin, int velocity){      //Mueve las balas de un tipo especifico.
+object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting{      //Mueve las balas de un tipo especifico.
     object_t * Bala = ListBalasEnemy;
     object_t * newList = ListBalasEnemy;
+    int yMax = levelSetting -> yMax;
+    int yMin = levelSetting -> yMin;
     if(Bala != NULL){
         do{
-            if(Bala -> type == BalaType){
-                if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
-                    Bala -> pos.y += velocity;
-                }
-                else{                               //Si la bala se encuentra fuera (o en la frontera)
-                    newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
-                }                                                                                           
+            if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
+                objectType_t * balaType = getObjType(Bala -> type);
+                (Bala -> pos.y) += (balaType -> velocidad);
             }
+            else{                               //Si la bala se encuentra fuera (o en la frontera)
+                newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
+            }                                                                                           
             Bala = Bala -> next;
         }while(Bala != NULL);
     }
@@ -375,49 +377,27 @@ object_t * moveBala(object_t * ListBalasEnemy, int BalaType, int yMax, int yMin,
 
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
-    int balasDisponibles;                                       //Se crea una variable con la cantidad de balas que se puede disparar
-    if(listaNaves -> type == NAVE){                             //Si es una nave de usuario
-        balasDisponibles = levelSetting -> maxUsrBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
-    }
-    else{                                                       //Si es una nave enemiga
-        balasDisponibles = levelSetting -> maxEnemyBullets - balasActuales; //La cantidad de balas disponibles es la resta entre las maximas y las actuales
-    }
+    objectType_t * balaType = getObjType(listaBalas -> type);
+    int maxBullets = balaType -> maxBullets;
+    int balasDisponibles = levelSetting -> maxUsrBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //
     int tipoBala;
     while(balasDisponibles > 0 && nave != NULL){
-        switch(nave -> type){
-            case DANIEL:
-                probabilidad = levelSetting->shootProbDani;
-                tipoBala = BALA_DANIEL;
-                break;
-            case PABLO:
-                probabilidad = levelSetting->shootProbPablo;
-                tipoBala = BALA_PABLO;
-                break;
-            case NICOLAS:
-                probabilidad = levelSetting->shootProbNico;
-                tipoBala = BALA_NICOLAS;
-                break;
-            case NAVE:
-                probabilidad = 100;
-                tipoBala = BALA_USUARIO;
-                break;
-            default:
-                return NULL;
+        objectType_t * naveType = getObjType(nave -> type);
+        if (naveType == NULL){
+            printf("Err");
+            return NULL;
         }
+        probabilidad = naveType -> shootProb;
+        tipoBala = naveType -> hijoID;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            if(tipoBala == BALA_USUARIO){
-                posicionBala.x = nave->pos.x - (levelSetting->anchoUsr)/2;
-                posicionBala.y = nave->pos.y - (levelSetting->altoUsr)/2;
-            }
-            else{
-                posicionBala.x = nave->pos.x + (levelSetting->anchoNave)/2;
-                posicionBala.y = nave->pos.y + (levelSetting->altoNave)/2;
-            }
-            bala = addObj(bala, posicionBala, tipoBala, 1);
+            posicionBala.x = nave->pos.x - (naveType -> ancho)/2;
+            posicionBala.y = nave->pos.y - (naveType -> alto)/2;
+            VidaBala 
+            bala = addObj(bala, posicionBala, tipoBala, tipoBala);
             balasDisponibles--;
         }
         nave = nave -> next;
@@ -499,7 +479,7 @@ object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int mi
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};
 
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int distInitX, int distInitY){
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets){
     if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
         printf("Err in gameLib, addObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
@@ -520,8 +500,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).ancho=ancho;
         (objtypes[index]).alto=initLives;
         (objtypes[index]).shootProb=shootProb;
-        (objtypes[index]).distInicialX=distInitX;
-        (objtypes[index]).distInicialY=distInitY;
+        (objtypes[index]).maxBullets=maxBullets;
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
     }
     return 1;
