@@ -162,6 +162,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
             if(string[letra] != '0'){                       //Si no es 0 entonces rellena esa cantidad de aliens
                 int col;                //Contador de columnas (aliens rellenados en esa fila)
                 int tipoActual = (int) va_arg(tipos, int);              //Toma el tipo ingresado para la fila correspondiente
+                objectType_t * ObjectType = getObjType(tipoActual);     //Crea un puntero al tipo de objeto de esa fila
                     int vidaActual;                                         //Crea una variable que indica las vidas de cada tipo
                     switch(tipoActual){                                     //Selecciona las vidas con las que inicializa esa fila
                         case DANIEL:
@@ -176,6 +177,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
                         default:                                            //Si el tipo de nave no es valido se genera un error
                             return NULL;
                     }
+
                 int dirRelleno; //Si el proximo alien es un un numero par (Segundo, cuarto...) lo pone en la izquierda (-1)
                 //Si en cambio el prox alien es impar lo pone en la derecha (+1)  
                 for(col = 0; col < ASCII2HEXA(string[letra]); col++){       //Recorre toda la fila
@@ -481,29 +483,19 @@ object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int mi
     int barrera;                                        //Contador de barreras
     int columna;                                   //Contador de minibarreras en una fila
     int fila;                                      //Contador de filas de minibarreras
-    types_t tipoMini;                        //Tipo de minibarrera
+    types_t tipoMiniId;                        //Tipo de minibarrera
     types_t tiposArray[MAXCANTINPUT];        //Array de tipos de minibarrera ingresados en orden inicializado en 0
     for(barrera=0; barrera < cantBarreras; barrera++){    //Por cada barrera
         for(fila = 0; fila < miniBarrerasY; fila++){      //Por cada fila de minibarreras
             for(columna = 0; columna < miniBarrerasX; columna++){   //Por cada minibarrera
                 if(barrera == 0){                           //Si es la primera barrera
-                    tipoMini = va_arg(typeMiniBarrera, int);    //Se toma el tipo de los argumentos variables de entrada
-                    tiposArray[columna+fila*miniBarrerasX] = tipoMini;    //Se agrega a la lista el tipo
+                    tipoMiniId = va_arg(typeMiniBarrera, int);    //Se toma el tipo de los argumentos variables de entrada
+                    tiposArray[columna+fila*miniBarrerasX] = tipoMiniId;    //Se agrega a la lista el tipo
                 }
                 else{
-                    tipoMini = tiposArray[columna+fila*miniBarrerasX];      //Si no es la primera, se recupera el tipo desde el array
+                    tipoMiniId = tiposArray[columna+fila*miniBarrerasX];      //Si no es la primera, se recupera el tipo desde el array
                 }
-                switch(tipoMini){                                           //Para cada tipo de barrera
-                    case BARRERA_ESQUINA_INF_IZQ:
-                    case BARRERA_ESQUINA_INF_DER:
-                    case BARRERA_ESQUINA_SUP_IZQ:
-                    case BARRERA_ESQUINA_SUP_DER:
-                    case BARRERA_INTERNO:
-                        barreras = addObj(barreras, posicionBarrera, tipoMini, vidaMini);       //Si es un tipo valido lo añade a la lista
-                        break;
-                    default:
-                        break;                                                                  //De lo contrario deja vacio ese espacio
-                }
+                barreras = addObj(barreras, posicionBarrera, tipoMiniId, vidaMini);       //Lo añade a la lista
                 posicionBarrera.x += anchoMini;                                                 //Se agrega la siguiente minibarrera a la derecha
             }
             posicionBarrera.y += altoMini;                                                      //Se pasa a la fila de abajo
