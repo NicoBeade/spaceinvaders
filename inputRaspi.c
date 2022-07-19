@@ -25,6 +25,7 @@
 void* inputRPIThread(void* argInputRPI){
 
     jcoord_t coordJoy;
+    jswitch_t switchJoy;
 
     while(GAME_STATUS.exitStatus){
 
@@ -33,6 +34,7 @@ void* inputRPIThread(void* argInputRPI){
 
             joy_update();
             coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
+            switchJoy =  joy_get_switch();
 
             //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
             ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0);
@@ -40,7 +42,7 @@ void* inputRPIThread(void* argInputRPI){
             ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
 
             //Esta seccion detecta si se presiono el boton del joystick.
-            ((keys_t*)argInputRPI) -> press = (joy_get_switch() == J_PRESS) ? 1 : 0;
+            ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 1 : 0;
 
         }
     }
