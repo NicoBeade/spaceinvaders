@@ -116,7 +116,7 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, 1 , changeOption };
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4 , 1 , changeOption };
 
 menu_t* MENUES[] = {&menuInicio, NULL};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
@@ -283,12 +283,12 @@ static void* menuHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             sem_wait(&SEM_MENU);
-            printf("Move: %d\n", (menu->keys)->x);
-            printf("Press: %d\n", (menu->keys)->press);
+            //printf("Move: %d\n", (menu->keys)->x);
+            //printf("Press: %d\n", (menu->keys)->press);
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
                 select += 1;
-                if(select == (menu -> cantOpciones) - 1){//Si llegamos a la ultima opcion pasamos a la primera
+                if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
                 //(menu -> changeOption)(1);
