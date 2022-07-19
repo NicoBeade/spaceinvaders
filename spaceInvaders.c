@@ -122,6 +122,7 @@ level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos 
 
 unsigned int timerTick = 1000000;
 int velInput = 1;
+int velMenu = 20;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -275,29 +276,32 @@ static void* menuHandlerThread(void * data){
 
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
+        if( (timerTick % velMenu) == 0 ){
+            printf(("Move: %d\n", menu->keys)->x);
+            printf(("Press: %d\n", menu->keys)->x);
+            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
-        if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
-
-            select += 1;
-            if(select == (menu -> cantOpciones) - 1){//Si llegamos a la ultima opcion pasamos a la primera
-                select = 0;
+                select += 1;
+                if(select == (menu -> cantOpciones) - 1){//Si llegamos a la ultima opcion pasamos a la primera
+                    select = 0;
+                }
+                //(menu -> changeOption)(1);
+                printf("Opcion: %d\n", select);
             }
-            //(menu -> changeOption)(1);
-            printf("Opcion: %d\n", select);
-        }
 
-        if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
 
-            select -= 1;
-            if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
-                select = (menu -> cantOpciones) - 1;
+                select -= 1;
+                if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
+                    select = (menu -> cantOpciones) - 1;
+                }
+                //(menu -> changeOption)(-1);
+                printf("Opcion: %d\n", select);
             }
-            //(menu -> changeOption)(-1);
-            printf("Opcion: %d\n", select);
-        }
 
-        if (PRESS){//Si se selecciona la opcion
-            menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
+            if (PRESS){//Si se selecciona la opcion
+                menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
+            }
         }
     }
     
