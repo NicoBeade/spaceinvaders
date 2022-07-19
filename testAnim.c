@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <pthread.h>
 
-extern int velDispAnimation;
+extern int velDispAnimation = 50;
 
 void printLetter(caracteres_t letter, char xInicial, char yInicial){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
     int i,j;
@@ -72,45 +73,39 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
     disp_update();
 }
 
+typedef struct{
 
-void* textAnimMenu(char*msg, halfDisp_t* lowerDispMenu, int direccion){
+    char* msg;//Mensaje a mostrar
+    halfDisp_t* lowerDispMenu;//Contenido de la parte inferior del display.
+    int direccion;//Direccion en la que se debe mostrar el primer barrido.
+    int changeAnimation;//Indica cuando salir del thread.
+}argTextAnimMenu_t;
+
+
+void* textAnimMenu(void* argTextAnimMenu){
     
     int i,j, offset;
-    int dim = strlen(msg+4);
     
     //Primero imprimimos las primeras 4 letras.
     for(i = 0 ; i < 4 ; i ++){
 
-        usleep(10 * U_SEC2M_SEC * velDispAnimation);
-
-        offset = offsetAlfabeto(msg[i]);  
-        swipeCharacter   
-    }   
-    //strcpy()
-
-    //para rleferenciar la ultima columna que hay que copiar en el buffer
-    //Idea: voy a tener un contador que contara la columna maxima del texto que se esta imprimiendo
-    //Ese contador va a ir de 0 a strlen(msg)*4-1 
-    //Para cada valor del contador tendra que llenar el buffer completo. Para esto se usaran dos funciones auxiliiares
-    //  -zeroBuffer, recibe la columna del buffer y le carga 0s
-    //  -letterBuffer, recibe la columna del buffer y la columna de la letra, y la carga
-
-    //Como cada letra mide 4 columnas, para saber en que columna se encuentra se hace /4
-    //Para indicar que columna de la letra se tiene que cargar en el buffer, se hace un %4
-
-    //Para cada valor del contador, se debe correr un for que copie en el buffer 16 columnas
-    //Este nuevo contador debe ir desde i-15 hasta i asi se copian 16 columnas en el buffer
-
-    for(i=0; i<strlen(msg)*4 ; i++){
-
-
-
-
-        
-        
+        offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
+        swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, alfabeto[offset], ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
     }
+    usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
+    
 
+    do{//Barre el texto hasta que se le indique lo contrario.
+        for(j = i ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
+            offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
+            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, alfabeto[offset], IZQUIERDA);
+        }
+        i = 0;//Reinicia el proceso.
+    }
+    while(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation);
+
+    pthread_exit(0);
 }
 
 int offsetAlfabeto(char caracter){
@@ -138,12 +133,56 @@ int offsetAlfabeto(char caracter){
 }
 
 void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion){
-//Esta funcion agrega un caracter completo al buffer
-    int fil, col;
+//Esta funcion agrega un caracter completo al buffer.
+    int i, fil, col, colInicialB, colFinalB, colInicialL, colFinalL;
+    
+    colInicialB = (direccion == DERECHA) ? 14 : 1;//Define a partir de que columna se realiza el barrido.
+    colFinalB = (direccion == DERECHA) ? -1 : 16;//Define la ultima columna que se barrera.
+    colInicialL = (direccion == DERECHA) ? 3 : 0;//Define a partir de que columna se muestra la nueva letra.
+    colFinalL = (direccion == DERECHA) ? -1 : 4;//Define a la ultima columna de la letra que se mostrara.
 
-    for(fil = 0 ; fil < 8 ; fil++){//Copia cada fila y columna del sprite del caracter en el buffer.
-        for(col = 0 ; col < 4 ; col++){
-            buffer[fil][col + xInicial] = caracter[fil][col];
+    for(i = colInicialL ; i != colFinalL ; i -= direccion){//Recorre todas las columnas del caracter.
+
+        for(col = colInicialB ; col != colFinalB ; col -= direccion){//Barre el display hacia un costado.
+            usleep(10 * U_SEC2M_SEC * velDispAnimation);//Indica a que velocidad se debe hacer el barrido.
+            
+            for(fil = 0 ; fil < 8 ; fil++){
+                (*lowerDispMenu)[fil][col + direccion] = (*lowerDispMenu)[fil][col];//Realiza el barrido.
+            }
         }
+
+        for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna de la nueva letra al buffer.
+            (*lowerDispMenu)[fil][colFinalB + direccion] = caracter[fil][i];
+        }
+        printHalfDisp(*lowerDispMenu, 'I');//Muetra el contenido en el display.
     }
+    
+}
+
+
+int main(void){
+
+    disp_init();
+    disp_clear();
+
+    pthread_t testAnimT;
+
+    halfDisp_t lowerDispMenu = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };
+
+    argTextAnimMenu_t argTextAnimMenu = { "Nashe    ",  &lowerDispMenu, IZQUIERDA, 1};
+
+    pthread_create(&testAnimT, NULL, textAnimMenu, &argTextAnimMenu);
+
+    pthread_join(testAnimT, NULL);
+
+    return 0;
 }
