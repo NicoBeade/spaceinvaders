@@ -166,6 +166,8 @@ int main(void){
 
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
 
+    sem_init(&SEM_GAME, 0, 1);
+
     pthread_create(&timerT, NULL, timer, NULL);
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
