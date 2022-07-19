@@ -64,8 +64,6 @@ void* inputRPIThread(void* argInputRPI){
             }
             */
             
-            
-            
             //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
             ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0); 
 
@@ -74,8 +72,8 @@ void* inputRPIThread(void* argInputRPI){
             //Esta seccion detecta si se presiono el boton del joystick.
             ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 1 : 0;
             
-            printf("Moove: %d\n", ((keys_t*)argInputRPI) -> x);
-            printf("Press: %d\n", ((keys_t*)argInputRPI) -> press);
+            //printf("Moove: %d\n", ((keys_t*)argInputRPI) -> x);
+            //printf("Press: %d\n", ((keys_t*)argInputRPI) -> press);
         }
     }
     pthread_exit(0);
