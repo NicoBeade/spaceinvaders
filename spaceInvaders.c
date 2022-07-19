@@ -118,8 +118,8 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
-unsigned int timerTick = 10000000;
-unsigned int velInput = 1;
+extern unsigned int timerTick = 10000000;
+extern unsigned int velInput = 1;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
