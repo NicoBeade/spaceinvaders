@@ -9,6 +9,9 @@
 
 extern int velDispAnimation = 50;
 
+int offsetAlfabeto(char caracter);
+void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion);
+
 void printLetter(caracteres_t letter, char xInicial, char yInicial){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
     int i,j;
     dcoord_t punto;
@@ -130,6 +133,7 @@ int offsetAlfabeto(char caracter){
     else if(caracter == ' '){//Si es un espacio.
         offset = OFFSETCHARESP + 2;
     }
+    return offset;
 }
 
 void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion){
