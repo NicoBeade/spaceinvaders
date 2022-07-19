@@ -364,7 +364,7 @@ void changeOption(int direccion){
     printf("Hola mundo");
 }
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, 1 , changeOption };
+
 
 //******************************************************************************************************************************************
 

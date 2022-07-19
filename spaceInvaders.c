@@ -115,7 +115,9 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 
-menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, 1 , changeOption };
+
+menu_t* MENUES[] = {&menuInicio, NULL};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;

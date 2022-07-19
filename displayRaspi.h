@@ -114,6 +114,10 @@ void changeOptionPausa(int actualOption);//Se encarga de mostrar la opcion indic
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);
+int selectLevelsInicio(void);
+int selectVolumeInicio(void);
+int selectQuitGameInicio(void);
+void changeOption(int direccion);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
