@@ -28,13 +28,7 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
-typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
-    level_setting_t * levelSettings;//Informacion del nivel
-    object_t ** naveUsuario;//Necesita un puntero a la lista de la nave del usuario.
-    //object_t * (*fireUsuario)(object_t *);//Puntero a la funcion que dispara una bala del usuario.
-    void (*moveNaveUsuario)(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX);//Puntero a la funcion que se encarga de modificar la posicion del usuario.
-    //void * (*threadDisplayPausa)(void*);//Puntero al thread que gestiona la pausa en el display.
-}argUpdateInputGame_t;
+
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -49,9 +43,8 @@ typedef struct{//Este es el tipo de dato que recibe el thread de updateInputGame
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
-void* updateInputGameThread(void* argUpdateInputGame);  //Se encarga de leer el input durante la ejecucion del juego.
 
-void* inputMenuThread(void* punteroOpciones);          //Se encarga de leer el input durante la pausa.
+void* inputRPIThread(void* argInputRPI);  //Se encarga de leer el input durante la ejecucion del juego.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -70,6 +63,9 @@ void* inputMenuThread(void* punteroOpciones);          //Se encarga de leer el i
 #define JOY_ACTIVE_NEG -50      //Coordenada en X a partir de la cual se detecta que se activo el joystick.
 #define JOY_ACTIVE_POS  50
 
+#define VEL_USR 5   //Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
+                    //cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -86,7 +82,10 @@ void* inputMenuThread(void* punteroOpciones);          //Se encarga de leer el i
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velInput;    /*Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta 
                                                                 cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.*/
-extern sem_t semaforo;
+
+extern gameStatus_t GAME_STATUS;
+
+extern sem_t SEM_GAME;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

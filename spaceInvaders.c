@@ -25,10 +25,12 @@
 #define RASPI
 
 #ifdef RASPI
+#include "inputRaspi.h"
 #include "displayRaspi.h"
 #endif
 
 #ifdef ALLEGRO
+#include "inputAllegro.h"
 #include "displayAllegro.h"
 #endif
 
@@ -58,6 +60,7 @@
 
 #ifdef RASPI
 
+#define INPUT_THREAD inputRPIThread
 #define DISPLAY_THREAD_GAME displayRPIThread
 
 #define SIGUIENTE ((menu->keys)->x == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
@@ -67,6 +70,7 @@
 
 #ifdef ALLEGRO
 
+#define INPUT_THREAD keyboardt
 #define DISPLAY_THREAD_GAME displayt
 
 #define SIGUIENTE ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
@@ -89,7 +93,7 @@
  * 
  ******************************************************************************************************************************************/
 
-enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -104,11 +108,14 @@ enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un va
  * 
  ******************************************************************************************************************************************/
 
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .exitStatus = 1};
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0 , .exitStatus = 1};
 
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
+
+menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -123,13 +130,14 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
  * 
  ******************************************************************************************************************************************/
 
-menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
-level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
+
 
 
 int main(void){
 
-    pthread_t menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
+    pthread_t inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
+
+    pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
 
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -145,7 +153,9 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-
+                printf("se inicio el nivel\n");
+                return 0;
+                /*
                 object_t* alienList;//Se crea la lista de los aliens.
                 alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
                 object_t* listBalasEnemigas;//Lista de las balas de los aliens.
@@ -182,13 +192,13 @@ int main(void){
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
-
+                */
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
-                pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
+                //pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
 
-                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
+                //pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 break;
 
@@ -199,6 +209,8 @@ int main(void){
                 break;
         }
     }
+
+    pthread_join(inputT, NULL);
 
     return 0;
 }
@@ -224,14 +236,16 @@ static void* menuHandlerThread(void * data){
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
     while(menu -> exitStatus){
+        usleep(10 * U_SEC2M_SEC);
 
         if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
             select += 1;
-            if(menu->selectOption[select] == NULL){//Si llegamos a la ultima opcion pasamos a la primera
+            if(select == (menu -> cantOpciones) - 1){//Si llegamos a la ultima opcion pasamos a la primera
                 select = 0;
             }
-            (menu -> changeOption)(1);
+            //(menu -> changeOption)(1);
+            printf("Opcion: %d\n", select);
         }
 
         if (ANTERIOR){//Si se presiona para ir a la opcion anterior
@@ -240,7 +254,8 @@ static void* menuHandlerThread(void * data){
             if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                 select = (menu -> cantOpciones) - 1;
             }
-            (menu -> changeOption)(-1);
+            //(menu -> changeOption)(-1);
+            printf("Opcion: %d\n", select);
         }
 
         if (PRESS){//Si se selecciona la opcion
@@ -252,7 +267,7 @@ static void* menuHandlerThread(void * data){
 }
 
 
-
+/*
 static void* levelHandlerThread(void * data){
 
 	menu_t * menu = (menu_t *) data;
@@ -273,5 +288,6 @@ static void* levelHandlerThread(void * data){
 	}
 
 }
+*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

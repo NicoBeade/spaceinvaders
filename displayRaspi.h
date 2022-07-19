@@ -83,6 +83,9 @@ extern unsigned int timerTick;   //Variables utilizadas para saber cuando se deb
 extern keys_t KEYS;
 extern gameStatus_t GAME_STATUS;
 
+extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+extern level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
+
 extern sem_t SEM_GAME; 
 
 /*******************************************************************************************************************************************

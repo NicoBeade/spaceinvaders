@@ -167,7 +167,7 @@ void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barrien
  * 
  ******************************************************************************************************************************************/
 
-
+/*
 void* displayRPIThread (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
@@ -236,7 +236,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
             //balas = aux;
-
+/*
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
 
@@ -244,6 +244,7 @@ void* displayRPIThread (void* argDisplayRPI){
     }
     pthread_exit(0);
 }
+*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -257,7 +258,7 @@ void* displayRPIThread (void* argDisplayRPI){
                                                                        |_|                                                         
  * 
  ******************************************************************************************************************************************/
-
+/*
 void* dispMenu(void* punteroPausa){
 
     punteroMenu_t menuDisplay = {0,0,0};
@@ -287,7 +288,7 @@ void* dispMenu(void* punteroPausa){
         }
     }
 }
-
+*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -342,23 +343,28 @@ void changeOption(int actualOption){
 //********************************************              MENU DE INICIO          ********************************************************
 
 int selectPlayInicio(void){
-
+    printf("Select Play Inicio\n");
+    return 1;
 }
 
 int selectLevelsInicio(void){
-
+    return 1;
 }
 
 int selectVolumeInicio(void){
-
+    return 1;
 }
 
 int selectQuitGameInicio(void){
-
+    GAME_STATUS.pantallaActual = START_LEVEL;
+    return 0;
 }
 
+void changeOption(int direccion){
+    printf("Hola mundo");
+}
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, changeOption };
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, 1 , changeOption };
 
 //******************************************************************************************************************************************
 

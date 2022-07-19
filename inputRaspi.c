@@ -21,13 +21,53 @@
 #include <pthread.h>
 #include <unistd.h>
 
+
+void* inputRPIThread(void* argInputRPI){
+
+    jcoord_t coordJoy;
+
+    while(GAME_STATUS.exitStatus){
+
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velInput) == 0 ){//Determina cada cuanto se actualiza el input.
+
+            joy_update();
+            coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
+
+            //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
+            ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0);
+
+            ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
+
+            //Esta seccion detecta si se presiono el boton del joystick.
+            ((keys_t*)argInputRPI) -> press = (joy_get_switch() == J_PRESS) ? 1 : 0;
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
  void* updateInputGameThread(void* argUpdateInputGame){
 
     level_setting_t * infoNivel = ((argUpdateInputGame_t*)argUpdateInputGame) -> levelSettings;
 
     int velUsuario = 5;/*Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
         cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.*/
-    jcoord_t coordJoy;
+    /*jcoord_t coordJoy;
     pthread_t TdisplayPausa, TinputPausa;
     punteroMenu_t punteroPausa = {0,0,0};
     while(1){
@@ -101,3 +141,4 @@ void* inputMenuThread(void* punteroPausa){
         }
     }
 }
+*/

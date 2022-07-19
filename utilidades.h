@@ -71,7 +71,6 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
  * 
  ******************************************************************************************************************************************/
 
-
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
 #define DERECHA 1
@@ -80,6 +79,12 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 //*************TIMER
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 
+//*************VELOCIDAD DE EJECUCION
+#define USER_SPEED 5    //Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta
+                        //cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.
+
+//*************PANTALLAS
+enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
