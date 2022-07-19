@@ -44,6 +44,7 @@ void* inputRPIThread(void* argInputRPI){
 
         }
     }
+    pthread_exit(0);
 }
 
 

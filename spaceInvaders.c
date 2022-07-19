@@ -21,6 +21,7 @@
 #include <semaphore.h>
 #include "utilidades.h"
 #include "aliensYBalas.h"
+#include <unistd.h>
 
 #define RASPI
 
@@ -96,7 +97,7 @@
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
+static void* menuHandlerThread(void * data);
 
 /*******************************************************************************************************************************************
  * 
@@ -154,7 +155,7 @@ int main(void){
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("se inicio el nivel\n");
-                return 0;
+                GAME_STATUS.exitStatus = 0;
                 /*
                 object_t* alienList;//Se crea la lista de los aliens.
                 alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
