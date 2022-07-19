@@ -126,6 +126,31 @@ unsigned int velInput = 1;
 
 /*******************************************************************************************************************************************
  * 
+                                                 _____   _                     
+                                                |_   _| (_)  _ __    ___   _ _ 
+                                                  | |   | | | '  \  / -_) | '_|
+                                                  |_|   |_| |_|_|_| \___| |_|  
+ * 
+ ******************************************************************************************************************************************/
+void * timer(){
+/* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 10mS luego el resto de los
+    threads utilizan esta variable para determinar cuando se deben ejecutar.
+*/
+    printf("Timer set\n");
+    while(GAME_STATUS.exitStatus){
+        usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
+        timerTick -= 1;
+    }
+    pthread_exit(0);
+}
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+
+/*******************************************************************************************************************************************
+ * 
                                                          __  __          _        
                                                         |  \/  |  __ _  (_)  _ _  
                                                         | |\/| | / _` | | | | ' \ 
@@ -139,7 +164,9 @@ unsigned int velInput = 1;
 
 int main(void){
 
-    pthread_t inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
+
+    pthread_create(&timerT, NULL, timer, NULL);
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
 
@@ -215,6 +242,7 @@ int main(void){
     }
 
     pthread_join(inputT, NULL);
+    pthread_join(timerT, NULL);
 
     return 0;
 }
