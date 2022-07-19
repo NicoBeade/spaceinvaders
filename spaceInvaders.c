@@ -277,8 +277,8 @@ static void* menuHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            printf(("Move: %d\n", menu->keys)->x);
-            printf(("Press: %d\n", menu->keys)->x);
+            printf("Move: %d\n", (menu->keys)->x);
+            printf("Press: %d\n", (menu->keys)->x);
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
                 select += 1;
