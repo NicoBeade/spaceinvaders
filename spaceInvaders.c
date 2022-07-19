@@ -114,6 +114,7 @@ gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuAct
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
+sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4, 1 , changeOption };
 
@@ -173,6 +174,7 @@ int main(void){
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
 
     sem_init(&SEM_GAME, 0, 1);
+    sem_init(&SEM_MENU, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
 
@@ -280,6 +282,7 @@ static void* menuHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
+            sem_wait(&SEM_MENU);
             printf("Move: %d\n", (menu->keys)->x);
             printf("Press: %d\n", (menu->keys)->x);
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
@@ -305,6 +308,7 @@ static void* menuHandlerThread(void * data){
             if (PRESS){//Si se selecciona la opcion
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
             }
+            sem_post(&SEM_MENU);
         }
     }
     
