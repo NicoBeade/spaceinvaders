@@ -93,7 +93,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     for(i = 0 ; i < 4 ; i ++){
 
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
-        swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, alfabeto[offset], ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
+        swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
     }
     usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
     
@@ -102,7 +102,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         for(j = i ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
             offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
-            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, alfabeto[offset], IZQUIERDA);
+            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);
         }
         i = 0;//Reinicia el proceso.
     }
