@@ -284,7 +284,7 @@ static void* menuHandlerThread(void * data){
         if( (timerTick % velMenu) == 0 ){
             sem_wait(&SEM_MENU);
             printf("Move: %d\n", (menu->keys)->x);
-            printf("Press: %d\n", (menu->keys)->x);
+            printf("Press: %d\n", (menu->keys)->press);
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
                 select += 1;
