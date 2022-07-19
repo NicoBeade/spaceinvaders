@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-extern int velDispAnimation = 100;
+extern int velDispAnimation = 50;
 
 int offsetAlfabeto(char caracter);
 void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion);
