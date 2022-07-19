@@ -167,6 +167,9 @@ void * timer(){
 
 int main(void){
 
+    disp_init();
+    joy_init();
+
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
 
     sem_init(&SEM_GAME, 0, 1);
