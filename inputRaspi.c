@@ -36,14 +36,42 @@ void* inputRPIThread(void* argInputRPI){
             coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
             switchJoy =  joy_get_switch();
 
-            //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
-            ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0) : -1;
+            if(coordJoy.x <= JOY_ACTIVE_NEG){
+                ((keys_t*)argInputRPI) -> x = -1;
+            }
+            else if(coordJoy.x >= JOY_ACTIVE_POS){
+                ((keys_t*)argInputRPI) -> x = 1;
+            }
+            else if(coordJoy.x <= JOY_ACTIVE_POS && coordJoy.x >= JOY_ACTIVE_NEG){
+                ((keys_t*)argInputRPI) -> x = 0;
+            }
 
-            ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG) ? ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0) : -1;
+            if(coordJoy.y <= JOY_ACTIVE_NEG){
+                ((keys_t*)argInputRPI) -> y = -1;
+            }
+            else if(coordJoy.y >= JOY_ACTIVE_POS){
+                ((keys_t*)argInputRPI) -> y = 1;
+            }
+            else if(coordJoy.y <= JOY_ACTIVE_POS && coordJoy.y >= JOY_ACTIVE_NEG){
+                ((keys_t*)argInputRPI) -> y = 0;
+            }
+
+            if(switchJoy == J_PRESS){
+                ((keys_t*)argInputRPI) -> press = 1;
+            }
+            else{
+                ((keys_t*)argInputRPI) -> press = 0;
+            }
+
+            /*
+            //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
+            ((keys_t*)argInputRPI) -> x = (coordJoy.x > JOY_ACTIVE_NEG && coordJoy.x < JOY_ACTIVE_POS) ? 0 : 
+
+            ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
 
             //Esta seccion detecta si se presiono el boton del joystick.
-            ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 0 : 1;
-
+            ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 1 : 0;
+            */
         }
     }
     pthread_exit(0);
