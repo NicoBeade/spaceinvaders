@@ -153,7 +153,7 @@ void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direcc
     for(i = colInicialL ; i != colFinalL ; i -= direccion){//Recorre todas las columnas del caracter.
 
         for(col = colInicialB ; col != colFinalB ; col -= direccion){//Barre el display hacia un costado.
-            usleep(10 * U_SEC2M_SEC * velDispAnimation);//Indica a que velocidad se debe hacer el barrido.
+            usleep(velDispAnimation * U_SEC2M_SEC);//Indica a que velocidad se debe hacer el barrido.
             
             for(fil = 0 ; fil < 8 ; fil++){
                 (*lowerDispMenu)[fil][col + direccion] = (*lowerDispMenu)[fil][col];//Realiza el barrido.
