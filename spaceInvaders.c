@@ -175,9 +175,11 @@ int main(void){
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
+                printf("Entro a menu\n");
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
+                printf("paso el semaforo\n");
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
-
+                printf("Esperando el thread menu handler\n");
                 pthread_join(menuHandlerT, NULL);
                 sem_post(&SEM_GAME);
 
