@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-extern int velDispAnimation = 50;
+extern int velDispAnimation = 100;
 
 int offsetAlfabeto(char caracter);
 void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion);
@@ -94,7 +94,12 @@ void* textAnimMenu(void* argTextAnimMenu){
 
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
-    }
+        printf("Caracter: %c\n", (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
+        int x;
+        for(x = 0 ; x < 8 ; x++){
+            printf("%c\n", (*(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu)) [x][15]);
+        }
+    }   
     usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
     
 
