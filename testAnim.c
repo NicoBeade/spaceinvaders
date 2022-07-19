@@ -190,6 +190,7 @@ int main(void){
     argTextAnimMenu_t argTextAnimMenu = { "Nashe    ",  &lowerDispMenu, IZQUIERDA, 1};
 
     pthread_create(&testAnimT, NULL, textAnimMenu, &argTextAnimMenu);
+    printf("Se creo el thread\n");
 
     pthread_join(testAnimT, NULL);
 
