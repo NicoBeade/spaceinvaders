@@ -40,8 +40,8 @@ typedef struct{//Contiene el estado del juego.
 
 typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
-	uint8_t x;
-	uint8_t y;
+	char x;
+	char y;
 	uint8_t press;
 } keys_t;
 
