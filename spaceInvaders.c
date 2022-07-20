@@ -28,7 +28,7 @@
 #ifdef RASPI
 #include "inputRaspi.h"
 #include "displayRaspi.h"
-//#include "sprites.h"
+#include "sprites.h"
 #include "disdrv.h"
 #include "joydrv.h"
 #endif
@@ -318,7 +318,8 @@ static void* menuHandlerThread(void * data){
                     select = 0;
                 }
 
-                (menu -> changeOption)(displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA);
+                argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
+                (menu -> changeOption)(&argChangeOption);
                 
             }
 
@@ -328,7 +329,8 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                (menu -> changeOption)(displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA);
+                argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA };
+                (menu -> changeOption)(&argChangeOption);
                 
             }
 

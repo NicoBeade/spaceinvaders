@@ -434,20 +434,22 @@ void* dispMenu(void* punteroPausa){
  * 
  ******************************************************************************************************************************************/
 
-void changeOption(pthread_t threadMenu, int* animStatus, halfDisp_t* lowerDispMenu, char* nuevoTexto, int direccion){
+void changeOption(void* argChangeOption){
 //Esta funcion es la encargada de cambiar el texto que se muestra en pantalla en un menu.
     
     velDispAnimation = 1;
 
-    *animStatus = 0;
+    *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
-    pthread_join(threadMenu, NULL);//Termina el thread anterior aumentando la velocidad del barrido.
+    pthread_join(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
-    *animStatus = 1;
+    *(((argChangeOption_t*)argChangeOption) -> animStatus) = 1;
 
-    argTextAnimMenu_t argTextAnimMenu = { nuevoTexto,  lowerDispMenu, direccion, animStatus};//Inicia el nuevo thread que mostrara el nuevo texto.
+    argTextAnimMenu_t argTextAnimMenu = { ((argChangeOption_t*)argChangeOption) -> nuevoTexto,  ((argChangeOption_t*)argChangeOption) -> lowerDispMenu,
+                                         ((argChangeOption_t*)argChangeOption) -> direccion, ((argChangeOption_t*)argChangeOption) -> animStatus};
+                                        //Inicia el nuevo thread que mostrara el nuevo texto.
 
-    pthread_create(&threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
+    pthread_create(&(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL, textAnimMenu, &argTextAnimMenu);
 }
 
 /*

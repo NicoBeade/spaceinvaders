@@ -47,6 +47,14 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     int* changeAnimation;//Indica cuando salir del thread.
 }argTextAnimMenu_t;
 
+typedef struct{
+    pthread_t threadMenu;
+    int* animStatus;
+    halfDisp_t* lowerDispMenu;
+    char* nuevoTexto;
+    int direccion;
+}argChangeOption_t;
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -119,7 +127,7 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad); //Imprime una mitad d
 
 //*****************THREAD DISPLAY DURANTE MENUES
 void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion de barrido de los textos durante la ejecucion de un menu.
-void changeOption(pthread_t threadMenu, int* animSatatus, halfDisp_t* lowerDispMenu, char* texto, int direccion); //Cambia el texto mostrado en pantalla.
+void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla.
 
 
 //*****************MENU DE INICIO
