@@ -96,7 +96,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     velDispAnimation = 1;
     
     //Primero imprimimos las primeras 4 letras.
-    for(i = firstLetter ; i != lastLetter ; i ++){
+    for(i = firstLetter ; i != lastLetter ; i -= (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion)){
 
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
