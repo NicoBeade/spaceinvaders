@@ -19,7 +19,8 @@
 #include <stdint.h>
 #include "aliensYBalas.h"
 #include <pthread.h>
-#include "sprites.h"
+//#include "sprites.h"
+#include "displayRaspi.h"
 
 /*******************************************************************************************************************************************
  * 
