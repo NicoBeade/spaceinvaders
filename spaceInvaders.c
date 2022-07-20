@@ -28,6 +28,7 @@
 #ifdef RASPI
 #include "inputRaspi.h"
 #include "displayRaspi.h"
+#include "sprites.h"
 #endif
 
 #ifdef ALLEGRO
