@@ -314,7 +314,7 @@ static void* menuHandlerThread(void * data){
                     select = 0;
                 }
 
-                (menu -> changeOption)(IZQIERDA);
+                (menu -> changeOption)(displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA);
                 
             }
 
@@ -324,7 +324,7 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                (menu -> changeOption)(DERECHA);
+                (menu -> changeOption)(displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA);
                 
             }
 
