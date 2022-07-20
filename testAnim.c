@@ -93,7 +93,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     int firstLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? 3 : 0;
     int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
 
-    velDispAnimation = 5;
+    velDispAnimation = 1;
     
     //Primero imprimimos las primeras 4 letras.
     for(i = firstLetter ; i != lastLetter ; i ++){
@@ -194,7 +194,7 @@ int main(void){
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
-    argTextAnimMenu_t argTextAnimMenu = { "Nashe    ",  &lowerDispMenu, IZQUIERDA, 1};
+    argTextAnimMenu_t argTextAnimMenu = { "Nashe    ",  &lowerDispMenu, DERECHA, 1};
 
     pthread_create(&testAnimT, NULL, textAnimMenu, &argTextAnimMenu);
     printf("Se creo el thread\n");
