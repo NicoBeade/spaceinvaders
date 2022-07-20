@@ -35,7 +35,7 @@
 #include <pthread.h>
 #include "displayRaspi.h"
 #include <stdio.h>
-//#include "sprites.h"
+#include "sprites.h"
 
 /*int main (void){
     dcoord_t p = {5,5};
