@@ -108,7 +108,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }   
     usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
 
-    velDispAnimation = 15;
+    velDispAnimation = 25;
 
     do{//Barre el texto hasta que se le indique lo contrario.
         for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
@@ -160,7 +160,7 @@ void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direcc
     for(i = colInicialL ; i != colFinalL ; i -= direccion){//Recorre todas las columnas del caracter.
 
         for(col = colInicialB ; col != colFinalB ; col -= direccion){//Barre el display hacia un costado.
-            usleep(velDispAnimation * U_SEC2M_SEC);//Indica a que velocidad se debe hacer el barrido.
+            usleep(velDispAnimation * 500);//Indica a que velocidad se debe hacer el barrido.
             
             for(fil = 0 ; fil < 8 ; fil++){
                 (*lowerDispMenu)[fil][col + direccion] = (*lowerDispMenu)[fil][col];//Realiza el barrido.
