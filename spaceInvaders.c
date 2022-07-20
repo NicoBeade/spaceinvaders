@@ -28,7 +28,7 @@
 #ifdef RASPI
 #include "inputRaspi.h"
 #include "displayRaspi.h"
-#include "sprites.h"
+//#include "sprites.h"
 #include "disdrv.h"
 #include "joydrv.h"
 #endif
@@ -128,6 +128,7 @@ level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos 
 unsigned int timerTick = 1000000;
 int velInput = 1;
 int velMenu = 20;
+int velDispAnimation = 1;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
