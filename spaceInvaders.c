@@ -23,7 +23,7 @@
 #include "aliensYBalas.h"
 #include <unistd.h>
 
-#define RASPI
+#define RASPI 
 
 #ifdef RASPI
 #include "inputRaspi.h"
