@@ -108,7 +108,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }   
     usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
 
-    velDispAnimation = 600;
+    velDispAnimation = 900;
 
     do{//Barre el texto hasta que se le indique lo contrario.
         for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
