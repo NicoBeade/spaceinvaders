@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-extern int velDispAnimation = 25;
+extern int velDispAnimation = 15;
 
 int offsetAlfabeto(char caracter);
 void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion);
@@ -87,10 +87,16 @@ typedef struct{
 
 void* textAnimMenu(void* argTextAnimMenu){
     
-    int i,j, offset;
+    int i, j, offset;
+    int firstBarr = 4;
+
+    int firstLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? 3 : 0;
+    int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
+
+    velDispAnimation = 5;
     
     //Primero imprimimos las primeras 4 letras.
-    for(i = 0 ; i < 4 ; i ++){
+    for(i = firstLetter ; i != lastLetter ; i ++){
 
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
@@ -101,15 +107,16 @@ void* textAnimMenu(void* argTextAnimMenu){
         }
     }   
     usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
-    
+
+    velDispAnimation = 15;
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        for(j = i ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
+        for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
             offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
             swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);
         }
-        i = 0;//Reinicia el proceso.
+        firstBarr = 0;//Reinicia el proceso.
     }
     while(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation);
 
