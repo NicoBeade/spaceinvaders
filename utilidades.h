@@ -18,6 +18,8 @@
 
 #include <stdint.h>
 #include "aliensYBalas.h"
+#include <pthread.h>
+#include "sprites.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -55,7 +57,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
     int cantOpciones;//Cantidad de opciones del menu.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    void (*changeOption)(int direccion);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*changeOption)(pthread_t threadMenu, int* animSatatus, halfDisp_t* lowerDispMenu, char* texto, int direccion);//Callback a la funcion que cambia la opcion seleccionada.
 } menu_t;
 
 /*******************************************************************************************************************************************
