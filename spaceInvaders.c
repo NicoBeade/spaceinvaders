@@ -116,7 +116,8 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio}, 4 , 1 , changeOption };
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
+                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };
 
 menu_t* MENUES[] = {&menuInicio, NULL};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
@@ -279,20 +280,42 @@ static void* menuHandlerThread(void * data){
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
+    //*****************************************     Inicializa el thread que barre el display       *****************************
+    pthread_t displayMenuT;
+
+    halfDisp_t lowerDispMenu = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+    };
+
+    int animStatus = 1;
+
+    argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, IZQUIERDA, &animStatus};
+
+    pthread_create(&displayMenuT, NULL, textAnimMenu, &argTextAnimMenu);
+
+    //***************************************************************************************************************************
+
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             sem_wait(&SEM_MENU);
-            //printf("Move: %d\n", (menu->keys)->x);
-            //printf("Press: %d\n", (menu->keys)->press);
+            
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
                 select += 1;
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
-                //(menu -> changeOption)(1);
-                printf("Opcion: %d\n", select);
+
+                (menu -> changeOption)(IZQIERDA);
+                
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
@@ -301,8 +324,8 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                //(menu -> changeOption)(-1);
-                printf("Opcion: %d\n", select);
+                (menu -> changeOption)(DERECHA);
+                
             }
 
             if (PRESS){//Si se selecciona la opcion
@@ -311,6 +334,7 @@ static void* menuHandlerThread(void * data){
             sem_post(&SEM_MENU);
         }
     }
+    animStatus = 0;
     
     pthread_exit(0);
 }

@@ -65,6 +65,23 @@
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
+
+/*******************************************************************************************************************************************
+ * 
+             ___               _           _     _                          _           ___   _            _     _           
+            | _ \  _ _   ___  | |_   ___  | |_  (_)  _ __   ___   ___    __| |  ___    / __| | |_   __ _  | |_  (_)  __   ___
+            |  _/ | '_| / _ \ |  _| / _ \ |  _| | | | '_ \ / _ \ (_-<   / _` | / -_)   \__ \ |  _| / _` | |  _| | | / _| (_-<
+            |_|   |_|   \___/  \__| \___/  \__| |_| | .__/ \___/ /__/   \__,_| \___|   |___/  \__| \__,_|  \__| |_| \__| /__/
+                                                    |_|                                                                                                                                                                                                               
+ * 
+ ******************************************************************************************************************************************/
+//*****************THREAD DISPLAY DURANTE MENUES
+static int offsetAlfabeto(char caracter); //Se utiliza para obtener el offset necesario para acceder al string "alfabeto".
+static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion); //Agrega un caracter completo al buffer.
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
 /******************************************************************************************************************************************
  * 
   ___                      _                                _         _        _   _               _                   ___   ___   ___ 
@@ -145,6 +162,34 @@ void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barrien
             punto.x=j;
             punto.y=i;
             if (displaySprite[i][j]==1){
+                disp_write(punto,D_ON);
+            }
+            else{
+                disp_write(punto,D_OFF);
+            }
+        }
+    }
+    disp_update();
+}
+
+void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de la pantalla barriendo los 128 pixeles de una matriz
+    int i,j,offset;                                        //se puede elegir cual mitad del display ingresando I (inf) o S (sup)
+    if (mitad=='I'){
+        offset=8;
+    }
+    else if(mitad=='S'){
+        offset=0;
+    }
+    else {
+        printf("Letra no valida para la impresion de medio display\n");
+        return;
+    }
+    dcoord_t punto;
+    for (i=0; i<8; i++){
+        for (j=0; j<16; j++){
+            punto.x=j;
+            punto.y=i+offset;
+            if (halfDispSprite [i][j]==1){
                 disp_write(punto,D_ON);
             }
             else{
@@ -258,6 +303,92 @@ void* displayRPIThread (void* argDisplayRPI){
                                                                        |_|                                                         
  * 
  ******************************************************************************************************************************************/
+
+void* textAnimMenu(void* argTextAnimMenu){
+//Este thread es el que se encarga de realizar el barrido de texto durante la ejecucion de un menu.
+    
+    int i, j, offset;
+    int firstBarr = 4;
+
+    int firstLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? 3 : 0;
+    int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
+    
+    //Primero imprimimos las primeras 4 letras.
+    for(i = firstLetter ; i != lastLetter ; i -= (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion)){
+
+        offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
+        swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
+    }   
+    usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
+
+    velDispAnimation = VEL_DISP_ANIMATION;
+
+    do{//Barre el texto hasta que se le indique lo contrario.
+        for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
+
+            offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
+            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);
+        }
+        firstBarr = 0;//Reinicia el proceso.
+    }
+    while(*(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation));
+
+    pthread_exit(0);
+}
+
+
+static int offsetAlfabeto(char caracter){
+//Esta funcion se utiliza para obtener el offset necesario para acceder al string "alfabeto".
+    int offset;
+    
+    if(caracter >= 'a' && caracter <= 'z'){//Si es una letra minuscula.
+        offset = caracter - 'a' + OFFSETLETRA;
+    }
+    else if(caracter >= 'A' && caracter <= 'Z'){//Si es una letra mayuscula.
+        offset = caracter - 'A' + OFFSETLETRA;
+    }
+    else if(caracter >= '0' && caracter <= '9'){//Si es un numero.
+        offset = caracter - '0' + OFFSETNUM;
+    }
+    else if(caracter == '-'){//Si es un guion.
+        offset = OFFSETCHARESP;
+    }
+    else if(caracter == '.'){//Si es un punto.
+        offset = OFFSETCHARESP + 1;
+    }
+    else if(caracter == ' '){//Si es un espacio.
+        offset = OFFSETCHARESP + 2;
+    }
+    return offset;
+}
+
+static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion){
+//Esta funcion agrega un caracter completo al buffer.
+    int i, fil, col, colInicialB, colFinalB, colInicialL, colFinalL;
+    
+    colInicialB = (direccion == DERECHA) ? 14 : 1;//Define a partir de que columna se realiza el barrido.
+    colFinalB = (direccion == DERECHA) ? -1 : 16;//Define la ultima columna que se barrera.
+    colInicialL = (direccion == DERECHA) ? 3 : 0;//Define a partir de que columna se muestra la nueva letra.
+    colFinalL = (direccion == DERECHA) ? -1 : 4;//Define a la ultima columna de la letra que se mostrara.
+
+    for(i = colInicialL ; i != colFinalL ; i -= direccion){//Recorre todas las columnas del caracter.
+
+        for(col = colInicialB ; col != colFinalB ; col -= direccion){//Barre el display hacia un costado.
+            usleep(velDispAnimation);//Indica a que velocidad se debe hacer el barrido.
+            
+            for(fil = 0 ; fil < 8 ; fil++){
+                (*lowerDispMenu)[fil][col + direccion] = (*lowerDispMenu)[fil][col];//Realiza el barrido.
+            }
+        }
+
+        for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna de la nueva letra al buffer.
+            (*lowerDispMenu)[fil][colFinalB + direccion] = caracter[fil][i];
+        }
+        printHalfDisp(*lowerDispMenu, 'I');//Muetra el contenido en el display.
+    }
+    
+}
+
 /*
 void* dispMenu(void* punteroPausa){
 
@@ -302,6 +433,23 @@ void* dispMenu(void* punteroPausa){
                   |_|                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
+
+void changeOption(pthread_t threadMenu, int* animStatus, halfDisp_t* lowerDispMenu, char* nuevoTexto, int direccion){
+//Esta funcion es la encargada de cambiar el texto que se muestra en pantalla en un menu.
+    
+    velDispAnimation = 1;
+
+    *animStatus = 0;
+
+    pthread_join(threadMenu, NULL);//Termina el thread anterior aumentando la velocidad del barrido.
+
+    *animStatus = 1;
+
+    argTextAnimMenu_t argTextAnimMenu = { nuevoTexto,  lowerDispMenu, direccion, animStatus};//Inicia el nuevo thread que mostrara el nuevo texto.
+
+    pthread_create(&threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
+}
+
 /*
 void changeOption(int actualOption){
     switch(actualOption){
@@ -324,8 +472,6 @@ void changeOption(int actualOption){
     }
 }
 */
-
-
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -359,12 +505,6 @@ int selectQuitGameInicio(void){
     GAME_STATUS.pantallaActual = START_LEVEL;
     return 0;
 }
-
-void changeOption(int direccion){
-    printf("Hola mundo");
-}
-
-
 
 //******************************************************************************************************************************************
 
