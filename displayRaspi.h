@@ -20,7 +20,7 @@
 #include "termlib.h"
 #include <semaphore.h>
 #include "utilidades.h"
-#include "sprites.h"
+//#include "sprites.h"
 
 /*******************************************************************************************************************************************
  * 
