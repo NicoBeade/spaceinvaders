@@ -297,6 +297,8 @@ static void* menuHandlerThread(void * data){
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     };
 
+    printf("Puntero al display fuera del thread: %p\n", &lowerDispMenu);
+
     int animStatus = 1;
 
     argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, IZQUIERDA, &animStatus};
