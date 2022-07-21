@@ -1076,6 +1076,7 @@ void changeOption(void* argChangeOption){
     printf("Nuevo texto: %s\n", ((argChangeOption_t*)argChangeOption) -> nuevoTexto);
     printf("anim Status dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> animStatus);
     printf("puntero thread dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
+    printf("Puntero al display dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> lowerDispMenu);
 
     pthread_create(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
 
