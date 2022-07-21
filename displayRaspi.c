@@ -925,7 +925,7 @@ void* textAnimMenu(void* argTextAnimMenu){
 //Este thread es el que se encarga de realizar el barrido de texto durante la ejecucion de un menu.
 
     printf("Texto dentro del thread de barrido: %s\n", ((argTextAnimMenu_t*)argTextAnimMenu) -> msg);
-    printf("Puntero al display dentro del thread de barrido: %s\n", ((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu );
+    printf("Puntero al display dentro del thread de barrido: %p\n", ((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu );
     
     int i, j, offset;
     int firstBarr = 4;
