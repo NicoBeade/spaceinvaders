@@ -330,7 +330,7 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA };
                 (menu -> changeOption)(&argChangeOption);
                 
             }
