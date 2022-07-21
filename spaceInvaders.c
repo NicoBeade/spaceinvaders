@@ -317,6 +317,7 @@ static void* menuHandlerThread(void * data){
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
+                printf("anim Status fuera del thread: %p", &animStatus);
                 argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 
@@ -340,6 +341,8 @@ static void* menuHandlerThread(void * data){
         }
     }
     animStatus = 0;
+
+    pthread_join(displayMenuT, NULL);
     
     pthread_exit(0);
 }
