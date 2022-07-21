@@ -319,7 +319,7 @@ static void* menuHandlerThread(void * data){
                 }
                 printf("anim Status fuera del thread: %p\n", &animStatus);
                 printf("puntero thread fuera del thread: %p\n", &displayMenuT);
-                argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 
             }

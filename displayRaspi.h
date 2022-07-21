@@ -52,7 +52,7 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
 }argTextAnimMenu_t;
 
 typedef struct{//Argumentos que recibe la funcion changeOption.
-    pthread_t threadMenu;//Puntero al thread
+    pthread_t* threadMenu;//Puntero al thread
     int* animStatus;//Indicador de si se debe cambiar de texto
     halfDisp_t* lowerDispMenu;//Puntero a la parte inferior del display durante la ejecucion del menu.
     char* nuevoTexto;//Nuevo texto a mostrar en pantalla.

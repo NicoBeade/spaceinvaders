@@ -1060,7 +1060,7 @@ void changeOption(void* argChangeOption){
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
-    pthread_join(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL);//Termina el thread anterior aumentando la velocidad del barrido.
+    pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
     printf("Se finalizo el thread\n");
 
@@ -1072,9 +1072,9 @@ void changeOption(void* argChangeOption){
     
     printf("Nuevo texto: %s\n", ((argChangeOption_t*)argChangeOption) -> nuevoTexto);
     printf("anim Status dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> animStatus);
-    printf("puntero thread dentro de changeOption: %p\n", &(((argChangeOption_t*)argChangeOption) -> threadMenu));
+    printf("puntero thread dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
 
-    pthread_create(&(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL, textAnimMenu, &argTextAnimMenu);
+    pthread_create(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
 
     printf("Se inicio el nuevo thread\n");
 }
