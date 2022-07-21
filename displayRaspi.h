@@ -20,7 +20,6 @@
 #include "termlib.h"
 #include <semaphore.h>
 #include "utilidades.h"
-#include "sprites.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -47,13 +46,19 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     int* changeAnimation;//Indica cuando salir del thread.
 }argTextAnimMenu_t;
 
-typedef struct{
-    pthread_t threadMenu;
-    int* animStatus;
-    halfDisp_t* lowerDispMenu;
-    char* nuevoTexto;
-    int direccion;
+typedef struct{//Argumentos que recibe la funcion changeOption.
+    pthread_t threadMenu;//Puntero al thread
+    int* animStatus;//Indicador de si se debe cambiar de texto
+    halfDisp_t* lowerDispMenu;//Puntero a la parte inferior del display durante la ejecucion del menu.
+    char* nuevoTexto;//Nuevo texto a mostrar en pantalla.
+    int direccion;//Direccion de la animacion.
 }argChangeOption_t;
+
+
+typedef const uint8_t sprite_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
+typedef const uint8_t fullDisp_t [16][16]; //matriz de 16x16, para imprimir sobre todo el display
+typedef const uint8_t caracteres_t [8][4]; //matriz de 8x4 para imprimir letras
+typedef uint8_t halfDisp_t [8][16]; //matriz de 8x16 para imprimir sobre la mitad del display
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
