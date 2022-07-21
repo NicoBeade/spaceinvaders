@@ -31,6 +31,11 @@
  * 
  ******************************************************************************************************************************************/
 
+typedef const uint8_t sprite_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
+typedef const uint8_t fullDisp_t [16][16]; //matriz de 16x16, para imprimir sobre todo el display
+typedef const uint8_t caracteres_t [8][4]; //matriz de 8x4 para imprimir letras
+typedef uint8_t halfDisp_t [8][16]; //matriz de 8x16 para imprimir sobre la mitad del display
+
 typedef struct{ //argumentos a recibir por el thread del display en juego RPI
     object_t** balasEnemigas;
     object_t** balasUsr;
@@ -53,12 +58,6 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     char* nuevoTexto;//Nuevo texto a mostrar en pantalla.
     int direccion;//Direccion de la animacion.
 }argChangeOption_t;
-
-
-typedef const uint8_t sprite_t [2][3]; //matriz de 2x3, tamanyo de los enemigos
-typedef const uint8_t fullDisp_t [16][16]; //matriz de 16x16, para imprimir sobre todo el display
-typedef const uint8_t caracteres_t [8][4]; //matriz de 8x4 para imprimir letras
-typedef uint8_t halfDisp_t [8][16]; //matriz de 8x16 para imprimir sobre la mitad del display
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
