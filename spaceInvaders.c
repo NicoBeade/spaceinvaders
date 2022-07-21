@@ -189,11 +189,11 @@ int main(void){
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
-                printf("Entro a menu\n");
+                //printf("Entro a menu\n");
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
-                printf("paso el semaforo\n");
+                //printf("paso el semaforo\n");
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
-                printf("Esperando el thread menu handler\n");
+                //printf("Esperando el thread menu handler\n");
                 pthread_join(menuHandlerT, NULL);
                 sem_post(&SEM_GAME);
 
@@ -312,11 +312,11 @@ static void* menuHandlerThread(void * data){
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
+                printf("Siguiente opcion \n");
                 select += 1;
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
-
                 argChangeOption_t argChangeOption = { displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 

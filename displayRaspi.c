@@ -1056,9 +1056,13 @@ void changeOption(void* argChangeOption){
     
     velDispAnimation = 1;
 
+    printf("Se inicio changeOption\n");
+
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
     pthread_join(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL);//Termina el thread anterior aumentando la velocidad del barrido.
+
+    printf("Se finalizo el thread\n");
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 1;
 
@@ -1067,6 +1071,8 @@ void changeOption(void* argChangeOption){
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
 
     pthread_create(&(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL, textAnimMenu, &argTextAnimMenu);
+
+    printf("Se inicio el nuevo thread\n");
 }
 
 /*
