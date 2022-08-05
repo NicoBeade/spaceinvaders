@@ -939,7 +939,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
     }   
-    usleep(500 * U_SEC2M_SEC);//Espera medio segundo.
+    usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
     velDispAnimation = VEL_DISP_ANIMATION;
 
