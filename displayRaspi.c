@@ -952,8 +952,6 @@ void* textAnimMenu(void* argTextAnimMenu){
         firstBarr = 0;//Reinicia el proceso.
     }
     while(*(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation));
-    
-    printf("AAAAAAAAAAAAAAAAA\n");
 
     pthread_exit(0);
 }
@@ -1059,6 +1057,8 @@ void* dispMenu(void* punteroPausa){
 void changeOption(void* argChangeOption){
 //Esta funcion es la encargada de cambiar el texto que se muestra en pantalla en un menu.
     
+    static argTextAnimMenu_t argTextAnimMenu;
+
     velDispAnimation = 1;
 
     printf("Se inicio changeOption\n");
@@ -1071,8 +1071,10 @@ void changeOption(void* argChangeOption){
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 1;
 
-    argTextAnimMenu_t argTextAnimMenu = { ((argChangeOption_t*)argChangeOption) -> nuevoTexto,  ((argChangeOption_t*)argChangeOption) -> lowerDispMenu,
-                                         ((argChangeOption_t*)argChangeOption) -> direccion, ((argChangeOption_t*)argChangeOption) -> animStatus};
+    argTextAnimMenu.msg = ((argChangeOption_t*)argChangeOption) -> nuevoTexto;
+    argTextAnimMenu.lowerDispMenu = ((argChangeOption_t*)argChangeOption) -> lowerDispMenu;
+    argTextAnimMenu.direccion = ((argChangeOption_t*)argChangeOption) -> direccion;
+    argTextAnimMenu.changeAnimation = ((argChangeOption_t*)argChangeOption) -> animStatus;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
     
     printf("Nuevo texto: %s\n", ((argChangeOption_t*)argChangeOption) -> nuevoTexto);
