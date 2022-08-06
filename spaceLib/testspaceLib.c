@@ -1,5 +1,6 @@
 #include "spaceLib.h"
 #include <stdlib.h>
+#include <stdio.h>
 void iniciarNivel1(void);
 int main(void) {
 
