@@ -315,14 +315,15 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
     }
     int borde = 0;
     while ((alien->next != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
-        if (alien->pos.x <= 0 + MARGEN_X_L(levelSettings)){ //deteccion borde izquierdo
+        objectType_t * tipoAlien = getObjType(alien->type);
+        if (alien->pos.x <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x > X_MAX_L(levelSettings) - MARGEN_X_L(levelSettings) - ANCHO_ALIEN_L(levelSettings)){ //deteccion borde derecho
+        else if (alien->pos.x > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
         }
-        if (alien->pos.y >= Y_MAX_L(levelSettings) - MARGEN_Y_L(levelSettings)){ //deteccion de suelo
-        borde = ABAJO;
+        if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo
+            borde = ABAJO;
         }
         alien = alien -> next;
     }
@@ -391,9 +392,6 @@ object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting){ 
 
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
-    objectType_t * balaType = getObjType(listaBalas -> type);
-    int maxBullets = balaType -> maxBullets;
-    int balasDisponibles = maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
@@ -402,6 +400,10 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
     if(nave == NULL){
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");
         return NULL;
+    }
+    else{
+        int maxBullets = balaType -> maxBullets;
+        int balasDisponibles = maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     }
     while(balasDisponibles > 0 && nave != NULL){
         naveType = getObjType(nave -> type);
