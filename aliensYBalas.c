@@ -221,7 +221,7 @@ void * moveAlienThread(void* argMoveAlien){
 
 void moveAlien(level_setting_t*  levelSettings, object_t * alienList, int direccion){
     if(alienList == NULL){
-        printf("Error. AlienList cannot be NULL pointer in thread ""moveAlien"".\n");
+        printf("Error: AlienList cannot be NULL pointer in function ""moveAlien""\n");
     }
     object_t * auxiliar;
     direccion = detectarDireccion(direccion, levelSettings, alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
