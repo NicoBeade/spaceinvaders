@@ -13,7 +13,7 @@ int main(void) {
     settings.distInicialY = 2;
     settings.margenX = 1;
     settings.margenY = 1;
-    settings.saltoX = 1;
+    settings.saltoX = 4;
     settings.saltoY = 3;
     settings.xMax = 15;
     settings.xMin = 0;
@@ -25,7 +25,7 @@ int main(void) {
     addObjType(NICOLAS, 1, 3, 2, 1, 30, 4);
     addObjType(PABLO, 1, 3, 2, 2, 40, 4);
     addObjType(DANIEL, 1, 3, 2, 3, 50, 4);
-    printf("pepe\n");
+    imprimirARRAY();
     object_t* listAlien = NULL;//Puntero al primer elemento de la lista de los aliens.
     listAlien = initAliens(listAlien, &settings, "20403", NICOLAS, PABLO, DANIEL);
     printf("george\n");
