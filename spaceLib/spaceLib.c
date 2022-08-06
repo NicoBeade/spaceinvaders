@@ -499,7 +499,7 @@ object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int mi
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};    //Se inicializa un array de objectTypes 
 
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets){
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID){
     if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
         printf("Err in gameLib, addObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
@@ -522,6 +522,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).initLives=initLives;
         (objtypes[index]).shootProb=shootProb;
         (objtypes[index]).maxBullets=maxBullets;
+        (objtypes[index]).balaID=balaID;
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
     }
     return 1;

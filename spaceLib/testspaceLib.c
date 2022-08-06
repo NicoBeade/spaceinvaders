@@ -7,8 +7,8 @@ int main(void) {
     level_setting_t settings;
     settings.desplazamientoX = 1;
     settings.desplazamientoY = 1;
-    settings.disInicialUsrX = 7;
-    settings.disInicialUsrY = 13;
+    settings.disInicialUsrX = 9;
+    settings.disInicialUsrY = 1;
     settings.distInicialX = 2;
     settings.distInicialY = 2;
     settings.margenX = 1;
@@ -22,9 +22,15 @@ int main(void) {
     #define NICOLAS 1
     #define PABLO 2
     #define DANIEL 3
-    addObjType(NICOLAS, 1, 3, 2, 1, 30, 4);
-    addObjType(PABLO, 1, 3, 2, 2, 40, 4);
-    addObjType(DANIEL, 1, 3, 2, 3, 50, 4);
+    #define BALANICOLAS 4
+    #define BALAPABLO 5
+    #define BALADANIEL 6
+    addObjType(NICOLAS, 1, 3, 2, 1, 30, 4, BALANICOLAS);
+    addObjType(PABLO, 1, 3, 2, 2, 40, 4, BALAPABLO);
+    addObjType(DANIEL, 1, 3, 2, 3, 50, 4, BALADANIEL);
+    addObjType(BALANICOLAS, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
+    addObjType(BALAPABLO, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
+    addObjType(BALADANIEL, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
     imprimirARRAY();
     object_t* listAlien = NULL;//Puntero al primer elemento de la lista de los aliens.
     listAlien = initAliens(listAlien, &settings, "20403", NICOLAS, PABLO, DANIEL);
@@ -34,6 +40,14 @@ int main(void) {
     object_t* prueba = listAlien;
     while(prueba != NULL){
         printf("Alien %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
+        i++;
+        prueba = prueba -> next;
+    }
+    object_t* balas = NULL;
+    shootBala(listAlien,balas,&settings);
+    object_t* pruebab = balas;
+    while(pruebab != NULL){
+        printf("Bala %d: x: %d ; y: %d ; tipo: %d ; vidas: %d\n", i, prueba -> pos.x, prueba -> pos.y, prueba -> type, prueba -> lives);
         i++;
         prueba = prueba -> next;
     }
