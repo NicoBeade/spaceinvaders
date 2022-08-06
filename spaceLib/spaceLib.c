@@ -397,14 +397,12 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType;                                    //Puntero al tipo de nave
+    int balasDisponibles;                                       //Balas disponibles para disparar
     if(nave == NULL){
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");
         return NULL;
     }
-    else{
-        int maxBullets = balaType -> maxBullets;
-        int balasDisponibles = maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
-    }
+    balasDisponibles = nave -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales
     while(balasDisponibles > 0 && nave != NULL){
         naveType = getObjType(nave -> type);
         if (naveType == NULL){
