@@ -518,7 +518,8 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).id=id;
         (objtypes[index]).velocidad=vel;
         (objtypes[index]).ancho=ancho;
-        (objtypes[index]).alto=initLives;
+        (objtypes[index]).alto=alto;
+        (objtypes[index]).initLives=initLives;
         (objtypes[index]).shootProb=shootProb;
         (objtypes[index]).maxBullets=maxBullets;
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
