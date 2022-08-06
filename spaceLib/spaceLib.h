@@ -177,7 +177,7 @@ void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int t
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets);	//Añade un tipo de objeto
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID);	//Añade un tipo de objeto
 int delObjType(int id);																								//Elimina un tipo de objeto
 
 /*******************************************************************************************************************************************
