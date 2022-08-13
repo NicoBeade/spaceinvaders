@@ -131,7 +131,7 @@ void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
 void printHalfDisp(halfDisp_t halfDispSprite, char mitad); //Imprime una mitad del display.
 
 //*****************THREAD DISPLAY IN GAME
-//void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
+void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
 
 //*****************THREAD DISPLAY DURANTE MENUES
 void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion de barrido de los textos durante la ejecucion de un menu.

@@ -1,4 +1,4 @@
-/**********************************************************************************************************************************************************
+/***********************************************************************************************************************************************************
  *
                           _____                                   _____                               _                     
                          / ____|                                 |_   _|                             | |                    
@@ -46,7 +46,16 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
+typedef struct{
+	level_setting_t * levelSettings;
+	object_t ** alienList;
+}argMoveAlien_t;
 
+typedef struct{
+	level_setting_t * levelSettings;
+	object_t ** balasEnemigas;
+	object_t ** balasUsr;
+}argMoveBala_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -66,8 +75,10 @@
 #define INPUT_THREAD inputRPIThread
 #define DISPLAY_THREAD_GAME displayRPIThread
 
-#define SIGUIENTE ((menu->keys)->x == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
-#define ANTERIOR  ((menu->keys)->x == -1)
+#define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
+#define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
+#define ARRIBA_INPUT ((menu->keys)->y == 1)
+#define ABAJO_INPUT  ((menu->keys)->y == -1)
 
 #endif
 
@@ -76,18 +87,20 @@
 #define INPUT_THREAD keyboardt
 #define DISPLAY_THREAD_GAME displayt
 
-#define SIGUIENTE ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
-#define ANTERIOR  ((menu->keys)->y == -1)
+#define SIGUIENTE_INPUT ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
+#define ANTERIOR_INPUT  ((menu->keys)->y == -1)
 #endif
 
 
-#define PRESS     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
+#define PRESS_INPUT     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
 void * moveAlienThread(void* argMoveAlien);
 
 void * moveBalaThread(void * argMoveBala);
+
+static void* menuHandlerThread(void * data);
 
 /*******************************************************************************************************************************************
  * 
@@ -101,8 +114,7 @@ void * moveBalaThread(void * argMoveBala);
 
 
 /*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-static void* menuHandlerThread(void * data);
+********************************************************************************************************************************************
 
 /*******************************************************************************************************************************************
  * 
@@ -121,16 +133,22 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
-                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };
+game_t menuGame = { &KEYS, NULL, NULL, 0}; //Estructura del level handler.
 
-menu_t* MENUES[] = {&menuInicio, NULL};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
+                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };//Estructura del menu de inicio.
+
+menu_t menuPausa = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
+                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };//Estructura del menu de inicio.
+
+menu_t* MENUES[] = {&menuInicio, &menuPausa};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
 int velInput = 1;
 int velMenu = 20;
 int velDispAnimation = 1;
+int velInputGame = 10;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -192,31 +210,65 @@ int main(void){
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
-                //printf("Entro a menu\n");
+                
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
-                //printf("paso el semaforo\n");
+                
+                MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
+
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
-                //printf("Esperando el thread menu handler\n");
+                
                 pthread_join(menuHandlerT, NULL);
+
                 sem_post(&SEM_GAME);
 
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                printf("se inicio el nivel\n");
-                GAME_STATUS.exitStatus = 0;
-                /*
-                object_t* alienList;//Se crea la lista de los aliens.
-                alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
+                
+                sem_wait(&SEM_MENU);
+
+                object_t* alienList = NULL;//Se crea la lista de los aliens.
+                //alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
                 object_t* listBalasEnemigas;//Lista de las balas de los aliens.
                 object_t* listBalasUsr;//Lista de las balas del usuario.
-
+                
                 object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
 
                 if(naveUsuario == NULL){\
                     printf("no se pudo crear al usuario por malloc \n");
                 }
 
+                level_setting_t settings;
+    settings.desplazamientoX = 1;
+    settings.desplazamientoY = 1;
+    settings.desplazamientoUsr = 1;
+    settings.disInicialUsrX = 9;
+    settings.disInicialUsrY = 1;
+    settings.distInicialX = 2;
+    settings.distInicialY = 2;
+    settings.margenX = 1;
+    settings.margenY = 1;
+    settings.saltoX = 4;
+    settings.saltoY = 3;
+    settings.xMax = 15;
+    settings.xMin = 0;
+    settings.yMax = 15;
+    settings.yMin = 0;
+    #define NICOLAS 1
+    #define PABLO 2
+    #define DANIEL 3
+    #define BALANICOLAS 4
+    #define BALAPABLO 5
+    #define BALADANIEL 6
+    #define NAVE 8
+    addObjType(NICOLAS, 1, 3, 2, 1, 30, 4, BALANICOLAS);
+    addObjType(PABLO, 1, 3, 2, 2, 40, 4, BALAPABLO);
+    addObjType(DANIEL, 1, 3, 2, 3, 50, 4, BALADANIEL);
+    addObjType(BALANICOLAS, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
+    addObjType(BALAPABLO, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
+    addObjType(BALADANIEL, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
+    alienList = initAliens(alienList, &settings, "20403", NICOLAS, PABLO, DANIEL);
+    
                 naveUsuario -> pos.x = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrX;   //Inicializa la nave del usuario.
                 naveUsuario -> pos.y = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrY;
                 naveUsuario -> type = NAVE;
@@ -233,6 +285,10 @@ int main(void){
 
                 pthread_create(&displayT, NULL, DISPLAY_THREAD_GAME, &argDisplay);//Inicializa el thead del display.
 
+                menuGame.naveUsr = &naveUsuario;
+                //menuGame.levelSettings =
+                //Aca tiene que ir el puntero a level settings.
+                menuGame.exitStatus = 1;
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
                 
                 argMoveAlien_t argMoveAlien = { .levelSettings = LEVELS[GAME_STATUS.nivelActual] , .alienList = &alienList };//Inicializa el thread Move Alien.
@@ -242,7 +298,9 @@ int main(void){
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
-                */
+                
+                sem_wait(&SEM_MENU);
+
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
@@ -315,7 +373,7 @@ static void* menuHandlerThread(void * data){
         if( (timerTick % velMenu) == 0 ){
             sem_wait(&SEM_MENU);
             
-            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+            if (DERECHA_INPUT){//Si se presiona para ir a la siguiente opcion
 
                 printf("Siguiente opcion \n");
                 select += 1;
@@ -329,7 +387,7 @@ static void* menuHandlerThread(void * data){
                 
             }
 
-            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+            if (IZQUIERDA_INPUT){//Si se presiona para ir a la opcion anterior
 
                 select -= 1;
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
@@ -340,7 +398,7 @@ static void* menuHandlerThread(void * data){
                 
             }
 
-            if (PRESS){//Si se selecciona la opcion
+            if (PRESS_INPUT){//Si se selecciona la opcion
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
             }
             sem_post(&SEM_MENU);
@@ -354,30 +412,45 @@ static void* menuHandlerThread(void * data){
 }
 
 
-/*
+
 static void* levelHandlerThread(void * data){
 
-	menu_t * menu = (menu_t *) data;
+	game_t * menu = (game_t *) data;
 
+    while(menu -> exitStatus){
 
-	if (DISPARAR){
-		//Animacion
-		disparar();
-	}
+        if (PRESS_INPUT){//Si se presiono el joystick se debe pausar el juego.
+                GAME_STATUS.menuActual = MENU_PAUSA;//Indica que se pauso el juego.
+                GAME_STATUS.pantallaActual = MENU;
+                menu -> exitStatus = 0;//Indica que hay que salir del level Handler
+        }
 
-	if (MOVER){
-		//Animacion
-		moverder();
-	}
+        usleep(10 * U_SEC2M_SEC);
+        if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
+            if (ARRIBA_INPUT){//Dispara una bala
+                //Disparar una bala
+            }
 
-	if (PRESS){
-		*opcionActual();
-	}
+            if (DERECHA_INPUT){//Mueve al usuario
+                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
+            }
 
+            if (IZQUIERDA_INPUT){
+                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
+            }
+        }
+    }
+
+    pthread_exit(0);
 }
-*/
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
+
+/********************************************************************************************************************************************************************************************************
+                              _     _   _                _____   _                            _                                        ___          _          _____   _                            _     
+  _ __    ___  __ __  ___    /_\   | | (_)  ___   _ _   |_   _| | |_    _ _   ___   __ _   __| |    _  _     _ __    ___  __ __  ___  | _ )  __ _  | |  __ _  |_   _| | |_    _ _   ___   __ _   __| |    
+ | '  \  / _ \ \ V / / -_)  / _ \  | | | | / -_) | ' \    | |   | ' \  | '_| / -_) / _` | / _` |   | || |   | '  \  / _ \ \ V / / -_) | _ \ / _` | | | / _` |   | |   | ' \  | '_| / -_) / _` | / _` |    
+ |_|_|_| \___/  \_/  \___| /_/ \_\ |_| |_| \___| |_||_|   |_|   |_||_| |_|   \___| \__,_| \__,_|    \_, |   |_|_|_| \___/  \_/  \___| |___/ \__,_| |_| \__,_|   |_|   |_||_| |_|   \___| \__,_| \__,_|    
+                                                                                                    |__/                                                                                                  
+********************************************************************************************************************************************************************************************************/
 
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
@@ -408,12 +481,9 @@ void * moveBalaThread(void * argMoveBala){
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
             //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala( BALAS_ENEMIGAS_L(argMoveBala), NICOLAS, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_PABLO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
+            (*(((argMoveBala_t *) argMoveBala) -> balasEnemigas))  = moveBala(*(((argMoveBala_t *) argMoveBala) -> balasEnemigas), ((argMoveBala_t *) argMoveBala) -> levelSettings);
             //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_DANIEL, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
-            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            BALAS_USR_L(argMoveBala) = moveBala(BALAS_USR_L(argMoveBala), BALA_USUARIO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
+            (*(((argMoveBala_t *) argMoveBala) -> balasUsr)) = moveBala(*(((argMoveBala_t *) argMoveBala) -> balasUsr), ((argMoveBala_t *) argMoveBala) -> levelSettings);
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             sem_post(&SEM_GAME);

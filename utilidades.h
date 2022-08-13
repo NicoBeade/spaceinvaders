@@ -17,8 +17,8 @@
 #define UTILIDADES_H
 
 #include <stdint.h>
-#include "aliensYBalas.h"
 #include <pthread.h>
+#include "spaceLib.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -59,6 +59,14 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
 } menu_t;
 
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
+
+	keys_t * keys;
+    object_t** naveUsr;
+    level_setting_t* levelSettings;
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+} game_t;
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -87,6 +95,9 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 
 //*************PANTALLAS
 enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
+
+//*************MENUES
+enum PANTALLAS { MENU_INICIO , MENU_PAUSA};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

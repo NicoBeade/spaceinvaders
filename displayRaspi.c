@@ -829,7 +829,7 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
  * 
  ******************************************************************************************************************************************/
 
-/*
+
 void* displayRPIThread (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
@@ -898,7 +898,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 balas=balas->next; //se pasa a la siguiente bala de la lista
             }*/
             //balas = aux;
-/*
+
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
 
@@ -906,7 +906,7 @@ void* displayRPIThread (void* argDisplayRPI){
     }
     pthread_exit(0);
 }
-*/
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

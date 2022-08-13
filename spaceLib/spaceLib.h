@@ -68,7 +68,7 @@ typedef struct{
     int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
     //int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
     //int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
-    //int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
     //int altoUsr;                //-altoUsr: Alto de la nave del usuario
     //int anchoAlien;             //-anchoNave: Ancho de las naves enemigas
     //int altoAlien;              //-altoNave: Alto de las naves enemigas
@@ -92,22 +92,9 @@ typedef struct{
     //int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
     int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
     int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
+    int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick.
 }level_setting_t;
 
-
-//SE DEBEN MOVER LOS SIGUIENTES STRUCT AL MAIN
-/*
-typedef struct{
-	level_setting_t * levelSettings;
-	object_t ** alienList;
-}argMoveAlien_t;
-
-typedef struct{
-	level_setting_t * levelSettings;
-	object_t ** balasEnemigas;
-	object_t ** balasUsr;
-}argMoveBala_t;
-*/
 
 
 typedef struct{
@@ -171,7 +158,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
 //void * moveBalaThread(void * argMoveBala);
 
 //*****************USUARIO
-void moveNaveUsuario(object_t * naveUsuario, int desplazamiento, int xMax, int tamAliensX); //Se encarga de actualizar la posicion de la nave del usuari
+void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int direccion); //Se encarga de actualizar la posicion de la nave del usuari
 
 
 //*****************OBJTYPES
