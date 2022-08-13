@@ -20,7 +20,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include "utilidades.h"
-#include "aliensYBalas.h"
+#include "spaceLib/spaceLib.h"
 #include <unistd.h>
 
 #define RASPI 
@@ -85,6 +85,9 @@
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
+void * moveAlienThread(void* argMoveAlien);
+
+void * moveBalaThread(void * argMoveBala);
 
 /*******************************************************************************************************************************************
  * 
@@ -375,3 +378,45 @@ static void* levelHandlerThread(void * data){
 */
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
+
+//******************************************    Thread moveAlien    **********************************************************
+void * moveAlienThread(void* argMoveAlien){
+    //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
+    
+    int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
+    while(1){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velAliens) == 0 ){
+
+            sem_wait(&SEM_GAME);
+
+            moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  *(((argMoveAlien_t*)argMoveAlien) -> alienList), direccion);
+
+            sem_post(&SEM_GAME);
+        }
+    }
+    pthread_exit(0);
+}
+
+void * moveBalaThread(void * argMoveBala){
+
+    while(1){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velBalas) == 0 ){
+            sem_wait(&SEM_GAME);
+            object_t * balas = NULL;
+            //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
+            //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
+            //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala( BALAS_ENEMIGAS_L(argMoveBala), NICOLAS, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_PABLO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
+            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_DANIEL, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
+            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            BALAS_USR_L(argMoveBala) = moveBala(BALAS_USR_L(argMoveBala), BALA_USUARIO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
+            //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
+            sem_post(&SEM_GAME);
+        } 
+    }
+}
