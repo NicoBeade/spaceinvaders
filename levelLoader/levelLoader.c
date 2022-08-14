@@ -52,7 +52,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 decodedFile[linea].value[arrayIndex] = 0;
                                 arrayIndex++;
                             }
-                            if(caracter == ' '){
+                            if(caracter == ' ' || caracter == '\t'){
                                 decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
                                 arrayIndex = 0;
                                 state = SPACE;
@@ -67,7 +67,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 decodedFile[linea].value[arrayIndex] = 0;
                                 arrayIndex++;
                             }
-                            if(caracter == ' '){
+                            if(caracter == ' ' || caracter == '\t'){
                                 decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
                                 arrayIndex = 0;
                                 state = SPACE;
@@ -82,7 +82,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 //   printf("Error in levelLoader.c: \"%s\", %d row, \"\" not closed properly or space added inside a parameter or value", file, linea);
                                 //   return -1;
                             // }
-                            if(caracter != ' '){    //Si el caracter es distinto del espacio
+                            if(caracter != ' ' && caracter != '\t'){    //Si el caracter es distinto del espacio
                                 state = VALUE;  //Se pasa al estado value
                                 decodedFile[linea].value[0] = caracter;
                                 arrayIndex++;
@@ -124,7 +124,11 @@ void clearFileBuffer(void){
 void printFile(void){
     int index;
     for(index = 0; decodedFile[index].parameter[0] != 0; index++){
-        printf("PARAMETRO: %s VALOR: %s", decodedFile[index].parameter, decodedFile[index].value);
+        printf("PARAMETRO: %s VALOR: %s\n", decodedFile[index].parameter, decodedFile[index].value);
     }
 }
 
+int main (){
+    readFile("test.txt");
+    printFile();
+}
