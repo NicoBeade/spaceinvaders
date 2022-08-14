@@ -4,6 +4,7 @@
 #include "../spaceLib/spaceLib.h"
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 #define ISNUM(caracter) (((caracter) > '0' ) && ((caracter) < '9' ))
 
@@ -16,24 +17,25 @@ typedef struct{
     char value[MAX_VALUE_LETTERS];          //String del valor asociado
 }lineaArchivo_t;   
 
+
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
 
 
 int readFile(char * file){       //Funcion leer archivo, recibe la direccion
     FILE * filePointer;     //Se crea un puntero al archivo
     if(file == NULL){       //Si la direccion es nula, devuelve error
-        printf("Error in levelLoader.c: file cannot be null");
+        printf("Error in levelLoader.c, readFile function: file cannot be null\n");
         return -1;
     }
     else{               //Si se ingreso una direccion valida, se intenta abrir el archivo
         filePointer = fopen(file, "r");
     }
     if(filePointer == NULL){        //Si no se pudo abrir, se devuelve error
-        printf("Error in levelLoader.c: \"%s\" file open failed", file);
+        printf("Error in levelLoader.c, readFile function: \"%s\" file open failed\n", file);
         return -1;
     }
     else{           //Si se puede abrir, se lee el archivo
-        clearFileBuffer;    //Se limpia el buffer del archivo
+        clearFileBuffer();    //Se limpia el buffer del archivo
         int linea;  //Contador de lineas de archivo
         char lineaStr[MAX_FILE_ROW_LENGHT] = {};       //Variable auxiliar para almacenar las lineas del archivo
         void * fgetsReturn = file;     //Se inicializa una variable para recibir el parametro de salida de fgets
@@ -41,7 +43,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
             fgetsReturn = fgets(lineaStr, MAX_FILE_ROW_LENGHT,filePointer);       //Se copia la linea a lineaStr
             if(fgetsReturn){    //Si no es el fin del archivo EOF
                 if(lineaStr[MAX_FILE_ROW_LENGHT-1] != 0 && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\n' && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\r'){        //Si se paso la cantidad de lineas devuelve error
-                    printf("Error in levelLoader.c: \"%s\" too many letters in the %d row", file, linea);
+                    printf("Error in levelLoader.c, readFile function: \"%s\" too many letters in the %d row\n", file, linea);
                     return -1;
                 }
                 int letra = 0;          //Se crea variable auxiliar letra
@@ -111,7 +113,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
             }
         }
         if(linea == MAX_FILE_ROWS){
-            printf("Error in levelLoader.c: \"%s\" too many lines in the file", file);
+            printf("Error in levelLoader.c, readFile function: \"%s\" too many lines in the file\n", file);
             return -1;
         }
     }
@@ -198,13 +200,60 @@ int loadAsset(char * file){
         }
     }
     if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1){   //Si no se encontraron todos los campos devuelve error
-        printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters", file);
+        printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
     }
     addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID); //Añade el tipo de objeto
+    return 0;
 }
 
-int main (){
-    readFile("test.txt");
-    printFile();
+int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga todos los assets
+    if(platform == NULL){
+        printf("Error in levelLoader.c, loadAllAssets function : platform cannot be a null pointer\n");
+        return -1;
+    }
+    loadDirectory(ASSETSDIR, directoryStore);       //Carga los archivos del directorio de assets
+    int archivoCounter;     //Contador de numero de archivos
+    for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0; archivoCounter++){   //Por cada archivo
+        int longitud = strlen(platform);
+        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0){       //Si el archivo es de la plataforma elegida
+            char direccionAsset[MAX_FILE_NAME]; //Variable auxiar para guardar la direccion del archivo a leer
+            strcpy(direccionAsset, ASSETSDIR);  //Se copia el principio de la direccion
+            strcat(direccionAsset, "/");    //Se agrega el slash
+            strcat(direccionAsset, (*directoryStore)[archivoCounter]);  //Se agrega el final de la direccion(el nombre del archivo)
+            loadAsset(direccionAsset);
+        }
+    }
+    return 0;
 }
+
+int loadDirectory(char * carpeta, directory_t * directoryStore){
+    struct dirent *directoryEntry;
+    DIR *directoryPointer = opendir(carpeta);
+    if(directoryPointer == NULL){
+        printf("Error in levelLoader.c, loadDirectory function : \"%s\" could not open directory\n", carpeta);
+        return -1;
+    }
+    int fileCounter = 0;
+    while ((directoryEntry = readdir(directoryPointer)) != NULL){
+        if(strlen(directoryEntry->d_name) >= 3){    //Si el archivo es un archivo valido debe tener 3 letras como minimo
+            strcpy((*directoryStore)[fileCounter], directoryEntry->d_name);
+            fileCounter++;
+        }
+    }
+    closedir(directoryPointer);    
+    return 0;
+}
+
+
+
+int main (){
+    //loadAsset("../game/assets/test.asset");
+//    imprimirARRAY();
+    directory_t carpetaAssets = {};
+    //loadDirectory("../game/assets", &carpetaAssets);
+    loadAllAssets("rpi", &carpetaAssets);
+    imprimirARRAY();
+
+}
+

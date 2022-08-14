@@ -1,0 +1,11 @@
+parametro1 10
+parametro2    20
+parametro3             40
+id 13
+vel 2    
+ancho 4
+alto 45
+initLives 5
+shootProb 6
+maxBullets 7
+balaID 8
