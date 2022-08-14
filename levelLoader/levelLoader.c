@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "levelLoader.h"
+#include "../spaceLib/spaceLib.h"
+#include <string.h>
+#include <stdlib.h>
 
 #define ISNUM(caracter) (((caracter) > '0' ) && ((caracter) < '9' ))
 
 enum paramType {ENTERO, ARCHIVO, BINARIO};      //Identifica el tipo de valor que tiene un parametro
-enum estados {PARAM, VALUE, SPACE};
+enum estados {START, PARAM, VALUE, SPACE};
 
 
 typedef struct{
@@ -14,6 +17,7 @@ typedef struct{
 }lineaArchivo_t;   
 
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
+
 
 int readFile(char * file){       //Funcion leer archivo, recibe la direccion
     FILE * filePointer;     //Se crea un puntero al archivo
@@ -43,13 +47,20 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                 int letra = 0;          //Se crea variable auxiliar letra
                 int arrayIndex = 0;     //Se crea variable auxiliar arrayIndex
                 char caracter = lineaStr[0];          //Se crea variable auxiliar caracter
-                int state = PARAM;      //Se crea variable auxiliar state
+                int state = START;      //Se crea variable auxiliar state
                 //int comillas;           //Variable auxiliar comillas
                 while(caracter != 0){    //Mientras no sea un un 0
                     switch(state){
+                        case START:
+                            if(caracter == ' ' || caracter == '\t'){
+                                break;
+                            }
+                            else{
+                                state = PARAM;
+                            }
                         case PARAM:
-                            if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r'){
-                                decodedFile[linea].value[arrayIndex] = 0;
+                            if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){
+                                decodedFile[linea].parameter[arrayIndex] = 0;
                                 arrayIndex++;
                             }
                             if(caracter == ' ' || caracter == '\t'){
@@ -63,12 +74,12 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                             }
                             break;
                         case VALUE:
-                            if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r'){
+                            if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){
                                 decodedFile[linea].value[arrayIndex] = 0;
                                 arrayIndex++;
                             }
                             if(caracter == ' ' || caracter == '\t'){
-                                decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
+                                decodedFile[linea].value[arrayIndex] = 0; //Agrega el terminador
                                 arrayIndex = 0;
                                 state = SPACE;
                             }
@@ -105,6 +116,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
         }
     }
     fclose(filePointer);
+    return 0;
 }
 
 void clearFileBuffer(void){
@@ -126,6 +138,70 @@ void printFile(void){
     for(index = 0; decodedFile[index].parameter[0] != 0; index++){
         printf("PARAMETRO: %s VALOR: %s\n", decodedFile[index].parameter, decodedFile[index].value);
     }
+}
+
+int loadAsset(char * file){
+    if(readFile(file) != 0){ //Si no se pudo leer correctamente
+        return -1;      //Devuelve error
+    }
+    int paramNo;        //Variable que cuenta los parametros
+
+    int id;
+    int vel;
+    int ancho;
+    int alto;
+    int initLives;
+    int shootProb;
+    int maxBullets;
+    int balaID;
+    char id_found = 0;
+    char vel_found = 0;
+    char ancho_found = 0;
+    char alto_found = 0;
+    char initLives_found = 0;
+    char shootProb_found = 0;
+    char maxBullets_found = 0;
+    char balaID_found = 0;
+
+    for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
+        if(id_found == 0 && strcmp(decodedFile[paramNo].parameter, "id") == 0){
+            id = atoi(decodedFile[paramNo].value);
+            id_found++;
+        }
+        else if(vel_found == 0 && strcmp(decodedFile[paramNo].parameter, "vel") == 0){
+            vel = atoi(decodedFile[paramNo].value);
+            vel_found++;
+        }
+        else if(ancho_found == 0 && strcmp(decodedFile[paramNo].parameter, "ancho") == 0){
+            ancho = atoi(decodedFile[paramNo].value);
+            ancho_found++;
+        }
+        else if(alto_found == 0 && strcmp(decodedFile[paramNo].parameter, "alto") == 0){
+            alto = atoi(decodedFile[paramNo].value);
+            alto_found++;
+        }
+        else if(initLives_found == 0 && strcmp(decodedFile[paramNo].parameter, "initLives") == 0){
+            initLives = atoi(decodedFile[paramNo].value);
+            initLives_found++;
+        }
+        else if(shootProb_found == 0 && strcmp(decodedFile[paramNo].parameter, "shootProb") == 0){
+            shootProb = atoi(decodedFile[paramNo].value);
+            shootProb_found++;
+        }
+        else if(maxBullets_found == 0 && strcmp(decodedFile[paramNo].parameter, "maxBullets") == 0){
+            maxBullets = atoi(decodedFile[paramNo].value);
+            maxBullets_found++;
+        }
+        else if(balaID_found == 0 && strcmp(decodedFile[paramNo].parameter, "balaID") == 0){
+            balaID = atoi(decodedFile[paramNo].value);
+            balaID_found++;
+        }
+    }
+    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1){   //Si no se encontraron todos los campos devuelve error
+        printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters", file);
+        return -1;
+    }
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID); //Añade el tipo de objeto
 }
 
 int main (){
