@@ -32,51 +32,71 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
         clearFileBuffer;    //Se limpia el buffer del archivo
         int linea;  //Contador de lineas de archivo
         char lineaStr[MAX_FILE_ROW_LENGHT] = {};       //Variable auxiliar para almacenar las lineas del archivo
-        char fgetsReturn = 'A';     //Se inicializa una variable para recibir el parametro de salida de fgets
-        for(linea = 0; fgetsReturn != EOF && linea<MAX_FILE_ROWS; linea++){        //Mientras el retorno de fgets no sea un EOF y no se haya exedido el max de lineas, se lee el archivo
-            fgets(lineaStr, MAX_FILE_ROW_LENGHT,filePointer);       //Se copia la linea a lineaStr
-            if(lineaStr[MAX_FILE_ROW_LENGHT-1] != 0 && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\n'){        //Si se paso la cantidad de lineas devuelve error
-                printf("Error in levelLoader.c: \"%s\" too many letters in the %d row", file, linea);
-                return -1;
-            }
-            int letra = 0;          //Se crea variable auxiliar letra
-            int arrayIndex = 0;     //Se crea variable auxiliar arrayIndex
-            char caracter = lineaStr[0];          //Se crea variable auxiliar caracter
-            int state = PARAM;      //Se crea variable auxiliar state
-            //int comillas;           //Variable auxiliar comillas
-            while(caracter != '\n' &&  caracter != 0){    //Mientras no sea un enter o un 0
-                switch(state){
-                    case PARAM:
-                        if(caracter == ' '){
-                            decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
-                            arrayIndex = 0;
-                            state = SPACE;
-                        }
-                        else{
-                            decodedFile[linea].parameter[arrayIndex] = caracter;
-                        }
-                        break;
-                    case VALUE:
-                        if(caracter == ' '){
-                            decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
-                            arrayIndex = 0;
-                            state = SPACE;
-                        }
-                        else{
-                            decodedFile[linea].value[arrayIndex] = caracter;
-                        }
-                    case SPACE:
-                        //if(comillas){   //Si encuentra comillas durante la lectura de espacios hubo error
-                         //   printf("Error in levelLoader.c: \"%s\", %d row, \"\" not closed properly or space added inside a parameter or value", file, linea);
-                         //   return -1;
-                       // }
-                        if(caracter != ' '){    //Si el caracter es distinto del espacio
-                            state = VALUE;  //Se pasa al estado value
-                            decodedFile[linea].value[0] = caracter;
-                        }
+        void * fgetsReturn = file;     //Se inicializa una variable para recibir el parametro de salida de fgets
+        for(linea = 0; fgetsReturn != NULL && linea<MAX_FILE_ROWS; linea++){        //Mientras el retorno de fgets no sea un EOF y no se haya exedido el max de lineas, se lee el archivo
+            fgetsReturn = fgets(lineaStr, MAX_FILE_ROW_LENGHT,filePointer);       //Se copia la linea a lineaStr
+            if(fgetsReturn){    //Si no es el fin del archivo EOF
+                if(lineaStr[MAX_FILE_ROW_LENGHT-1] != 0 && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\n' && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\r'){        //Si se paso la cantidad de lineas devuelve error
+                    printf("Error in levelLoader.c: \"%s\" too many letters in the %d row", file, linea);
+                    return -1;
                 }
-                letra++;
-                caracter = lineaStr[letra];
+                int letra = 0;          //Se crea variable auxiliar letra
+                int arrayIndex = 0;     //Se crea variable auxiliar arrayIndex
+                char caracter = lineaStr[0];          //Se crea variable auxiliar caracter
+                int state = PARAM;      //Se crea variable auxiliar state
+                //int comillas;           //Variable auxiliar comillas
+                while(caracter != 0){    //Mientras no sea un un 0
+                    switch(state){
+                        case PARAM:
+                            if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r'){
+                                decodedFile[linea].value[arrayIndex] = 0;
+                                arrayIndex++;
+                            }
+                            if(caracter == ' '){
+                                decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
+                                arrayIndex = 0;
+                                state = SPACE;
+                            }
+                            else{
+                                decodedFile[linea].parameter[arrayIndex] = caracter;
+                                arrayIndex++;
+                            }
+                            break;
+                        case VALUE:
+                            if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r'){
+                                decodedFile[linea].value[arrayIndex] = 0;
+                                arrayIndex++;
+                            }
+                            if(caracter == ' '){
+                                decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
+                                arrayIndex = 0;
+                                state = SPACE;
+                            }
+                            else{
+                                decodedFile[linea].value[arrayIndex] = caracter;
+                                arrayIndex++;
+                            }
+                            break;
+                        case SPACE:
+                            //if(comillas){   //Si encuentra comillas durante la lectura de espacios hubo error
+                                //   printf("Error in levelLoader.c: \"%s\", %d row, \"\" not closed properly or space added inside a parameter or value", file, linea);
+                                //   return -1;
+                            // }
+                            if(caracter != ' '){    //Si el caracter es distinto del espacio
+                                state = VALUE;  //Se pasa al estado value
+                                decodedFile[linea].value[0] = caracter;
+                                arrayIndex++;
+                            }
+                            break;
+                    }
+                    if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r'){
+                        caracter = 0;
+                    }
+                    else{
+                        letra++;
+                        caracter = lineaStr[letra];
+                    }
+                }
             }
         }
         if(linea == MAX_FILE_ROWS){
@@ -107,3 +127,4 @@ void printFile(void){
         printf("PARAMETRO: %s VALOR: %s", decodedFile[index].parameter, decodedFile[index].value);
     }
 }
+
