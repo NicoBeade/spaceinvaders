@@ -1005,7 +1005,7 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna de la nueva letra al buffer.
             (*lowerDispMenu)[fil][colFinalB + direccion] = caracter[fil][i];
         }
-        printf("Waiting\n");
+        
         sem_wait(&SEM_MENU);
         printHalfDisp(*lowerDispMenu, 'I');//Muetra el contenido en el display.
         sem_post(&SEM_MENU);
@@ -1070,9 +1070,6 @@ void changeOption(void* argChangeOption){
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
-    printf("Booo: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
-
-    //sem_post(&SEM_MENU);
 
     pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
