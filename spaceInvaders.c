@@ -402,7 +402,7 @@ static void* menuHandlerThread(void * data){
                 }
                 printf("anim Status fuera del thread: %p\n", &animStatus);
                 printf("puntero thread fuera del thread: %p\n", &displayMenuT);
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 
             }
@@ -413,7 +413,7 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, (menu -> textOpciones)[select], DERECHA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA };
                 (menu -> changeOption)(&argChangeOption);
                 
             }

@@ -63,6 +63,8 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     pthread_t* threadMenu;//Puntero al thread
     int* animStatus;//Indicador de si se debe cambiar de texto
     halfDisp_t* lowerDispMenu;//Puntero a la parte inferior del display durante la ejecucion del menu.
+    halfDisp_t* higherDispMenu;//Contenido de la parte superior del display.
+    halfDisp_t* drawing;//Dibujo a mostrar en la opcion seleccionada.
     char* nuevoTexto;//Nuevo texto a mostrar en pantalla.
     int direccion;//Direccion de la animacion.
 }argChangeOption_t;

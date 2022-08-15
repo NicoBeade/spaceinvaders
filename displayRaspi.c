@@ -932,9 +932,9 @@ void* textAnimMenu(void* argTextAnimMenu){
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
     }
-    printf("Se imprimio la wea\n");
+    
     pthread_join(drawingSwipeT, NULL);
-    printf("Se imprimio la wea\n");
+    
 
     usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
@@ -944,9 +944,8 @@ void* textAnimMenu(void* argTextAnimMenu){
         for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
             offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
-            printf("Antes de swipe caracter\n");
-            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);
-            printf("Despues de swipe caracter\n");        
+            
+            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
         }
         firstBarr = 0;//Reinicia el proceso.
     }
@@ -1075,6 +1074,8 @@ void changeOption(void* argChangeOption){
 
     argTextAnimMenu.msg = ((argChangeOption_t*)argChangeOption) -> nuevoTexto;
     argTextAnimMenu.lowerDispMenu = ((argChangeOption_t*)argChangeOption) -> lowerDispMenu;
+    argTextAnimMenu.higherDispMenu = 
+    argTextAnimMenu.drawing = 
     argTextAnimMenu.direccion = ((argChangeOption_t*)argChangeOption) -> direccion;
     argTextAnimMenu.changeAnimation = ((argChangeOption_t*)argChangeOption) -> animStatus;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
