@@ -391,7 +391,7 @@ static void* menuHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            sem_wait(&SEM_MENU);
+            //sem_wait(&SEM_MENU);
             
             if (DERECHA_INPUT){//Si se presiona para ir a la siguiente opcion
 
@@ -420,7 +420,7 @@ static void* menuHandlerThread(void * data){
             if (PRESS_INPUT){//Si se selecciona la opcion
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
             }
-            sem_post(&SEM_MENU);
+            //sem_post(&SEM_MENU);
         }
     }
     animStatus = 0;
