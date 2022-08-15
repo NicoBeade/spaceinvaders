@@ -1031,7 +1031,7 @@ void* swipeDrawing(void* data){
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
         }
-        printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'I');//Muetra el contenido en el display.
+        printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muetra el contenido en el display.
     }
     pthread_exit(0);
 }
