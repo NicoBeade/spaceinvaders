@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <pthread.h>
 #include "spaceLib/spaceLib.h"
+#include "displayRaspi.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -98,7 +99,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
 enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
 
 //*************MENUES
-enum PANTALLAS { MENU_INICIO , MENU_PAUSA};//Determinan un valor para cada pantalla
+enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
