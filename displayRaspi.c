@@ -1072,6 +1072,8 @@ void changeOption(void* argChangeOption){
 
     printf("Booo: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
 
+    sem_post(&SEM_MENU);
+
     pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
     printf("Se finalizo el thread\n");
