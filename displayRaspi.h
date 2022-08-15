@@ -99,7 +99,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 
 enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
 
-#define VEL_DISP_ANIMATION 900
+#define VEL_DISP_ANIMATION 1100
 
 #define OFFSETLETRA 0
 #define OFFSETALIEN 39
