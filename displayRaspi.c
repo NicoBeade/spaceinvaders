@@ -932,7 +932,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
     }
-
+    printf("Se imprimio la wea\n");
     pthread_join(drawingSwipeT, NULL);
     printf("Se imprimio la wea\n");
 
