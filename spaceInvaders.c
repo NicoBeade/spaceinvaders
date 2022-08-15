@@ -475,7 +475,7 @@ static void* levelHandlerThread(void * data){
                                                                     |__/                                                                                                                                                                                                                                                   
  * 
  ******************************************************************************************************************************************/
-
+/*
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
@@ -514,3 +514,4 @@ void * moveBalaThread(void * argMoveBala){
         } 
     }
 }
+*/
