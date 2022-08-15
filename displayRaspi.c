@@ -934,6 +934,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     pthread_join(drawingSwipeT, NULL);
+    printf("Se imprimio la wea\n");
 
     usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
@@ -943,7 +944,9 @@ void* textAnimMenu(void* argTextAnimMenu){
         for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
             offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
+            printf("Antes de swipe caracter\n");
             swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);
+            printf("Despues de swipe caracter\n");        
         }
         firstBarr = 0;//Reinicia el proceso.
     }
