@@ -948,8 +948,11 @@ void* textAnimMenu(void* argTextAnimMenu){
             swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
         }
         firstBarr = 0;//Reinicia el proceso.
+        printf("Change animation dentro del thread: %d\n", *(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation));
     }
     while(*(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation));
+
+    printf("Saliendo de textAnimMenu\n");
 
     pthread_exit(0);
 }
