@@ -1069,7 +1069,7 @@ void changeOption(void* argChangeOption){
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
-    printf("Booo\n");
+    printf("Booo: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
 
     pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
