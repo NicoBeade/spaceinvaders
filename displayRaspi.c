@@ -1082,8 +1082,8 @@ void changeOption(void* argChangeOption){
 
     argTextAnimMenu.msg = ((argChangeOption_t*)argChangeOption) -> nuevoTexto;
     argTextAnimMenu.lowerDispMenu = ((argChangeOption_t*)argChangeOption) -> lowerDispMenu;
-    argTextAnimMenu.higherDispMenu = 
-    argTextAnimMenu.drawing = 
+    argTextAnimMenu.higherDispMenu = ((argChangeOption_t*)argChangeOption) -> higherDispMenu;
+    argTextAnimMenu.drawing = ((argChangeOption_t*)argChangeOption) -> drawing;
     argTextAnimMenu.direccion = ((argChangeOption_t*)argChangeOption) -> direccion;
     argTextAnimMenu.changeAnimation = ((argChangeOption_t*)argChangeOption) -> animStatus;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
