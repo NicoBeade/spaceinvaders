@@ -19,7 +19,6 @@
 #include <stdint.h>
 #include <pthread.h>
 #include "spaceLib/spaceLib.h"
-#include "displayRaspi.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -49,17 +48,6 @@ typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
 typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar
                                 //una opcion en un menu.
-
-typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
-
-	keys_t * keys;
-	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
-    char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
-    halfDisp_t* drawingOpciones[10];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
-    int cantOpciones;//Cantidad de opciones del menu.
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
-} menu_t;
 
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
 
