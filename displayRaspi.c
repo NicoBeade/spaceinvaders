@@ -829,7 +829,7 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
  * 
  ******************************************************************************************************************************************/
 
-
+/*
 void* displayRPIThread (void* argDisplayRPI){
     //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
     object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
@@ -889,15 +889,6 @@ void* displayRPIThread (void* argDisplayRPI){
             punto.y=naveUser->pos.y;
             drawSprite(punto,nave); //copia la nave en el buffer
             
-            //aux = balas;//Guarda el puntero al primer elemento de la lista de las balas
-           /* while (balas!=NULL){ //mientras no se haya llegado al final de la lista
-                punto.x=balas->pos.x; //se definen posiciones en x y en y de las balas
-                punto.y=balas->pos.y;
-                if (punto.x>15||punto.y>15)printf("Fuera de rango de impresion en la bala/n"); //chequeo de pixel a imprimir
-                disp_write(punto,  D_ON); //como las balas son pixeles, se imprime el pixel donde se encuentra la bala
-                balas=balas->next; //se pasa a la siguiente bala de la lista
-            }*/
-            //balas = aux;
 
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
@@ -906,7 +897,7 @@ void* displayRPIThread (void* argDisplayRPI){
     }
     pthread_exit(0);
 }
-
+*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -923,22 +914,27 @@ void* displayRPIThread (void* argDisplayRPI){
 
 void* textAnimMenu(void* argTextAnimMenu){
 //Este thread es el que se encarga de realizar el barrido de texto durante la ejecucion de un menu.
-
-    printf("Texto dentro del thread de barrido: %s\n", ((argTextAnimMenu_t*)argTextAnimMenu) -> msg);
-    printf("Puntero al display dentro del thread de barrido: %p\n", ((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu );
     
     int i, j, offset;
     int firstBarr = 4;
+    pthread_t drawingSwipeT;
 
     int firstLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? 3 : 0;
     int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
     
-    //Primero imprimimos las primeras 4 letras.
+    //Primero imprimimos las primeras 4 letras y el dibujo.
+    argSwipeDrawing_t argSwipeDrawing = { ((argTextAnimMenu_t*)argTextAnimMenu) -> higherDispMenu, ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion, ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing };
+
+    pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
+
     for(i = firstLetter ; i != lastLetter ; i -= (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion)){
 
         offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
         swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
-    }   
+    }
+
+    pthread_join(drawingSwipeT, NULL);
+
     usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
     velDispAnimation = VEL_DISP_ANIMATION;
@@ -1009,37 +1005,36 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
     
 }
 
-/*
-void* dispMenu(void* punteroPausa){
+void* swipeDrawing(void* data){
+/*Este thread se encarga de mostrar los dibujos de la parte superior del display durante un menu.
+    Recibe un puntero a la parte superior del display, la direccion en la que se debe mover y un puntero al dibujo a mostrar.*/
 
-    punteroMenu_t menuDisplay = {0,0,0};
+    argSwipeDrawing_t* argSwipeDrawing = (argSwipeDrawing_t*)data;
 
-    int exitThread = 1;//Se utiliza para saber si hay que salir del thread.
+    int i, fil, col, colInicialB, colFinalB, colInicialD, colFinalD;
+    
+    colInicialB = (argSwipeDrawing -> direccion == DERECHA) ? 14 : 1;//Define a partir de que columna se realiza el barrido.
+    colFinalB = (argSwipeDrawing -> direccion == DERECHA) ? -1 : 16;//Define la ultima columna que se barrera.
+    colInicialD = (argSwipeDrawing -> direccion == DERECHA) ? 15 : 0;//Define a partir de que columna se muestra la nueva letra.
+    colFinalD = (argSwipeDrawing -> direccion == DERECHA) ? -1 : 16;//Define a la ultima columna de la letra que se mostrara.
 
-    while(exitThread){
+    for(i = colInicialD ; i != colFinalD ; i -= argSwipeDrawing -> direccion){//Recorre todas las columnas del dibujo.
 
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % FRAMERATE) == 0 ){
-
-            if( ((punteroMenu_t*)punteroPausa) -> x != 0 ){//Si se movio el joistick
-                menuDisplay.x += ((punteroMenu_t*)punteroPausa) -> x;
-                if(menuDisplay.x < 0){//estos if estan para que se pueda "dar la vuelta" en las opciones.
-                    menuDisplay.x = (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1;//Si nos pasamos por la izquierda vamos a la ultima opcion.
-                }
-                else if(menuDisplay.x > (((punteroMenu_t*)punteroPausa) -> cantOpciones) - 1){
-                    menuDisplay.x = 0;//Si nos pasamos por la derecha vamos a la primera opcion.
-                }
-                (((punteroMenu_t*)punteroPausa) -> changeOption)(menuDisplay.x);//Llama a la funcion que se encarga de mostrar en pantalla la opcion indicada
-            }
-
-            menuDisplay.press = ((punteroMenu_t*)punteroPausa) -> press;
-            if(menuDisplay.press != 0){
-                exitThread = (((punteroMenu_t*)punteroPausa) -> selectOption)(menuDisplay.x);//Llama a la funcion que se encarga de procesar que hacer cuadno se selecciona una opcion.
+        for(col = colInicialB ; col != colFinalB ; col -= argSwipeDrawing -> direccion){//Barre el display hacia un costado.
+            usleep(1);//Indica a que velocidad se debe hacer el barrido.
+            
+            for(fil = 0 ; fil < 8 ; fil++){
+                (*( argSwipeDrawing -> higerDispMenu ))[fil][col + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> higerDispMenu ))[fil][col];//Realiza el barrido.
             }
         }
+
+        for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
+            (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
+        }
+        printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'I');//Muetra el contenido en el display.
     }
+    pthread_exit(0);
 }
-*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -1087,28 +1082,6 @@ void changeOption(void* argChangeOption){
     printf("Se inicio el nuevo thread\n");
 }
 
-/*
-void changeOption(int actualOption){
-    switch(actualOption){
-        case RESUME://Volver al juego
-            printHalfDisp(halfDispResume);
-            swipeTextDisp("RESUME");
-        case VOLUMEN://Modificar el volumen
-            printHalfDisp(halfDispVolume);
-            swipeTextDisp("VOLUME");
-        case HOME://Volver al menu de inicio
-            printHalfDisp(halfDispAlienSpaceInvaders);
-            swipeTextDisp("HOME");
-        case RESTART://Reiniciar el nivel
-            printHalfDisp(halfDispRestart);
-            swipeTextDisp("RESTART");
-        case SCORE://Ver el puntaje actual
-            printHalfDisp(halfDispTrophy);
-            swipeTextDisp("SCORE");
-        default:
-    }
-}
-*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

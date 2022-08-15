@@ -47,9 +47,17 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
 typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     char* msg;//Mensaje a mostrar
     halfDisp_t* lowerDispMenu;//Contenido de la parte inferior del display.
+    halfDisp_t* higherDispMenu;//Contenido de la parte superior del display.
+    halfDisp_t* drawing;//Dibujo a mostrar en la opcion seleccionada.
     int direccion;//Direccion en la que se debe mostrar el primer barrido.
     int* changeAnimation;//Indica cuando salir del thread.
 }argTextAnimMenu_t;
+
+typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
+    halfDisp_t* higerDispMenu;//parte superior del display.
+    int direccion;
+    halfDisp_t* drawing;//Dibujo a mostrar.
+}argSwipeDrawing_t;
 
 typedef struct{//Argumentos que recibe la funcion changeOption.
     pthread_t* threadMenu;//Puntero al thread
@@ -135,6 +143,7 @@ void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display
 
 //*****************THREAD DISPLAY DURANTE MENUES
 void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion de barrido de los textos durante la ejecucion de un menu.
+void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del display.
 void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla.
 
 

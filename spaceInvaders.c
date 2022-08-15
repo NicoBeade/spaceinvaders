@@ -72,8 +72,9 @@ typedef struct{
 
 #ifdef RASPI
 
-#define INPUT_THREAD inputRPIThread
-#define DISPLAY_THREAD_GAME displayRPIThread
+#define INPUT_THREAD inputRPIThread             //Thread encargado de leer el input en la RPI
+#define DISPLAY_THREAD_GAME displayRPIThread    //Thread encargado de actualizar el display durante la ejecucion del juego en la RPI
+#define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
 
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
@@ -112,7 +113,11 @@ static void* menuHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
-
+extern halfDisp_t halfDispTrophy;
+extern halfDisp_t halfDispAlienSpaceInvaders;
+extern halfDisp_t halfDispVolume;
+extern halfDisp_t halfDispResume;
+extern halfDisp_t halfDispRestart;
 /*******************************************************************************************************************************************
 ********************************************************************************************************************************************
 
@@ -136,10 +141,14 @@ sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 game_t menuGame = { &KEYS, NULL, NULL, 0}; //Estructura del level handler.
 
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
-                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };//Estructura del menu de inicio.
+                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart}, 
+                      4 , 1 , changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
-                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 4 , 1 , changeOption };//Estructura del menu de inicio.
+                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart}, 
+                      4 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
@@ -224,7 +233,7 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                
+            /*    
                 sem_wait(&SEM_MENU);
 
                 object_t* alienList = NULL;//Se crea la lista de los aliens.
@@ -300,7 +309,7 @@ int main(void){
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
                 
                 sem_wait(&SEM_MENU);
-
+                */
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
@@ -347,24 +356,35 @@ static void* menuHandlerThread(void * data){
     //*****************************************     Inicializa el thread que barre el display       *****************************
     pthread_t displayMenuT;
 
-    halfDisp_t lowerDispMenu = {
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-    };
+    #ifdef RASPI
+        halfDisp_t higherDispMenu = {//Parte superior del display
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
 
-    printf("Puntero al display fuera del thread: %p\n", &lowerDispMenu);
+        halfDisp_t lowerDispMenu = {//Parte inferior del display
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
 
-    int animStatus = 1;
+        int animStatus = 1;
 
-    argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, IZQUIERDA, &animStatus};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
+    #endif
 
-    pthread_create(&displayMenuT, NULL, textAnimMenu, &argTextAnimMenu);
+    pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
 
     //***************************************************************************************************************************
 
@@ -412,7 +432,7 @@ static void* menuHandlerThread(void * data){
 }
 
 
-
+/*
 static void* levelHandlerThread(void * data){
 
 	game_t * menu = (game_t *) data;
@@ -443,14 +463,18 @@ static void* levelHandlerThread(void * data){
 
     pthread_exit(0);
 }
+*/
 
-/********************************************************************************************************************************************************************************************************
-                              _     _   _                _____   _                            _                                        ___          _          _____   _                            _     
-  _ __    ___  __ __  ___    /_\   | | (_)  ___   _ _   |_   _| | |_    _ _   ___   __ _   __| |    _  _     _ __    ___  __ __  ___  | _ )  __ _  | |  __ _  |_   _| | |_    _ _   ___   __ _   __| |    
- | '  \  / _ \ \ V / / -_)  / _ \  | | | | / -_) | ' \    | |   | ' \  | '_| / -_) / _` | / _` |   | || |   | '  \  / _ \ \ V / / -_) | _ \ / _` | | | / _` |   | |   | ' \  | '_| / -_) / _` | / _` |    
- |_|_|_| \___/  \_/  \___| /_/ \_\ |_| |_| \___| |_||_|   |_|   |_||_| |_|   \___| \__,_| \__,_|    \_, |   |_|_|_| \___/  \_/  \___| |___/ \__,_| |_| \__,_|   |_|   |_||_| |_|   \___| \__,_| \__,_|    
-                                                                                                    |__/                                                                                                  
-********************************************************************************************************************************************************************************************************/
+
+/*******************************************************************************************************************************************
+ * 
+                                         _     _   _                                                     ___          _        
+             _ __    ___  __ __  ___    /_\   | | (_)  ___   _ _      _  _     _ __    ___  __ __  ___  | _ )  __ _  | |  __ _ 
+            | '  \  / _ \ \ V / / -_)  / _ \  | | | | / -_) | ' \    | || |   | '  \  / _ \ \ V / / -_) | _ \ / _` | | | / _` |
+            |_|_|_| \___/  \_/  \___| /_/ \_\ |_| |_| \___| |_||_|    \_, |   |_|_|_| \___/  \_/  \___| |___/ \__,_| |_| \__,_|
+                                                                    |__/                                                                                                                                                                                                                                                   
+ * 
+ ******************************************************************************************************************************************/
 
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
