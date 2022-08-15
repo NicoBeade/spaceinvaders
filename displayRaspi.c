@@ -1019,7 +1019,7 @@ void* swipeDrawing(void* data){
     colInicialB = (argSwipeDrawing -> direccion == DERECHA) ? 14 : 1;//Define a partir de que columna se realiza el barrido.
     colFinalB = (argSwipeDrawing -> direccion == DERECHA) ? -1 : 16;//Define la ultima columna que se barrera.
     colInicialD = (argSwipeDrawing -> direccion == DERECHA) ? 15 : 0;//Define a partir de que columna se muestra la nueva letra.
-    colFinalD = (argSwipeDrawing -> direccion == DERECHA) ? -1 : 16;//Define a la ultima columna de la letra que se mostrara.
+    colFinalD = (argSwipeDrawing -> direccion == DERECHA) ? -1 : 15;//Define a la ultima columna de la letra que se mostrara.
 
     for(i = colInicialD ; i != colFinalD ; i -= argSwipeDrawing -> direccion){//Recorre todas las columnas del dibujo.
 
