@@ -37,25 +37,25 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
     else{           //Si se puede abrir, se lee el archivo
         clearFileBuffer();    //Se limpia el buffer del archivo
         int lineaFile;  //Contador de lineas de archivo
+        int linea = 0;              //Variable auxiliar que cuenta las lineas de parametros (sin ;)
         char lineaStr[MAX_FILE_ROW_LENGHT] = {};       //Variable auxiliar para almacenar las lineas del archivo
         void * fgetsReturn = file;     //Se inicializa una variable para recibir el parametro de salida de fgets
         for(lineaFile = 0; fgetsReturn != NULL && lineaFile<MAX_FILE_ROWS; lineaFile++){        //Mientras el retorno de fgets no sea un EOF y no se haya exedido el max de lineas, se lee el archivo
             fgetsReturn = fgets(lineaStr, MAX_FILE_ROW_LENGHT,filePointer);       //Se copia la linea a lineaStr
             if(fgetsReturn){    //Si no es el fin del archivo EOF
                 if(lineaStr[MAX_FILE_ROW_LENGHT-1] != 0 && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\n' && lineaStr[MAX_FILE_ROW_LENGHT-1] != '\r'){        //Si se paso la cantidad de lineas devuelve error
-                    printf("Error in levelLoader.c, readFile function: \"%s\" too many letters in the %d row\n", file, lineaFile);
+                    printf("Error in levelLoader.c, readFile function: \"%s\" too many letters in the %dth row\n", file, lineaFile+1);
                     return -1;
                 }
                 int letra = 0;          //Se crea variable auxiliar letra
                 int arrayIndex = 0;     //Se crea variable auxiliar arrayIndex
                 char caracter = lineaStr[0];          //Se crea variable auxiliar caracter
                 int state = START;      //Se crea variable auxiliar state
-                int linea;              //Variable auxiliar que cuenta las lineas de parametros (sin ;)
                 if(caracter != ';'){    //Si no es un comentario
                     while(caracter != 0){    //Mientras no sea un un 0 recorre los caracteres de una linea
                         switch(state){      //Dependiendo de en donde se encuentre leyendo (parametro, espacio o valor)
                             case START:     //Si es el primer caracter
-                                if(caracter == ' ' || caracter == '\t'){    //Si es un espacio lo ignora
+                                if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
                                     break;
                                 }
                                 else{                   //Si no es un espacio se encuentra en el estado lectura de parametro
@@ -64,7 +64,6 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                             case PARAM:     //Si esta leyendo el parametro
                                 if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r' || lineaStr[letra] == ';'){   //Si la linea llego a su fin
                                     decodedFile[linea].parameter[arrayIndex] = 0;       //Se guarda el terminador en el array del parametro correspondiente 
-                                    //arrayIndex++;
                                 }
                                 if(caracter == ' ' || caracter == '\t'){    //Si encuentra un espacio
                                     decodedFile[linea].parameter[arrayIndex] = 0; //Agrega el terminador
@@ -77,9 +76,8 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 }
                                 break;
                             case VALUE:     //Si esta leyendo el valor
-                                if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r' || lineaStr[letra] == ';'){   //Si la linea no llego a su fin
+                                if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r' || lineaStr[letra] == ';'){   //Si la linea  llego a su fin
                                     decodedFile[linea].value[arrayIndex] = 0;       //Se guarda el terminador
-                                    //arrayIndex++;
                                 }
                                 if((caracter == ' ' || caracter == '\t') && (lineaStr[letra+1] == ' ' || lineaStr[letra+1] == '\t' || lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r' || lineaStr[letra+1] == ';')){
                                     //Si ve un espacio y el caracter que le sigue es un finalizador de la linea o un espacio, entonces deja de guardar el valor
@@ -93,10 +91,9 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 }
                                 break;
                             case SPACE:
-                                //if(comillas){   //Si encuentra comillas durante la lectura de espacios hubo error
-                                    //   printf("Error in levelLoader.c: \"%s\", %d row, \"\" not closed properly or space added inside a parameter or value", file, linea);
-                                    //   return -1;
-                                // }
+                                if(lineaStr[letra] == 0 || lineaStr[letra] == '\n' || lineaStr[letra] == '\r' || lineaStr[letra] == ';'){   //Si la linea  llego a su fin
+                                    state = START;
+                                }
                                 if(caracter != ' ' && caracter != '\t'){    //Si el caracter es distinto del espacio estando en el estado espacio
                                     state = VALUE;  //Se pasa al estado value
                                     decodedFile[linea].value[0] = caracter;
@@ -110,6 +107,16 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                         else{   //Si la linea no finalizo se incrementa el index de la lietra y se lee un nuevo caracter
                             letra++;          
                             caracter = lineaStr[letra]; //Se lee un nuevo caracter
+                        }
+                        if(arrayIndex >= MAX_PARAM_LETTERS-1 && state == PARAM){ //Si supera la cantidad de caracteres permitidos en el array de parametro devuelve error
+                            printf("Error in levelLoader.c, readFile function: \"%s\" too many letters in parameter of the %dth row\n", file, lineaFile+1);
+                            fclose(filePointer);
+                            return -1;
+                        }
+                        if(arrayIndex >= MAX_VALUE_LETTERS-1 && state == VALUE){ //Si supera la cantidad de caracteres permitidos en el array de valor devuelve error
+                            printf("Error in levelLoader.c, readFile function: \"%s\" too many letters in value of the %dth row\n", file, lineaFile+1);
+                            fclose(filePointer);
+                            return -1;
                         }
                     }
                     linea++;
