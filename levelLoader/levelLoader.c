@@ -408,11 +408,12 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform){
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
+    sprintf(levelFile, "%s%s%s%d%s", LEVELS_DIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
     if(levelNo == 0){   //Si es el nivel numero 0
         strcat(levelFile, platform);
      
     }
-    sprintf(levelFile, "%s%s%s%d", LEVELS_DIR, platform, "_level", levelNo);
+    
 
 
 }
