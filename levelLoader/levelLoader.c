@@ -386,6 +386,29 @@ int readLevel(char * file, level_setting_t * levelSettings){
     return 0;
 }
 
+int loadLevel(level_setting_t * levelSettings, char * platform){
+    static int levelNo = 0;     //Contador de niveles
+    char levelNoString[MAX_LEVELS_NO_LENGTH];
+    char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME] = LEVELSDIR;
+    if(platform == NULL){
+        printf("Error in levelLoader.c, loadLevel function : platform cannot be NULL\n");
+        return -1;
+    }
+    
+    strcat(levelFile, platform);    //Se agrega la plataforma al principio del nombre del archivo
+    strcat(levelFile, "_level");    //Se agrega el nombre del archivo sin el numero
+    if(levelSettings == NULL && levelNo){
+        printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
+        return -1;
+    }
+    if(levelNo == 0){   //Si es el nivel numero 0
+        strcat(levelFile, platform);
+     
+    }
+
+}
+
+
 int main (){
     //loadAsset("../game/assets/test.asset");
     //imprimirARRAY();
