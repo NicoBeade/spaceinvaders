@@ -16,10 +16,10 @@
 #define DISPLAY_RASPI_H
 
 #include <stdint.h>
-#include "disdrv.h"
-#include "termlib.h"
+#include "drivers/disdrv.h"
+#include "drivers/termlib.h"
 #include <semaphore.h>
-#include "utilidades.h"
+#include "../utilidades.h"
 
 /*******************************************************************************************************************************************
  * 

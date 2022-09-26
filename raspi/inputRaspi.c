@@ -15,8 +15,8 @@
  **********************************************************************************************************************************************************/
 
 #include <stdio.h>
-#include "joydrv.h"
-#include "utilidades.h"
+#include "drivers/joydrv.h"
+#include "../utilidades.h"
 #include "inputRaspi.h"
 #include <pthread.h>
 #include <unistd.h>

@@ -16,7 +16,7 @@
 
 #define MAX_DIR_LENGTH 60       //Maxaima longitud de un directorio
 
-#define MAX_LEVELS_NO_LENGTH 4 //Maxima cantidad de digitos que ocupa el numero de nivel
+#define MAX_LEVEL 999       //Maximo nivel
 typedef char fileName_t[MAX_FILE_NAME];
 
 typedef fileName_t directory_t[MAX_FILES_IN_FOLDER];

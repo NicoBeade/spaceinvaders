@@ -17,7 +17,7 @@
  #ifndef INPUT_RASPI_H
  #define INPUT_RASPI_H
 
-#include "utilidades.h"
+#include "../utilidades.h"
 #include <semaphore.h>
 /*******************************************************************************************************************************************
  * 
