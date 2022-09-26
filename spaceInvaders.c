@@ -222,6 +222,21 @@ int main(void){
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
 
+    object_t * alienList = NULL; //Se crea la lista de aliens
+    object_t * balasList = NULL; //Se crea la lista de balas
+    object_t * UsrList = NULL; //Se crea la lista de nave usuario
+    object_t * barrerasList = NULL; //Se crea la lista de barreras
+
+    level_settings_t levelSettings;
+
+    int levelCounter = 0;
+    #ifdef RASPI
+    char platform[4] = "rpi";
+    #endif
+    #ifdef ALLEGRO
+    char platform[4] = "lnx";
+    #endif
+
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -241,87 +256,51 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                object_t * alienList = NULL; //Se crea la lista de aliens
-                object_t 
-
-
-            /*    
                 sem_wait(&SEM_MENU);
-
-                object_t* alienList = NULL;//Se crea la lista de los aliens.
-                //alienList = initAliens(alienList, LEVELS[GAME_STATUS.nivelActual], "STRING QUE DICE LA CANTIDAD DE ALIENS POR FILAS", PABLO, SEXO);
-                object_t* listBalasEnemigas;//Lista de las balas de los aliens.
-                object_t* listBalasUsr;//Lista de las balas del usuario.
-                
-                object_t * naveUsuario = (object_t*) malloc(sizeof(object_t));//Crea la nave del usuario
-
-                if(naveUsuario == NULL){\
-                    printf("no se pudo crear al usuario por malloc \n");
+                if(levelCounter == 0){
+                    int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
+                    if(levelStatus == -1){
+                        printf("Error in spaceInvaders.c, level number 0 not founded\n");
+                        return -1;
+                    }
+                    levelCounter++
                 }
+                int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
+                if(levelStatus == -1){
+                    printf("Error in spaceInvaders.c, Couldnt start level\n");
+                    return -1;
+                }
+                else if (levelStatus == -2){        //Si es -2 termina el juego
+                    GAME_STATUS.exitStatus = 0;
+                }
+                if(alienList == NULL){
+                    printf("Error in spaceInvaders.c, Couldnt start level, alienList null\n");
+                    return -1;
+                }
+                if(UsrList == NULL){
+                    printf("Error in spaceInvaders.c, Couldnt start level, UsrList null\n");
+                    return -1;
+                }
+                if(barrerasList == NULL){
+                    printf("Error in spaceInvaders.c, Couldnt start level, barrerasList null\n");
+                    return -1;
+                }
+                levelCounter++;
 
-                level_setting_t settings;
-    settings.desplazamientoX = 1;
-    settings.desplazamientoY = 1;
-    settings.desplazamientoUsr = 1;
-    settings.disInicialUsrX = 9;
-    settings.disInicialUsrY = 1;
-    settings.distInicialX = 2;
-    settings.distInicialY = 2;
-    settings.margenX = 1;
-    settings.margenY = 1;
-    settings.saltoX = 4;
-    settings.saltoY = 3;
-    settings.xMax = 15;
-    settings.xMin = 0;
-    settings.yMax = 15;
-    settings.yMin = 0;
-    #define NICOLAS 1
-    #define PABLO 2
-    #define DANIEL 3
-    #define BALANICOLAS 4
-    #define BALAPABLO 5
-    #define BALADANIEL 6
-    #define NAVE 8
-    addObjType(NICOLAS, 1, 3, 2, 1, 30, 4, BALANICOLAS);
-    addObjType(PABLO, 1, 3, 2, 2, 40, 4, BALAPABLO);
-    addObjType(DANIEL, 1, 3, 2, 3, 50, 4, BALADANIEL);
-    addObjType(BALANICOLAS, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
-    addObjType(BALAPABLO, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
-    addObjType(BALADANIEL, 1, 1, 3, 1, 0, 0, NONEOBJTYPEID);
-    alienList = initAliens(alienList, &settings, "20403", NICOLAS, PABLO, DANIEL);
-    
-                naveUsuario -> pos.x = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrX;   //Inicializa la nave del usuario.
-                naveUsuario -> pos.y = LEVELS[GAME_STATUS.nivelActual] -> disInicialUsrY;
-                naveUsuario -> type = NAVE;
-                naveUsuario -> lives = 1;
-                naveUsuario -> next = NULL;
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
+                //argMoveBala_t argMoveBala = { &levelSettings, PUNTERO A LA LISTA DE LAS BALAS ENEMIGAS Y DEL USUARIO };
+                pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
+                //pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 #ifdef RASPI
-                argDisplayRPI_t argDisplay = { .balasEnemigas = &listBalasEnemigas , .balasUsr = &listBalasUsr , .aliens = &alienList , .naveUser = & naveUsuario };
+                //argDisplayRPI_t argDisplayRPI = { BALAS ENEMIGAS Y BALAS USR, &alienList, &UsrList };
+                //pthread_create(displayT, NULL, displayRPIThread, argDisplayRPI);
                 #endif
-
                 #ifdef ALLEGRO
-                //aca hay que crear el argumento que recibe el thread del display de allegro.
                 #endif
 
-                pthread_create(&displayT, NULL, DISPLAY_THREAD_GAME, &argDisplay);//Inicializa el thead del display.
 
-                menuGame.naveUsr = &naveUsuario;
-                //menuGame.levelSettings =
-                //Aca tiene que ir el puntero a level settings.
-                menuGame.exitStatus = 1;
-                pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
-                
-                argMoveAlien_t argMoveAlien = { .levelSettings = LEVELS[GAME_STATUS.nivelActual] , .alienList = &alienList };//Inicializa el thread Move Alien.
-                pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-
-                argMoveBala_t argMoveBala = { .levelSettings = LEVELS[GAME_STATUS.nivelActual] , .balasEnemigas = &listBalasEnemigas, .balasUsr = &listBalasUsr };//Inicializa el thread Move Bala.
-                pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
-
-                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
-                
-                sem_wait(&SEM_MENU);
-                */
+                sem_post(&SEM_MENU);
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
@@ -449,7 +428,7 @@ static void* menuHandlerThread(void * data){
 }
 
 
-/*
+
 static void* levelHandlerThread(void * data){
 
 	game_t * menu = (game_t *) data;
@@ -480,7 +459,7 @@ static void* levelHandlerThread(void * data){
 
     pthread_exit(0);
 }
-*/
+
 
 
 /*******************************************************************************************************************************************
@@ -492,7 +471,7 @@ static void* levelHandlerThread(void * data){
                                                                     |__/                                                                                                                                                                                                                                                   
  * 
  ******************************************************************************************************************************************/
-/*
+
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
@@ -531,4 +510,3 @@ void * moveBalaThread(void * argMoveBala){
         } 
     }
 }
-*/

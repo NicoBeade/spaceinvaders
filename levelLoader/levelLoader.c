@@ -181,6 +181,10 @@ int loadAsset(char * file){
     int shootProb;
     int maxBullets;
     int balaID;
+    char sprite1[MAX_SPRITE_FILE_LENGTH];
+    char sprite2[MAX_SPRITE_FILE_LENGTH];
+    char sprite3[MAX_SPRITE_FILE_LENGTH];
+
     char id_found = 0;
     char vel_found = 0;
     char ancho_found = 0;
@@ -189,6 +193,9 @@ int loadAsset(char * file){
     char shootProb_found = 0;
     char maxBullets_found = 0;
     char balaID_found = 0;
+    char sprite1_found = 0;
+    char sprite2_found = 0;
+    char sprite3_found = 0;
 
     for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
         if(id_found == 0 && strcmp(decodedFile[paramNo].parameter, "id") == 0){
@@ -223,8 +230,32 @@ int loadAsset(char * file){
             balaID = atoi(decodedFile[paramNo].value);
             balaID_found++;
         }
+        else if(sprite1_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite1") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                return -1;
+            }
+            memcpy(sprite1, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite1_found++;
+        }
+        else if(sprite2_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite2") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                return -1;
+            }
+            memcpy(sprite2, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite2_found++;
+        }
+        else if(sprite3_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite3") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                return -1;
+            }
+            memcpy(sprite3, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite3_found++;
+        }
     }
-    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1){   //Si no se encontraron todos los campos devuelve error
+    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || sprite1_found != 1 ||){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
     }
@@ -427,7 +458,12 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
     }
     else{
         if(readFile(levelFile) == -1){      //Lee el archivo
-            return -1;                      //Si no se pudo leer termina la ejecucion
+            if(levelNo == 0){
+                return -1;                      //Si no se pudo leer termina la ejecucion
+            }
+            else{
+                return -2;                  //Si no se encontro mas niveles termina
+            }
         }
         else{                   //Si se pudo leer el archivo comienza a leer los npcs
             int fila = 0;        //Se crea una variable fila

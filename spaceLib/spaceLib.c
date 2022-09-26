@@ -640,7 +640,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
     else{       //Si no hubo error, rellena el elemento del array
         (objtypes[index]).id=id;
         (objtypes[index]).velocidad=vel;
-        
+
         (objtypes[index]).ancho=ancho;
         (objtypes[index]).alto=alto;
         (objtypes[index]).initLives=initLives;

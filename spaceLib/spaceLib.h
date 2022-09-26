@@ -31,6 +31,7 @@
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
 #define DERECHA 1
 #define ABAJO 2
+#define MAX_SPRITE_FILE_LENGTH 100
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
@@ -114,7 +115,9 @@ typedef struct{
 	int shootProb;      //Probabilidad de disparo del tipo de objeto
     int maxBullets;     //Cantidad maxima de balas del escuadron
     int balaID;         //ID del objectType de la bala asociada a este objeto
-    char * sprite;
+    char sprite1[MAX_SPRITE_FILE_LENGTH];    //Sprite 1
+    char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
+    char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
 }objectType_t;
 
 

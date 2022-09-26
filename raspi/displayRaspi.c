@@ -818,11 +818,12 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
  * 
  ******************************************************************************************************************************************/
 
-/*
+
 void* displayRPIThread (void* argDisplayRPI){
-    //object_t* balas = ((argDisplayRPI_t*)argDisplayRPI)->balas; //Puntero a la lista de balas
-    object_t* aliens = ((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-    object_t* naveUser = ((argDisplayRPI_t*)argDisplayRPI)->naveUser; //Puntero a la nave del usuario
+    object_t* balasEnemigas = *((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas; //Puntero a la lista de balas enemigas
+    object_t* balasUsr = *((argDisplayRPI_t*)argDisplayRPI)->balasUsr; //Puntero a la lista de balas del usuario
+    object_t* aliens = *((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
+    object_t* naveUser = *((argDisplayRPI_t*)argDisplayRPI)->naveUser; //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
     while(1){
 
@@ -831,7 +832,6 @@ void* displayRPIThread (void* argDisplayRPI){
             sem_wait(&SEM_GAME);
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
-            printf("esta por entrar al while\n");
             object_t* aux = aliens;
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
 
@@ -886,7 +886,7 @@ void* displayRPIThread (void* argDisplayRPI){
     }
     pthread_exit(0);
 }
-*/
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -1102,7 +1102,8 @@ void changeOption(void* argChangeOption){
 
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
-    return 1;
+    GAME_STATUS.pantallaActual = START_LEVEL;
+    return 0;
 }
 
 int selectLevelsInicio(void){
@@ -1114,7 +1115,7 @@ int selectVolumeInicio(void){
 }
 
 int selectQuitGameInicio(void){
-    GAME_STATUS.pantallaActual = START_LEVEL;
+    GAME_STATUS.exitStatus = 0;
     return 0;
 }
 
