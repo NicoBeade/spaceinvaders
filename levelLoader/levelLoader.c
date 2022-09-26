@@ -20,6 +20,19 @@ typedef struct{
 
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
 
+void printAliens(object_t ** listAliens){
+    
+    object_t * listaAliens = *listAliens;
+    if(listaAliens == NULL){
+        printf("ERROR PETE\n");
+        return;
+    }
+    while (listaAliens != NULL){
+        printf("POSX:%d\t POSY:%d\t LIV:%d\t ANIM:%d\t\n", listaAliens->pos.x, listaAliens->pos.y, listaAliens->lives, listaAliens->animationStatus);
+        listaAliens=listaAliens->next;
+    }
+}
+
 
 int readFile(char * file){       //Funcion leer archivo, recibe la direccion
     FILE * filePointer;     //Se crea un puntero al archivo
@@ -257,7 +270,7 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
     return 0;
 }
 
-int readLevel(char * file, level_setting_t * levelSettings){
+int readLevelSettings(char * file, level_setting_t * levelSettings){
     if(readFile(file) != 0){ //Si no se pudo leer correctamente
         return -1;      //Devuelve error
     }
@@ -386,7 +399,7 @@ int readLevel(char * file, level_setting_t * levelSettings){
     return 0;
 }
 
-int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform){
+int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     if(platform == NULL){
         printf("Error in levelLoader.c, loadLevel function : platform cannot be NULL\n");
@@ -408,25 +421,157 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform){
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
-    sprintf(levelFile, "%s%s%s%d%s", LEVELS_DIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
-    if(levelNo == 0){   //Si es el nivel numero 0
-        strcat(levelFile, platform);
-     
+    sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
+    if(levelNo == 0 && readLevelSettings(levelFile,  levelSettings) == -1){ //Si el nivel es el cero, carga el levelSettings
+        return -1;
     }
-    
-
-
+    else{
+        if(readFile(levelFile) == -1){      //Lee el archivo
+            return -1;                      //Si no se pudo leer termina la ejecucion
+        }
+        else{                   //Si se pudo leer el archivo comienza a leer los npcs
+            int fila = 0;        //Se crea una variable fila
+            while(decodedFile[fila].parameter[0] != 0){ //Para todos los parametros en el array
+                if(strcmp(decodedFile[fila].parameter, "ALIEN") == 0){  //Si es un alien
+                    fila++;     //Se incrementa la fila
+                    
+                    object_t alien;                     //Buffer del alien a leer
+                    fila = readObj(fila, &alien);       //Lee el alien
+                    if(fila == -1){    //Si no se pudo leer termina
+                        return -1;
+                    }                    
+                    objectType_t * objType = getObjType(alien.type);        //Se recupera el tipo de alien
+                    (* listaAliens) = addObj((* listaAliens), alien.pos, alien.type, objType->initLives);    //Se agrega a la lista
+                    printf("george\n");
+                }
+                else if(strcmp(decodedFile[fila].parameter, "BARRERA") == 0){  //Si es una barrera
+                    fila++;     //Se incrementa la fila
+                    object_t barrera;                     //Buffer de la barrera a leer
+                    fila = readObj(fila, &barrera);       //Lee la barrera
+                    if(fila == -1){    //Si no se pudo leer termina
+                        return -1;
+                    }    
+                    objectType_t * objType = getObjType(barrera.type);        //Se recupera el tipo de barrera
+                    (* listaBarreras) = addObj((* listaBarreras), barrera.pos, barrera.type, objType->initLives);    //Se agrega a la lista
+                }
+                else if(strcmp(decodedFile[fila].parameter, "USUARIO") == 0){  //Si es una barrera
+                    fila++;     //Se incrementa la fila
+                    object_t usuario;                     //Buffer de la barrera a leer
+                    fila = readObj(fila, &usuario);       //Lee el usuario
+                    if(fila == -1){    //Si no se pudo leer termina
+                        return -1;
+                    }    
+                    objectType_t * objType = getObjType(usuario.type);        //Se recupera el tipo de barrera
+                    (* listaUsr) = addObj((* listaUsr), usuario.pos, usuario.type, objType->initLives);    //Se agrega a la lista
+                }
+                fila++;
+            }
+        }
+    }
+    return 0;
 }
 
+int readObj(int paramNo, object_t * objOut){
+    int type_found = 0;
+    int posX_found = 0;
+    int posY_found = 0;
+    int fila;
+    if(decodedFile[paramNo].parameter == NULL){
+        printf("Error in levelLoader.c, readObj function : paramNo %d not valid\n",paramNo);
+        return -1;
+    }
+    for(fila = paramNo; (strcmp(decodedFile[fila].parameter, "END") != 0) && (decodedFile[fila].parameter[0] != 0); fila++){
+        if(type_found == 0 && strcmp(decodedFile[fila].parameter, "type") == 0){
+            if(getObjType(atoi(decodedFile[fila].value)) == NULL){       //Si no se encuentra el tipo de objeto se sale de la funcion y devuelve error
+                printf("Error in levelLoader.c, readObj function : type %s not valid\n",decodedFile[fila].value);
+                return -1;
+            }
+            else{           //Si se encontro el tipo de objeto se almacena
+                objOut->type = atoi(decodedFile[fila].value);   
+                type_found++;     
+            }
+        }
+        else if(posX_found == 0 && strcmp(decodedFile[fila].parameter, "posX") == 0){        //Si el parametro es la posicion en X
+            (objOut->pos).x = atoi(decodedFile[fila].value);        //Se guarda
+            posX_found++;       //Se incrementa el contador
+        }
+        else if(posY_found == 0 && strcmp(decodedFile[fila].parameter, "posY") == 0){        //Si el parametro es la posicion en y
+            (objOut->pos).y = atoi(decodedFile[fila].value);        //Se guarda
+            posY_found++;       //Se incrementa el contador
+        }
+    }
+    if(decodedFile[fila].parameter[0] == 0 && strcmp(decodedFile[fila].parameter, "END") != 0){
+        printf("Error in levelLoader.c, readObj function : END line not founded\n");
+        return -1;
+    }
+    if(type_found != 1 || posX_found != 1 || posY_found != 1){   //Si no se encontraron todos los campos devuelve error
+        printf("Error in levelLoader.c, readObj function : file has missing parameters: type_found:%d, posX_found:%d, posY_found: %d, in line number %d\n", type_found, posX_found, posY_found, fila);
+        return -1;
+    }
+    return fila;
+}
 
 int main (){
     //loadAsset("../game/assets/test.asset");
     //imprimirARRAY();
-    //directory_t carpetaAssets = {};
-    //loadDirectory("../game/assets", &carpetaAssets);
-    //loadAllAssets("rpi", &carpetaAssets);
-    //imprimirARRAY();
-    readFile("testfile.txt");
-    printFile();
+    directory_t carpetaAssets = {};
+    loadDirectory("../game/assets", &carpetaAssets);
+    loadAllAssets("rpi", &carpetaAssets);
+    imprimirARRAY();
+    clearFileBuffer();
+    readFile("../game/levels/rpi_level1.level");
+    object_t alien;
+
+    printf("%s\t%s\n", decodedFile[0].parameter,decodedFile[0].value);
+    printf("%s\t%s\n", decodedFile[1].parameter,decodedFile[1].value);
+    printf("%s\t%s\n", decodedFile[2].parameter,decodedFile[2].value);
+    printf("%s\t%s\n", decodedFile[3].parameter,decodedFile[3].value);
+    printf("%s\t%s\n", decodedFile[4].parameter,decodedFile[4].value);
+    printf("%s\t%s\n", decodedFile[5].parameter,decodedFile[5].value);
+    printf("%s\t%s\n", decodedFile[6].parameter,decodedFile[6].value);
+    printf("%s\t%s\n", decodedFile[7].parameter,decodedFile[7].value);
+    printf("%s\t%s\n", decodedFile[8].parameter,decodedFile[8].value);
+    printf("%s\t%s\n", decodedFile[9].parameter,decodedFile[9].value);
+    printf("%s\t%s\n", decodedFile[10].parameter,decodedFile[10].value);
+    printf("%s\t%s\n", decodedFile[11].parameter,decodedFile[11].value);
+    printf("%s\t%s\n", decodedFile[12].parameter,decodedFile[12].value);
+    printf("%s\t%s\n", decodedFile[13].parameter,decodedFile[13].value);
+    printf("%s\t%s\n", decodedFile[14].parameter,decodedFile[14].value);
+    printf("%s\t%s\n", decodedFile[15].parameter,decodedFile[15].value);
+    printf("%s\t%s\n", decodedFile[16].parameter,decodedFile[16].value);
+    printf("%s\t%s\n", decodedFile[17].parameter,decodedFile[17].value);
+    printf("%s\t%s\n", decodedFile[18].parameter,decodedFile[18].value);
+    printf("%s\t%s\n", decodedFile[19].parameter,decodedFile[19].value);
+    printf("%s\t%s\n", decodedFile[20].parameter,decodedFile[20].value);
+
+    level_setting_t levelSettings;
+        object_t * listaAliens = NULL;
+    loadLevel(0, &levelSettings, "rpi",&listaAliens,NULL,NULL);
+
+    loadLevel(1, &levelSettings, "rpi",&listaAliens,NULL,NULL);
+    //readLevel("../game/levels/rpi_level0.level", &levelSettings);
+    /*
+    printf("%d\n", levelSettings.anchoUsr); 
+    printf("%d\n", levelSettings.desplazamientoUsr);
+    printf("%d\n", levelSettings.desplazamientoX);
+    printf("%d\n", levelSettings.desplazamientoY);
+    printf("%d\n", levelSettings.disInicialUsrX);
+    printf("%d\n", levelSettings.disInicialUsrY);
+    printf("%d\n", levelSettings.distInicialX);
+    printf("%d\n", levelSettings.distInicialY);
+    printf("%d\n", levelSettings.margenX);
+    printf("%d\n", levelSettings.margenY);
+    printf("%d\n", levelSettings.saltoX);
+    printf("%d\n", levelSettings.saltoY);
+    printf("%d\n", levelSettings.xMax);
+    printf("%d\n", levelSettings.xMin);
+    printf("%d\n", levelSettings.yMax);
+    printf("%d\n", levelSettings.yMin);
+    */
+    printAliens(&listaAliens);
+    
 }
+
+
+
 

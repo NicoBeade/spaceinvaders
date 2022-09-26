@@ -1,24 +1,21 @@
 /**********************************************************************************************************************************************************
  * 
-                                         _   _                       __     __  ____            _                          
-                                        | | (_)                      \ \   / / |  _ \          | |                         
-                                  __ _  | |  _    ___   _ __    ___   \ \_/ /  | |_) |   __ _  | |   __ _   ___        ___ 
-                                 / _` | | | | |  / _ \ | '_ \  / __|   \   /   |  _ <   / _` | | |  / _` | / __|      / __|
-                                | (_| | | | | | |  __/ | | | | \__ \    | |    | |_) | | (_| | | | | (_| | \__ \  _  | (__ 
-                                 \__,_| |_| |_|  \___| |_| |_| |___/    |_|    |____/   \__,_| |_|  \__,_| |___/ (_)  \___|
-                                                                                            
+                                                                             _        _   _                
+                                                                            | |      (_) | |               
+                                         ___   _ __     __ _    ___    ___  | |       _  | |__         ___ 
+                                        / __| | '_ \   / _` |  / __|  / _ \ | |      | | | '_ \       / __|
+                                        \__ \ | |_) | | (_| | | (__  |  __/ | |____  | | | |_) |  _  | (__ 
+                                        |___/ | .__/   \__,_|  \___|  \___| |______| |_| |_.__/  (_)  \___|
+                                            | |                                                          
+                                            |_|                                                                          
  * 
  ***********************************************************************************************************************************************************
-*   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas a las balas y los aliens.
-*   Contiene los siguientes threads:
-*       -moveAlien: se encarga de realizar el movimiento de los aliens. Para ello utiliza las siguientes funciones:
-*           -detectarDireccion.
-*               -tocaBorde.
-*       -moveBala:
-*
-*   Ademas contiene las siguientes funciones:
-*       -initAliens: crea la lista de los aliens. Esta funcion a su vez utiliza:
-*           -addAlien: agrega un nuevo alien a la lista.
+*   Este archivo contiene las funciones y threads encargados del backEnd del juego. Tiene las siguientes funcionalidades:
+*       -Funciones para crear las listas de los aliens y las balas.
+*       -Funciones que se encargan de mover los aliens durante la ejecucion del juego.
+*       -Funciones que se encargan de que los aliens disparen.
+*       -Funciones que se utilzan para mover al usuario y evitar que se salga de la pantalla.
+*       -Funcion que detecta si una bala golpeo algo.
 *
  **********************************************************************************************************************************************************/
 
@@ -84,6 +81,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 	newObj -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
 	newObj -> type = setType;
 	newObj -> lives = setLives;
+    newObj -> animationStatus = 0;
     newObj -> next = NULL;
 
 	return firstObj;//Devuelve un puntero al primer elemento.
@@ -454,6 +452,129 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
 *******************************************************************************************************************************************/
 
 
+
+/*******************************************************************************************************************************************
+ * 
+                                              ___         _   _   _      _             
+                                             / __|  ___  | | | | (_)  __| |  ___   _ _ 
+                                            | (__  / _ \ | | | | | | / _` | / -_) | '_|
+                                             \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
+ * 
+ ******************************************************************************************************************************************/
+/*
+void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr){
+//Esta funcion se encarga de detectar si una bala impacta contra algo.
+
+    char collition = 1;//Flag para detectar colisiones.
+
+    //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
+    object_t * listAliens = *alienList;
+    object_t * listUsr = *usrList;
+    object_t * listBalasEnemigas = *balasEnemigas;
+    object_t * listBalasUsr = *balasUsr;
+
+    while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
+
+        if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
+            listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
+            if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
+                //GAME_STATUS.pantallaActual = LOST_LEVEL;
+            }
+            listBalasEnemigas->lives -= 1;
+            if(listBalasEnemigas-> lives == 0){//Si la bala debe morir
+                object_t * balaADestruir = listBalasEnemigas;
+                listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+                *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
+            }
+            else{//Si la bala no debe morir
+                listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+            }
+        }
+        //else if() HAY QUE CHEQUEAR SI GOLPEA UNA BARRERA
+        else{
+            listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+        }
+    }
+    
+    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
+
+        while(listAliens != NULL  &&  collition){//Chequea todos los aliens
+            if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
+                collition = 0;
+                listAliens->lives -= 1;
+                if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
+                    *alienList = destroyObj(*alienList, listAliens);
+                }
+                listBalasUsr->lives -= 1;
+                if(listBalasUsr->lives == 0){//Si la bala debe morir
+                    object_t * balaADestruir = listBalasUsr;
+                    listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+                    *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
+                }
+                else{//Si la bala no debe morir
+                listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+                }
+            }
+            else{//Si no golpeo a ese alien chequea el siguiente
+                listAliens = listAliens->next;
+            }
+        }
+        if(!collition){//Si no hubo colision
+            listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+        }
+        collition = 1;
+    }
+}
+
+
+int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType){
+//Esta funcion se encarga de detectar si hubo una colision teniendo en cuenta la hitbox de los objetos.
+
+    objectType_t * objType = getObjType(objectType);
+    if(objType == NULL){
+        return -1;
+    }
+    int objectAncho = objType->ancho;//Obtiene la hitbox del objeto
+    int objectAlto = objType->alto;
+
+    objectType_t * balType = getObjType(balaType);
+    if(balType == NULL){
+        return -1;
+    }
+    int balaAncho = balType->ancho;//Obtiene la hitbox de la bala
+    int balaAlto = balType->alto;
+    
+    int minXBala = balaPos.x;//Obtiene los extremos de la bala
+    int maxXBala = minXBala + balaAncho;
+    int minYBala = balaPos.y;
+    int maxYBala = minYBala + balaAlto;
+
+    int minXObj = objectPos.x;//Obtiene los extremos del objeto
+    int maxXObj = minXObj + objectAncho;
+    int minYObj = objectPos.y;
+    int maxYObj = minYObj + objectAlto;
+
+    int interseccionX = maxXBala >= minXObj && minXBala <= maxXObj;//Detecta si se intersectan
+    int interseccionY = maxYBala >= minYObj && minYBala <= maxYObj;
+
+    return interseccionX && interseccionY;//Solo hay interseccion si se intersectan en X e Y.
+}
+*/
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...){
     int vidaMini = levelSetting -> miniBarreraLives;   //Cantidad de vidas de cada minibarrera
@@ -519,6 +640,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
     else{       //Si no hubo error, rellena el elemento del array
         (objtypes[index]).id=id;
         (objtypes[index]).velocidad=vel;
+        
         (objtypes[index]).ancho=ancho;
         (objtypes[index]).alto=alto;
         (objtypes[index]).initLives=initLives;

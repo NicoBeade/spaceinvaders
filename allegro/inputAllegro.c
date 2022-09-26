@@ -83,20 +83,19 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
         if(timerTick % FPS == 0 ){
 
             if(key_pressed[UP]){
-                sem_wait(&semaforo);
-                *data->punteros->balasUsuario = shootBala(data->punteros->nave, *data->punteros->balasUsuario, data->levelSettings);
-                key_pressed[UP]=false;
-                sem_post(&semaforo);
+                *data->keys.y = 1;
             }
             if(key_pressed[DOWN]){
-                
+                *data->keys.y = -1;
             }
             if(key_pressed[RIGHT]){
-                moveNaveUsuario(data->punteros->nave, DESPLAZAMIENTO_X, X_MAX, NAVEX);
-                
+                *data->keys.x = 1; 
             }
             if(key_pressed[LEFT]){
-                moveNaveUsuario(data->punteros->nave, -DESPLAZAMIENTO_X, X_MAX, NAVEX);
+                *data->keys.x = -1;
+            }
+            if(key_pressed[SPACE]){
+                *data->keys.space = 1;
             }
 
         }

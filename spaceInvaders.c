@@ -57,6 +57,14 @@ typedef struct{
 	object_t ** balasUsr;
 }argMoveBala_t;
 
+typedef struct{
+	level_setting_t * levelSettings;
+    object_t ** alienList;
+    object_t ** usrList;
+	object_t ** balasEnemigas;
+	object_t ** balasUsr;
+}argCollider_t;
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -233,6 +241,10 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
+                object_t * alienList = NULL; //Se crea la lista de aliens
+                object_t 
+
+
             /*    
                 sem_wait(&SEM_MENU);
 
@@ -399,8 +411,11 @@ static void* menuHandlerThread(void * data){
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
-                
+
+                #ifdef RASPI
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                #endif
+
                 (menu -> changeOption)(&argChangeOption);
                 
             }
@@ -411,7 +426,11 @@ static void* menuHandlerThread(void * data){
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA };
+
+                #ifdef RASPI
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                #endif
+
                 (menu -> changeOption)(&argChangeOption);
                 
             }

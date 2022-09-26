@@ -87,11 +87,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
             al_clear_to_color(al_map_rgb(BGCOLOR));
 
-            showLista(data->punteros->nave);
-            showLista(data->punteros->aliens);
-            showLista(data->punteros->balasAliens);
-            showLista(*data->punteros->balasUsuario);
-            showLista(data->punteros->barreras);
+            showLista(data->punteros->toShow);
 
             al_flip_display();
 

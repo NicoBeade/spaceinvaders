@@ -73,10 +73,8 @@ void * allegroThread (void * dataIn){
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
-    punteros_t punteros = {data->nave, data->aliens, data->balasAliens,  data->balasUsuario, data->barreras};
-
-    display_data_t dataD = {&event_queue, &punteros, &close_display, &displayFlag};
-    keyboard_data_t dataK = {&event_queue, &ev, &punteros, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode, data->levelSettings};
+    display_data_t dataD = {&event_queue, &data->toShow, &close_display, &displayFlag};
+    keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode, data->levelSettings};
 
     /*************************************************************************************************************
      * 
@@ -145,4 +143,16 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
     pthread_exit(0);
 
+}
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      MENUES
+ * 
+ * ********************************************************************************************************************************************************/
+
+void * allegroMenu(void * dataIn){
+    
+    //tengo que tomar las cosas que se van a imprimir y mandarselas al display mediante toShow
+    pthread_exit(0);
 }

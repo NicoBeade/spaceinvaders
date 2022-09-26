@@ -8,7 +8,7 @@
                                                                                             
  * 
  ***********************************************************************************************************************************************************
-*   Este .h contiene tipos de datos, externs y prototipos para mostrar en el display de la raspi el estado del juego
+*   Este .h contiene tipos de datos, externs y prototipos para mostrar en el display de la raspi el estado del juego.
 *
  **********************************************************************************************************************************************************/
 

@@ -42,22 +42,12 @@
                         uno a la lista de las balas del usuario
                         uno a la lista de las balas de los aliens
     ***************************************************************************/
-typedef struct{
-
-    object_t * nave;
-    object_t * aliens;
-    object_t * balasAliens;
-    object_t ** balasUsuario;
-    object_t * barreras;
-    //menu_t * menu;
-
-} punteros_t;
 
 typedef struct 
 {
     ALLEGRO_EVENT_QUEUE ** event_queue;
 
-    punteros_t * punteros;
+    object_t * toShow;
 
     bool * close_display;
     bool * displayFlag;

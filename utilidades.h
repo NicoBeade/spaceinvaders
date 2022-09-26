@@ -31,13 +31,6 @@
  ******************************************************************************************************************************************/
 //typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO, BARRERA_ESQUINA_SUP_IZQ, BARRERA_ESQUINA_SUP_DER, BARRERA_INTERNO, BARRERA_ESQUINA_INF_IZQ, BARRERA_ESQUINA_INF_DER, NONE} types_t;
 
-typedef struct{//Contiene el estado del juego.
-
-    unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
-    unsigned char nivelActual;//Indica el nivel que esta en juego.
-    unsigned char menuActual;//Indica el menu que esta corriendo.
-    unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
-}gameStatus_t;
 
 typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
@@ -84,7 +77,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
                         //cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.
 
 //*************PANTALLAS
-enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL};//Determinan un valor para cada pantalla
+enum PANTALLAS { MENU , START_LEVEL , IN_GAME, LOST_LEVEL, DESTROY_LEVEL};//Determinan un valor para cada pantalla
 
 //*************MENUES
 enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA};//Determinan un valor para cada pantalla

@@ -25,6 +25,7 @@
  #ifndef SPACELIB_H
  #define SPACELIB_H
 
+//#include "../utilidades.h"
 
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
@@ -95,6 +96,13 @@ typedef struct{
     int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick.
 }level_setting_t;
 
+typedef struct{//Contiene el estado del juego.
+
+    unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
+    unsigned char nivelActual;//Indica el nivel que esta en juego.
+    unsigned char menuActual;//Indica el menu que esta corriendo.
+    unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
+}gameStatus_t;
 
 
 typedef struct{
@@ -201,6 +209,8 @@ int delObjType(int id);																								//Elimina un tipo de objeto
                                             |___| /_\_\  \__| \___| |_|   |_||_| /__/                                                                                                                      
  * 
  ******************************************************************************************************************************************/
+
+extern gameStatus_t GAME_STATUS; //Variable que indica el estado del juego.
 
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS

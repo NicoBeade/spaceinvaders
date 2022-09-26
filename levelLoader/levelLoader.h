@@ -1,9 +1,9 @@
 #ifndef LEVEL_LOADER_H
 #define LEVEL_LOADER_H
-
+#include "../spaceLib/spaceLib.h"
 #define MAX_PARAM_LETTERS 30        //Maximo tamaño de char que ocupa un parametro
 #define MAX_VALUE_LETTERS 50        //Maximo tamaño de char que ocupa un valor
-#define MAX_FILE_ROWS 2000           //Maxima cantidad de filas de un archivo
+#define MAX_FILE_ROWS 100           //Maxima cantidad de filas de un archivo
 
 #define MAX_FILE_ROW_LENGHT 100     //Maximo tamaño de fila para un archivo
 
@@ -30,4 +30,7 @@ int loadAsset(char * file);
 int loadDirectory(char * carpeta, directory_t * directoryStore);
 int loadAllAssets(char * platform, directory_t * directoryStore);
 
+int readObj(int paramNo, object_t * objOut);
+int readLevelSettings(char * file, level_setting_t * levelSettings);
+int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
 #endif

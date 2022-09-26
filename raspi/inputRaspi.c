@@ -12,11 +12,13 @@
  ***********************************************************************************************************************************************************
 *   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas a recibir input del usuario cuando el juego se ejecuta en
 *   la raspberry.
+*   Funciona de la siguiente manera: tiene acceso a un struct global (keys) que almacena hacia donde se movio el joyustick. Este thread se encarga de 
+*   modificar el contenido de dicho struct para que el resto del programa pueda saber hacia donde se movio el joystick.
+*
  **********************************************************************************************************************************************************/
 
 #include <stdio.h>
 #include "drivers/joydrv.h"
-#include "../utilidades.h"
 #include "inputRaspi.h"
 #include <pthread.h>
 #include <unistd.h>

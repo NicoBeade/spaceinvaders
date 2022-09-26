@@ -10,8 +10,6 @@
                                         |_|                                          |_|
  * 
  ***********************************************************************************************************************************************************
-*   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas a recibir input del usuario cuando el juego se ejecuta en
-*   la raspberry.
  **********************************************************************************************************************************************************/
 
  #ifndef INPUT_RASPI_H

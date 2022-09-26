@@ -20,7 +20,7 @@
  #include <allegro5/allegro.h>
  #include <allegro5/allegro_image.h>
  #include "utilidades.h"
-#include "displayAllegro.h"
+ #include "displayAllegro.h"
 
  #define EVENTO (*(data->ev))
 
@@ -30,7 +30,7 @@
     ALLEGRO_EVENT_QUEUE ** event_queue;
     ALLEGRO_EVENT * ev; 
 
-    punteros_t * punteros;
+    keys_t * keys;
 
     bool * close_display;
     bool * keyboardDownFlag;

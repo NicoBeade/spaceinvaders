@@ -5,26 +5,15 @@
                                 / _` | | | (_-< | '_ \ | | / _` | | || | |   / / _` | (_-< | '_ \ | |  _  / _|
                                 \__,_| |_| /__/ | .__/ |_| \__,_|  \_, | |_|_\ \__,_| /__/ | .__/ |_| (_) \__|
                                                 |_|                |__/                    |_|                
-
 * 
  ***********************************************************************************************************************************************************
 *   
-*   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas al manejo del display RPI
-*   Contiene los siguientes threads:
-*       -displayRPI: se encarga de realizar la actualizacion del display durante la ejecucion del juego. 
-*            Para ello utiliza las siguientes funciones:
-*               -drawSprite
-*               -cleanSprite
-*               -clearBuffer
-*
-*                                        Se usaran los siguientes recursos de la libreria del display
-*                                             -dcoord_t, tipo de dato: struct con un campo x y un campo y
-*                                             -disp_init(void), inicializa el display
-*                                             -disp_clear(void), limpia el display
-*                                             -disp_write(dcoord_t,dlevel_t), escribe en el display
-*                                             -D_OFF,D_ON, ctes de prendido y apagado del display
-*                                             -disp_update(void), actualiza el display
-*
+*   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas al manejo del display RPI.
+*   Tiene las siguientes funcionalidades:
+*       -Funciones para agregar informacion al buffer e imprimir cosas en el display.
+*       -Thread que se encarga de actualizar el display durante la ejecucion del juego en la raspberry.
+*       -Thread que se encarga del barrido de texto en el display durante la ejecucion de un menu (menu de inicio, pausa, etc.).
+*       -Funciones que indican que hacer cuando se selecciona una opcion en un menu.
 *
  **********************************************************************************************************************************************************/
 
@@ -53,7 +42,7 @@
 /*******************************************************************************************************************************************
  *                                                   ___                _   _              
                                                     / __|  _ __   _ _  (_) | |_   ___   ___
-                                                    \__ \ | '_ \ | '_| | | |  _| / 0_) (_0<
+                                                    \__ \ | '_ \ | '_| | | |  _| / 0_) (_ <
                                                     |___/ | .__/ |_|   |_|  \__| \___| /__/
                                                           |_|                              
 *
@@ -76,7 +65,7 @@ sprite_t nave = {{0,1,0},{1,1,1}}; //1 sprite unico para la nave del usuario
  * 
                                          ___          _   _   ___    _               _                    
                                         | __|  _  _  | | | | |   \  (_)  ___  _ __  | |  __ _   _  _   ___
-                                        | _|  | || | | | | | | |) | | | (_0< | '_ \ | | / _` | | || | (_0<
+                                        | _|  | || | | | | | | |) | | | (_ < | '_ \ | | / _` | | || | (_ <
                                         |_|    \_,_| |_| |_| |___/  |_| /__/ | .__/ |_| \__,_|  \_, | /__/
                                                                              |_|                |__/   
 *
