@@ -257,7 +257,134 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
     return 0;
 }
 
+int readLevel(char * file, level_setting_t * levelSettings){
+    if(readFile(file) != 0){ //Si no se pudo leer correctamente
+        return -1;      //Devuelve error
+    }
+    int paramNo;
+    int xMin;                   //-xMax: coordenada maxima en x alcanzable.
+    int xMax;                   //-xMin: coordenada minima en x alcanzable.
+    int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
+    int yMax;                   //-YMin: coordenada minima en Y alcanzable.
+    int saltoX;                 //-saltoX: distancia entre naves en x
+    int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
+    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
+    int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
+    int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
+    int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
+    int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
 
+    char xMin_found = 0;
+    char xMax_found = 0;
+    char yMin_found = 0;
+    char yMax_found = 0;
+    char saltoX_found = 0;
+    char saltoY_found = 0;
+    char distInicialX_found = 0;
+    char distInicialY_found = 0;
+    char anchoUsr_found = 0;
+    char margenX_found = 0;
+    char margenY_found = 0;
+    char disInicialUsrX_found = 0;
+    char disInicialUsrY_found = 0;
+    char desplazamientoX_found = 0;
+    char desplazamientoY_found = 0;
+    char desplazamientoUsr_found = 0;
+
+
+    for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
+        if(xMin_found == 0 && strcmp(decodedFile[paramNo].parameter, "xMin") == 0){
+            xMin = atoi(decodedFile[paramNo].value);
+            xMin_found++;
+        }
+        else if(xMax_found == 0 && strcmp(decodedFile[paramNo].parameter, "xMax") == 0){
+            xMax = atoi(decodedFile[paramNo].value);
+            xMax_found++;
+        }
+        else if(yMin_found == 0 && strcmp(decodedFile[paramNo].parameter, "yMin") == 0){
+            yMin = atoi(decodedFile[paramNo].value);
+            yMin_found++;
+        }
+        else if(yMax_found == 0 && strcmp(decodedFile[paramNo].parameter, "yMax") == 0){
+            yMax = atoi(decodedFile[paramNo].value);
+            yMax_found++;
+        }
+        else if(saltoX_found == 0 && strcmp(decodedFile[paramNo].parameter, "saltoX") == 0){
+            saltoX = atoi(decodedFile[paramNo].value);
+            saltoX_found++;
+        }
+        else if(saltoY_found == 0 && strcmp(decodedFile[paramNo].parameter, "saltoY") == 0){
+            saltoY = atoi(decodedFile[paramNo].value);
+            saltoY_found++;
+        }
+        else if(distInicialX_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialX") == 0){
+            distInicialX = atoi(decodedFile[paramNo].value);
+            distInicialX_found++;
+        }
+        else if(distInicialY_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialY") == 0){
+            distInicialY = atoi(decodedFile[paramNo].value);
+            distInicialY_found++;
+        }
+        else if(anchoUsr_found == 0 && strcmp(decodedFile[paramNo].parameter, "anchoUsr") == 0){
+            anchoUsr = atoi(decodedFile[paramNo].value);
+            anchoUsr_found++;
+        }
+        else if(margenX_found == 0 && strcmp(decodedFile[paramNo].parameter, "margenX") == 0){
+            margenX = atoi(decodedFile[paramNo].value);
+            margenX_found++;
+        }
+        else if(margenY_found == 0 && strcmp(decodedFile[paramNo].parameter, "margenY") == 0){
+            margenY = atoi(decodedFile[paramNo].value);
+            margenY_found++;
+        }
+        else if(disInicialUsrX_found == 0 && strcmp(decodedFile[paramNo].parameter, "disInicialUsrX") == 0){
+            disInicialUsrX = atoi(decodedFile[paramNo].value);
+            disInicialUsrX_found++;
+        }
+        else if(disInicialUsrY_found == 0 && strcmp(decodedFile[paramNo].parameter, "disInicialUsrY") == 0){
+            disInicialUsrY = atoi(decodedFile[paramNo].value);
+            disInicialUsrY_found++;
+        }
+        else if(desplazamientoX_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoX") == 0){
+            desplazamientoX = atoi(decodedFile[paramNo].value);
+            desplazamientoX_found++;
+        }
+        else if(desplazamientoY_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoY") == 0){
+            desplazamientoY = atoi(decodedFile[paramNo].value);
+            desplazamientoY_found++;
+        }
+        else if(desplazamientoUsr_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoUsr") == 0){
+            desplazamientoUsr = atoi(decodedFile[paramNo].value);
+            desplazamientoUsr_found++;
+        }
+    }
+    if(xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || anchoUsr_found != 1 || margenX_found != 1 || margenY_found != 1 || disInicialUsrX_found != 1 || disInicialUsrY_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1){   //Si no se encontraron todos los campos devuelve error
+        printf("Error in levelLoader.c, readLevel function : \"%s\" has missing parameters\n", file);
+        return -1;
+    }
+    levelSettings->anchoUsr = anchoUsr;
+    levelSettings->desplazamientoUsr = desplazamientoUsr;
+    levelSettings->desplazamientoX = desplazamientoX;
+    levelSettings->desplazamientoY = desplazamientoY;
+    levelSettings->disInicialUsrX = disInicialUsrX;
+    levelSettings->disInicialUsrY = disInicialUsrY;
+    levelSettings->distInicialX = distInicialX;
+    levelSettings->distInicialY = distInicialY;
+    levelSettings->margenX = margenX;
+    levelSettings->margenY = margenY;
+    levelSettings->saltoX = saltoX;
+    levelSettings->saltoY = saltoY;
+    levelSettings->xMax = xMax;
+    levelSettings->xMin = xMin;
+    levelSettings->yMax = yMax;
+    levelSettings->yMin = yMin;
+    return 0;
+}
 
 int main (){
     //loadAsset("../game/assets/test.asset");
