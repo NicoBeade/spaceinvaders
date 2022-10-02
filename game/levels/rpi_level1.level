@@ -1,23 +1,23 @@
 ALIEN
 type  1
-posX  69
-posY  70
+posX  1
+posY  3
 END
 ;
 ALIEN
 type 1
-posX 56
-posY 66
+posX 5
+posY 3
 END
 ;
 ALIEN
 type 1
-posX 56
-posY 66
+posX 8
+posY 3
 END
 ;
 ALIEN
 type 1
-posX 56
-posY 66
+posX 1
+posY 7
 END

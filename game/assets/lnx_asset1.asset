@@ -3,8 +3,8 @@ parametro2    20
 parametro3             40
 id 1
 vel 2    
-ancho 3
-alto 4
+ancho 4
+alto 3
 initLives 5
 shootProb 6
 maxBullets 7
