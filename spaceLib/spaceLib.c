@@ -223,15 +223,15 @@ void * moveAlienThread(void* argMoveAlien){
     pthread_exit(0);
 }
 */
-void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int direccion){
+void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
     if(*alienList == NULL){
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function ""moveAlien""\n");
     }
     object_t * auxiliar;
-    direccion = detectarDireccion(direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
+    *direccion = detectarDireccion(*direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
     int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
 
-    switch (direccion){//Primero detecta en que sentido debemos mover las naves.
+    switch (*direccion){//Primero detecta en que sentido debemos mover las naves.
         case IZQUIERDA:
             vx = - (levelSettings -> desplazamientoX);
             vy = 0;
