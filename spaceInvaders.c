@@ -270,6 +270,8 @@ int main(void){
                     levelCounter++;
                 }
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+                vector_t pos={2,3};
+                UsrList = addObj(UsrList, pos, 2, 3);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
@@ -285,10 +287,11 @@ int main(void){
                     printf("Error in spaceInvaders.c, Couldnt start level, UsrList null\n");
                     return -1;
                 }
-                if(barrerasList == NULL){
+               /* if(barrerasList == NULL){
                     printf("Error in spaceInvaders.c, Couldnt start level, barrerasList null\n");
                     return -1;
                 }
+                */
                 levelCounter++;
 
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
