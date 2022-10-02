@@ -320,7 +320,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         }
         else if (alien->pos.x > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
-            printf("Se toco el borde derecho.\n")
+            printf("Se toco el borde derecho.\n");
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo
             borde = ABAJO;
