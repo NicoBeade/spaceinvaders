@@ -270,8 +270,10 @@ int main(void){
                     levelCounter++;
                 }
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-                vector_t pos={2,3};
-                UsrList = addObj(UsrList, pos, 2, 3);
+                vector_t pos;
+                pos.x = levelSettings.disInicialUsrX;
+                pos.y = levelSettings.disInicialUsrY;
+                UsrList = addObj(UsrList, pos,2, 3);  //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;

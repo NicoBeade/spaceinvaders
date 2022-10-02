@@ -233,7 +233,7 @@ void moveAlien(level_setting_t*  levelSettings, object_t * alienList, int direcc
 
     switch (direccion){//Primero detecta en que sentido debemos mover las naves.
         case IZQUIERDA:
-            vx = - levelSettings -> desplazamientoX;
+            vx = - (levelSettings -> desplazamientoX);
             vy = 0;
             break;
         case DERECHA:
