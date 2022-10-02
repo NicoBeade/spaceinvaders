@@ -22,6 +22,7 @@
 #include "utilidades.h"
 #include "spaceLib/spaceLib.h"
 #include <unistd.h>
+#include "levelLoader/levelLoader.h"
 
 #define RASPI 
 
@@ -110,6 +111,8 @@ void * moveAlienThread(void* argMoveAlien);
 void * moveBalaThread(void * argMoveBala);
 
 static void* menuHandlerThread(void * data);
+
+static void* levelHandlerThread(void * data);
 
 /*******************************************************************************************************************************************
  * 
@@ -291,7 +294,7 @@ int main(void){
 
                 #ifdef RASPI
                 argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
-                pthread_create(displayT, NULL, displayRPIThread, &argDisplayRPI);
+                pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
 
                 #ifdef ALLEGRO
@@ -453,11 +456,11 @@ static void* levelHandlerThread(void * data){
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
-                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
+                moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, DERECHA);
             }
 
             if (IZQUIERDA_INPUT){
-                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
+                moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, IZQUIERDA);
             }
         }
     }
