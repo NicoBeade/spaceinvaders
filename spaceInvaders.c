@@ -465,6 +465,7 @@ static void* levelHandlerThread(void * data){
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
+            printf("Booooo\n");
                 moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, DERECHA);
             }
 
