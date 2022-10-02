@@ -9,10 +9,10 @@ spaceInvaders.o: spaceInvaders.c utilidades.h
 	gcc -c spaceInvaders.c -Wall
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h
-	gcc -c raspi/inputRaspi.c -Wall
+	gcc -c raspi/inputRaspi.c -Wall -o inputRaspi.o
 
 displayRaspi.o: raspi/displayRaspi.c raspi/displayRaspi.h
-	gcc -c raspi/displayRaspi.c -Wall
+	gcc -c raspi/displayRaspi.c -Wall -o displayRaspi.o
 
 levelLoader.o: levelLoader/levelLoader.c spaceLib.o
 	gcc -c levelLoader/levelLoader.c spaceLib/spaceLib.o -Wall -o levelLoader.o
