@@ -500,7 +500,7 @@ void * moveAlienThread(void* argMoveAlien){
 
             sem_wait(&SEM_GAME);
 
-            moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  *(((argMoveAlien_t*)argMoveAlien) -> alienList), direccion);
+            moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), direccion);
 
             sem_post(&SEM_GAME);
         }

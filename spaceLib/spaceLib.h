@@ -157,7 +157,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
 
 //void * moveAlienThread(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
-void moveAlien(level_setting_t*  levelSettings, object_t * alienList, int direccion);//Esta funcion es llamada por el thread y es la
+void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 
 //*****************BALAS
