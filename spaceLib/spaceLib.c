@@ -249,8 +249,8 @@ void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int direc
     }
     auxiliar = *alienList;
     printf("auxiliar: %p\n", auxiliar);
-    printf("vx = %d", vx);
-    printf("vy = %d", vy);
+    printf("vx = %d\n", vx);
+    printf("vy = %d\n", vy);
     while (auxiliar != NULL){//Mueve los aliens uno por uno
 
         auxiliar->pos.x += vx;//Modifica su posicion en x e y
@@ -289,11 +289,12 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
+            printf("Yendo para abajo\n");
             if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
             }
             if (tocaBorde(levelSettings, listAliens) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
-                return IZQUIERDA;
                 printf("Se comienza a mover para la izquierda\n");
+                return IZQUIERDA;
             }
             else {
                 return DERECHA; //si no, esta tocando el borde izquierdo, por lo que se mueve hacia la derecha
@@ -304,6 +305,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             printf("Err in gameLib, detectarDireccion function: invalid movement case reached\n");
             break;
     } 
+    printf("Aca no deberia llegar\n");
     return 0;
 }
 
