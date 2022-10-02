@@ -28,8 +28,8 @@
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
 #include "raspi/displayRaspi.h"
-#include "disdrv.h"
-#include "joydrv.h"
+#include "raspi/drivers/disdrv.h"
+#include "raspi/drivers/joydrv.h"
 #endif
 
 #ifdef ALLEGRO
