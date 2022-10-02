@@ -249,6 +249,8 @@ void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int direc
     }
     auxiliar = *alienList;
     printf("auxiliar: %p\n", auxiliar);
+    printf("vx = %d", vx);
+    printf("vy = %d", vy);
     while (auxiliar != NULL){//Mueve los aliens uno por uno
 
         auxiliar->pos.x += vx;//Modifica su posicion en x e y
