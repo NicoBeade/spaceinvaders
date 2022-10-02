@@ -26,8 +26,8 @@
 #define RASPI 
 
 #ifdef RASPI
-#include "inputRaspi.h"
-#include "displayRaspi.h"
+#include "raspi/inputRaspi.h"
+#include "raspi/displayRaspi.h"
 #include "disdrv.h"
 #include "joydrv.h"
 #endif
