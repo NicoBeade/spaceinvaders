@@ -41,6 +41,7 @@ void* inputRPIThread(void* argInputRPI){
             sem_wait(&SEM_MENU);
             //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
             ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0); 
+            printf("JoyX: %d", coordJoy.x);
 
             ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
 
