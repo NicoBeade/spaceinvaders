@@ -20,6 +20,9 @@ levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c spaceLib/spaceLib.c -o spaceLib.o
 
+clean:
+	rm spaceLib.o levelLoader.o displayRaspi.o inputRaspi.o spaceInvaders.o
+
 #*******************************************************************************************************************************************
 #*******************************************************************************************************************************************
 

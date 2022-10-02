@@ -4,8 +4,9 @@ parametro3             40
 id 13
 vel 2    
 ancho 4
-alto 45
+alto 3
 initLives 5
 shootProb 6
 maxBullets 7
 balaID 8
+sprite1 4
