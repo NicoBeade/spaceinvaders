@@ -11,8 +11,8 @@
 
 #define MAX_FILES_IN_FOLDER 30  //Maxima cantidad de archivos en una carpeta
 
-#define ASSETSDIR "../game/assets"
-#define LEVELSDIR "../game/levels"
+#define ASSETSDIR "game/assets"
+#define LEVELSDIR "game/levels"
 
 #define MAX_DIR_LENGTH 60       //Maxaima longitud de un directorio
 
