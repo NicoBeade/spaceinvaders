@@ -258,14 +258,14 @@ int main(void){
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 sem_wait(&SEM_MENU);
                 if(levelCounter == 0){
-                    int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
+                    int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
                         return -1;
                     }
                     levelCounter++;
                 }
-                int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
+                int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;

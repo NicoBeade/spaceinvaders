@@ -8,17 +8,17 @@ mainRaspi: spaceInvaders.o inputRaspi.o displayRaspi.o levelLoader.o spaceLib.o 
 spaceInvaders.o: spaceInvaders.c utilidades.h
 	gcc -c spaceInvaders.c -Wall
 
-inputRaspi.o: inputRaspi.c inputRaspi.h
-	gcc -c inputRaspi.c -Wall
+inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h
+	gcc -c raspi/inputRaspi.c -Wall
 
-displayRaspi.o: displayRaspi.c displayRaspi.h
-	gcc -c displayRaspi.c -Wall
+displayRaspi.o: raspi/displayRaspi.c raspi/displayRaspi.h
+	gcc -c raspi/displayRaspi.c -Wall
 
-levelLoader.o: levelLoader.c spaceLib.o
+levelLoader.o: levelLoader/levelLoader.c spaceLib.o
 	gcc -c levelLoader/levelLoader.c spaceLib/spaceLib.o -Wall -o levelLoader.o
 
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
-	gcc -Wall -c spaceLib/spaceLib.c -o spaceLib/spaceLib.o
+	gcc -Wall -c spaceLib/spaceLib.c -o spaceLib.o
 
 #*******************************************************************************************************************************************
 #*******************************************************************************************************************************************
