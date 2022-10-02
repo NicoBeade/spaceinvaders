@@ -37,11 +37,11 @@ typedef const uint8_t caracteres_t [8][4]; //matriz de 8x4 para imprimir letras
 typedef uint8_t halfDisp_t [8][16]; //matriz de 8x16 para imprimir sobre la mitad del display
 
 typedef struct{ //argumentos a recibir por el thread del display en juego RPI
-    object_t** balasEnemigas;
-    object_t** balasUsr;
+    //object_t** balasEnemigas; //puntero a las distintas listas
+    //object_t** balasUsr;
     object_t** aliens;
     object_t** naveUser;
-    //faltan los punteros a barreras y user
+    //faltan los punteros a barreras y la nave nodriza
 }argDisplayRPI_t;
 
 typedef struct{//Argumentos que recibe el thread de la animacion de barrido.

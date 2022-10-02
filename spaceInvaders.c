@@ -205,9 +205,6 @@ void * timer(){
  * 
  ******************************************************************************************************************************************/
 
-
-
-
 int main(void){
 
     disp_init();
@@ -227,7 +224,7 @@ int main(void){
     object_t * UsrList = NULL; //Se crea la lista de nave usuario
     object_t * barrerasList = NULL; //Se crea la lista de barreras
 
-    level_settings_t levelSettings;
+    level_setting_t levelSettings;
 
     int levelCounter = 0;
     #ifdef RASPI
@@ -260,10 +257,10 @@ int main(void){
                 if(levelCounter == 0){
                     int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
                     if(levelStatus == -1){
-                        printf("Error in spaceInvaders.c, level number 0 not founded\n");
+                        printf("Error in spaceInvaders.c, level number 0 not found\n");
                         return -1;
                     }
-                    levelCounter++
+                    levelCounter++;
                 }
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &platform, &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
@@ -293,12 +290,20 @@ int main(void){
                 //pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 #ifdef RASPI
-                //argDisplayRPI_t argDisplayRPI = { BALAS ENEMIGAS Y BALAS USR, &alienList, &UsrList };
-                //pthread_create(displayT, NULL, displayRPIThread, argDisplayRPI);
+                argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
+                pthread_create(displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
+
                 #ifdef ALLEGRO
                 #endif
 
+                menuGame.naveUsr = &UsrList;
+                menuGame.levelSettings = &levelSettings;
+                menuGame.exitStatus = 1;
+
+                pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
+
+                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
                 break;
@@ -490,7 +495,7 @@ void * moveAlienThread(void* argMoveAlien){
     }
     pthread_exit(0);
 }
-
+/*
 void * moveBalaThread(void * argMoveBala){
 
     while(1){
@@ -510,3 +515,4 @@ void * moveBalaThread(void * argMoveBala){
         } 
     }
 }
+*/

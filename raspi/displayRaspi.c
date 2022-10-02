@@ -47,6 +47,9 @@
                                                           |_|                              
 *
 ********************************************************************************************************************************************/
+
+enum SPRITESALIENS {DANIEL, PABLO, NICOLAS};
+
 sprite_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 sprite_t daniel2 = {{1,1,1},{1,0,1}};
 
@@ -723,7 +726,7 @@ void cleanSprite(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen
             pAux.x = p.x+i; 
             pAux.y = p.y+j;
             if(pAux.x>15||pAux.y>15){
-            printf("Fuera de ranfo de impresion en algun pixel de la nave");
+            printf("Fuera de rango de impresion en algun pixel de la nave");
             }
             disp_write(pAux ,D_OFF); //Actualiza el buffer
         }
@@ -817,13 +820,21 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
                                                                                |_|                |__/                     
  * 
  ******************************************************************************************************************************************/
-
+/* ESte es el struct que se le pasa al thread del display
+typedef struct{ //argumentos a recibir por el thread del display en juego RPI
+    object_t** balasEnemigas;
+    object_t** balasUsr;
+    object_t** aliens;
+    object_t** naveUser;
+    //faltan los punteros a barreras y user
+}argDisplayRPI_t;
+*/
 
 void* displayRPIThread (void* argDisplayRPI){
-    object_t* balasEnemigas = *((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas; //Puntero a la lista de balas enemigas
-    object_t* balasUsr = *((argDisplayRPI_t*)argDisplayRPI)->balasUsr; //Puntero a la lista de balas del usuario
-    object_t* aliens = *((argDisplayRPI_t*)argDisplayRPI)->aliens; //Puntero a la lista de aliens
-    object_t* naveUser = *((argDisplayRPI_t*)argDisplayRPI)->naveUser; //Puntero a la nave del usuario
+    //object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
+    //object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
+    object_t* aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
+    object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
     while(1){
 
@@ -1123,6 +1134,3 @@ int selectQuitGameInicio(void){
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
-
-
