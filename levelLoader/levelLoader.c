@@ -547,6 +547,7 @@ int readObj(int paramNo, object_t * objOut){
     return fila;
 }
 
+/*
 int main (){
     //loadAsset("../game/assets/test.asset");
     //imprimirARRAY();
@@ -603,11 +604,11 @@ int main (){
     printf("%d\n", levelSettings.xMin);
     printf("%d\n", levelSettings.yMax);
     printf("%d\n", levelSettings.yMin);
-    */
+    
     printAliens(&listaAliens);
     
 }
-
+*/
 
 
 
