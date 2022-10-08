@@ -1,12 +1,9 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
-#include "utilidades.h"
 #include "displayAllegro.h"
 #include "inputAllegro.h"
 #include "allegro.h"
@@ -155,9 +152,8 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
 void * allegroMenu(void * dataIn){
     
-    //Recibo los textos de las opciones del menu
-    //Armo la lista de los textos en formato texto_t
-    //Meto la lista en el puntero texts del thread del display
-    
+    //Recibo en que menu estoy
+    //Tengo que saber que poner para ese menu
+    //tengo que tomar las cosas que se van a imprimir y mandarselas al display mediante toShow
     pthread_exit(0);
 }
