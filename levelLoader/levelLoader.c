@@ -181,9 +181,10 @@ int loadAsset(char * file){
     int shootProb;
     int maxBullets;
     int balaID;
-    char sprite1[MAX_SPRITE_FILE_LENGTH];
-    char sprite2[MAX_SPRITE_FILE_LENGTH];
-    char sprite3[MAX_SPRITE_FILE_LENGTH];
+
+    char * sprite1;
+    char * sprite2;
+    char * sprite3;
 
     char id_found = 0;
     char vel_found = 0;
@@ -235,7 +236,7 @@ int loadAsset(char * file){
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            memcpy(sprite1, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite1 = &(decodedFile[paramNo].value)[0];
             sprite1_found++;
         }
         else if(sprite2_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite2") == 0){
@@ -243,7 +244,7 @@ int loadAsset(char * file){
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            memcpy(sprite2, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite2 = &(decodedFile[paramNo].value)[0];
             sprite2_found++;
         }
         else if(sprite3_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite3") == 0){
@@ -251,7 +252,7 @@ int loadAsset(char * file){
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            memcpy(sprite3, decodedFile[paramNo].value, MAX_SPRITE_FILE_LENGTH);
+            sprite3 = &(decodedFile[paramNo].value)[0];
             sprite3_found++;
         }
     }
@@ -259,7 +260,7 @@ int loadAsset(char * file){
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID); //Añade el tipo de objeto
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID, sprite1, sprite2, sprite3); //Añade el tipo de objeto
     return 0;
 }
 

@@ -1145,6 +1145,7 @@ void changeOption(void* argChangeOption){
 
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
+    velDispAnimation = 1;
     GAME_STATUS.pantallaActual = START_LEVEL;
     return 0;
 }
