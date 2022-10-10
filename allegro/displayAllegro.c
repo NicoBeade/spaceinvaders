@@ -30,8 +30,20 @@
 
 extern sem_t semaforo;
 
-//En esta array se guardan las direcciones a los sprites
+//Structs
     
+typedef int (*option_t)(void);
+
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
+
+	keys_t * keys;
+	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
+    int cantOpciones;//Cantidad de opciones del menu.
+    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+} menu_t;
+
+
 
 /***********************************************************************************************************************************************************
  * 
@@ -57,11 +69,12 @@ int showEntity(object_t * entity);
      * ***************************************************************************/
 
 int showObjects(object_t * inicial);
-
 int showText(texto_t * data, ALLEGRO_FONT * fuente);
-
-
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
+texto_t * emptyText(texto_t * firstText);
+texto_t * allegroMenu(menu_t * data, texto_t * toshow);
+void changeOption(void * data);
 
 /***********************************************************************************************************************************************************
  * 
@@ -100,8 +113,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
             al_clear_to_color(al_map_rgb(BGCOLOR));
 
-            showObjects(data->objects);
-            showTexts(data->text, fuente);
+            showObjects(*data->objects);
+            showTexts(*data->text, fuente);
 
             al_flip_display();
 
@@ -124,10 +137,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
 int showText(texto_t * data, ALLEGRO_FONT * fuente){
 
-    al_draw_text(fuente, al_map_rgb(255,0,0) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+    al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
 }
-
-//      Show Entity
 
 int showEntity(object_t * entity){
   
@@ -135,39 +146,6 @@ int showEntity(object_t * entity){
 
     //Se busca la direccion del sprite
     char * sprite;
-
-    /*switch (entity->type){
-        case NAVE:
-            sprite = SNAVE;
-            break;
-
-        case DANIEL:
-            sprite = SALIEN1;
-            break;
-
-        case PABLO:
-            sprite = SALIEN2;
-            break;
-
-        case NICOLAS:
-            sprite = SALIEN3;
-            break;    
-
-        case BALA_DANIEL:
-        case BALA_NICOLAS:
-        case BALA_PABLO:
-        case BALA_USUARIO:
-            sprite = SBALA;
-            break;
-
-        case BARRERA:
-            sprite = SBARRERA;
-            break;
-
-        default:
-            break;
-    }*/
-           
 
     image = al_load_bitmap(sprite);    //Se carga en el bitmap
 
@@ -183,8 +161,6 @@ int showEntity(object_t * entity){
 
     return 0;
 }
-
-//      Show Lista
 
 int showObjects(object_t * inicial){
 
@@ -234,4 +210,107 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
     return 0;
 
 }
+
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
+/* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
+    Devuelve un puntero al primer elemento de la lista.
+*/	
+	texto_t * newText = malloc(sizeof(texto_t));//Agrega el nuevo alien
+
+	if(newText == NULL){//Si no se puede hacer el malloc indica error.
+		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
+		return NULL; //error
+	}
+
+    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
+        texto_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
+
+		while(lastObj -> next != NULL){
+			lastObj = lastObj -> next;
+		}
+        lastObj -> next = newText;
+	}
+    else{//Si es el primero de la lista debemos devolver ese puntero.
+        firstObj = newText;
+    }
+
+	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
+	newText -> posx = posx;
+	newText -> posy = posy;
+    newText -> next = NULL;
+
+	return firstObj;//Devuelve un puntero al primer elemento.
+}
+
+texto_t * emptyText(texto_t * firstText){
+
+    texto_t * first = firstText;
+
+    if(first != NULL){
+        if(first->next == NULL){
+            free(first);
+        }
+        else{
+            texto_t * sig = first->next;
+            do{
+                sig = first->next;
+                free(first);
+                first = sig;
+            }while(sig!=NULL);
+        }
+
+    }
+    return first;             //Se devuelve la lista
+}
+
+texto_t * allegroMenu(menu_t * data, texto_t * toshow){
+
+    int i;
+    for( i = 0; i<data->cantOpciones; i++){
+
+        if(i==0){
+            toshow=addText(toshow, data->textOpciones[i], 130, (i+1)*100);
+        }
+        else{
+            toshow=addText(toshow, data->textOpciones[i], 100, (i+1)*100);
+        }
+    }
+    toshow = addText(toshow, "> ", 100, 100);
+    return toshow;
+}
+
+void changeOption(void * dataIn){
+
+    changeOptionData_t * data = (changeOptionData_t *) dataIn;
+    texto_t * puntero = *data->toText;
+    int i = 0, j= 0;
+
+    
+    //Busco la opcion seleccionada
+    for(i = 0; i<data->actualOp; i++){
+        puntero = puntero->next;
+    }
+    //la muevo
+    puntero->posx-=30;
+    
+    //busco la nueva opcion seleccionada
+    puntero = *data->toText;
+    for(i = 0; i<data->nextOp; i++){
+        puntero = puntero->next;
+    }
+    
+    //la muevo
+    puntero->posx +=30;
+
+    //busco el selector
+    puntero = *data->toText;
+    for(j = 0; j< (data->menu)->cantOpciones; j++){
+        puntero = puntero->next;
+    }
+    
+    puntero->posx=100;
+    puntero->posy=(data->nextOp+1)*100;
+
+}
+
 /**********************************************************************************************************************************************************/

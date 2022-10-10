@@ -97,6 +97,16 @@ typedef struct {
 
 } eventH_data_t;
 
+typedef struct{
+
+    texto_t ** toText;
+    int actualOp;
+    int nextOp;
+    menu_t * menu;
+
+} changeOptionData_t;
+
+
 enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
 #define KEYCODE ALLEGRO_KEY_DOWN-*data->keycode
 
@@ -114,7 +124,7 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
 texto_t * emptyText(texto_t * firstText);
 texto_t * allegroMenu(menu_t * data, texto_t * toshow);
-texto_t * changeOption(texto_t * toshow, int actualOp, int nextOp, menu_t * menu);
+void changeOption(void * dataIn);
 
 /************************************************************************************************/
 
@@ -134,9 +144,9 @@ int main()
     keys_t * toKeys = &KEYS;
 
     data_allegro_t data = {&toObject, &toText, toKeys};
-
-
     menu_t menu = {NULL, {NULL}, {"hola mundo", "chau mundo", "messi"}, 3, NULL };
+    changeOptionData_t coData = {&toText, 0 , 1, &menu};
+
 
     principal = al_create_thread(allegroThread, &data);
 
@@ -144,7 +154,7 @@ int main()
 
     toText = allegroMenu(&menu, toText);
     sleep(3.0);
-    toText= changeOption(toText, 0, 1, &menu);
+    changeOption(&coData);
     sleep(3.0);
     toText = emptyText(toText);
     sleep(3.0);
@@ -532,22 +542,23 @@ texto_t * allegroMenu(menu_t * data, texto_t * toshow){
     return toshow;
 }
 
-texto_t * changeOption(texto_t * toshow, int actualOp, int nextOp, menu_t * menu){
+void changeOption(void * dataIn){
 
-    texto_t * puntero = toshow;
+    changeOptionData_t * data = (changeOptionData_t *) dataIn;
+    texto_t * puntero = *data->toText;
     int i = 0, j= 0;
 
     
     //Busco la opcion seleccionada
-    for(i = 0; i<actualOp; i++){
+    for(i = 0; i<data->actualOp; i++){
         puntero = puntero->next;
     }
     //la muevo
     puntero->posx-=30;
     
     //busco la nueva opcion seleccionada
-    puntero = toshow;
-    for(i = 0; i<nextOp; i++){
+    puntero = *data->toText;
+    for(i = 0; i<data->nextOp; i++){
         puntero = puntero->next;
     }
     
@@ -555,12 +566,12 @@ texto_t * changeOption(texto_t * toshow, int actualOp, int nextOp, menu_t * menu
     puntero->posx +=30;
 
     //busco el selector
-    puntero = toshow;
-    for(j = 0; j<menu->cantOpciones; j++){
+    puntero = *data->toText;
+    for(j = 0; j< (data->menu)->cantOpciones; j++){
         puntero = puntero->next;
     }
     
     puntero->posx=100;
-    puntero->posy=(nextOp+1)*100;
-    return toshow;
+    puntero->posy=(data->nextOp+1)*100;
+
 }
