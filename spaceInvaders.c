@@ -518,7 +518,7 @@ void * moveBalaThread(void * argMoveBala){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
-            sem_wait(&SEM_GAME);
+            //sem_wait(&SEM_GAME);
             printf("Se ingreso a moveBala \n");
 
             if(*(data -> alienList) != NULL){
@@ -538,7 +538,7 @@ void * moveBalaThread(void * argMoveBala){
                 //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
                 //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             }
-            sem_post(&SEM_GAME);
+            //sem_post(&SEM_GAME);
         } 
     }
 }
