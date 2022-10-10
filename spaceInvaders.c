@@ -309,6 +309,7 @@ int main(void){
                 argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
+                printf("Display Raspi creado\n");
 
                 #ifdef ALLEGRO
                 
