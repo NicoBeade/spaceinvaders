@@ -832,10 +832,9 @@ void* displayRPIThread (void* argDisplayRPI){
     while(1){
         printf("Display RPI 2\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        sem_wait(&SEM_GAME);
         if( (timerTick % FRAMERATE) == 0 ){
             printf("BOOO\n");
-            
+            sem_wait(&SEM_GAME);
             printf("Boooo\n");
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
