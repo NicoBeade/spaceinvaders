@@ -823,16 +823,22 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
 
 void* displayRPIThread (void* argDisplayRPI){
 
-    object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
-    object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
-    object_t* aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
-    object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
+    object_t* balasEnemigas;
+    object_t* balasUsr;
+    object_t* aliens;
+    object_t* naveUser;
     dcoord_t punto; //punto del display a escribir
 
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&SEM_GAME);
+
+            balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
+            balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
+            aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
+            naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
+
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             object_t* aux = aliens;
