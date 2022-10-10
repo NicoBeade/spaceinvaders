@@ -4,7 +4,7 @@ ancho 4
 alto 3
 initLives 5
 shootProb 6
-maxBullets 7
+maxBullets 10
 balaID 21
 sprite1 3
 sprite2 3
