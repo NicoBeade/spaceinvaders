@@ -16,6 +16,7 @@
 #define DISPLAY_RASPI_H
 
 #include <stdint.h>
+#include <string.h>
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
 #include <semaphore.h>

@@ -855,14 +855,14 @@ void* displayRPIThread (void* argDisplayRPI){
                 objectType_t * objTypePointer = getObjType(aliens->type);
                 if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
                     printf("Error in displayRaspi.c, displayRPIThread function : Object type %d not found\n", aliens->type);
-                    return -1;
+                    pthread_exit(0);
                 }
                 int sprite1 = atoi(objTypePointer->sprite1);
                 int sprite2 = atoi(objTypePointer->sprite2);
                 int sprite;
                 if(sprite1 < 1 || sprite1 > MAX_SPRITES){
                    printf("Error in displayRaspi.c, displayRPIThread function : sprite: %s has an invalid format not found\n", objTypePointer->sprite1);
-                   return -1; 
+                   pthread_exit(0); 
                 }
                 if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
                     sprite = sprite1;

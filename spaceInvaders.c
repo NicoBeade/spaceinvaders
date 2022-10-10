@@ -225,7 +225,6 @@ int main(void){
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
 
     object_t * alienList = NULL; //Se crea la lista de aliens
-    object_t * balasList = NULL; //Se crea la lista de balas
     object_t * UsrList = NULL; //Se crea la lista de nave usuario
     object_t * barrerasList = NULL; //Se crea la lista de barreras
     object_t * balasUsr = NULL; //Se crea la lista de las balas del usuario
