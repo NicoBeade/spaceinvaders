@@ -4,6 +4,7 @@
 #include <allegro5/allegro_ttf.h> //Manejo de ttfs
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 #include <time.h>
 
@@ -17,7 +18,6 @@ typedef struct TEXTO
     struct TEXTO * next;
 } texto_t;
 
-
 typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
 	int x;
@@ -29,6 +29,17 @@ typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
     int y;
 }vector_t;
+
+typedef int (*option_t)(void);
+
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
+
+	keys_t * keys;
+	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
+    int cantOpciones;//Cantidad de opciones del menu.
+    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+} menu_t;
 
 typedef struct OBJECT{//Cada alien, barrera, bala y la nave del usuario es un struct de este tipo y se los organizara en listas en funcion de cual de estos es.
     vector_t pos;//Posicion en x e y
@@ -100,6 +111,10 @@ int showEntity(object_t * entity);
 int showObjects(object_t * inicial);
 int showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
+texto_t * emptyText(texto_t * firstText);
+texto_t * allegroMenu(menu_t * data, texto_t * toshow);
+texto_t * changeOption(texto_t * toshow, int actualOp, int nextOp, menu_t * menu);
 
 /************************************************************************************************/
 
@@ -113,20 +128,26 @@ int main()
     ALLEGRO_THREAD * principal;
 
     keys_t KEYS = { .x =0, .y = 0, .press = 0 };
-    texto_t texto = {"hola mundo", 100, 100};
 
     object_t * toObject;
-    texto_t * toText = &texto;
+    texto_t * toText = NULL;
     keys_t * toKeys = &KEYS;
 
     data_allegro_t data = {&toObject, &toText, toKeys};
+
+
+    menu_t menu = {NULL, {NULL}, {"hola mundo", "chau mundo", "messi"}, 3, NULL };
 
     principal = al_create_thread(allegroThread, &data);
 
     al_start_thread(principal);
 
-    sleep(5.0);
-    texto.texto="chau mundo";
+    toText = allegroMenu(&menu, toText);
+    sleep(3.0);
+    toText= changeOption(toText, 0, 1, &menu);
+    sleep(3.0);
+    toText = emptyText(toText);
+    sleep(3.0);
     al_join_thread(principal, NULL);
     al_destroy_thread(principal);
     
@@ -281,8 +302,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
             al_clear_to_color(al_map_rgb(0,0,0));
 
-            //showObjects(data->objects);
-            showText(*data->text, fuente);
+            //showObjects(*data->objects);
+            showTexts(*data->text, fuente);
 
             al_flip_display();
 
@@ -306,8 +327,6 @@ int showText(texto_t * data, ALLEGRO_FONT * fuente){
     al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
 }
 
-//      Show Entity
-
 int showEntity(object_t * entity){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
@@ -329,8 +348,6 @@ int showEntity(object_t * entity){
 
     return 0;
 }
-
-//      Show Lista
 
 int showObjects(object_t * inicial){
 
@@ -356,7 +373,7 @@ int showObjects(object_t * inicial){
     return 0;
 }
 
-/*int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
+int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
     //punter al primer objeto de la lista
     texto_t * puntero = inicial;
@@ -379,7 +396,7 @@ int showObjects(object_t * inicial){
     
     return 0;
 
-}*/
+}
 
 void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
@@ -445,4 +462,105 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
     }
 
     pthread_exit(0); 
+}
+
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
+/* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
+    Devuelve un puntero al primer elemento de la lista.
+*/	
+	texto_t * newText = malloc(sizeof(texto_t));//Agrega el nuevo alien
+
+	if(newText == NULL){//Si no se puede hacer el malloc indica error.
+		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
+		return NULL; //error
+	}
+
+    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
+        texto_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
+
+		while(lastObj -> next != NULL){
+			lastObj = lastObj -> next;
+		}
+        lastObj -> next = newText;
+	}
+    else{//Si es el primero de la lista debemos devolver ese puntero.
+        firstObj = newText;
+    }
+
+	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
+	newText -> posx = posx;
+	newText -> posy = posy;
+    newText -> next = NULL;
+
+	return firstObj;//Devuelve un puntero al primer elemento.
+}
+
+texto_t * emptyText(texto_t * firstText){
+
+    texto_t * first = firstText;
+
+    if(first != NULL){
+        if(first->next == NULL){
+            free(first);
+        }
+        else{
+            texto_t * sig = first->next;
+            do{
+                sig = first->next;
+                free(first);
+                first = sig;
+            }while(sig!=NULL);
+        }
+
+    }
+    return first;             //Se devuelve la lista
+}
+
+texto_t * allegroMenu(menu_t * data, texto_t * toshow){
+
+    int i;
+    for( i = 0; i<data->cantOpciones; i++){
+
+        if(i==0){
+            toshow=addText(toshow, data->textOpciones[i], 130, (i+1)*100);
+        }
+        else{
+            toshow=addText(toshow, data->textOpciones[i], 100, (i+1)*100);
+        }
+    }
+    toshow = addText(toshow, "> ", 100, 100);
+    return toshow;
+}
+
+texto_t * changeOption(texto_t * toshow, int actualOp, int nextOp, menu_t * menu){
+
+    texto_t * puntero = toshow;
+    int i = 0, j= 0;
+
+    
+    //Busco la opcion seleccionada
+    for(i = 0; i<actualOp; i++){
+        puntero = puntero->next;
+    }
+    //la muevo
+    puntero->posx-=30;
+    
+    //busco la nueva opcion seleccionada
+    puntero = toshow;
+    for(i = 0; i<nextOp; i++){
+        puntero = puntero->next;
+    }
+    
+    //la muevo
+    puntero->posx +=30;
+
+    //busco el selector
+    puntero = toshow;
+    for(j = 0; j<menu->cantOpciones; j++){
+        puntero = puntero->next;
+    }
+    
+    puntero->posx=100;
+    puntero->posy=(nextOp+1)*100;
+    return toshow;
 }
