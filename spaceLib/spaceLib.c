@@ -22,10 +22,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <pthread.h>    //Mas adelante hay que sacarla
 #include <unistd.h>
 #include <stdarg.h>
 #include "spaceLib.h"
+#include <string.h>
 
 
 /*******************************************************************************************************************************************
