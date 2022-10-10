@@ -464,8 +464,9 @@ static void* levelHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT){//Dispara una bala
-            printf("Pooof\n");
+                printf("Pooof\n");
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
+                printf("Luego de disparar: %p\n", *(menu -> balasUsr));
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
