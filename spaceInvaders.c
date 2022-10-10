@@ -298,11 +298,12 @@ int main(void){
                 }
                 */
                 levelCounter++;
-
+                printf("Por crear move alien y move bala\n");
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
+                printf("Move alien y bala creados\n");
 
                 #ifdef RASPI
                 argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
