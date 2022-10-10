@@ -664,7 +664,7 @@ caracteres_t letraEspacio ={
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 4 //tasa de refresco del display
+#define FRAMERATE 20 //tasa de refresco del display
 
 caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
