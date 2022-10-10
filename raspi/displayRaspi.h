@@ -17,6 +17,8 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
 #include <semaphore.h>
