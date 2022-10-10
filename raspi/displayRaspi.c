@@ -820,19 +820,10 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
                                                                                |_|                |__/                     
  * 
  ******************************************************************************************************************************************/
-/* ESte es el struct que se le pasa al thread del display
-typedef struct{ //argumentos a recibir por el thread del display en juego RPI
-    object_t** balasEnemigas;
-    object_t** balasUsr;
-    object_t** aliens;
-    object_t** naveUser;
-    //faltan los punteros a barreras y user
-}argDisplayRPI_t;
-*/
 
 void* displayRPIThread (void* argDisplayRPI){
-    //object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
-    //object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
+    object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
+    object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
     object_t* aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
     object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
@@ -900,6 +891,36 @@ void* displayRPIThread (void* argDisplayRPI){
             punto.y=naveUser->pos.y;
             drawSprite(punto,nave); //copia la nave en el buffer
             
+            aux = balasEnemigas;
+
+            while (balasEnemigas!= NULL){ //mientras no se haya llegado al final de la lista
+
+                punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+                punto.y=balasEnemigas->pos.y;
+                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+                    printf("Fuera de rango de impresion en la nave/n"); //chequea de pixel a imprimir
+                }
+                else{   
+                    disp_write(punto,D_ON);
+                }
+                balasEnemigas = balasEnemigas -> next;
+            }
+            balasEnemigas = aux;
+
+            aux = balasUsr;
+            while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
+
+                punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+                punto.y=balasUsr->pos.y;
+                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+                    printf("Fuera de rango de impresion en la nave/n"); //chequea de pixel a imprimir
+                }
+                else{   
+                    disp_write(punto,D_ON);
+                }
+                balasUsr = balasUsr -> next;
+            }
+            balasUsr = aux;
 
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
