@@ -394,7 +394,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
-    objectType_t * naveType = getObjType(nave->type);                                    //Puntero al tipo de nave
+    objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
     int balasDisponibles;                                       //Balas disponibles para disparar
     if(nave == NULL){
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");

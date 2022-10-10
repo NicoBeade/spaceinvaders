@@ -56,6 +56,7 @@ typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
+    object_t ** alienList;
 }argMoveBala_t;
 
 typedef struct{
@@ -149,7 +150,7 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
-game_t menuGame = { &KEYS, NULL, NULL, 0}; //Estructura del level handler.
+game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
                       {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 
@@ -227,6 +228,8 @@ int main(void){
     object_t * balasList = NULL; //Se crea la lista de balas
     object_t * UsrList = NULL; //Se crea la lista de nave usuario
     object_t * barrerasList = NULL; //Se crea la lista de barreras
+    object_t * balasUsr = NULL; //Se crea la lista de las balas del usuario
+    object_t * balasAlien = NULL; //Se crea la lista de las balas de los aliens
 
     level_setting_t levelSettings;
 
@@ -297,9 +300,9 @@ int main(void){
                 levelCounter++;
 
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
-                //argMoveBala_t argMoveBala = { &levelSettings, PUNTERO A LA LISTA DE LAS BALAS ENEMIGAS Y DEL USUARIO };
+                argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                //pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
+                pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 #ifdef RASPI
                 argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
@@ -307,10 +310,12 @@ int main(void){
                 #endif
 
                 #ifdef ALLEGRO
+                
                 #endif
 
                 menuGame.naveUsr = &UsrList;
                 menuGame.levelSettings = &levelSettings;
+                menuGame.balasUsr = &balasUsr;
                 menuGame.exitStatus = 1;
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
@@ -461,7 +466,7 @@ static void* levelHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT){//Dispara una bala
-                //Disparar una bala
+                *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
@@ -508,24 +513,28 @@ void * moveAlienThread(void* argMoveAlien){
     }
     pthread_exit(0);
 }
-/*
+
 void * moveBalaThread(void * argMoveBala){
+
+    argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
             sem_wait(&SEM_GAME);
-            object_t * balas = NULL;
+            //object_t * balas = NULL;
+
+            *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
+
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
             //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            (*(((argMoveBala_t *) argMoveBala) -> balasEnemigas))  = moveBala(*(((argMoveBala_t *) argMoveBala) -> balasEnemigas), ((argMoveBala_t *) argMoveBala) -> levelSettings);
+            (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
             //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            (*(((argMoveBala_t *) argMoveBala) -> balasUsr)) = moveBala(*(((argMoveBala_t *) argMoveBala) -> balasUsr), ((argMoveBala_t *) argMoveBala) -> levelSettings);
+            (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             sem_post(&SEM_GAME);
         } 
     }
 }
-*/

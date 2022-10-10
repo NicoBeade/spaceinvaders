@@ -852,31 +852,42 @@ void* displayRPIThread (void* argDisplayRPI){
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
-                
-                switch(aliens->type){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
-                    case DANIEL:
-                        if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
-                            drawSprite(punto,daniel1);
-                        }
-                        else{
-                            drawSprite(punto,daniel2);
-                        }
+                objectType_t * objTypePointer = getObjType(aliens->type);
+                if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
+                    printf("Error in displayRaspi.c, displayRPIThread function : Object type %d not found\n", aliens->type);
+                    return -1;
+                }
+                int sprite1 = atoi(objTypePointer->sprite1);
+                int sprite2 = atoi(objTypePointer->sprite2);
+                int sprite;
+                if(sprite1 < 1 || sprite1 > MAX_SPRITES){
+                   printf("Error in displayRaspi.c, displayRPIThread function : sprite: %s has an invalid format not found\n", objTypePointer->sprite1);
+                   return -1; 
+                }
+                if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
+                    sprite = sprite1;
+                }
+                else{
+                    sprite = sprite2;
+                }
+                switch(sprite){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
+                    case 1:
+                        drawSprite(punto,daniel1);
                         break;
-                    case NICOLAS:
-                        if (aliens->animationStatus%2){
-                            drawSprite(punto,nicolas1);
-                        }
-                        else{
-                            drawSprite(punto,nicolas2);
-                        }
+                    case 2:
+                        drawSprite(punto,daniel2);
                         break;
-                    case PABLO:
-                        if (aliens->animationStatus%2){
-                            drawSprite(punto,pablo1);
-                        }
-                        else{
-                            drawSprite(punto,pablo2);
-                        }
+                    case 3:
+                        drawSprite(punto,nicolas1);
+                        break;
+                    case 4:
+                        drawSprite(punto,nicolas2);
+                        break;
+                    case 5:
+                        drawSprite(punto,pablo1);
+                        break;
+                    case 6:
+                        drawSprite(punto,pablo2);
                         break;
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
                     
@@ -1066,14 +1077,9 @@ void changeOption(void* argChangeOption){
 
     velDispAnimation = 1;
 
-    printf("Se inicio changeOption\n");
-
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
 
-
     pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
-
-    printf("Se finalizo el thread\n");
 
     *(((argChangeOption_t*)argChangeOption) -> animStatus) = 1;
 
@@ -1084,11 +1090,6 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.direccion = ((argChangeOption_t*)argChangeOption) -> direccion;
     argTextAnimMenu.changeAnimation = ((argChangeOption_t*)argChangeOption) -> animStatus;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
-    
-    printf("Nuevo texto: %s\n", ((argChangeOption_t*)argChangeOption) -> nuevoTexto);
-    printf("anim Status dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> animStatus);
-    printf("puntero thread dentro de changeOption: %p\n", ((argChangeOption_t*)argChangeOption) -> threadMenu);
-    printf("Puntero al display dentro de changeOption: %p\n", argTextAnimMenu.lowerDispMenu);
 
     pthread_create(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
 
