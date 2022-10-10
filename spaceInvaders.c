@@ -529,7 +529,7 @@ void * moveBalaThread(void * argMoveBala){
             printf("Se ingreso a moveBala \n");
 
             if(*(data -> alienList) != NULL){
-            *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
+                *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
             }
             printf("ShootBala \n");
 
