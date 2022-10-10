@@ -835,6 +835,7 @@ void* displayRPIThread (void* argDisplayRPI){
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             object_t* aux = aliens;
+            printf("Por imprimir los aliens\n");
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
@@ -886,7 +887,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
             aliens=aux; //devuelve aliens al principio de la lista
-            
+            printf("Por imprimir al usuario\n");
             punto.x=naveUser->pos.x; //posicion en x y en y de la nave
             punto.y=naveUser->pos.y;
             drawSprite(punto,nave); //copia la nave en el buffer
