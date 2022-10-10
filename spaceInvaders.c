@@ -518,21 +518,22 @@ void * moveBalaThread(void * argMoveBala){
             //sem_wait(&SEM_GAME);
 
             if(*(data -> alienList) != NULL){
+
                 *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
             }
-            printf("ShootBala \n");
+            else{
+                printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");
+            }
 
-            //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
-            //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
-            //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            if(*(data -> balasEnemigas) != NULL  ||  *(data -> balasUsr) != NULL){
+            if(*(data -> balasEnemigas) != NULL){
+
                 (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
                 printf("MoveBala \n");
-                //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+            }
+            if(*(data -> balasUsr) != NULL){
+
                 (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
                 printf("MoveBala \n");
-                //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-                //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             }
             //sem_post(&SEM_GAME);
         } 
