@@ -301,7 +301,6 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                usleep(50 * U_SEC2M_SEC);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
 
                 #ifdef RASPI
