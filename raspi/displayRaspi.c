@@ -892,7 +892,7 @@ void* displayRPIThread (void* argDisplayRPI){
             drawSprite(punto,nave); //copia la nave en el buffer
             
             aux = balasEnemigas;
-
+            printf("Por imprimir balas enemigas\n");
             while (balasEnemigas!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
@@ -906,7 +906,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 balasEnemigas = balasEnemigas -> next;
             }
             balasEnemigas = aux;
-
+            printf("Por imprimir balas usuario\n");
             aux = balasUsr;
             while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
 
