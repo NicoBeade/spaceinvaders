@@ -527,7 +527,7 @@ void * moveBalaThread(void * argMoveBala){
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
             //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            if(*(data -> balasEnemigas) != NULL){
+            if(*(data -> balasEnemigas) != NULL  &&  *(data -> balasUsr) != NULL){
                 (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
                 printf("MoveBala \n");
                 //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
