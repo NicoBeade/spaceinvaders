@@ -830,14 +830,12 @@ void* displayRPIThread (void* argDisplayRPI){
     dcoord_t punto; //punto del display a escribir
 
     while(1){
-        printf("Display RPI 2\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             sem_wait(&SEM_GAME);
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             object_t* aux = aliens;
-            printf("Por imprimir los aliens\n");
             objectType_t * objTypePointer;      //Variable auxiliar que almacena el objectType de cada elemento
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
 
@@ -896,13 +894,13 @@ void* displayRPIThread (void* argDisplayRPI){
                 aliens=aliens->next; //se pasa al siguiente alien en la lista
             }
             aliens=aux; //devuelve aliens al principio de la lista
-            printf("Por imprimir al usuario\n");
+
             punto.x=naveUser->pos.x; //posicion en x y en y de la nave
             punto.y=naveUser->pos.y;
             drawSprite(punto,nave); //copia la nave en el buffer
             
             aux = balasEnemigas;
-            printf("Por imprimir balas enemigas\n");
+
             while (balasEnemigas!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
@@ -916,8 +914,9 @@ void* displayRPIThread (void* argDisplayRPI){
                 balasEnemigas = balasEnemigas -> next;
             }
             balasEnemigas = aux;
-            printf("Por imprimir balas usuario\n");
+
             aux = balasUsr;
+            printf("Balas Usr> %p\n", balasUsr);
             while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
@@ -927,6 +926,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 }
                 else{   
                     disp_write(punto,D_ON);
+                    printf("Imprimio bala\n");
                 }
                 balasUsr = balasUsr -> next;
             }
