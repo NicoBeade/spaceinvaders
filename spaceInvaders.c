@@ -456,7 +456,7 @@ static void* menuHandlerThread(void * data){
 static void* levelHandlerThread(void * data){
 
 	game_t * menu = (game_t *) data;
-
+    printf("Level Handler\n");
     while(menu -> exitStatus){
 
         if (PRESS_INPUT){//Si se presiono el joystick se debe pausar el juego.
@@ -499,7 +499,7 @@ static void* levelHandlerThread(void * data){
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    
+    printf("Move Alien \n");
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
@@ -516,7 +516,7 @@ void * moveAlienThread(void* argMoveAlien){
 }
 
 void * moveBalaThread(void * argMoveBala){
-
+    printf("Move Bala \n");
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
     while(1){
