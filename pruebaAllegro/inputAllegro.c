@@ -16,9 +16,7 @@
 
 #include <stdio.h>
 #include <time.h>
-#include "aliensYBalas.h"
 #include "inputAllegro.h"
-#include "utilidades.h"
 #include "displayAllegro.h"
 #include <semaphore.h>
 
@@ -83,7 +81,7 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
         if(timerTick % FPS == 0 ){
 
             if(key_pressed[UP]){
-                *data->keys.y = 1;
+                *(data->keys).y = 1;
             }
             if(key_pressed[DOWN]){
                 *data->keys.y = -1;

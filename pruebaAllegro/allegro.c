@@ -72,7 +72,7 @@ void * allegroThread (void * dataIn){
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
-    display_data_t dataD = {&event_queue, &data->toShow, &close_display, &displayFlag};
+    display_data_t dataD = {&event_queue, &data->objectsToShow, &data->textToShow, &close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode, data->levelSettings};
 
     /*************************************************************************************************************

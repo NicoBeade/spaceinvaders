@@ -19,11 +19,16 @@
 
  #include <allegro5/allegro.h>
  #include <allegro5/allegro_image.h>
- #include "utilidades.h"
  #include "displayAllegro.h"
 
  #define EVENTO (*(data->ev))
 
+typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
+
+	int x;
+	int y;
+	uint8_t press;
+} keys_t;
 
  typedef struct {
 
