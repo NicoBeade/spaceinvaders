@@ -270,7 +270,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
         case DERECHA: //Si se viene moviendo para la derecha
             if (tocaBorde(levelSettings, listAliens) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
-                printf("Pa bajo\n");
+                printf("Pa bajooooooooo\n");
             }
             else {
                 return DERECHA; //si no, sigue moviendose para la derecha
@@ -320,6 +320,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         }
         else if (alien->pos.x >= levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
+            printf("Borde derechooooooo\n");
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo
             borde = ABAJO;
@@ -396,7 +397,6 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
-    printf("Carlos: BALAS MAXIMAS:%d, RECUENTO; %d\n",naveType -> maxBullets,balasActuales );
     int balasDisponibles;                                       //Balas disponibles para disparar
     if(nave == NULL){
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");
