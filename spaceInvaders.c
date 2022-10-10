@@ -308,7 +308,7 @@ int main(void){
                 printf("Move alien y bala creados\n");
 
                 #ifdef RASPI
-                argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
+                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList };
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
                 printf("Display Raspi creado\n");
