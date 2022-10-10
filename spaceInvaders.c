@@ -320,10 +320,9 @@ int main(void){
                 menuGame.balasUsr = &balasUsr;
                 menuGame.exitStatus = 1;
 
-                //pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
+                pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
                 printf("Level handler creado \n");
-                //pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
-                pthread_join(moveBalaT, NULL);
+                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
                 break;
@@ -507,7 +506,7 @@ void * moveAlienThread(void* argMoveAlien){
         if( (timerTick % velAliens) == 0 ){
 
             sem_wait(&SEM_GAME);
-
+            printf("Se ingreso a move alien\n");
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
