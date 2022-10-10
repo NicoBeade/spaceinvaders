@@ -828,8 +828,9 @@ void* displayRPIThread (void* argDisplayRPI){
     object_t* aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
     object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
+    printf("Display RPI 1\n");
     while(1){
-
+        printf("Display RPI 2\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
             printf("BOOO\n");
