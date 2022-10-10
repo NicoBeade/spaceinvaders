@@ -664,7 +664,7 @@ caracteres_t letraEspacio ={
                                                                                                                                                             
  * 
  ******************************************************************************************************************************************/
-#define FRAMERATE 20 //tasa de refresco del display
+#define FRAMERATE 4 //tasa de refresco del display
 
 caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
@@ -922,7 +922,6 @@ void* displayRPIThread (void* argDisplayRPI){
             balasEnemigas = aux;
 
             aux = balasUsr;
-            printf("Balas Usr> %p\n", balasUsr);
             while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
@@ -932,7 +931,6 @@ void* displayRPIThread (void* argDisplayRPI){
                 }
                 else{   
                     disp_write(punto,D_ON);
-                    printf("Imprimio bala\n");
                 }
                 balasUsr = balasUsr -> next;
             }

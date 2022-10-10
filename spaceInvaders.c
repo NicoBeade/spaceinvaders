@@ -463,9 +463,7 @@ static void* levelHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT){//Dispara una bala
-                printf("Pooof\n");
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
-                printf("Luego de disparar: %p\n", *(menu -> balasUsr));
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
@@ -497,12 +495,11 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    imprimirARRAY();
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
-            printf("Se ingreso a move alien\n");
             sem_wait(&SEM_GAME);
+            printf("Se ingreso a move alien\n");
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
@@ -519,7 +516,6 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
             //sem_wait(&SEM_GAME);
-            printf("Se ingreso a moveBala \n");
 
             if(*(data -> alienList) != NULL){
                 *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
