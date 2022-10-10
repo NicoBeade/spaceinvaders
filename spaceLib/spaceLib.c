@@ -313,7 +313,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         return DERECHA+ABAJO+IZQUIERDA;
     }
     int borde = 0;
-    while ((alien->next != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
+    while ((alien != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         objectType_t * tipoAlien = getObjType(alien->type);
         if (alien->pos.x <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
