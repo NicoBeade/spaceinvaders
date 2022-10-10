@@ -270,6 +270,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
         case DERECHA: //Si se viene moviendo para la derecha
             if (tocaBorde(levelSettings, listAliens) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
+                printf("Pa bajo\n");
             }
             else {
                 return DERECHA; //si no, sigue moviendose para la derecha
@@ -317,7 +318,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         if (alien->pos.x <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x >= levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho - 1){ //deteccion borde derecho
+        else if (alien->pos.x >= levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo
