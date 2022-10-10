@@ -587,8 +587,7 @@ int main (){
     loadLevel(0, &levelSettings, "rpi",&listaAliens,NULL,NULL);
 
     loadLevel(1, &levelSettings, "rpi",&listaAliens,NULL,NULL);
-    //readLevel("../game/levels/rpi_level0.level", &levelSettings);
-    /*
+    readLevel("../game/levels/rpi_level0.level", &levelSettings);
     printf("%d\n", levelSettings.anchoUsr); 
     printf("%d\n", levelSettings.desplazamientoUsr);
     printf("%d\n", levelSettings.desplazamientoX);
