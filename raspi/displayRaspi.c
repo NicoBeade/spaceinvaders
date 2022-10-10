@@ -856,8 +856,14 @@ void* displayRPIThread (void* argDisplayRPI){
                 int sprite2 = atoi(objTypePointer->sprite2);
                 int sprite;
                 if(sprite1 < 1 || sprite1 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s has an invalid format\n", objTypePointer->sprite1);
+                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d) has an invalid format\n", objTypePointer->sprite1, sprite1);
+                   sem_post(&SEM_GAME);
                    pthread_exit(0); 
+                }
+                if(sprite1 < 2 || sprite2 > MAX_SPRITES){
+                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d) has an invalid format\n", objTypePointer->sprite2, sprite2);
+                   sem_post(&SEM_GAME);
+                   pthread_exit(0);
                 }
                 if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
                     sprite = sprite1;
