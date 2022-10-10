@@ -307,8 +307,8 @@ int main(void){
                 printf("Move alien y bala creados\n");
 
                 #ifdef RASPI
-                //argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
-                //pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
+                argDisplayRPI_t argDisplayRPI = { &alienList, &UsrList };
+                pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
                 printf("Display Raspi creado\n");
 
@@ -528,20 +528,23 @@ void * moveBalaThread(void * argMoveBala){
             sem_wait(&SEM_GAME);
             printf("Se ingreso a moveBala \n");
 
+            if(*(data -> alienList) != NULL){
             *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
-
+            }
             printf("ShootBala \n");
 
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
             //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
-            printf("MoveBala \n");
-            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
-            printf("MoveBala \n");
-            //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
+            if(*(data -> balasEnemigas) != NULL){
+                (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
+                printf("MoveBala \n");
+                //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+                (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
+                printf("MoveBala \n");
+                //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
+                //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
+            }
             sem_post(&SEM_GAME);
         } 
     }
