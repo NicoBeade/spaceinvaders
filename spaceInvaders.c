@@ -298,6 +298,7 @@ int main(void){
                 }
                 */
                 levelCounter++;
+                printf("Ashe: %p\n", &alienList);
                 printf("Por crear move alien y move bala\n");
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
@@ -505,10 +506,9 @@ void * moveAlienThread(void* argMoveAlien){
     while(1){
         printf("Move Alien 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        sem_wait(&SEM_GAME);
         if( (timerTick % velAliens) == 0 ){
             printf("Se ingreso a move alien\n");
-            
+            sem_wait(&SEM_GAME);
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
@@ -524,10 +524,9 @@ void * moveBalaThread(void * argMoveBala){
     while(1){
         printf("Move Bala 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        sem_wait(&SEM_GAME);
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
-            
+            sem_wait(&SEM_GAME);
             printf("Se ingreso a moveBala \n");
 
             if(*(data -> alienList) != NULL){
