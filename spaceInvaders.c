@@ -522,16 +522,20 @@ void * moveBalaThread(void * argMoveBala){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
             sem_wait(&SEM_GAME);
-            //object_t * balas = NULL;
+            printf("Se ingreso a moveBala \n");
 
             *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
+
+            printf("ShootBala \n");
 
             //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
             //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
             //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
             (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
+            printf("MoveBala \n");
             //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
+            printf("MoveBala \n");
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
             sem_post(&SEM_GAME);
