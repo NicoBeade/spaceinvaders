@@ -15,7 +15,7 @@ displayRaspi.o: raspi/displayRaspi.c raspi/displayRaspi.h
 	gcc -c raspi/displayRaspi.c -Wall -o displayRaspi.o 
 
 levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
-	gcc -c levelLoader/levelLoader.c spaceLib/spaceLib.o -Wall -o levelLoader.o
+	gcc -c levelLoader/levelLoader.c spaceLib.o -Wall -o levelLoader.o
 
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c spaceLib/spaceLib.c -o spaceLib.o
