@@ -524,7 +524,7 @@ void * moveBalaThread(void * argMoveBala){
         printf("Move Bala 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
-            
+            printf("Move Bala 2\n");
             sem_wait(&SEM_GAME);
             printf("Se ingreso a moveBala \n");
 
