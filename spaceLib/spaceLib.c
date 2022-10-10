@@ -414,8 +414,8 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
         int vidaBala = balaType -> initLives;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            posicionBala.x = nave->pos.x - (naveType -> ancho)/2;
-            posicionBala.y = nave->pos.y - (naveType -> alto)/2;
+            posicionBala.x = nave->pos.x;
+            posicionBala.y = nave->pos.y;
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             balasDisponibles--;
         }
