@@ -302,7 +302,7 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                usleep(10 * U_SEC2M_SEC);
+                usleep(50 * U_SEC2M_SEC);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 printf("Move alien y bala creados\n");
 
@@ -506,9 +506,8 @@ void * moveAlienThread(void* argMoveAlien){
         printf("Move Alien 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
-            
-            sem_wait(&SEM_GAME);
             printf("Se ingreso a move alien\n");
+            sem_wait(&SEM_GAME);
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
