@@ -315,12 +315,12 @@ int main(void){
                 #ifdef ALLEGRO
                 
                 #endif
-                sem_wait(&SEM_GAME);
+
                 menuGame.naveUsr = &UsrList;
                 menuGame.levelSettings = &levelSettings;
                 menuGame.balasUsr = &balasUsr;
                 menuGame.exitStatus = 1;
-                sem_post(&SEM_GAME);
+
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
                 printf("Level handler creado \n");
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
@@ -505,9 +505,10 @@ void * moveAlienThread(void* argMoveAlien){
     while(1){
         printf("Move Alien 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        sem_wait(&SEM_GAME);
         if( (timerTick % velAliens) == 0 ){
             printf("Se ingreso a move alien\n");
-            sem_wait(&SEM_GAME);
+            
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
@@ -523,9 +524,10 @@ void * moveBalaThread(void * argMoveBala){
     while(1){
         printf("Move Bala 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        sem_wait(&SEM_GAME);
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
-            sem_wait(&SEM_GAME);
+            
             printf("Se ingreso a moveBala \n");
 
             if(*(data -> alienList) != NULL){

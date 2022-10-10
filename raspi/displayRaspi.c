@@ -822,8 +822,8 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
  ******************************************************************************************************************************************/
 
 void* displayRPIThread (void* argDisplayRPI){
+    
     printf("Display RPI\n");
-    sem_wait(&SEM_GAME);
     object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
     object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
     printf("Boo: %p\n", (((argDisplayRPI_t*)argDisplayRPI)->balasUsr));
@@ -831,7 +831,7 @@ void* displayRPIThread (void* argDisplayRPI){
     object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
     printf("Display RPI 1\n");
-    sem_post(&SEM_GAME);
+
     while(1){
         printf("Display RPI 2\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
