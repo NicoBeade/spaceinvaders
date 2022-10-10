@@ -507,10 +507,10 @@ void * moveAlienThread(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             printf("Se ingreso a move alien\n");
-            sem_wait(&SEM_GAME);
+            //sem_wait(&SEM_GAME);
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
-            sem_post(&SEM_GAME);
+            //sem_post(&SEM_GAME);
         }
     }
     pthread_exit(0);
@@ -525,7 +525,7 @@ void * moveBalaThread(void * argMoveBala){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
-            sem_wait(&SEM_GAME);
+            //sem_wait(&SEM_GAME);
             printf("Se ingreso a moveBala \n");
 
             *(data -> balasEnemigas) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
@@ -542,7 +542,7 @@ void * moveBalaThread(void * argMoveBala){
             printf("MoveBala \n");
             //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
             //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
-            sem_post(&SEM_GAME);
+            //sem_post(&SEM_GAME);
         } 
     }
 }
