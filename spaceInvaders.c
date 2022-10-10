@@ -496,6 +496,7 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
+    imprimirARRAY();
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
