@@ -860,7 +860,7 @@ void* displayRPIThread (void* argDisplayRPI){
                    sem_post(&SEM_GAME);
                    pthread_exit(0); 
                 }
-                if(sprite1 < 2 || sprite2 > MAX_SPRITES){
+                if(sprite1 < 1 || sprite2 > MAX_SPRITES){
                    printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite2, sprite2, objTypePointer->id);
                    sem_post(&SEM_GAME);
                    pthread_exit(0);
