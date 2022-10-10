@@ -321,7 +321,7 @@ int main(void){
                 menuGame.exitStatus = 1;
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
-
+                printf("Level handler creado \n");
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
