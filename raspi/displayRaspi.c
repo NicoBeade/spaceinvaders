@@ -822,27 +822,23 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
  ******************************************************************************************************************************************/
 
 void* displayRPIThread (void* argDisplayRPI){
-    
-    printf("Display RPI\n");
+
     object_t* balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
     object_t* balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
-    printf("Boo: %p\n", (((argDisplayRPI_t*)argDisplayRPI)->balasUsr));
     object_t* aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
     object_t* naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
     dcoord_t punto; //punto del display a escribir
-    printf("Display RPI 1\n");
 
     while(1){
         printf("Display RPI 2\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FRAMERATE) == 0 ){
-            printf("BOOO\n");
             sem_wait(&SEM_GAME);
-            printf("Boooo\n");
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
             object_t* aux = aliens;
             printf("Por imprimir los aliens\n");
+            objectType_t * objTypePointer;      //Variable auxiliar que almacena el objectType de cada elemento
             while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
 
                 punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
@@ -851,7 +847,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
                     printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
                 }
-                objectType_t * objTypePointer = getObjType(aliens->type);
+                objTypePointer = getObjType(aliens->type);
                 if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
                     printf("Error in displayRaspi.c, displayRPIThread function : Object type %d not found\n", aliens->type);
                     pthread_exit(0);
@@ -860,7 +856,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 int sprite2 = atoi(objTypePointer->sprite2);
                 int sprite;
                 if(sprite1 < 1 || sprite1 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s has an invalid format not found\n", objTypePointer->sprite1);
+                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s has an invalid format\n", objTypePointer->sprite1);
                    pthread_exit(0); 
                 }
                 if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien

@@ -298,20 +298,16 @@ int main(void){
                 }
                 */
                 levelCounter++;
-                printf("Ashe: %p\n", &alienList);
-                printf("Por crear move alien y move bala\n");
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 usleep(50 * U_SEC2M_SEC);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
-                printf("Move alien y bala creados\n");
 
                 #ifdef RASPI
                 argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList };
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
-                printf("Display Raspi creado\n");
 
                 #ifdef ALLEGRO
                 
@@ -323,7 +319,6 @@ int main(void){
                 menuGame.exitStatus = 1;
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
-                printf("Level handler creado \n");
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
@@ -458,7 +453,6 @@ static void* menuHandlerThread(void * data){
 static void* levelHandlerThread(void * data){
 
 	game_t * menu = (game_t *) data;
-    printf("Level Handler\n");
     while(menu -> exitStatus){
 
         if (PRESS_INPUT){//Si se presiono el joystick se debe pausar el juego.
@@ -501,10 +495,8 @@ static void* levelHandlerThread(void * data){
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    printf("Move Alien \n");
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(1){
-        printf("Move Alien 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             printf("Se ingreso a move alien\n");
@@ -518,11 +510,9 @@ void * moveAlienThread(void* argMoveAlien){
 }
 
 void * moveBalaThread(void * argMoveBala){
-    printf("Move Bala \n");
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
     while(1){
-        printf("Move Bala 1\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
             printf("Move Bala 2\n");
