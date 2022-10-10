@@ -856,12 +856,12 @@ void* displayRPIThread (void* argDisplayRPI){
                 int sprite2 = atoi(objTypePointer->sprite2);
                 int sprite;
                 if(sprite1 < 1 || sprite1 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, type %d) has an invalid format\n", objTypePointer->sprite1, sprite1, objTypePointer->type);
+                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite1, sprite1, objTypePointer->id);
                    sem_post(&SEM_GAME);
                    pthread_exit(0); 
                 }
                 if(sprite1 < 2 || sprite2 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, type %d) has an invalid format\n", objTypePointer->sprite2, sprite2, objTypePointer->type);
+                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite2, sprite2, objTypePointer->id);
                    sem_post(&SEM_GAME);
                    pthread_exit(0);
                 }
