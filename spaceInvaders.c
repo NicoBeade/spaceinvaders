@@ -192,6 +192,7 @@ void * timer(){
     while(GAME_STATUS.exitStatus){
         usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
         timerTick -= 1;
+        printf("timer tick: %d\n", timerTick);
     }
     pthread_exit(0);
 }
