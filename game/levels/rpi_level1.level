@@ -16,8 +16,8 @@ posX 5
 posY 13
 END
 
-MOTHERSHIP
-type 30
-posX -3
-posY 0
-END
+;MOTHERSHIP
+;type 30
+;posX -3
+;posY 0
+;END

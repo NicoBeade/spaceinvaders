@@ -461,7 +461,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     return 0;
 }
 
-int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
+int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras, object_t ** listMothership){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     if(platform == NULL){
         printf("Error in levelLoader.c, loadLevel function : platform cannot be NULL\n");
@@ -541,7 +541,7 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
                         return -1;
                     }    
                     objectType_t * objType = getObjType(mothership.type);        //Se recupera el tipo de nave nodriza
-                    (* listaUsr) = addObj((* listaUsr), mothership.pos, mothership.type, objType->initLives);    //Se agrega a la lista
+                    (* listMothership) = addObj((* listMothership), mothership.pos, mothership.type, objType->initLives);    //Se agrega a la lista
                 }
                 fila++;
             }

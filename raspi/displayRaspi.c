@@ -894,6 +894,7 @@ void* displayRPIThread (void* argDisplayRPI){
                     case 6:
                         drawSprite(punto,pablo2);
                         break;
+                    
                     default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
                     
                 }   
@@ -935,7 +936,8 @@ void* displayRPIThread (void* argDisplayRPI){
                 balasUsr = balasUsr -> next;
             }
             balasUsr = aux;
-
+            
+            
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
 

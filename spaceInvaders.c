@@ -280,6 +280,7 @@ int main(void){
                     }
                     levelCounter++;
                 }
+                
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
@@ -339,6 +340,7 @@ int main(void){
                 break;
 
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
+                GAME_STATUS.inGame = 0;
                 removeList(alienList); //Elimina todas las listas del heap.
                 removeList(UsrList);
                 removeList(barrerasList);
@@ -528,6 +530,7 @@ void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(GAME_STATUS.inGame){
+        printf("MoveAlien\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             sem_wait(&SEM_GAME);
@@ -554,6 +557,7 @@ void * moveBalaThread(void * argMoveBala){
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
     while(GAME_STATUS.inGame){
+        printf("MoveBala\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
 
@@ -600,6 +604,7 @@ void * colliderThread(void * argCollider){
     argCollider_t * data = (argCollider_t*)argCollider;
 
     while(GAME_STATUS.inGame){
+        printf("Collider\n");
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 ){
 

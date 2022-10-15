@@ -6,6 +6,6 @@ initLives 1
 shootProb 0
 maxBullets 0
 balaID 0
-sprite1 10
-sprite2 11
+sprite1 7
+sprite2 8
 sprite3 12
