@@ -279,7 +279,6 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
             strcat(direccionAsset, "/");    //Se agrega el slash
             strcat(direccionAsset, (*directoryStore)[archivoCounter]);  //Se agrega el final de la direccion(el nombre del archivo)
             loadAsset(direccionAsset);
-            printf("George entro %d\n", archivoCounter);
 ;        }
     }
     return 0;
@@ -449,7 +448,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     if(saltoY_found){
         levelSettings->saltoY = saltoY;
     }
-    if(checkAllFields && (xMax_found || xMin_found || yMax_found || yMin_found)){
+    if(checkAllFields == 0 && (xMax_found || xMin_found || yMax_found || yMin_found)){
         printf("Error in levelLoader.c, readLevelSettings function : Display constants found in a non-zero level\n");
         return -1;
     }
