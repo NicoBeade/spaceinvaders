@@ -286,10 +286,10 @@ int main(void){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
                 }
-                printf("George 289\n");
                 else if (levelStatus == -2){        //Si es -2 termina el juego
                     GAME_STATUS.exitStatus = 0;
                 }
+                printf("George 293\n");
                 if(alienList == NULL){
                     printf("Error in spaceInvaders.c, Couldnt start level, alienList null\n");
                     return -1;
