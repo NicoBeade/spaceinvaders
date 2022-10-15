@@ -30,7 +30,7 @@ clean:
 #													MAKEFILE ALLEGRO
 #*******************************************************************************************************************************************
 
-COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 --libs --cflags)
+COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 --libs --cflags)
 
 mainAllegro: aliensYBalas.o testDisplayAllegro.o allegro.o displayAllegro.o inputAllegro.o
 	gcc testDisplayAllegro.o aliensYBalas.o allegro.o displayAllegro.o inputAllegro.o -o testDisplayAllegro $(COMPILACION_ALLEGRO) -pthread

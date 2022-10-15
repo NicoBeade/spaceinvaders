@@ -40,28 +40,35 @@
                         uno a la lista de las balas del usuario
                         uno a la lista de las balas de los aliens
     ***************************************************************************/
+typedef struct TEXTO
+{
+    char* texto;
+    int posx;
+    int posy;
+
+    struct TEXTO * next;
+} texto_t;
 
 typedef struct 
 {
     ALLEGRO_EVENT_QUEUE ** event_queue;
 
-    object_t * objects;
-    texto_t * text;
+    object_t ** objects;
+    texto_t ** text;
 
     bool * close_display;
     bool * displayFlag;
 
 } display_data_t;
 
-typedef struct 
-{
-    char * texto;
-    int posx;
-    int posy;
+typedef struct{
 
-    texto_t * next;
-} texto_t;
+    texto_t ** toText;
+    int actualOp;
+    int nextOp;
+    menu_t * menu;
 
+} changeOptionData_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
