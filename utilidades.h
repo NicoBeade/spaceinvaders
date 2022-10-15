@@ -32,12 +32,7 @@
 //typedef enum objectTypes {DANIEL, PABLO, NICOLAS, NAVE, BARRERA, BALA_DANIEL, BALA_PABLO, BALA_NICOLAS, BALA_USUARIO, BARRERA_ESQUINA_SUP_IZQ, BARRERA_ESQUINA_SUP_DER, BARRERA_INTERNO, BARRERA_ESQUINA_INF_IZQ, BARRERA_ESQUINA_INF_DER, NONE} types_t;
 
 
-typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
-	int x;
-	int y;
-	uint8_t press;
-} keys_t;
 
 typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar
                                 //una opcion en un menu.
