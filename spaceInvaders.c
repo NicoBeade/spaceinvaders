@@ -171,7 +171,7 @@ unsigned int timerTick = 1000000;
 int velInput = 1;
 int velMenu = 20;
 int velDispAnimation = 1;
-int velInputGame = 10;
+int velInputGame = 5;
 int velAliens = 100;
 int velBalas = 10;
 /*******************************************************************************************************************************************
@@ -463,7 +463,7 @@ static void* levelHandlerThread(void * data){
         }
 
         usleep(10 * U_SEC2M_SEC);
-        if( ((timerTick % velInputGame ) == 0) && menu -> exitStatus ){
+        if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
             }
