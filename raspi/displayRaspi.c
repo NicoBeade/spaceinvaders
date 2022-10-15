@@ -1176,6 +1176,7 @@ int selectResume(void){
 int selectRestartLevel(void){
     printf("Select Restart Level\n");
     velDispAnimation = 2;
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = START_LEVEL_MENU;
     return 0;
 }

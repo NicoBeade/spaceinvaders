@@ -310,7 +310,6 @@ int main(void){
                 }
                 */
                 printf("George 306\n");
-                levelCounter++;
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
