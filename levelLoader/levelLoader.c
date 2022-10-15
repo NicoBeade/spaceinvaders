@@ -487,10 +487,12 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
     sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
     printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
+        printf("Error in levelLoader.c, loadLevel function : readLevelSettings failed at level No %d\n", levelNo);
         return -1;
     }
     else{
         if(readFile(levelFile) == -1){      //Lee el archivo
+            printf("Error in levelLoader.c, loadLevel function : readFile failed at level No %d\n", levelNo);
             if(levelNo == 0){       
                 return -1;                      //Si no se pudo leer termina la ejecucion
             }
@@ -503,7 +505,6 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
             while(decodedFile[fila].parameter[0] != 0){ //Para todos los parametros en el array
                 if(strcmp(decodedFile[fila].parameter, "ALIEN") == 0){  //Si es un alien
                     fila++;     //Se incrementa la fila
-                    
                     object_t alien;                     //Buffer del alien a leer
                     fila = readObj(fila, &alien);       //Lee el alien
                     if(fila == -1){    //Si no se pudo leer termina
