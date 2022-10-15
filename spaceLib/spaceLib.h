@@ -105,9 +105,16 @@ typedef struct{//Contiene el estado del juego.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
 }gameStatus_t;
 
+typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
+
+	int x;
+	int y;
+	uint8_t press;
+} keys_t;
+
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
 
-	  keys_t * keys;
+	keys_t * keys;
     object_t** naveUsr;
     object_t** balasUsr;
     level_setting_t* levelSettings;
