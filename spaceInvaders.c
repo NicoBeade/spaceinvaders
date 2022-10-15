@@ -462,6 +462,7 @@ static void* levelHandlerThread(void * data){
                 menu -> exitStatus = 0;//Indica que hay que salir del level Handler
         }
 
+        usleep(10 * U_SEC2M_SEC);
         if( ((timerTick % velInputGame ) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
