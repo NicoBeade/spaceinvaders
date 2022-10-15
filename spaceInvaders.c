@@ -349,13 +349,9 @@ int main(void){
                 GAME_STATUS.inGame = 0;
                 printf("Destroy level\n");
                 removeList(alienList); //Elimina todas las listas del heap.
-                usleep(10);
                 removeList(UsrList);
-                usleep(10);
                 removeList(barrerasList);
-                usleep(10);
                 removeList(balasAlien);
-                usleep(10);
                 removeList(balasUsr);
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){

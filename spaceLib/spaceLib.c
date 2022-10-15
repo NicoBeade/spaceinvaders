@@ -110,14 +110,12 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
 
 void removeList(object_t* lista){
 //Esta funcion se encarga de liberar del heap una lista completa.
-    if(lista != NULL){
-        object_t * lastObj = lista; //Se crean dos punteros auxiliares
-        object_t * nextObj;
-        do {
-            nextObj = lastObj -> next; //Se apunta al siguiente nodo
-            free(lastObj); //Se libera la memoria dinamica del nodo a eliminar
-            lastObj = nextObj;
-        } while (nextObj != NULL);
+    object_t * lastObj = lista; //Se crean dos punteros auxiliares
+    object_t * nextObj;
+    while (lastObj != NULL){
+        nextObj = lastObj -> next; //Se apunta al siguiente nodo
+        free(lastObj); //Se libera la memoria dinamica del nodo a eliminar
+        lastObj = nextObj;
     }
 }
 
