@@ -486,6 +486,7 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
         return -1;
     }
     sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
+    printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         return -1;
     }
