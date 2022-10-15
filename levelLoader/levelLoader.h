@@ -9,7 +9,7 @@
 
 #define MAX_FILE_NAME 30        //Maximo tamaño de archivo
 
-#define MAX_FILES_IN_FOLDER 30  //Maxima cantidad de archivos en una carpeta
+#define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 
 #define ASSETSDIR "game/assets"
 #define LEVELSDIR "game/levels"
