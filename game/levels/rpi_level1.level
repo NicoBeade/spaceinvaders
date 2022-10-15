@@ -3,13 +3,21 @@ type  13
 posX  5
 posY  1
 END
+
 ALIEN
 type  1
 posX  1
 posY  1
 END
+
 USUARIO
 type 40
 posX 5
 posY 13
+END
+
+MOTHERSHIP
+type 30
+posX -3
+posY 0
 END

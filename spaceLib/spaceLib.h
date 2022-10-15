@@ -101,6 +101,7 @@ typedef struct{//Contiene el estado del juego.
     unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
     unsigned char nivelActual;//Indica el nivel que esta en juego.
     unsigned char menuActual;//Indica el menu que esta corriendo.
+    unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
 }gameStatus_t;
 
@@ -137,6 +138,12 @@ typedef struct{
 #define MAX_CANT_OBJTIPOS 30 // Maxima cantidad de tipos de objetos que se pueden ingresar
 #define NONEOBJTYPEID 100	//	Tipo de objeto nulo/terminador
 
+
+//*************PANTALLAS
+enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
+
+//*************MENUES
+enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_LOST_LEVEL, START_LEVEL_MENU};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -176,7 +183,7 @@ void imprimirARRAY(void);																							//Muestra el array de tipos de o
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
 int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3);	//Añade un tipo de objeto
 int delObjType(int id);			
-void removeList(object_t* listAlien);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
+void removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

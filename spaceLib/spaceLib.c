@@ -108,6 +108,22 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
     return Obj;             //Se devuelve la lista
 }
 
+void removeList(object_t* lista){
+//Esta funcion se encarga de liberar del heap una lista completa.
+    if(lista != NULL){
+        object_t * lastObj = lista; //Se crean dos punteros auxiliares
+        object_t * nextObj;
+        do {
+            nextObj = lastObj -> next; //Se apunta al siguiente nodo
+            free(lastObj); //Se libera la memoria dinamica del nodo a eliminar
+            lastObj = nextObj;
+        } while (nextObj != NULL);
+    }
+    else{
+        printf("Err in gameLib, removeList function: Cannot delete a null list\n");
+    }
+}
+
 static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
     unsigned int nodosCant = 0;                 //Se inicializa la variable cantidad de nodos
     while(lista != NULL){                  //Si el nodo no esta vacio (no es el ultimo)
@@ -187,25 +203,9 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 }     
 
 
-void removeList(object_t* listAlien){
-/*Esta funcion se encarga de liberar del heap la lista creada de los aliens*/
-    if(listAlien != NULL){
-        object_t * lastAlien = listAlien; //Se crean dos punteros auxiliares
-        object_t * nextAlien;
-        do {
-            nextAlien = lastAlien -> next; //Se apunta al siguiente nodo
-            free(lastAlien); //Se libera la memoria dinamica del nodo a eliminar
-            lastAlien = nextAlien;
-        } while (nextAlien != NULL);
-    }
-    else{
-        printf("Err in gameLib, removeAlienList function: Cannot delete a null list\n");
-    }
-}
-
 void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
     if(*alienList == NULL){
-        printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function ""moveAlien""\n");
+        printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
     }
     object_t * auxiliar;
     *direccion = detectarDireccion(*direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
@@ -236,6 +236,8 @@ void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
         auxiliar = auxiliar -> next;
     }
 }
+
+
 //*************************************************************************************************************************************
 
 static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
@@ -441,7 +443,8 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
-                //GAME_STATUS.pantallaActual = LOST_LEVEL;
+                GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+                GAME_STATUS.menuActual = MENU_LOST_LEVEL;
             }
             listBalasEnemigas->lives -= 1;
             if(listBalasEnemigas-> lives == 0){//Si la bala debe morir

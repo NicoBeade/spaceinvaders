@@ -31,6 +31,6 @@ int loadDirectory(char * carpeta, directory_t * directoryStore);
 int loadAllAssets(char * platform, directory_t * directoryStore);
 
 int readObj(int paramNo, object_t * objOut);
-int readLevelSettings(char * file, level_setting_t * levelSettings);
+int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
 #endif

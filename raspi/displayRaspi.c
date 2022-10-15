@@ -1152,16 +1152,40 @@ int selectPlayInicio(void){
     return 0;
 }
 
-int selectLevelsInicio(void){
+int selectLevels(void){
     return 1;
 }
 
-int selectVolumeInicio(void){
+int selectVolume(void){
     return 1;
 }
 
-int selectQuitGameInicio(void){
-    GAME_STATUS.exitStatus = 0;
+int selectQuitGame(void){
+    printf("Select Quit Game\n");
+    velDispAnimation = 2;
+    GAME_STATUS.pantallaActual = QUIT_GAME;
+    return 0;
+}
+
+int selectResume(void){
+    return 0;
+}
+
+int selectRestartLevel(void){
+    printf("Select Restart Level\n");
+    velDispAnimation = 2;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
+    return 0;
+}
+
+int selectMainMenu(void){
+    printf("Select Main Menu\n");
+    velDispAnimation = 2;
+    GAME_STATUS.menuActual = MENU_INICIO;
+    return 0;
+}
+
+int selectDificulty(void){
     return 0;
 }
 

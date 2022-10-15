@@ -77,11 +77,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
 #define USER_SPEED 5    //Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta
                         //cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.
 
-//*************PANTALLAS
-enum PANTALLAS { MENU , START_LEVEL , IN_GAME, LOST_LEVEL, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
 
-//*************MENUES
-enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

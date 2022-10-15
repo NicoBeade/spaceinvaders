@@ -134,20 +134,16 @@ extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
 
 #define VEL_SHOOT_USR 15
-/*******************************************************************************************************************************************
-********************************************************************************************************************************************
 
-/*******************************************************************************************************************************************
- * 
+/******************************************************************************************************************************************* 
                 __   __               _          _      _                 ___   _         _             _            
                 \ \ / /  __ _   _ _  (_)  __ _  | |__  | |  ___   ___    / __| | |  ___  | |__   __ _  | |  ___   ___
                  \ V /  / _` | | '_| | | / _` | | '_ \ | | / -_) (_-<   | (_ | | | / _ \ | '_ \ / _` | | | / -_) (_-<
                   \_/   \__,_| |_|   |_| \__,_| |_.__/ |_| \___| /__/    \___| |_| \___/ |_.__/ \__,_| |_| \___| /__/
                                                                                                                                                             
- * 
- ******************************************************************************************************************************************/
+*******************************************************************************************************************************************/
 
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0 , .exitStatus = 1};
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0 , .inGame = 0, .exitStatus = 1};
 
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
@@ -156,17 +152,22 @@ sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
-                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
+                      {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart}, 
                       4 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectPlayInicio, selectLevelsInicio, selectVolumeInicio, selectQuitGameInicio},
-                      {"Quick Play    ", "Niveles    ", "Volumen    ", "Salir del juego    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart}, 
-                      4 , 1 , changeOption };//Estructura del menu de pausa.
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
+                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart, &halfDispRestart, &halfDispRestart, &halfDispRestart}, 
+                      7 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t* MENUES[] = {&menuInicio, &menuPausa};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
+                      {&halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
+                      6 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
@@ -175,6 +176,7 @@ int velMenu = 20;
 int velDispAnimation = 1;
 int velInputGame = 5;
 int velAliens = 100;
+int velMothership = 70;
 int velBalas = 10;
 int velCollider = 5;
 /*******************************************************************************************************************************************
@@ -266,6 +268,7 @@ int main(void){
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 sem_wait(&SEM_MENU);
+                GAME_STATUS.inGame = 1;
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
@@ -278,9 +281,6 @@ int main(void){
                     levelCounter++;
                 }
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-                vector_t pos;
-                pos.x = levelSettings.disInicialUsrX;
-                pos.y = levelSettings.disInicialUsrY;
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
@@ -301,6 +301,7 @@ int main(void){
                     return -1;
                 }
                 */
+
                 levelCounter++;
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
@@ -337,9 +338,31 @@ int main(void){
 
                 break;
 
-            case LOST_LEVEL://Entra a este caso cuando se pierde un nivel.
-                //Aca hay que liberar del heap todas las listas y parar los threads que ejecutan el juego.
-                
+            case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
+                removeList(alienList); //Elimina todas las listas del heap.
+                removeList(UsrList);
+                removeList(barrerasList);
+                removeList(balasAlien);
+                removeList(balasUsr);
+
+                if(GAME_STATUS.menuActual == START_LEVEL_MENU){
+                    GAME_STATUS.pantallaActual = START_LEVEL;
+                }
+                else{
+                    GAME_STATUS.pantallaActual = MENU; //Se pasa al menu correspondiente.
+                }
+                break;
+
+            case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
+                removeList(alienList); //Elimina todas las listas del heap.
+                removeList(UsrList);
+                removeList(barrerasList);
+                removeList(balasAlien);
+                removeList(balasUsr);
+
+                GAME_STATUS.exitStatus = 0;
+
+                break;
 
             default:
                 break;
@@ -504,12 +527,20 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    while(1){
+    while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             sem_wait(&SEM_GAME);
 
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
+
+            sem_post(&SEM_GAME);
+        }
+        if( (timerTick % velMothership) == 0){
+
+            sem_wait(&SEM_GAME);
+
+            
 
             sem_post(&SEM_GAME);
         }
@@ -522,7 +553,7 @@ void * moveBalaThread(void * argMoveBala){
     //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
-    while(1){
+    while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
 
@@ -547,6 +578,7 @@ void * moveBalaThread(void * argMoveBala){
             sem_post(&SEM_GAME);
         } 
     }
+    pthread_exit(0);
 }
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -567,14 +599,15 @@ void * colliderThread(void * argCollider){
 
     argCollider_t * data = (argCollider_t*)argCollider;
 
-    while(1){
+    while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 ){
-            printf("Dentro del thread collider\n");
+
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
 
         }
     }
+    pthread_exit(0);
 }
  /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

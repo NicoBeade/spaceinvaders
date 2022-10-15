@@ -21,8 +21,9 @@
 #include <stdio.h>
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
-#include <semaphore.h>
+#include "../spaceLib/spaceLib.h"
 #include "../utilidades.h"
+#include <semaphore.h>
 
 /*******************************************************************************************************************************************
  * 
@@ -167,9 +168,13 @@ void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);
-int selectLevelsInicio(void);
-int selectVolumeInicio(void);
-int selectQuitGameInicio(void);
+int selectLevels(void);
+int selectVolume(void);
+int selectQuitGame(void);
+int selectResume(void);
+int selectRestartLevel(void);
+int selectMainMenu(void);
+int selectDificulty(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
