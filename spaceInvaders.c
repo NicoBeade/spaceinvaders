@@ -280,12 +280,13 @@ int main(void){
                     }
                     levelCounter++;
                 }
-
+                printf("George 283\n");
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
                 }
+                printf("George 289\n");
                 else if (levelStatus == -2){        //Si es -2 termina el juego
                     GAME_STATUS.exitStatus = 0;
                 }
@@ -302,7 +303,7 @@ int main(void){
                     return -1;
                 }
                 */
-
+                printf("George 306\n");
                 levelCounter++;
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
@@ -528,9 +529,10 @@ static void* levelHandlerThread(void * data){
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
+    printf("MoveAlien\n");
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(GAME_STATUS.inGame){
-        printf("MoveAlien\n");
+        
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             sem_wait(&SEM_GAME);
@@ -543,7 +545,9 @@ void * moveAlienThread(void* argMoveAlien){
 
             sem_wait(&SEM_GAME);
 
+            /*
             
+            */
 
             sem_post(&SEM_GAME);
         }
@@ -555,9 +559,10 @@ void * moveAlienThread(void* argMoveAlien){
 void * moveBalaThread(void * argMoveBala){
     //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
+    printf("MoveBala\n");
 
     while(GAME_STATUS.inGame){
-        printf("MoveBala\n");
+        
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
 
@@ -600,11 +605,12 @@ void * moveBalaThread(void * argMoveBala){
 
 void * colliderThread(void * argCollider){
     //Este thread se utiliza para detectar si hubo colisiones.
+    printf("Collider\n");
 
     argCollider_t * data = (argCollider_t*)argCollider;
 
     while(GAME_STATUS.inGame){
-        printf("Collider\n");
+        
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 ){
 
