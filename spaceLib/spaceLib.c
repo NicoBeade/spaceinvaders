@@ -430,15 +430,12 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
         printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
+        return;
     }
     object_t * listBalasEnemigas = *balasEnemigas;
-    if(balasEnemigas == NULL){
-        printf("Err in spaceLib.c balasEnemigas cannot be NULL in collider.\n");
-    }
+
     object_t * listBalasUsr = *balasUsr;
-    if(balasUsr == NULL){
-        printf("Err in spaceLib.c balasUsr cannot be NULL in collider.\n");
-    }
+
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
     printf("Chequeando balas enemigas\n");
@@ -452,6 +449,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 object_t * balaADestruir = listBalasEnemigas;
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
                 *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
+                listBalasEnemigas = *balasEnemigas;
             }
             else{//Si la bala no debe morir
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
@@ -506,6 +504,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
     objectType_t * objType = getObjType(objectType);
     if(objType == NULL){
+        printf("Esta saliendo de la funcion de collision pq el objtype es null");
         return -1;
     }
     int objectAncho = objType->ancho;//Obtiene la hitbox del objeto
@@ -513,6 +512,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
     objectType_t * balType = getObjType(balaType);
     if(balType == NULL){
+        printf("Esta saliendo de la funcion de collision pq el baltype es null");
         return -1;
     }
     int balaAncho = balType->ancho;//Obtiene la hitbox de la bala
