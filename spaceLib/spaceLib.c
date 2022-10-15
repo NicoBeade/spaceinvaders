@@ -425,23 +425,23 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
-        printf("Err in spaceLib.c alienList cannot be NULL in collider.");
+        printf("Err in spaceLib.c alienList cannot be NULL in collider.\n");
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
-        printf("Err in spaceLib.c usrList cannot be NULL in collider.");
+        printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
     }
     object_t * listBalasEnemigas = *balasEnemigas;
-    if(listBalasEnemigas == NULL){
-        printf("Err in spaceLib.c balasEnemigas cannot be NULL in collider.");
+    if(balasEnemigas == NULL){
+        printf("Err in spaceLib.c balasEnemigas cannot be NULL in collider.\n");
     }
     object_t * listBalasUsr = *balasUsr;
-    if(listBalasUsr == NULL){
-        printf("Err in spaceLib.c balasUsr cannot be NULL in collider.");
+    if(balasUsr == NULL){
+        printf("Err in spaceLib.c balasUsr cannot be NULL in collider.\n");
     }
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
-
+        printf("Chequeando balas enemigas \n");
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
@@ -464,7 +464,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }
 
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
-
+        printf("Chequeando balas del usuario\n");
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
                 printf("Golpeo un alien\n");
