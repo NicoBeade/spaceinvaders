@@ -269,7 +269,7 @@ int main(void){
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets("rpi", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
+                    loadAllAssets(&(platform[0]), &carpetaAssets);   
                     int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
@@ -281,7 +281,6 @@ int main(void){
                 vector_t pos;
                 pos.x = levelSettings.disInicialUsrX;
                 pos.y = levelSettings.disInicialUsrY;
-                UsrList = addObj(UsrList, pos,2, 3);  //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
@@ -338,8 +337,9 @@ int main(void){
 
                 break;
 
-            case DESTROY_LEVEL://Entra a este caso cuando se debe salir de un nivel, como cuando el usuario pierde o se desea volver al menu de inicio.
+            case LOST_LEVEL://Entra a este caso cuando se pierde un nivel.
                 //Aca hay que liberar del heap todas las listas y parar los threads que ejecutan el juego.
+                
 
             default:
                 break;

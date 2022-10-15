@@ -152,8 +152,7 @@ typedef struct{
 
 //*****************ALIENS
 object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
-object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
-void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.                                                         
+object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.                                                     
 void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 
@@ -176,7 +175,8 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
 int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3);	//Añade un tipo de objeto
-int delObjType(int id);																								//Elimina un tipo de objeto
+int delObjType(int id);			
+void removeList(object_t* listAlien);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
