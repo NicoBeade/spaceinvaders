@@ -488,7 +488,8 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             }
         }
         if(collition){//Si no hubo colision
-            listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+            printf("Apunta al siguiente alien\n");
         }
         collition = 1;
     }
