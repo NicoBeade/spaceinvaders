@@ -131,7 +131,7 @@ extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
 
-#define VEL_SHOOT_USR 20
+#define VEL_SHOOT_USR 15
 /*******************************************************************************************************************************************
 ********************************************************************************************************************************************
 
@@ -530,12 +530,10 @@ void * moveBalaThread(void * argMoveBala){
             if(*(data -> balasEnemigas) != NULL){
 
                 (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
-                printf("MoveBala \n");
             }
             if(*(data -> balasUsr) != NULL){
 
                 (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
-                printf("MoveBala \n");
             }
             sem_post(&SEM_GAME);
         } 
