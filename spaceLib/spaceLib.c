@@ -441,7 +441,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
-
+    printf("Chequeando balas enemigas\n");
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
@@ -464,7 +464,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }
 
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
-
+    printf("Chequeando balas del usuario\n");
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
                 printf("Golpeo un alien\n");
@@ -497,6 +497,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
         collition = 1;
     }
+    printf("Esta saliendo del thread del collider\n");
 }
 
 

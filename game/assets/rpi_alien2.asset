@@ -1,11 +1,11 @@
-id 1
+id 13
 vel 2    
 ancho 4
 alto 3
-initLives 5
+initLives 1
 shootProb 6
 maxBullets 7
 balaID 20
-sprite1 1
-sprite2 2
+sprite1 3
+sprite2 4
 sprite3 4
