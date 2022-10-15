@@ -420,7 +420,7 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
 void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
-    char collition = 1;//Flag para detectar colisiones.
+    char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
@@ -487,11 +487,12 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listAliens = listAliens->next;
             }
         }
-        if(!collition){//Si no hubo colision
+        if(collition){//Si no hubo colision
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
         collition = 1;
     }
+    
 
     *alienList = listAliens;
     *usrList = listUsr;
