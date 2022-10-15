@@ -472,15 +472,17 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listAliens->lives -= 1;
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
                     *alienList = destroyObj(*alienList, listAliens);
+                    listAliens = *alienList;
                 }
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir
                     object_t * balaADestruir = listBalasUsr;
                     listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
-                    *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
+                    *balasUsr = destroyObj(*balasUsr, balaADestruir);
+                    listBalasUsr = *balasUsr;
                 }
                 else{//Si la bala no debe morir
-                listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
                 }
             }
             else{//Si no golpeo a ese alien chequea el siguiente
@@ -493,7 +495,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
         collition = 1;
     }
-    
+    printf("Esta saliendo del collider\n");
 }
 
 
