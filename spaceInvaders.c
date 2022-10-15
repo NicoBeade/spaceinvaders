@@ -570,7 +570,7 @@ void * colliderThread(void * argCollider){
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 ){
-
+            printf("Dentro del thread collider\n");
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
 
         }

@@ -423,11 +423,12 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     char collition = 1;//Flag para detectar colisiones.
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
+    printf("Collider 1\n");
     object_t * listAliens = *alienList;
     object_t * listUsr = *usrList;
     object_t * listBalasEnemigas = *balasEnemigas;
     object_t * listBalasUsr = *balasUsr;
-
+    printf("Collider 2\n");
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
@@ -450,7 +451,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
     }
-    
+    printf("Se chequearon las colisiones de las balas enemigas\n");
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
 
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
