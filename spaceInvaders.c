@@ -274,7 +274,7 @@ int main(void){
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets(&(platform[0]), &carpetaAssets);   
+                    loadAllAssets("rpi", &carpetaAssets);   
                     printf("George 278\n");
                     int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                     printf("George 280\n");
