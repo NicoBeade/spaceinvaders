@@ -546,8 +546,8 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
                     objectType_t * objType = getObjType(mothership.type);        //Se recupera el tipo de nave nodriza
                     (* listMothership) = addObj((* listMothership), mothership.pos, mothership.type, objType->initLives);    //Se agrega a la lista
                 }
-                fila++;
                 */
+                fila++;
             }
         }
     }
