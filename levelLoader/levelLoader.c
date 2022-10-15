@@ -488,6 +488,7 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
     sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
     printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
+        printf("LEVEL SETTING ATRODEN YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings->yMax, levelSettings->yMin, levelSettings->xMax, levelSettings->xMin);
         printf("Error in levelLoader.c, loadLevel function : readLevelSettings failed at level No %d\n", levelNo);
         return -1;
     }
