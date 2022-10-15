@@ -203,26 +203,6 @@ void removeAlienList(object_t* listAlien){
     }
 }
 
-//******************************************    Thread moveAlien    ***********************************************************
-/*
-void * moveAlienThread(void* argMoveAlien){
-    Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    
-    int static direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    while(1){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velAliens) == 0 ){
-
-            sem_wait(&SEM_GAME);
-
-            moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  *(((argMoveAlien_t*)argMoveAlien) -> alienList), direccion);
-
-            sem_post(&SEM_GAME);
-        }
-    }
-    pthread_exit(0);
-}
-*/
 void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
     if(*alienList == NULL){
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function ""moveAlien""\n");
@@ -340,30 +320,6 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
                     |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   |___/ \__,_| |_| \__,_|                                                                                   
  * 
  ******************************************************************************************************************************************/
-/*
-void * moveBalaThread(void * argMoveBala){
-
-    while(1){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velBalas) == 0 ){
-            sem_wait(&SEM_GAME);
-            object_t * balas = NULL;
-            //printf("%d   %d", Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala));
-            //printf("%p   ", BALAS_ENEMIGAS_L(argMoveBala));.
-            //printf("GEORGE %p   ",  BALAS_ENEMIGAS_L(argMoveBala));
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala( BALAS_ENEMIGAS_L(argMoveBala), NICOLAS, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadNicolas);
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_PABLO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadPablo);
-            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            BALAS_ENEMIGAS_L(argMoveBala) = moveBala(BALAS_ENEMIGAS_L(argMoveBala), BALA_DANIEL, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadDaniel);
-            //printf("%p   ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            BALAS_USR_L(argMoveBala) = moveBala(BALAS_USR_L(argMoveBala), BALA_USUARIO, Y_MAX_L(argMoveBala), Y_MIN_L(argMoveBala), ((argMoveBala_t*) argMoveBala) -> velocidadUsr);
-            //printf("%p        ", ((argMoveBala_t*) argMoveBala) -> balasEnemigas);
-            //printf("%p\n", ((argMoveBala_t*) argMoveBala) -> balasUsr);
-            sem_post(&SEM_GAME);
-        } 
-    }
-}
-*/
 
 object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting){      //Mueve las balas de un tipo especifico.
     object_t * Bala = ListBalasEnemy;
@@ -461,7 +417,6 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-/*
 void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
@@ -559,7 +514,6 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
     return interseccionX && interseccionY;//Solo hay interseccion si se intersectan en X e Y.
 }
-*/
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

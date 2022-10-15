@@ -174,6 +174,7 @@ int velDispAnimation = 1;
 int velInputGame = 5;
 int velAliens = 100;
 int velBalas = 10;
+int velCollider = 5;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -218,7 +219,7 @@ int main(void){
     disp_init();
     joy_init();
 
-    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT;
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT, colliderT;
 
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
@@ -300,10 +301,13 @@ int main(void){
                 }
                 */
                 levelCounter++;
+                //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
+                argCollider_t argCollider = { &levelSettings, &UsrList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
+                pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
                 #ifdef RASPI
                 argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList };
@@ -480,7 +484,8 @@ static void* levelHandlerThread(void * data){
 
     pthread_exit(0);
 }
-
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
 
 
 /*******************************************************************************************************************************************
@@ -489,7 +494,7 @@ static void* levelHandlerThread(void * data){
              _ __    ___  __ __  ___    /_\   | | (_)  ___   _ _      _  _     _ __    ___  __ __  ___  | _ )  __ _  | |  __ _ 
             | '  \  / _ \ \ V / / -_)  / _ \  | | | | / -_) | ' \    | || |   | '  \  / _ \ \ V / / -_) | _ \ / _` | | | / _` |
             |_|_|_| \___/  \_/  \___| /_/ \_\ |_| |_| \___| |_||_|    \_, |   |_|_|_| \___/  \_/  \___| |___/ \__,_| |_| \__,_|
-                                                                    |__/                                                                                                                                                                                                                                                   
+                                                                      |__/                                                                                                                                                                                                                                                   
  * 
  ******************************************************************************************************************************************/
 
@@ -510,7 +515,9 @@ void * moveAlienThread(void* argMoveAlien){
     pthread_exit(0);
 }
 
+//******************************************    Thread moveBala    **********************************************************
 void * moveBalaThread(void * argMoveBala){
+    //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
     while(1){
@@ -539,3 +546,33 @@ void * moveBalaThread(void * argMoveBala){
         } 
     }
 }
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+
+/*******************************************************************************************************************************************
+ * 
+                                              ___         _   _   _      _             
+                                             / __|  ___  | | | | (_)  __| |  ___   _ _ 
+                                            | (__  / _ \ | | | | | | / _` | / -_) | '_|
+                                             \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
+ * 
+ ******************************************************************************************************************************************/
+
+void * colliderThread(void * argCollider){
+    //Este thread se utiliza para detectar si hubo colisiones.
+
+    argCollider_t * data = (argCollider_t*)argCollider;
+
+    while(1){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velCollider) == 0 ){
+
+            collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
+
+        }
+    }
+}
+ /*******************************************************************************************************************************************
+*******************************************************************************************************************************************/

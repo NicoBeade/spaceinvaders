@@ -153,9 +153,7 @@ typedef struct{
 //*****************ALIENS
 object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.
-void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.
-
-//void * moveAlienThread(void* alien);                                                                //Se encarga de modificar la posicion de los aliens.
+void removeAlienList(object_t* listAlien);                                               //Elimina de heap la lista creada.                                                         
 void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 
@@ -165,11 +163,14 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj);
 object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting);
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting);
 
-//void * moveBalaThread(void * argMoveBala);
 
 //*****************USUARIO
 void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int direccion); //Se encarga de actualizar la posicion de la nave del usuari
 
+
+//*****************COLLIDER
+void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr); //Recorre todas las listas para chequear si hubo colisiones
+int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType); //Detecta si hubo colision entre dos objetos.
 
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
