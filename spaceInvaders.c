@@ -130,6 +130,8 @@ extern halfDisp_t halfDispAlienSpaceInvaders;
 extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
+
+#define VEL_SHOOT_USR 10
 /*******************************************************************************************************************************************
 ********************************************************************************************************************************************
 
@@ -170,7 +172,7 @@ int velInput = 1;
 int velMenu = 20;
 int velDispAnimation = 1;
 int velInputGame = 10;
-int velAliens = 100;\
+int velAliens = 100;
 int velBalas = 10;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -461,8 +463,8 @@ static void* levelHandlerThread(void * data){
         }
 
         usleep(10 * U_SEC2M_SEC);
-        if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
-            if (ARRIBA_INPUT){//Dispara una bala
+        if( ((timerTick % velInputGame ) == 0) && menu -> exitStatus ){
+            if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
             }
 
@@ -499,7 +501,7 @@ void * moveAlienThread(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 ){
             sem_wait(&SEM_GAME);
-            printf("Se ingreso a move alien\n");
+
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
@@ -514,8 +516,8 @@ void * moveBalaThread(void * argMoveBala){
     while(1){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velBalas) == 0 ){
-            printf("Move Bala 2\n");
-            //sem_wait(&SEM_GAME);
+
+            sem_wait(&SEM_GAME);
 
             if(*(data -> alienList) != NULL){
 
@@ -535,7 +537,7 @@ void * moveBalaThread(void * argMoveBala){
                 (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
                 printf("MoveBala \n");
             }
-            //sem_post(&SEM_GAME);
+            sem_post(&SEM_GAME);
         } 
     }
 }
