@@ -412,6 +412,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
+    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + distInicialX_found + distInicialY_found + anchoUsr_found + margenX_found + margenY_found + disInicialUsrX_found + disInicialUsrY_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
     if(anchoUsr_found){
         levelSettings->anchoUsr = anchoUsr;
     }
