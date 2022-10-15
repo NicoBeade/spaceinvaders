@@ -398,7 +398,7 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
 /* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
     la posicion de la nave del usuario.
 */
-    if( direccion == DERECHA && (naveUsuario -> pos.x != levelSettings->xMax - levelSettings->anchoUsr) ){//Si se tiene que mover para la derecha y no llego al limite
+    if( direccion == DERECHA && (naveUsuario -> pos.x != levelSettings->xMax - levelSettings->anchoUsr + 1) ){//Si se tiene que mover para la derecha y no llego al limite
         naveUsuario -> pos.x += levelSettings->desplazamientoUsr;//Desplaza la nave
     }
     else if( direccion == IZQUIERDA && (naveUsuario -> pos.x != levelSettings->xMin) ){//Si se tiene que mover para la izquierda y no llego al limite
