@@ -526,6 +526,8 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
     int interseccionX = maxXBala >= minXObj && minXBala <= maxXObj;//Detecta si se intersectan
     int interseccionY = maxYBala >= minYObj && minYBala <= maxYObj;
 
+    printf("Esta saliendo de la funcion de collision\n");
+
     return interseccionX && interseccionY;//Solo hay interseccion si se intersectan en X e Y.
 }
 /*******************************************************************************************************************************************
