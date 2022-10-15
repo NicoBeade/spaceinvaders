@@ -302,7 +302,7 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
     return 0;
 }
 
-int readLevelSettings(char * file, level_setting_t * levelSettings){
+int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings){
     if(readFile(file) != 0){ //Si no se pudo leer correctamente
         return -1;      //Devuelve error
     }
@@ -408,26 +408,56 @@ int readLevelSettings(char * file, level_setting_t * levelSettings){
             desplazamientoUsr_found++;
         }
     }
-    if(xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || anchoUsr_found != 1 || margenX_found != 1 || margenY_found != 1 || disInicialUsrX_found != 1 || disInicialUsrY_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1){   //Si no se encontraron todos los campos devuelve error
-        printf("Error in levelLoader.c, readLevel function : \"%s\" has missing parameters\n", file);
+    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || anchoUsr_found != 1 || margenX_found != 1 || margenY_found != 1 || disInicialUsrX_found != 1 || disInicialUsrY_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
+        printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    levelSettings->anchoUsr = anchoUsr;
-    levelSettings->desplazamientoUsr = desplazamientoUsr;
-    levelSettings->desplazamientoX = desplazamientoX;
-    levelSettings->desplazamientoY = desplazamientoY;
-    levelSettings->disInicialUsrX = disInicialUsrX;
-    levelSettings->disInicialUsrY = disInicialUsrY;
-    levelSettings->distInicialX = distInicialX;
-    levelSettings->distInicialY = distInicialY;
-    levelSettings->margenX = margenX;
-    levelSettings->margenY = margenY;
-    levelSettings->saltoX = saltoX;
-    levelSettings->saltoY = saltoY;
-    levelSettings->xMax = xMax;
-    levelSettings->xMin = xMin;
-    levelSettings->yMax = yMax;
-    levelSettings->yMin = yMin;
+    if(anchoUsr_found){
+        levelSettings->anchoUsr = anchoUsr;
+    }
+    if(desplazamientoUsr_found){
+        levelSettings->desplazamientoUsr = desplazamientoUsr;
+    }
+    if(desplazamientoX_found){
+        levelSettings->desplazamientoX = desplazamientoX;
+    }
+    if(desplazamientoY_found){
+        levelSettings->desplazamientoY = desplazamientoY;
+    }
+    if(disInicialUsrX_found){
+        levelSettings->disInicialUsrX = disInicialUsrX;
+    }
+    if(disInicialUsrY_found){
+        levelSettings->disInicialUsrY = disInicialUsrY;
+    }
+    if(distInicialX_found){
+        levelSettings->distInicialX = distInicialX;
+    }
+    if(distInicialY_found){
+        levelSettings->distInicialY = distInicialY;
+    }
+    if(margenX_found){
+        levelSettings->margenX = margenX;
+    }
+    if(margenY_found){
+        levelSettings->margenY = margenY;
+    }
+    if(saltoX_found){
+        levelSettings->saltoX = saltoX;
+    }
+    if(saltoY_found){
+        levelSettings->saltoY = saltoY;
+    }
+    if(checkAllFields && (xMax_found || xMin_found || yMax_found || yMin_found)){
+        printf("Error in levelLoader.c, readLevelSettings function : Display constants found in a non-zero level\n");
+        return -1;
+    }
+    else{
+        levelSettings->xMax = xMax;
+        levelSettings->xMin = xMin;
+        levelSettings->yMax = yMax;
+        levelSettings->yMin = yMin;
+    }
     return 0;
 }
 
@@ -448,13 +478,14 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
     if(levelNo > MAX_LEVEL){
         printf("Error in levelLoader.c, loadLevel function : level number reached max\n");
         return -1;
+
     }
-    if(levelSettings == NULL && levelNo){
+{
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
     sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
-    if(levelNo == 0 && readLevelSettings(levelFile,  levelSettings) == -1){ //Si el nivel es el cero, carga el levelSettings
+    if(readLevelSettings(!levelNo, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         return -1;
     }
     else{
@@ -491,15 +522,26 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
                     objectType_t * objType = getObjType(barrera.type);        //Se recupera el tipo de barrera
                     (* listaBarreras) = addObj((* listaBarreras), barrera.pos, barrera.type, objType->initLives);    //Se agrega a la lista
                 }
-                else if(strcmp(decodedFile[fila].parameter, "USUARIO") == 0){  //Si es una barrera
+                else if(strcmp(decodedFile[fila].parameter, "USUARIO") == 0){  //Si es el usuario
                     fila++;     //Se incrementa la fila
-                    object_t usuario;                     //Buffer de la barrera a leer
+                    object_t usuario;                     //Buffer del usuario a leer
                     fila = readObj(fila, &usuario);       //Lee el usuario
                     if(fila == -1){    //Si no se pudo leer termina
                         return -1;
                     }    
-                    objectType_t * objType = getObjType(usuario.type);        //Se recupera el tipo de barrera
+                    objectType_t * objType = getObjType(usuario.type);        //Se recupera el tipo de usuario
                     (* listaUsr) = addObj((* listaUsr), usuario.pos, usuario.type, objType->initLives);    //Se agrega a la lista
+                }
+
+                else if(strcmp(decodedFile[fila].parameter, "MOTHERSHIP") == 0){  //Si es la nave nodria
+                    fila++;     //Se incrementa la fila
+                    object_t mothership;                     //Buffer de la nave nodriza a leer
+                    fila = readObj(fila, &mothership);       //Lee la nave nodriza
+                    if(fila == -1){    //Si no se pudo leer termina
+                        return -1;
+                    }    
+                    objectType_t * objType = getObjType(mothership.type);        //Se recupera el tipo de nave nodriza
+                    (* listaUsr) = addObj((* listaUsr), mothership.pos, mothership.type, objType->initLives);    //Se agrega a la lista
                 }
                 fila++;
             }
