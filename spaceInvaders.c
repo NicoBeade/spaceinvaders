@@ -274,8 +274,10 @@ int main(void){
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets("rpi", &carpetaAssets);   
+                    loadAllAssets(&(platform[0]), &carpetaAssets);   
+                    printf("George 278\n");
                     int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+                    printf("George 280\n");
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
                         return -1;
