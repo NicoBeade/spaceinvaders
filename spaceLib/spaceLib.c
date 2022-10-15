@@ -423,15 +423,15 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     char collition = 1;//Flag para detectar colisiones.
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
-    printf("Collider 1\n");
+    //printf("Collider 1\n");
     object_t * listAliens = *alienList;
-    printf("AlienList: %p", listAliens);
+    //printf("AlienList: %p\n", listAliens);
     object_t * listUsr = *usrList;
-    printf("usrList: %p", usrList);
+    //printf("usrList: %p\n", usrList);
     object_t * listBalasEnemigas = *balasEnemigas;
-    printf("BalasEnemigas: %p", balasEnemigas);
+    //printf("BalasEnemigas: %p\n", balasEnemigas);
     object_t * listBalasUsr = *balasUsr;
-    printf("BalasUsr: %p", balasUsr);
+    //printf("BalasUsr: %p\n", balasUsr);
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
@@ -460,6 +460,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
+                printf("Golpeo un alien\n");
                 collition = 0;
                 listAliens->lives -= 1;
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
