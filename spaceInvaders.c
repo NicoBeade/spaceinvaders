@@ -111,6 +111,8 @@ void * moveAlienThread(void* argMoveAlien);
 
 void * moveBalaThread(void * argMoveBala);
 
+void * colliderThread(void * argCollider);
+
 static void* menuHandlerThread(void * data);
 
 static void* levelHandlerThread(void * data);
