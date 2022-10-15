@@ -119,9 +119,6 @@ void removeList(object_t* lista){
             lastObj = nextObj;
         } while (nextObj != NULL);
     }
-    else{
-        printf("Err in gameLib, removeList function: Cannot delete a null list\n");
-    }
 }
 
 static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj

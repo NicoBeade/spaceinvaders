@@ -347,6 +347,7 @@ int main(void){
 
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
+                printf("Destroy level\n");
                 removeList(alienList); //Elimina todas las listas del heap.
                 removeList(UsrList);
                 removeList(barrerasList);
