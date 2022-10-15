@@ -423,15 +423,22 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     char collition = 1;//Flag para detectar colisiones.
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
-    //printf("Collider 1\n");
     object_t * listAliens = *alienList;
-    //printf("AlienList: %p\n", listAliens);
+    if(listAliens == NULL){
+        printf("Err in spaceLib.c alienList cannot be NULL in collider.");
+    }
     object_t * listUsr = *usrList;
-    //printf("usrList: %p\n", usrList);
+    if(listUsr == NULL){
+        printf("Err in spaceLib.c usrList cannot be NULL in collider.");
+    }
     object_t * listBalasEnemigas = *balasEnemigas;
-    //printf("BalasEnemigas: %p\n", balasEnemigas);
+    if(listBalasEnemigas == NULL){
+        printf("Err in spaceLib.c balasEnemigas cannot be NULL in collider.");
+    }
     object_t * listBalasUsr = *balasUsr;
-    //printf("BalasUsr: %p\n", balasUsr);
+    if(listBalasUsr == NULL){
+        printf("Err in spaceLib.c balasUsr cannot be NULL in collider.");
+    }
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
@@ -455,7 +462,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
     }
-    printf("Se chequearon las colisiones de las balas enemigas\n");
+
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
 
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
@@ -485,7 +492,11 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
         collition = 1;
     }
-    printf("Se chequearon las colisiones de las balas del usuario\n");
+
+    *alienList = listAliens;
+    *usrList = listUsr;
+    *balasEnemigas = listBalasEnemigas;
+    *balasUsr = listBalasUsr;
 }
 
 
