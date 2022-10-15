@@ -224,10 +224,10 @@ int main(void){
     joy_init();
 
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT, colliderT;
-
+    
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
-
+    printf("George 230\n");
     pthread_create(&timerT, NULL, timer, NULL);
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
@@ -247,7 +247,7 @@ int main(void){
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
-
+    printf("George 2250\n");
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -267,8 +267,10 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
+                printf("George 289\n");
                 sem_wait(&SEM_MENU);
                 GAME_STATUS.inGame = 1;
+                printf("George 274\n");
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO

@@ -937,7 +937,7 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             balasUsr = aux;
             
-            
+
             disp_update(); //se transfiere del buffer al display de la RPI
             sem_post(&SEM_GAME);
 
