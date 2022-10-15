@@ -279,7 +279,8 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
             strcat(direccionAsset, "/");    //Se agrega el slash
             strcat(direccionAsset, (*directoryStore)[archivoCounter]);  //Se agrega el final de la direccion(el nombre del archivo)
             loadAsset(direccionAsset);
-        }
+            printf("George entro %d\n", archivoCounter);
+;        }
     }
     return 0;
 }
