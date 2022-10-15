@@ -25,6 +25,7 @@
  #ifndef SPACELIB_H
  #define SPACELIB_H
 
+#include <stdint.h>
 
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
