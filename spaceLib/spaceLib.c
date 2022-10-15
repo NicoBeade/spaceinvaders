@@ -519,14 +519,14 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
     int balaAlto = balType->alto;
     
     int minXBala = balaPos.x;//Obtiene los extremos de la bala
-    int maxXBala = minXBala + balaAncho;
+    int maxXBala = minXBala + balaAncho - 1;
     int minYBala = balaPos.y;
-    int maxYBala = minYBala + balaAlto;
+    int maxYBala = minYBala + balaAlto - 1;
 
     int minXObj = objectPos.x;//Obtiene los extremos del objeto
-    int maxXObj = minXObj + objectAncho;
+    int maxXObj = minXObj + objectAncho - 1;
     int minYObj = objectPos.y;
-    int maxYObj = minYObj + objectAlto;
+    int maxYObj = minYObj + objectAlto - 1;
 
     int interseccionX = maxXBala >= minXObj && minXBala <= maxXObj;//Detecta si se intersectan
     int interseccionY = maxYBala >= minYObj && minYBala <= maxYObj;
