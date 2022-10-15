@@ -849,7 +849,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 punto.y=aliens->pos.y;
 
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la nave/n"); //chequeo de pixel a imprimir
+                    printf("Fuera de rango de impresion en la nave\n"); //chequeo de pixel a imprimir
                 }
                 objTypePointer = getObjType(aliens->type);
                 if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
@@ -913,7 +913,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
                 punto.y=balasEnemigas->pos.y;
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la nave/n"); //chequea de pixel a imprimir
+                    printf("Fuera de rango de impresion en la bala enemiga \n"); //chequea de pixel a imprimir
                 }
                 else{   
                     disp_write(punto,D_ON);
@@ -928,7 +928,7 @@ void* displayRPIThread (void* argDisplayRPI){
                 punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
                 punto.y=balasUsr->pos.y;
                 if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la nave/n"); //chequea de pixel a imprimir
+                    printf("Fuera de rango de impresion en la bala aliada\n"); //chequea de pixel a imprimir
                 }
                 else{   
                     disp_write(punto,D_ON);
