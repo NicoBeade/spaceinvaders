@@ -280,7 +280,7 @@ int main(void){
                     }
                     levelCounter++;
                 }
-                
+
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
