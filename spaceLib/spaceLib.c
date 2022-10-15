@@ -460,7 +460,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
     }
-
+    printf("Vidas del usuario: %d\n", listUsr->lives != 0);
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
     printf("Chequeando balas del usuario\n");
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
