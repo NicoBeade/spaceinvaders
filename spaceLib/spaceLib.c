@@ -493,11 +493,6 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         collition = 1;
     }
     
-
-    *alienList = listAliens;
-    *usrList = listUsr;
-    *balasEnemigas = listBalasEnemigas;
-    *balasUsr = listBalasUsr;
 }
 
 
