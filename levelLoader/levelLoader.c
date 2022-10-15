@@ -453,7 +453,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
         printf("Error in levelLoader.c, readLevelSettings function : Display constants found in a non-zero level\n");
         return -1;
     }
-    else{
+    else if(checkAllFields){
         levelSettings->xMax = xMax;
         levelSettings->xMin = xMin;
         levelSettings->yMax = yMax;
