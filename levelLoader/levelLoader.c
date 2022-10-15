@@ -464,6 +464,9 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
 
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
+    int level0True =  levelNo? 0 : 1;
+    int level0True = levelNo? 0:1
+        ;
     if(platform == NULL){
         printf("Error in levelLoader.c, loadLevel function : platform cannot be NULL\n");
         return -1;
@@ -479,19 +482,17 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
     if(levelNo > MAX_LEVEL){
         printf("Error in levelLoader.c, loadLevel function : level number reached max\n");
         return -1;
-
-    }
-{
+    if(levelSettings == NULL && levelNo){
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
     sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
-    if(readLevelSettings(!levelNo, levelFile,  levelSettings) == -1){ //Carga el levelSettings
+    if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         return -1;
     }
     else{
         if(readFile(levelFile) == -1){      //Lee el archivo
-            if(levelNo == 0){
+            if(levelNo == 0){       
                 return -1;                      //Si no se pudo leer termina la ejecucion
             }
             else{
