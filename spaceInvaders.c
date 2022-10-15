@@ -247,7 +247,7 @@ int main(void){
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
-    printf("George 2250\n");
+    printf("George 250\n");
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -267,14 +267,14 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                printf("George 289\n");
+                printf("George 271\n");
                 sem_wait(&SEM_MENU);
                 GAME_STATUS.inGame = 1;
                 printf("George 274\n");
                 if(levelCounter == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets(&(platform[0]), &carpetaAssets);   
+                    loadAllAssets("rpi", &carpetaAssets);   
                     int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
@@ -282,7 +282,7 @@ int main(void){
                     }
                     levelCounter++;
                 }
-                printf("George 283\n");
+                printf("George 285\n");
                 int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
