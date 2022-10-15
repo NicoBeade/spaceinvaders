@@ -7,14 +7,14 @@
 
 #define MAX_FILE_ROW_LENGHT 100     //Maximo tamaño de fila para un archivo
 
-#define MAX_FILE_NAME 30        //Maximo tamaño de archivo
+#define MAX_FILE_NAME 50        //Maximo tamaño de archivo
 
 #define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 
 #define ASSETSDIR "game/assets"
 #define LEVELSDIR "game/levels"
 
-#define MAX_DIR_LENGTH 60       //Maxaima longitud de un directorio
+#define MAX_DIR_LENGTH 150       //Maxaima longitud de un directorio
 
 #define MAX_LEVEL 999       //Maximo nivel
 typedef char fileName_t[MAX_FILE_NAME];
