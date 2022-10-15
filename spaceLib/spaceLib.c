@@ -187,7 +187,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 }     
 
 
-void removeAlienList(object_t* listAlien){
+void removeList(object_t* listAlien){
 /*Esta funcion se encarga de liberar del heap la lista creada de los aliens*/
     if(listAlien != NULL){
         object_t * lastAlien = listAlien; //Se crean dos punteros auxiliares
