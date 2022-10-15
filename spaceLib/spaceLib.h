@@ -105,6 +105,14 @@ typedef struct{//Contiene el estado del juego.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
 }gameStatus_t;
 
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
+
+	  keys_t * keys;
+    object_t** naveUsr;
+    object_t** balasUsr;
+    level_setting_t* levelSettings;
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+} game_t;
 
 typedef struct{
 	int id;             //Identificador del tipo de objeto
@@ -221,6 +229,7 @@ void removeList(object_t* lista);                                               
  ******************************************************************************************************************************************/
 
 extern gameStatus_t GAME_STATUS; //Variable que indica el estado del juego.
+extern game_t menuGame;
 
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
 extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS

@@ -42,14 +42,7 @@ typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar
                                 //una opcion en un menu.
 
-typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
 
-	  keys_t * keys;
-    object_t** naveUsr;
-    object_t** balasUsr;
-    level_setting_t* levelSettings;
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-} game_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

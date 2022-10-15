@@ -445,6 +445,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
                 GAME_STATUS.pantallaActual = DESTROY_LEVEL;
                 GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                menuGame.exitStatus = 0;
             }
             listBalasEnemigas->lives -= 1;
             if(listBalasEnemigas-> lives == 0){//Si la bala debe morir
