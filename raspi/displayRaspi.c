@@ -984,7 +984,7 @@ void* textAnimMenu(void* argTextAnimMenu){
 
     usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
-    if(velDispAnimation != 1){
+    if(velDispAnimation != 2){
         velDispAnimation = VEL_DISP_ANIMATION;
     }
 
@@ -1147,7 +1147,7 @@ void changeOption(void* argChangeOption){
 
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
-    velDispAnimation = 1;
+    velDispAnimation = 2;
     GAME_STATUS.pantallaActual = START_LEVEL;
     return 0;
 }
