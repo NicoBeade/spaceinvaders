@@ -587,7 +587,7 @@ void * moveAlienThread(void* argMoveAlien){
         
         object_t * mothership = *(((argMoveAlien_t*)argMoveAlien) -> mothership);
         usleep(10 * U_SEC2M_SEC);  //Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % 1500 && mothership->lives == 0)){
+        if( (timerTick % 500 && mothership->lives == 0)){
             mothership->type = timerTick%2;
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;
