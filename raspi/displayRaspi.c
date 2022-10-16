@@ -829,9 +829,9 @@ void* displayRPIThread (void* argDisplayRPI){
     object_t* naveUser;
     dcoord_t punto; //punto del display a escribir
 
-    while(1){
+    while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % FRAMERATE) == 0 ){
+        if( (timerTick % FRAMERATE) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
 
             balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
@@ -944,6 +944,7 @@ void* displayRPIThread (void* argDisplayRPI){
 
         }
     }
+    printf("Killed Display RPI\n");
     pthread_exit(0);
 }
 

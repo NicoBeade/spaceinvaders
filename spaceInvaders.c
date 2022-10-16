@@ -176,7 +176,7 @@ int velMenu = 20;
 int velDispAnimation = 1;
 int velInputGame = 5;
 int velAliens = 100;
-int velMothership = 70;
+//int velMothership = 70;
 int velBalas = 10;
 int velCollider = 5;
 /*******************************************************************************************************************************************
@@ -563,23 +563,29 @@ void * moveAlienThread(void* argMoveAlien){
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velAliens) == 0 ){
+        if( (timerTick % velAliens) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
 
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
         }
-        if( (timerTick % velMothership) == 0){
+        /*
+        if( (timerTick % velMothership && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives != 0) == 0){
 
             sem_wait(&SEM_GAME);
 
-            /*
-            ((argMoveAlien_t*)argMoveAlien)mothership->pos.x += levelSettings->desplazamientoX
-            */
+            
+            //Se incrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
+            //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
+            //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
+            ((argMoveAlien_t*)argMoveAlien) -> mothership.pos.x += (argMoveAlien_t*)argMoveAlien) -> levelSettings.desplazamientoX
+            
 
             sem_post(&SEM_GAME);
         }
+        */
+
     }
     printf("Killed moveAliens\n");
     pthread_exit(0);
@@ -594,7 +600,7 @@ void * moveBalaThread(void * argMoveBala){
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velBalas) == 0 ){
+        if( (timerTick % velBalas) == 0 && GAME_STATUS.inGame ){
 
             sem_wait(&SEM_GAME);
 
@@ -643,7 +649,7 @@ void * colliderThread(void * argCollider){
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velCollider) == 0 ){
+        if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
 
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
 
