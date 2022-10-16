@@ -438,6 +438,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type)){
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
+                GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_LOST_LEVEL;
                 menuGame.exitStatus = 0;
             }
