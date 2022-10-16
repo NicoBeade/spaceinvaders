@@ -364,7 +364,8 @@ int main(void){
                 }
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
-                    GAME_STATUS.pantallaActual = START_LEVEL;
+                    printf("Nivel: %d", GAME_STATUS.nivelActual);
+                    GAME_STATUS.pantallaActual = START_LEVEL; //Si hay que iniciar nuevamente el juego
                 }
                 else{
                     GAME_STATUS.pantallaActual = MENU; //Se pasa al menu correspondiente.
