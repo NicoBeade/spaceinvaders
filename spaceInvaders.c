@@ -348,7 +348,7 @@ int main(void){
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
 
-                usleep(30 * U_SEC2M_SEC);
+                usleep(50 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
                     alienList = removeList(alienList); 
