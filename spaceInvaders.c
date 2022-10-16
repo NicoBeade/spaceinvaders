@@ -50,6 +50,7 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
+    object_t ** mothership;
 }argMoveAlien_t;
 
 typedef struct{
@@ -167,7 +168,12 @@ menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLeve
                       {&halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
+                      {&halfDispRestart, &halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
+                      7 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
@@ -176,7 +182,7 @@ int velMenu = 20;
 int velDispAnimation = 1;
 int velInputGame = 5;
 int velAliens = 100;
-//int velMothership = 70;
+int velMothership = 70;
 int velBalas = 10;
 int velCollider = 5;
 /*******************************************************************************************************************************************
@@ -237,6 +243,7 @@ int main(void){
     object_t * barrerasList = NULL; //Se crea la lista de barreras
     object_t * balasUsr = NULL; //Se crea la lista de las balas del usuario
     object_t * balasAlien = NULL; //Se crea la lista de las balas de los aliens
+    object_t * mothershipList = NULL; //Se crea la lista de la nave nodriza.
 
     level_setting_t levelSettings;
 
@@ -310,8 +317,12 @@ int main(void){
 
                 GAME_STATUS.inGame = 1;
 
+                //HARDCODED
+                vector_t Booo = {0,0};
+                mothershipList = addObj(mothershipList, Booo, 0, 0);
+
                 //Inicializa los threads encargados de controlar el juego.
-                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &mothershipList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
@@ -319,7 +330,7 @@ int main(void){
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
                 #ifdef RASPI
-                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList };
+                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList, &mothershipList };
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
 
@@ -573,30 +584,38 @@ void * moveAlienThread(void* argMoveAlien){
 
             sem_post(&SEM_GAME);
         }
-        /*
-        object_t * mothership = (argMoveAlien_t*)argMoveAlien) -> mothership;
+        
+        object_t * mothership = ((argMoveAlien_t*)argMoveAlien) -> mothership;
         usleep(10 * U_SEC2M_SEC);  //Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick == METER COSA RANDOM ACA && mothership->lives == 0)){
-            mothership->type = (timerTick%2)? 1:-1;
+        if( (timerTick % 1500 && mothership->lives == 0)){
+            mothership->type = timerTick%2;
             mothership->lives = 1;
-            mothership.pos.x = 8 + mothership->type * 11;
-            //si el tipo de mothership es 1, la nave nodriza se genera a la derecha del display
+            mothership->pos.x = (mothership->type)?-3:16;
+            //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
         }
 
-        if( ((timerTick % velMothership) == 0) && mothership->lives != 0)){
+        if( ((timerTick % velMothership) == 0) && mothership->lives != 0){
 
             sem_wait(&SEM_GAME);
-
             
-            //Se incrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
+            //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
             //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
             //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
-            mothership->pos.x += (argMoveAlien_t*)argMoveAlien) -> levelSettings.desplazamientoX;
-            
-
+            if(mothership->type == 1){
+                mothership->pos.x += (((argMoveAlien_t*)argMoveAlien) -> levelSettings) -> desplazamientoX;
+                if(mothership->pos.x == 16){
+                    mothership->lives = 0;
+                }
+            }
+            else if(mothership->type == 0){
+                mothership->pos.x -= (((argMoveAlien_t*)argMoveAlien) -> levelSettings) -> desplazamientoX;
+                  if(mothership->pos.x == -3){
+                    mothership->lives = 0;
+                }
+            }
             sem_post(&SEM_GAME);
         }
-        */
+        
 
     }
     printf("Killed moveAliens\n");

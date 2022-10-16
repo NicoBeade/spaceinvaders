@@ -828,6 +828,7 @@ void* displayRPIThread (void* argDisplayRPI){
     object_t* aliens;
     object_t* naveUser;
     dcoord_t punto; //punto del display a escribir
+    object_t* mothership;
 
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
@@ -838,6 +839,7 @@ void* displayRPIThread (void* argDisplayRPI){
             balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
             aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
             naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
+            mothership = *(((argDisplayRPI_t*)argDisplayRPI)->mothership); //Puntero a la nave nodriza
 
             clearBuffer(); //limpio el buffer            
             //Actualizo el buffer con la nueva posicion de los aliens
@@ -937,6 +939,14 @@ void* displayRPIThread (void* argDisplayRPI){
                 balasUsr = balasUsr -> next;
             }
             balasUsr = aux;
+
+            if(mothership->pos.x<0||mothership->pos.x>15)
+                dispWrite(mothership->pos.x);
+            if(mothership->pos.x+1<0||mothership->pos.x+1>15)
+                dispWrite(mothership->pos.x+1);
+            if(mothership->pos.x+2<0||mothership->pos.x+2>15)
+                dispWrite(mothership->pos.x+2);
+
             
             if(GAME_STATUS.inGame){
                 disp_update(); //se transfiere del buffer al display de la RPI
