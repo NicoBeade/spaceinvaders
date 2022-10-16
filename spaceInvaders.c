@@ -347,7 +347,7 @@ int main(void){
 
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
-                printf("Destroy level\n");
+
                 usleep(30 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
@@ -366,14 +366,7 @@ int main(void){
                     balasUsr = removeList(balasUsr);
                 }
 
-                printf("alienList: %p", alienList);
-                printf("UsrList: %p", UsrList);
-                printf("barrerasList: %p", barrerasList);
-                printf("balasAlien: %p", balasAlien);
-                printf("balasUsr: %p", balasUsr);
-
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
-                    printf("Nivel: %d\n", GAME_STATUS.nivelActual);
                     GAME_STATUS.pantallaActual = START_LEVEL; //Si hay que iniciar nuevamente el juego
                 }
                 else{
@@ -565,7 +558,7 @@ static void* levelHandlerThread(void * data){
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    printf("MoveAlien\n");
+    printf("velAliens: %d\n", velAliens);
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(GAME_STATUS.inGame){
         
@@ -578,13 +571,13 @@ void * moveAlienThread(void* argMoveAlien){
             sem_post(&SEM_GAME);
         }
         /*
-
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (unisgned int = timerTick == METER COSA RANDOM ACA && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives == 0)){
-
+        object_t * mothership = (argMoveAlien_t*)argMoveAlien) -> mothership;
+        usleep(10 * U_SEC2M_SEC);  //Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick == METER COSA RANDOM ACA && mothership->lives == 0)){
+            
         }
 
-        if( ((timerTick % velMothership && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives != 0) == 0){
+        if( ((timerTick % velMothership) == 0) && mothership->lives != 0)){
 
             sem_wait(&SEM_GAME);
 
@@ -592,7 +585,7 @@ void * moveAlienThread(void* argMoveAlien){
             //Se incrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
             //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
             //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
-            ((argMoveAlien_t*)argMoveAlien) -> mothership.pos.x += (argMoveAlien_t*)argMoveAlien) -> levelSettings.desplazamientoX
+            mothership->pos.x += (argMoveAlien_t*)argMoveAlien) -> levelSettings.desplazamientoX;
             
 
             sem_post(&SEM_GAME);
@@ -608,7 +601,7 @@ void * moveAlienThread(void* argMoveAlien){
 void * moveBalaThread(void * argMoveBala){
     //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
-    printf("MoveBala\n");
+    printf("velBalas: %d\n", velBalas);
 
     while(GAME_STATUS.inGame){
         
@@ -655,7 +648,7 @@ void * moveBalaThread(void * argMoveBala){
 
 void * colliderThread(void * argCollider){
     //Este thread se utiliza para detectar si hubo colisiones.
-    printf("Collider\n");
+    printf("velCollider: %d\n". velCollider);
 
     argCollider_t * data = (argCollider_t*)argCollider;
 
