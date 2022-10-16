@@ -940,12 +940,20 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             balasUsr = aux;
 
-            if(mothership->pos.x<0||mothership->pos.x>15)
-                dispWrite(mothership->pos.x);
-            if(mothership->pos.x+1<0||mothership->pos.x+1>15)
-                dispWrite(mothership->pos.x+1);
-            if(mothership->pos.x+2<0||mothership->pos.x+2>15)
-                dispWrite(mothership->pos.x+2);
+            punto.y=0;
+            if(mothership->pos.x<0||mothership->pos.x>15){
+                punto.x=mothership->pos.x;
+                disp_write(punto,D_ON);
+            }
+            if(mothership->pos.x+1<0||mothership->pos.x+1>15){
+                punto.x=mothership->pos.x+1;
+                disp_write(punto,D_ON);
+            }    
+            if(mothership->pos.x+2<0||mothership->pos.x+2>15){
+                punto.x=mothership->pos.x+2;
+                disp_write(punto,D_ON);
+            }
+                
 
             
             if(GAME_STATUS.inGame){
