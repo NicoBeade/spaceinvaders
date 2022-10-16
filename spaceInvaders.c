@@ -574,12 +574,13 @@ void * moveAlienThread(void* argMoveAlien){
             sem_wait(&SEM_GAME);
 
             /*
-            
+            ((argMoveAlien_t*)argMoveAlien)mothership->pos.x += levelSettings->desplazamientoX
             */
 
             sem_post(&SEM_GAME);
         }
     }
+    printf("Killed moveAliens\n");
     pthread_exit(0);
 }
 
@@ -615,6 +616,7 @@ void * moveBalaThread(void * argMoveBala){
             sem_post(&SEM_GAME);
         } 
     }
+    printf("Killed moveBala\n");
     pthread_exit(0);
 }
 /*******************************************************************************************************************************************
@@ -646,6 +648,7 @@ void * colliderThread(void * argCollider){
 
         }
     }
+    printf("Killed collider\n");
     pthread_exit(0);
 }
  /*******************************************************************************************************************************************
