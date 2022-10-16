@@ -375,6 +375,9 @@ int main(void){
                 break;
 
             case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
+                GAME_STATUS.inGame = 0;
+
+                usleep(50 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
                     alienList = removeList(alienList); 
@@ -574,7 +577,10 @@ void * moveAlienThread(void* argMoveAlien){
         object_t * mothership = (argMoveAlien_t*)argMoveAlien) -> mothership;
         usleep(10 * U_SEC2M_SEC);  //Espera 10mS para igualar el tiempo del timer.
         if( (timerTick == METER COSA RANDOM ACA && mothership->lives == 0)){
-            
+            mothership->type = (timerTick%2)? 1:-1;
+            mothership->lives = 1;
+            mothership.pos.x = 8 + mothership->type * 11;
+            //si el tipo de mothership es 1, la nave nodriza se genera a la derecha del display
         }
 
         if( ((timerTick % velMothership) == 0) && mothership->lives != 0)){

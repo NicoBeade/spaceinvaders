@@ -938,8 +938,9 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             balasUsr = aux;
             
-
-            disp_update(); //se transfiere del buffer al display de la RPI
+            if(GAME_STATUS.inGame){
+                disp_update(); //se transfiere del buffer al display de la RPI
+            }
             sem_post(&SEM_GAME);
 
         }
