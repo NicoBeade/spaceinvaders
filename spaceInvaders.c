@@ -348,6 +348,7 @@ int main(void){
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
                 printf("Destroy level\n");
+                usleep(40 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
                     removeList(alienList); 
@@ -366,7 +367,7 @@ int main(void){
                 }
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
-                    printf("Nivel: %d", GAME_STATUS.nivelActual);
+                    printf("Nivel: %d\n", GAME_STATUS.nivelActual);
                     GAME_STATUS.pantallaActual = START_LEVEL; //Si hay que iniciar nuevamente el juego
                 }
                 else{
@@ -571,6 +572,8 @@ void * moveAlienThread(void* argMoveAlien){
             sem_post(&SEM_GAME);
         }
         /*
+        if()
+
         if( (timerTick % velMothership && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives != 0) == 0){
 
             sem_wait(&SEM_GAME);
