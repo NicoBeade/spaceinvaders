@@ -366,11 +366,11 @@ int main(void){
                     removeList(balasUsr);
                 }
 
-                printf("alienList: %d", alienList);
-                printf("UsrList: %d", UsrList);
-                printf("barrerasList: %d", barrerasList);
-                printf("balasAlien: %d", balasAlien);
-                printf("balasUsr: %d", balasUsr);
+                printf("alienList: %p", alienList);
+                printf("UsrList: %p", UsrList);
+                printf("barrerasList: %p", barrerasList);
+                printf("balasAlien: %p", balasAlien);
+                printf("balasUsr: %p", balasUsr);
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
                     printf("Nivel: %d\n", GAME_STATUS.nivelActual);
