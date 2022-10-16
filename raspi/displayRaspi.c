@@ -895,7 +895,8 @@ void* displayRPIThread (void* argDisplayRPI){
                         drawSprite(punto,pablo2);
                         break;
                     
-                    default: printf("Se esta queriendo imprimir como alien algo que no es un alien");break;
+                    default: printf("Se esta queriendo imprimir como alien algo que no es un alien");
+                        break;
                     
                 }   
                 aliens=aliens->next; //se pasa al siguiente alien en la lista

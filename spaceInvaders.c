@@ -227,7 +227,7 @@ int main(void){
     
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
-    printf("George 230\n");
+
     pthread_create(&timerT, NULL, timer, NULL);
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
@@ -240,14 +240,13 @@ int main(void){
 
     level_setting_t levelSettings;
 
-    int levelCounter = 0;
     #ifdef RASPI
     char platform[4] = "rpi";
     #endif
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
-    printf("George 250\n");
+
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -267,27 +266,24 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                printf("George 271\n");
+
                 sem_wait(&SEM_MENU);
                 GAME_STATUS.inGame = 1;
-                printf("George 274\n");
-                if(levelCounter == 0){
+
+                if(GAME_STATUS.nivelActual == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    printf("George 277\n");
                     loadAllAssets("rpi", &carpetaAssets);   
-                    printf("George 279\n");
-                    int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-                    printf("George 281\n");
+                    int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
                         return -1;
                     }
-                    levelCounter++;
+                    GAME_STATUS.nivelActual++;
                 }
-                printf("George 285\n");
-                int levelStatus = loadLevel(levelCounter, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-                printf("LEVEL SETTING YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings.yMax, levelSettings.yMin, levelSettings.xMax, levelSettings.xMin);
+
+                int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
@@ -295,7 +291,7 @@ int main(void){
                 else if (levelStatus == -2){        //Si es -2 termina el juego
                     GAME_STATUS.exitStatus = 0;
                 }
-                printf("George 293\n");
+
                 if(alienList == NULL){
                     printf("Error in spaceInvaders.c, Couldnt start level, alienList null\n");
                     return -1;
@@ -309,7 +305,9 @@ int main(void){
                     return -1;
                 }
                 */
-                printf("George 306\n");
+
+                GAME_STATUS.nivelActual--;
+
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
