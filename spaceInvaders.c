@@ -284,6 +284,9 @@ int main(void){
                 }
 
                 int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+
+                printf("LEVEL SETTING YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings.yMax, levelSettings.yMin, levelSettings.xMax, levelSettings.xMin);
+
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
                     return -1;
