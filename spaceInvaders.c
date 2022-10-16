@@ -50,8 +50,12 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
-    object_t ** mothership;
 }argMoveAlien_t;
+
+typedef struct{
+    level_setting_t * levelSettings;
+    object_t ** mothership;
+}argMoveMothership_t;
 
 typedef struct{
 	level_setting_t * levelSettings;
@@ -109,6 +113,8 @@ typedef struct{
 *******************************************************************************************************************************************/
 
 void * moveAlienThread(void* argMoveAlien);
+
+void * moveMothershipThread(void* argMoveMothership);
 
 void * moveBalaThread(void * argMoveBala);
 
@@ -229,7 +235,7 @@ int main(void){
     disp_init();
     joy_init();
 
-    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT, colliderT;
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT, colliderT, mothershipT;
     
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
@@ -322,10 +328,12 @@ int main(void){
                 mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
-                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &mothershipList };
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
+                argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
+                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -583,11 +591,17 @@ void * moveAlienThread(void* argMoveAlien){
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
-        }
-        
-        object_t * mothership = *(((argMoveAlien_t*)argMoveAlien) -> mothership);
-        usleep(10 * U_SEC2M_SEC);  //Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % 500 && mothership->lives == 0)){
+        }   
+    }
+    printf("Killed moveAliens\n");
+    pthread_exit(0);
+}
+
+void * moveMothershipThread(void* argMoveMothership){
+    while(GAME_STATUS.inGame){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
+                if( (timerTick % 500 && mothership->lives == 0)){
             mothership->type = timerTick%2;
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;
@@ -602,25 +616,24 @@ void * moveAlienThread(void* argMoveAlien){
             //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
             //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
             if(mothership->type == 1){
-                mothership->pos.x += (((argMoveAlien_t*)argMoveAlien) -> levelSettings) -> desplazamientoX;
+                mothership->pos.x += (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
                 if(mothership->pos.x == 16){
                     mothership->lives = 0;
                 }
             }
             else if(mothership->type == 0){
-                mothership->pos.x -= (((argMoveAlien_t*)argMoveAlien) -> levelSettings) -> desplazamientoX;
+                mothership->pos.x -= (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
                   if(mothership->pos.x == -3){
                     mothership->lives = 0;
                 }
             }
             sem_post(&SEM_GAME);
         }
-        
-
     }
-    printf("Killed moveAliens\n");
+    printf("Killed moveMothership\n");
     pthread_exit(0);
 }
+
 
 //******************************************    Thread moveBala    **********************************************************
 void * moveBalaThread(void * argMoveBala){
