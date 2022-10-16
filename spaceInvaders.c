@@ -648,7 +648,7 @@ void * moveBalaThread(void * argMoveBala){
 
 void * colliderThread(void * argCollider){
     //Este thread se utiliza para detectar si hubo colisiones.
-    printf("velCollider: %d\n". velCollider);
+    printf("velCollider: %d\n", velCollider);
 
     argCollider_t * data = (argCollider_t*)argCollider;
 
