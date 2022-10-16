@@ -988,9 +988,7 @@ void* textAnimMenu(void* argTextAnimMenu){
 
     usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
 
-    if(velDispAnimation != 2){
-        velDispAnimation = VEL_DISP_ANIMATION;
-    }
+    velDispAnimation = VEL_DISP_ANIMATION;
 
     do{//Barre el texto hasta que se le indique lo contrario.
         for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
@@ -1151,7 +1149,7 @@ void changeOption(void* argChangeOption){
 
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
-    velDispAnimation = 2;
+    velDispAnimation = 1;
     GAME_STATUS.pantallaActual = START_LEVEL;
     return 0;
 }
@@ -1166,7 +1164,7 @@ int selectVolume(void){
 
 int selectQuitGame(void){
     printf("Select Quit Game\n");
-    velDispAnimation = 2;
+    velDispAnimation = 1;
     GAME_STATUS.pantallaActual = QUIT_GAME;
     return 0;
 }
@@ -1177,7 +1175,7 @@ int selectResume(void){
 
 int selectRestartLevel(void){
     printf("Select Restart Level\n");
-    velDispAnimation = 2;
+    velDispAnimation = 1;
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = START_LEVEL_MENU;
     return 0;
@@ -1185,9 +1183,9 @@ int selectRestartLevel(void){
 
 int selectMainMenu(void){
     printf("Select Main Menu\n");
-    velDispAnimation = 2;
-    GAME_STATUS.menuActual = MENU_INICIO;
-    GAME_STATUS.inGame = 0;
+    velDispAnimation = 1;
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
     return 0;
 }
 
