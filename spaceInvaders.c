@@ -348,11 +348,22 @@ int main(void){
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
                 printf("Destroy level\n");
-                removeList(alienList); //Elimina todas las listas del heap.
-                removeList(UsrList);
-                removeList(barrerasList);
-                removeList(balasAlien);
-                removeList(balasUsr);
+                //Elimina todas las listas del heap.
+                if(alienList != NULL){
+                    removeList(alienList); 
+                }
+                if(UsrList != NULL){
+                    removeList(UsrList);
+                }
+                if(barrerasList != NULL){
+                    removeList(barrerasList);
+                }
+                if(balasAlien != NULL){
+                    removeList(balasAlien);
+                }
+                if(balasUsr != NULL){
+                    removeList(balasUsr);
+                }
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
                     GAME_STATUS.pantallaActual = START_LEVEL;
@@ -363,11 +374,22 @@ int main(void){
                 break;
 
             case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
-                removeList(alienList); //Elimina todas las listas del heap.
-                removeList(UsrList);
-                removeList(barrerasList);
-                removeList(balasAlien);
-                removeList(balasUsr);
+                //Elimina todas las listas del heap.
+                if(alienList != NULL){
+                    removeList(alienList); 
+                }
+                if(UsrList != NULL){
+                    removeList(UsrList);
+                }
+                if(barrerasList != NULL){
+                    removeList(barrerasList);
+                }
+                if(balasAlien != NULL){
+                    removeList(balasAlien);
+                }
+                if(balasUsr != NULL){
+                    removeList(balasUsr);
+                }
 
                 GAME_STATUS.exitStatus = 0;
 
