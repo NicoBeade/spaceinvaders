@@ -45,7 +45,8 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
     object_t** balasUsr;
     object_t** aliens;
     object_t** naveUser;
-    //faltan los punteros a barreras y la nave nodriza
+    object_t** mothership;
+    //faltan los punteros a barreras 
 }argDisplayRPI_t;
 
 typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
