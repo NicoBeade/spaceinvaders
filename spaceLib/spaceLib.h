@@ -239,11 +239,6 @@ object_t* removeList(object_t* lista);                                          
 extern gameStatus_t GAME_STATUS; //Variable que indica el estado del juego.
 extern game_t menuGame;
 
-extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
-extern int velAliens;   /*Determina que tan rapido se moveran los aliens. La conversion es: si velAliens = 1, entonces moveAlien se ejecuta cada 10mS
-                                                                        Para ejecutar velAliens cada 1s velAliens debe valer 100.*/
-extern int velBalas;	//Velocidad a la que se mueven las balas.
-//extern sem_t SEM_GAME;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
