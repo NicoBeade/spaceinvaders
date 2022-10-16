@@ -1185,7 +1185,7 @@ int selectMainMenu(void){
     printf("Select Main Menu\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
-    GAME_STATUS.menuActual = START_LEVEL_MENU;
+    GAME_STATUS.menuActual = MENU_INICIO;
     return 0;
 }
 
