@@ -348,7 +348,7 @@ int main(void){
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
                 GAME_STATUS.inGame = 0;
                 printf("Destroy level\n");
-                usleep(40 * U_SEC2M_SEC);
+                usleep(30 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
                     removeList(alienList); 
@@ -365,6 +365,12 @@ int main(void){
                 if(balasUsr != NULL){
                     removeList(balasUsr);
                 }
+
+                printf("alienList: %d", alienList);
+                printf("UsrList: %d", UsrList);
+                printf("barrerasList: %d", barrerasList);
+                printf("balasAlien: %d", balasAlien);
+                printf("balasUsr: %d", balasUsr);
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
                     printf("Nivel: %d\n", GAME_STATUS.nivelActual);
