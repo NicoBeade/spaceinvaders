@@ -268,7 +268,6 @@ int main(void){
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
 
                 sem_wait(&SEM_MENU);
-                GAME_STATUS.inGame = 1;
 
                 if(GAME_STATUS.nivelActual == 0){
                     directory_t carpetaAssets = {};
@@ -308,6 +307,8 @@ int main(void){
                     return -1;
                 }
                 */
+
+                GAME_STATUS.inGame = 1;
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
