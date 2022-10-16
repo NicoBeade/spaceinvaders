@@ -199,7 +199,7 @@ void imprimirARRAY(void);																							//Muestra el array de tipos de o
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
 int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3);	//Añade un tipo de objeto
 int delObjType(int id);			
-void removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
+object_t* removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

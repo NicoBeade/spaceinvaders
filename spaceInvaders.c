@@ -351,19 +351,19 @@ int main(void){
                 usleep(30 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
-                    removeList(alienList); 
+                    alienList = removeList(alienList); 
                 }
                 if(UsrList != NULL){
-                    removeList(UsrList);
+                    UsrList = removeList(UsrList);
                 }
                 if(barrerasList != NULL){
-                    removeList(barrerasList);
+                    barrerasList = removeList(barrerasList);
                 }
                 if(balasAlien != NULL){
-                    removeList(balasAlien);
+                    balasAlien = removeList(balasAlien);
                 }
                 if(balasUsr != NULL){
-                    removeList(balasUsr);
+                    balasUsr = removeList(balasUsr);
                 }
 
                 printf("alienList: %p", alienList);
@@ -384,19 +384,19 @@ int main(void){
             case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
-                    removeList(alienList); 
+                    alienList = removeList(alienList); 
                 }
                 if(UsrList != NULL){
-                    removeList(UsrList);
+                    UsrList = removeList(UsrList);
                 }
                 if(barrerasList != NULL){
-                    removeList(barrerasList);
+                    barrerasList = removeList(barrerasList);
                 }
                 if(balasAlien != NULL){
-                    removeList(balasAlien);
+                    balasAlien = removeList(balasAlien);
                 }
                 if(balasUsr != NULL){
-                    removeList(balasUsr);
+                    balasUsr = removeList(balasUsr);
                 }
 
                 GAME_STATUS.exitStatus = 0;
@@ -578,9 +578,13 @@ void * moveAlienThread(void* argMoveAlien){
             sem_post(&SEM_GAME);
         }
         /*
-        if()
 
-        if( (timerTick % velMothership && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives != 0) == 0){
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (unisgned int = timerTick == METER COSA RANDOM ACA && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives == 0)){
+
+        }
+
+        if( ((timerTick % velMothership && ((argMoveAlien_t*)argMoveAlien) -> mothership.lives != 0) == 0){
 
             sem_wait(&SEM_GAME);
 

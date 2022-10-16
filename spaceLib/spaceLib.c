@@ -108,15 +108,16 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
     return Obj;             //Se devuelve la lista
 }
 
-void removeList(object_t* lista){
+object_t* removeList(object_t* lista){
 //Esta funcion se encarga de liberar del heap una lista completa.
-    object_t * lastObj = lista; //Se crean dos punteros auxiliares
     object_t * nextObj;
-    while (lastObj != NULL){
-        nextObj = lastObj -> next; //Se apunta al siguiente nodo
-        free(lastObj); //Se libera la memoria dinamica del nodo a eliminar
-        lastObj = nextObj;
+    while (lista != NULL){
+        nextObj = lista -> next; //Se apunta al siguiente nodo
+        free(lista); //Se libera la memoria dinamica del nodo a eliminar
+        lista = nextObj;
     }
+
+    return lista;
 }
 
 static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
