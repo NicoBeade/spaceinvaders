@@ -1,0 +1,11 @@
+id 50
+vel 0    
+ancho 1
+alto 1
+initLives 1
+shootProb 0
+maxBullets 0
+balaID 0
+sprite1 9
+sprite2 10
+sprite3 11
