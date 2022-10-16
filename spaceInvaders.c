@@ -306,8 +306,6 @@ int main(void){
                 }
                 */
 
-                GAME_STATUS.nivelActual--;
-
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList };
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
