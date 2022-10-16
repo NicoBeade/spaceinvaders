@@ -1186,6 +1186,7 @@ int selectMainMenu(void){
     printf("Select Main Menu\n");
     velDispAnimation = 2;
     GAME_STATUS.menuActual = MENU_INICIO;
+    GAME_STATUS.inGame = 0;
     return 0;
 }
 
