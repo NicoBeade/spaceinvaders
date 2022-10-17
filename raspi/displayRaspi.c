@@ -1098,7 +1098,7 @@ void* swipeDrawing(void* data){
     for(i = colInicialD ; i != colFinalD ; i -= argSwipeDrawing -> direccion){//Recorre todas las columnas del dibujo.
 
         for(col = colInicialB ; col != colFinalB ; col -= argSwipeDrawing -> direccion){//Barre el display hacia un costado.
-            usleep(1);//Indica a que velocidad se debe hacer el barrido.
+            usleep(velDispAnimation);//Indica a que velocidad se debe hacer el barrido.
             
             for(fil = 0 ; fil < 8 ; fil++){
                 (*( argSwipeDrawing -> higerDispMenu ))[fil][col + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> higerDispMenu ))[fil][col];//Realiza el barrido.

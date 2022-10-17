@@ -185,7 +185,7 @@ level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos 
 unsigned int timerTick = 1000000;
 int velInput = 1;
 int velMenu = 20;
-int velDispAnimation = 1;
+int velDispAnimation = 2;
 int velInputGame = 5;
 int velAliens = 100;
 int velMothership = 70;

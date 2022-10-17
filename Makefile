@@ -2,7 +2,7 @@
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
 mainRaspi: spaceInvaders.o inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o utilidades.h
-	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o spaceInvaders.o -pthread -Wall -o spaceInvaders -g
+	gcc -c joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o spaceInvaders.o -pthread -Wall -o spaceInvaders -g
 
 
 spaceInvaders.o: spaceInvaders.c utilidades.h
