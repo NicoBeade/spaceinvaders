@@ -799,14 +799,20 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
             punto.x=j;
             punto.y=i+offset;
             if (halfDispSprite [i][j]==1){
+                printf("Booo 5\n");
                 disp_write(punto,D_ON);
+                printf("Booo 6\n");
             }
             else{
+                printf("Booo 7\n");
                 disp_write(punto,D_OFF);
+                printf("Booo 8\n");
             }
         }
     }
+    printf("Booo 3\n");
     disp_update();
+    printf("Booo 4\n");
 }
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
