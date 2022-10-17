@@ -1194,6 +1194,7 @@ int selectResume(void){
     printf("Select Resume\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = IN_GAME;
+    menuGame.exitStatus = 1;
     return 0;
 }
 
