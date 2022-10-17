@@ -358,10 +358,12 @@ int main(void){
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
-                //pthread_create(&levelHandlerT, NULL, levelHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de level handler con el nivel indicado.
+                sem_post(&SEM_MENU);
+                pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
 
-                //pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
-
+                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
+                
+                sem_post(&SEM_MENU);
                 break;
 
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.

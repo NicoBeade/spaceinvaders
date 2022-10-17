@@ -1186,10 +1186,14 @@ int selectQuitGame(void){
     printf("Select Quit Game\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = QUIT_GAME;
+    disp_clear();
     return 0;
 }
 
 int selectResume(void){
+    printf("Select Resume\n");
+    velDispAnimation = 1;
+    GAME_STATUS.pantallaActual = IN_GAME;
     return 0;
 }
 
