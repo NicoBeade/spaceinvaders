@@ -941,7 +941,6 @@ void* displayRPIThread (void* argDisplayRPI){
             balasUsr = aux;
 
             punto.y=0;
-            printf("Esta por actualizar la posicion de la nave nodriza en el display \n");
             if(mothership->pos.x>0&&mothership->pos.x<15){
                 punto.x=mothership->pos.x;
                 disp_write(punto,D_ON);
