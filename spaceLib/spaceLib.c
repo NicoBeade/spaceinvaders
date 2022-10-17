@@ -470,6 +470,11 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;
+                    if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
+                        GAME_STATUS.pantallaActual = MENU;
+                        GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                        menuGame.exitStatus = 0;
+                    }
                 }
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir
