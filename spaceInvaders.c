@@ -482,11 +482,11 @@ static void* menuHandlerThread(void * data){
         argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
     #endif
 
-    usleep(100 * U_SEC2M_SEC);
-
     pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
 
     //***************************************************************************************************************************
+
+    usleep(200 * U_SEC2M_SEC);
 
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
