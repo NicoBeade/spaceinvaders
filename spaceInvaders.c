@@ -582,14 +582,14 @@ static void* levelHandlerThread(void * data){
 //******************************************    Thread moveAlien    **********************************************************
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
-    printf("velAliens: %d\n", velAliens);
+
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
-
+            printf("Move Alien\n");
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             sem_post(&SEM_GAME);
@@ -613,7 +613,7 @@ void * moveMothershipThread(void* argMoveMothership){
         if( ((timerTick % velMothership) == 0) && mothership->lives != 0){
 
             sem_wait(&SEM_GAME);
-            
+            printf("Move Nodriza\n");
             //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
             //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
             //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
@@ -641,7 +641,6 @@ void * moveMothershipThread(void* argMoveMothership){
 void * moveBalaThread(void * argMoveBala){
     //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
-    printf("velBalas: %d\n", velBalas);
 
     while(GAME_STATUS.inGame){
         
@@ -649,6 +648,7 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 && GAME_STATUS.inGame ){
 
             sem_wait(&SEM_GAME);
+            printf("MoveBala\n");
 
             if(*(data -> alienList) != NULL){
 
@@ -688,7 +688,6 @@ void * moveBalaThread(void * argMoveBala){
 
 void * colliderThread(void * argCollider){
     //Este thread se utiliza para detectar si hubo colisiones.
-    printf("velCollider: %d\n", velCollider);
 
     argCollider_t * data = (argCollider_t*)argCollider;
 
@@ -697,6 +696,7 @@ void * colliderThread(void * argCollider){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
+            printf("Collider\n");
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
             sem_post(&SEM_GAME);
         }
