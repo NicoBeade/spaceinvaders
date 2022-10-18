@@ -53,13 +53,17 @@ typedef struct
 {
     ALLEGRO_EVENT_QUEUE ** event_queue;
 
-    object_t ** objects;
+    object_t ** nave;
+    object_t ** aliens;
+    object_t ** balas;
     texto_t ** text;
 
     bool * close_display;
     bool * displayFlag;
 
 } display_data_t;
+    
+
 
 typedef struct{
 

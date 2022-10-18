@@ -74,7 +74,7 @@ void * allegroThread (void * dataIn){
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
-    display_data_t dataD = {&event_queue, data->objectsToShow, data->textToShow, &close_display, &displayFlag};
+    display_data_t dataD = {&event_queue, data->nave, data->aliens, data->balas, data->textToShow, &close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
 
     /*************************************************************************************************************
@@ -152,48 +152,53 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-typedef struct{
-
-    char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
-    int cantOpciones;//Cantidad de opciones del menu.
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    int * select; //Indicador de la opcion actual
-
-    texto_t ** toShow;
-
-} menu_t;
-
-void * allegroMenu(void * dataIn){
-    
-    //Recibo un puntero que tiene los textos del menu, la cantidad y la opcion actual
-    menu_t * data = (menu_t *) dataIn;
-
-    //Armo la lista de los textos en formato texto_t
-    texto_t * inicial;
-
-    inicial->texto=data->textOpciones[0];
-
-    for (int i = 1; i < data->cantOpciones; i++){
-        //Tengo que buscar como se arman las listas dinamicas con malloc 
-        
+texto_t * allegroMenu(menu_t * data, texto_t * toshow){
+//Esta funcion se utiliza para mostrar los menues en pantalla
+    int i;
+    for( i = 0; i<data->cantOpciones; i++){
+        //Se agregan los textos de las opciones a la lista de textos
+        if(i==0){
+            toshow=addText(toshow, data->textOpciones[i], 130, (i+1)*100);
+        }
+        else{
+            toshow=addText(toshow, data->textOpciones[i], 100, (i+1)*100);
+        }
     }
-    
-    //Meto la lista en el puntero texts del thread del display
-    
-    *(data->toShow) = inicial;
-    
-    //Recibo un flag que me indica cuando se cambio la opcion y se ejecuta el cambio de posicion del selector
-
-    //Cuando se cambio la opcion cambio el texto agregando un >
-    
-    if(data->exitStatus == 0){
-        //libero el espacio de memoria
-    }
-
-    pthread_exit(0);
+    //se agrega el selector
+    toshow = addText(toshow, "> ", 100, 100);
+    return toshow;
 }
 
-void * changeOption(void * dataIn){
+void changeOption(void * dataIn){
+//Esta funcion realiza la animacion de cambio de oipcion
+    changeOptionData_t * data = (changeOptionData_t *) dataIn;
+    texto_t * puntero = *data->toText;
+    int i = 0, j= 0;
 
-    //
+    
+    //Busco la opcion seleccionada
+    for(i = 0; i<data->actualOp; i++){
+        puntero = puntero->next;
+    }
+    //la muevo
+    puntero->posx-=30;
+    
+    //busco la nueva opcion seleccionada
+    puntero = *data->toText;
+    for(i = 0; i<data->nextOp; i++){
+        puntero = puntero->next;
+    }
+    
+    //la muevo
+    puntero->posx +=30;
+
+    //busco el selector
+    puntero = *data->toText;
+    for(j = 0; j< (data->menu)->cantOpciones; j++){
+        puntero = puntero->next;
+    }
+    
+    puntero->posx=100;
+    puntero->posy=(data->nextOp+1)*100;
+
 }
