@@ -28,6 +28,7 @@
 #define SALIEN3 "sprites/alien3.png"
 #define SBARRERA "sprites/nave.png"
 #define SBALA "sprites/bala.png"
+#define PUNTEROS(n) *(data->punteros.n)
 
 extern sem_t semaforo;
 
@@ -98,9 +99,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
             //Se dibujan los elementos y textos en el buffer
-            showObjects(*data->nave);
-            showObjects(*data->aliens);
-            showObjects(*data->balas);
+            showObjects(PUNTEROS(alienList));
+            showObjects(PUNTEROS(UsrList));
+            showObjects(PUNTEROS(barrerasList));
+            showObjects(PUNTEROS(balasUsr));
+            showObjects(PUNTEROS(balasAlien));
+            showObjects(PUNTEROS(mothershipList));
             showTexts(*data->text, fuente);
             //Se muestra en pantalla
             al_flip_display();
@@ -110,7 +114,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             sem_post(&semaforo);
         }
     }
-
     pthread_exit(0);
 }
 

@@ -26,12 +26,21 @@ texto_t * allegroMenu(menu_t * data, texto_t * toshow);
 void changeOption(void * data);
 
 /******************************************************************************************************/
+typedef struct {
+
+    object_t ** alienList;
+    object_t ** UsrList;
+    object_t ** barrerasList;
+    object_t ** balasUsr;
+    object_t ** balasAlien;
+    object_t ** mothershipList;
+
+} punteros_t;
+
 //Struct de datos para el thread de allegro
 typedef struct ALLEGRO {
 
-    object_t ** nave;
-    object_t ** aliens;
-    object_t ** balas;
+    punteros_t punteros;
     texto_t ** textToShow;
     keys_t * keys;
 

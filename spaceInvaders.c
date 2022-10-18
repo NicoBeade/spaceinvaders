@@ -34,8 +34,7 @@
 #endif
 
 #ifdef ALLEGRO
-#include "inputAllegro.h"
-#include "displayAllegro.h"
+#include "allegro.h"
 #endif
 
 /*******************************************************************************************************************************************
@@ -100,8 +99,7 @@ typedef struct{
 
 #ifdef ALLEGRO
 
-#define INPUT_THREAD keyboardt
-#define DISPLAY_THREAD_GAME displayt
+#define ALLEGRO_THREAD allegrot
 
 #define SIGUIENTE_INPUT ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
 #define ANTERIOR_INPUT  ((menu->keys)->y == -1)
@@ -159,6 +157,7 @@ sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
+#ifdef RASPI
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
                       {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart}, 
@@ -178,6 +177,25 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
                       {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
                       {&halfDispRestart, &halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
                       7 , 1 , changeOption };//Estructura del menu de pausa.
+#endif
+
+#ifdef ALLEGRO
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
+                      {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
+                      4, changeOption };//Estructura del menu de inicio.
+
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
+                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
+                      7, changeOption };//Estructura del menu de pausa.
+
+menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "},  
+                      6, changeOption };//Estructura del menu de pausa.
+
+menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
+                      7, changeOption };//Estructura del menu de pausa.
+#endif
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
@@ -450,6 +468,7 @@ static void* menuHandlerThread(void * data){
 	menu_t * menu = (menu_t *) data;
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
+    int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     pthread_t displayMenuT;
@@ -480,9 +499,9 @@ static void* menuHandlerThread(void * data){
         int animStatus = 1;
 
         argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
-    #endif
-
+    
     pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
+    #endif
 
     //***************************************************************************************************************************
 
@@ -495,6 +514,7 @@ static void* menuHandlerThread(void * data){
             if (DERECHA_INPUT){//Si se presiona para ir a la siguiente opcion
 
                 printf("Siguiente opcion \n");
+                preSelect = select;
                 select += 1;
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
@@ -503,6 +523,9 @@ static void* menuHandlerThread(void * data){
                 #ifdef RASPI
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 #endif
+                #ifdef ALLEGRO
+                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                #endif
 
                 (menu -> changeOption)(&argChangeOption);
                 
@@ -510,6 +533,7 @@ static void* menuHandlerThread(void * data){
 
             if (IZQUIERDA_INPUT){//Si se presiona para ir a la opcion anterior
 
+                preSelect = select;
                 select -= 1;
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
@@ -517,6 +541,9 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef RASPI
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                #endif
+                #ifdef ALLEGRO
+                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
 
                 (menu -> changeOption)(&argChangeOption);

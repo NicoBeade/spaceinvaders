@@ -53,9 +53,7 @@ typedef struct
 {
     ALLEGRO_EVENT_QUEUE ** event_queue;
 
-    object_t ** nave;
-    object_t ** aliens;
-    object_t ** balas;
+    punteros_t punteros;
     texto_t ** text;
 
     bool * close_display;
