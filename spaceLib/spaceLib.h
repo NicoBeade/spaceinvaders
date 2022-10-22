@@ -191,7 +191,7 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
 
 
 //*****************COLLIDER
-void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr); //Recorre todas las listas para chequear si hubo colisiones
+void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr); //Recorre todas las listas para chequear si hubo colisiones
 int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType); //Detecta si hubo colision entre dos objetos.
 
 //*****************OBJTYPES
