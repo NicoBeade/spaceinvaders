@@ -538,8 +538,9 @@ static void* menuHandlerThread(void * data){
         if( (timerTick % velMenu) == 0 ){
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
-
+                #ifdef ALLEGRO
                 preSelect = select;
+                #endif
                 select += 1;
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
@@ -557,8 +558,9 @@ static void* menuHandlerThread(void * data){
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
-
+                #ifdef ALLEGRO
                 preSelect = select;
+                #endif
                 select -= 1;
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
