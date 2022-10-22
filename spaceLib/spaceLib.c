@@ -447,6 +447,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 collition = 0;
                 listBarreras->lives -= 1;
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
+                    printf("ListBarreras: %p\n", listBarreras);
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
                     listBarreras = *barrerasList;
                 }
@@ -454,6 +455,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
                     object_t * balaADestruir = listBalasEnemigas;
                     listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
+                    printf("ListBalas: %p\n", balaADestruir);
                     *balasUsr = destroyObj(*balasUsr, balaADestruir);
                     listBalasEnemigas = *balasUsr;
                 }
