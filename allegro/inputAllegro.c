@@ -16,10 +16,10 @@
 
 #include <stdio.h>
 #include <time.h>
-#include "aliensYBalas.h"
 #include "inputAllegro.h"
-#include "utilidades.h"
+#include "../utilidades.h"
 #include "displayAllegro.h"
+#include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
 /*
@@ -83,19 +83,29 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
         if(timerTick % FPS == 0 ){
 
             if(key_pressed[UP]){
-                *data->keys.y = 1;
+                (*data->keys).y = 1;
+            }else{
+                (*data->keys).y = 0;
             }
             if(key_pressed[DOWN]){
-                *data->keys.y = -1;
+                (*data->keys).y = -1;
+            }else{
+                (*data->keys).y = 0;
             }
             if(key_pressed[RIGHT]){
-                *data->keys.x = 1; 
+                (*data->keys).x = 1; 
+            }else{
+                (*data->keys).x = 0;
             }
             if(key_pressed[LEFT]){
-                *data->keys.x = -1;
+                (*data->keys).x = -1;
+            }else{
+                (*data->keys).x = 0;
             }
             if(key_pressed[SPACE]){
-                *data->keys.space = 1;
+                (*data->keys).press = 1;
+            }else{
+                (*data->keys).press = 0;
             }
 
         }

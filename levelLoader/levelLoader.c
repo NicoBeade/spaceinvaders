@@ -64,11 +64,16 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                 int arrayIndex = 0;     //Se crea variable auxiliar arrayIndex
                 char caracter = lineaStr[0];          //Se crea variable auxiliar caracter
                 int state = START;      //Se crea variable auxiliar state
+                int ignoreComment = 0;             //Se crea variable auxiliar ingnorar comentario
                 if(caracter != ';'){    //Si no es un comentario
                     while(caracter != 0){    //Mientras no sea un un 0 recorre los caracteres de una linea
                         switch(state){      //Dependiendo de en donde se encuentre leyendo (parametro, espacio o valor)
                             case START:     //Si es el primer caracter
                                 if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
+                                    break;
+                                }
+                                else if(caracter == ';'){   //Si encuentra un comentario
+                                    ignoreComment = 1;
                                     break;
                                 }
                                 else{                   //Si no es un espacio se encuentra en el estado lectura de parametro
@@ -114,7 +119,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 }
                                 break;
                         }
-                        if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r' || lineaStr[letra+1] == ';'){   //Si el siguiente caracter es un finalizador de la linea, se termina el while
+                        if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r' || lineaStr[letra+1] == ';' || lineaStr[letra] == ';'){   //Si el siguiente caracter es un finalizador de la linea, se termina el while
                             caracter = 0;
                         }
                         else{   //Si la linea no finalizo se incrementa el index de la lietra y se lee un nuevo caracter
@@ -132,7 +137,12 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                             return -1;
                         }
                     }
-                    linea++;
+                    if(ignoreComment == 0){  //Si la linea no es un comentario se incrementa el index de linea
+                        linea++;
+                    }
+                    else{               //Si es un comentario se vuelve a setear en 0 el ignore comment para que la proxima linea se tome como "normal"
+                        ignoreComment = 0;
+                    }
                 }
             }
         }
@@ -656,7 +666,7 @@ int main (){
     printAliens(&listaAliens);
     
 }
-*/
 
+*/
 
 

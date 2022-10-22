@@ -20,7 +20,8 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include "utilidades.h"
+#include "../utilidades.h"
+#include "allegro.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -40,14 +41,6 @@
                         uno a la lista de las balas del usuario
                         uno a la lista de las balas de los aliens
     ***************************************************************************/
-typedef struct TEXTO
-{
-    char* texto;
-    int posx;
-    int posy;
-
-    struct TEXTO * next;
-} texto_t;
 
 typedef struct 
 {
@@ -59,18 +52,8 @@ typedef struct
     bool * close_display;
     bool * displayFlag;
 
-} display_data_t;
+}display_data_t;
     
-
-
-typedef struct{
-
-    texto_t ** toText;
-    int actualOp;
-    int nextOp;
-    menu_t * menu;
-
-} changeOptionData_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

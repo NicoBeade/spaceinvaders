@@ -23,8 +23,7 @@
 #include "spaceLib/spaceLib.h"
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
-
-#define RASPI 
+ 
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
@@ -34,7 +33,7 @@
 #endif
 
 #ifdef ALLEGRO
-#include "allegro.h"
+#include "allegro/allegro.h"
 #endif
 
 /*******************************************************************************************************************************************
@@ -69,6 +68,7 @@ typedef struct{
     object_t ** usrList;
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
+    object_t ** barriersList;
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -99,10 +99,12 @@ typedef struct{
 
 #ifdef ALLEGRO
 
-#define ALLEGRO_THREAD allegrot
+#define INPUT_THREAD allegroThread
 
-#define SIGUIENTE_INPUT ((menu->keys)->y == 1)    //Macros para indicar que representa un cambio de opcion en un menu.
-#define ANTERIOR_INPUT  ((menu->keys)->y == -1)
+#define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
+#define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
+#define ARRIBA_INPUT ((menu->keys)->y == 1)
+#define ABAJO_INPUT  ((menu->keys)->y == -1)
 #endif
 
 
@@ -132,11 +134,13 @@ static void* levelHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
+#ifdef RASPI
 extern halfDisp_t halfDispTrophy;
 extern halfDisp_t halfDispAlienSpaceInvaders;
 extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
+#endif
 
 #define VEL_SHOOT_USR 15
 
@@ -180,21 +184,22 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
 #endif
 
 #ifdef ALLEGRO
+texto_t * toText = NULL;
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
                       {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
-                      4, changeOption };//Estructura del menu de inicio.
+                      4, 1, changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
-                      7, changeOption };//Estructura del menu de pausa.
+                      7, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
                       {"Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "},  
-                      6, changeOption };//Estructura del menu de pausa.
+                      6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
                       {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
-                      7, changeOption };//Estructura del menu de pausa.
+                      7, 1, changeOption };//Estructura del menu de pausa.
 #endif
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
@@ -250,17 +255,19 @@ void * timer(){
 
 int main(void){
 
+    #ifdef RASPI
     disp_init();
     joy_init();
 
-    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, displayT, colliderT, mothershipT;
+    pthread_t displayT;
+    #endif
+
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT;
     
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
-
-    pthread_create(&inputT, NULL, INPUT_THREAD, &KEYS);
 
     object_t * alienList = NULL; //Se crea la lista de aliens
     object_t * UsrList = NULL; //Se crea la lista de nave usuario
@@ -270,6 +277,18 @@ int main(void){
     object_t * mothershipList = NULL; //Se crea la lista de la nave nodriza.
 
     level_setting_t levelSettings;
+
+    #ifdef ALLEGRO
+    punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList};
+    data_allegro_t dataInput = {punteros, &toText, &KEYS};
+    #endif
+
+    #ifdef RASPI
+        keys_t dataInput = KEYS;
+    #endif
+
+    pthread_create(&inputT, NULL, INPUT_THREAD, &dataInput);
+
 
     #ifdef RASPI
     char platform[4] = "rpi";
@@ -356,7 +375,7 @@ int main(void){
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
                 #ifdef RASPI
-                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList, &mothershipList };
+                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList, &barrerasList, &mothershipList };
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
 
@@ -471,9 +490,8 @@ static void* menuHandlerThread(void * data){
     int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
-    pthread_t displayMenuT;
-
     #ifdef RASPI
+        pthread_t displayMenuT;
         halfDisp_t higherDispMenu = {//Parte superior del display
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -503,6 +521,9 @@ static void* menuHandlerThread(void * data){
     pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
 
+    #ifdef ALLEGRO
+    toText = allegroMenu(MENUES[GAME_STATUS.menuActual], toText);
+    #endif
     //***************************************************************************************************************************
 
     usleep(200 * U_SEC2M_SEC);
@@ -556,10 +577,11 @@ static void* menuHandlerThread(void * data){
             
         }
     }
+    #ifdef RASPI
     animStatus = 0;
-
     pthread_join(displayMenuT, NULL);
-    
+    #endif
+
     pthread_exit(0);
 }
 

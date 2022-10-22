@@ -1,4 +1,16 @@
+ #ifndef ALLEGRO_H
+ #define ALLEGRO_H
+
 typedef int (*option_t)(void);
+
+typedef struct TEXTO
+{
+    char* texto;
+    int posx;
+    int posy;
+
+    struct TEXTO * next;
+}texto_t;
 
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
@@ -6,8 +18,10 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
     char* textOpciones[10];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
     int cantOpciones;//Cantidad de opciones del menu.
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
-} menu_t;
+    
+}menu_t;
 
 typedef struct{
 
@@ -16,7 +30,7 @@ typedef struct{
     int nextOp;
     menu_t * menu;
 
-} changeOptionData_t;
+}changeOptionData_t;
 
 //allegroMenu: Esta funcion se encarga de preparar las listas para mostrar un menu en pantalla
 //Como segundo parametro debe recibir el puntero a la lista de textos de allegro
@@ -35,7 +49,7 @@ typedef struct {
     object_t ** balasAlien;
     object_t ** mothershipList;
 
-} punteros_t;
+}punteros_t;
 
 //Struct de datos para el thread de allegro
 typedef struct ALLEGRO {
@@ -44,8 +58,19 @@ typedef struct ALLEGRO {
     texto_t ** textToShow;
     keys_t * keys;
 
-} data_allegro_t;
+}data_allegro_t;
 
 //protoripo de thread principal de allegro
 void * allegroThread (void * arg);
+
+int selectPlayInicio(void);
+int selectLevels(void);
+int selectVolume(void);
+int selectQuitGame(void);
+int selectResume(void);
+int selectRestartLevel(void);
+int selectMainMenu(void);
+int selectDificulty(void);
 /*******************************************************************************************************/
+
+#endif

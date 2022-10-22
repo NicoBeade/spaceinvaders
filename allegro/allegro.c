@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
-#include "utilidades.h"
+#include "../utilidades.h"
 #include "displayAllegro.h"
 #include "inputAllegro.h"
 #include "allegro.h"
@@ -17,6 +17,7 @@
 extern int timerTick;
 
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn);
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
 
 typedef struct {
 
@@ -154,6 +155,7 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
 texto_t * allegroMenu(menu_t * data, texto_t * toshow){
 //Esta funcion se utiliza para mostrar los menues en pantalla
+    
     int i;
     for( i = 0; i<data->cantOpciones; i++){
         //Se agregan los textos de las opciones a la lista de textos
@@ -201,4 +203,49 @@ void changeOption(void * dataIn){
     puntero->posx=100;
     puntero->posy=(data->nextOp+1)*100;
 
+}
+
+int selectPlayInicio(void){
+    printf("Select Play Inicio\n");
+    GAME_STATUS.pantallaActual = START_LEVEL;
+    return 0;
+}
+
+int selectLevels(void){
+    return 1;
+}
+
+int selectVolume(void){
+    return 1;
+}
+
+int selectQuitGame(void){
+    printf("Select Quit Game\n");
+    GAME_STATUS.pantallaActual = QUIT_GAME;
+    return 0;
+}
+
+int selectResume(void){
+    printf("Select Resume\n");
+    GAME_STATUS.pantallaActual = IN_GAME;
+    menuGame.exitStatus = 1;
+    return 0;
+}
+
+int selectRestartLevel(void){
+    printf("Select Restart Level\n");
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
+    return 0;
+}
+
+int selectMainMenu(void){
+    printf("Select Main Menu\n");
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+    GAME_STATUS.menuActual = MENU_INICIO;
+    return 0;
+}
+
+int selectDificulty(void){
+    return 0;
 }

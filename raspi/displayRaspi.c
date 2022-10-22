@@ -827,8 +827,10 @@ void* displayRPIThread (void* argDisplayRPI){
     object_t* balasUsr;
     object_t* aliens;
     object_t* naveUser;
-    dcoord_t punto; //punto del display a escribir
+    object_t* barriers;
     object_t* mothership;
+
+    dcoord_t punto; //punto del display a escribir
 
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
@@ -839,6 +841,7 @@ void* displayRPIThread (void* argDisplayRPI){
             balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
             aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
             naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
+            barriers = *(((argDisplayRPI_t*)argDisplayRPI)->barriers); //Puntero a la nave nodriza
             mothership = *(((argDisplayRPI_t*)argDisplayRPI)->mothership); //Puntero a la nave nodriza
 
             clearBuffer(); //limpio el buffer            
@@ -940,6 +943,20 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             balasUsr = aux;
 
+            aux = barriers;
+            while (barriers!= NULL){ //mientras no se haya llegado al final de la lista
+
+                punto.x=barriers->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+                punto.y=barriers->pos.y;
+                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+                    printf("Fuera de rango de impresion de las barreras\n"); //chequea de pixel a imprimir
+                }
+                else{   
+                    disp_write(punto,D_ON);
+                }
+                barriers = barriers -> next;
+            }
+            barriers = aux;
             punto.y=0;
             if(mothership->pos.x>0&&mothership->pos.x<15){
                 punto.x=mothership->pos.x;

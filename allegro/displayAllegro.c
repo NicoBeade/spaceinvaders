@@ -16,10 +16,12 @@
 
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h> //Manejo de ttfs
 #include <pthread.h>
 #include <stdio.h>
 #include "displayAllegro.h"
 #include "allegro.h"
+#include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
 #define SNAVE "sprites/nave.png"
@@ -30,7 +32,7 @@
 #define SBALA "sprites/bala.png"
 #define PUNTEROS(n) *(data->punteros.n)
 
-extern sem_t semaforo;
+extern sem_t SEM_GAME;
 
 /***********************************************************************************************************************************************************
  * 
@@ -56,7 +58,7 @@ int showEntity(object_t * entity);
      * ***************************************************************************/
 
 int showObjects(object_t * inicial);
-int showText(texto_t * data, ALLEGRO_FONT * fuente);
+void showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
 texto_t * emptyText(texto_t * firstText);
@@ -80,38 +82,41 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     display = al_create_display(X_MAX,Y_MAX);
 
+    printf("Puntero al texto: %p\n", *(data->text));
+    
     al_init_image_addon();
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon(); // initialize the ttf (True Type Font) addon
 
-    fuente = al_load_ttf_font("Fuente.ttf", 36, 0);
+    fuente = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0);
     
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
+    
     while(!*data->close_display){
 
         usleep(10 * U_SEC2M_SEC);    
 
         if(*data->displayFlag){
-
-            sem_wait(&semaforo);
+        
+            //sem_wait(&SEM_GAME);
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
             //Se dibujan los elementos y textos en el buffer
-            showObjects(PUNTEROS(alienList));
+            /*showObjects(PUNTEROS(alienList));
             showObjects(PUNTEROS(UsrList));
             showObjects(PUNTEROS(barrerasList));
             showObjects(PUNTEROS(balasUsr));
             showObjects(PUNTEROS(balasAlien));
-            showObjects(PUNTEROS(mothershipList));
+            showObjects(PUNTEROS(mothershipList));*/
             showTexts(*data->text, fuente);
             //Se muestra en pantalla
             al_flip_display();
 
             *data->displayFlag= false;
 
-            sem_post(&semaforo);
+            //sem_post(&SEM_GAME);
         }
     }
     pthread_exit(0);
@@ -125,7 +130,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-int showText(texto_t * data, ALLEGRO_FONT * fuente){
+void showText(texto_t * data, ALLEGRO_FONT * fuente){
 
     //Comando para escribir un texto en el buffer
     al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
@@ -136,7 +141,7 @@ int showEntity(object_t * entity){
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
 
     //Se busca la direccion del sprite
-    char * sprite;
+    char * sprite = "spritesAllegro/alien1";
 
     image = al_load_bitmap(sprite);    //Se carga en el bitmap
 
