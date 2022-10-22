@@ -459,7 +459,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
             }
         }
-        else if(listBarreras != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, barrerasList->pos, barrerasList->type)){
+        else if(listBarreras != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){
             collition = 0;
             listBarreras->lives -= 1;
             if(listBarreras->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
