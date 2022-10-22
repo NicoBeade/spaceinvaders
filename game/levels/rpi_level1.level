@@ -6,27 +6,27 @@ END
 ALIEN
 type  1
 posX  1
-posY  0
+posY  1
 END
 USUARIO
 type 40
 posX 5
-posY 13
-END
-BARRERA
-type 50
-posX 2
-posY 10
-END
-BARRERA
-type 50
-posX 3
-posY 10
+posY 14
 END
 BARRERA
 type 50
 posX 2
 posY 11
+END
+BARRERA
+type 50
+posX 3
+posY 12
+END
+BARRERA
+type 50
+posX 2
+posY 12
 END
 BARRERA
 type 50
