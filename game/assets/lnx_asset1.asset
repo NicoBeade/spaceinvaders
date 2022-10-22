@@ -1,11 +1,11 @@
-parametro1 10
-parametro2    20
-parametro3             40
 id 1
-vel 2    
-ancho 4
-alto 3
+vel 10    
+ancho 60
+alto 40
 initLives 5
 shootProb 6
 maxBullets 7
 balaID 8
+sprite1 /game/spritesAllegro/alien1.png
+sprite2 /game/spritesAllegro/alien1.png
+sprite3 /game/spritesAllegro/alien1.png

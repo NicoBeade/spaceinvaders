@@ -140,11 +140,17 @@ int showEntity(object_t * entity){
     
     char * sprite = asset->sprite1;
 
-    image = al_load_bitmap(sprite);    //Se carga en el bitmap
+    if (sprite == NULL){
+        return -1;
+    }
+    else{
+        image = al_load_bitmap(sprite);    //Se carga en el bitmap
+    }
+    
 
     //Si no se pudo cargar salta error
     if (!image) {
-        fprintf(stderr, "failed to load image !\n");
+        //fprintf(stderr, "failed to load image ! %s\n", sprite);
         return -1;
     }
 

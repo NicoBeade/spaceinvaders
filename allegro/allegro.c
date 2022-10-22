@@ -15,6 +15,7 @@
 
 //Timer tick
 extern int timerTick;
+extern gameStatus_t GAME_STATUS;
 
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn);
 texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);

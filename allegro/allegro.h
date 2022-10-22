@@ -35,6 +35,7 @@ typedef struct{
 //allegroMenu: Esta funcion se encarga de preparar las listas para mostrar un menu en pantalla
 //Como segundo parametro debe recibir el puntero a la lista de textos de allegro
 texto_t * allegroMenu(menu_t * data, texto_t * toshow);
+texto_t * emptyText(texto_t * firstText);
 
 //changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
 void changeOption(void * data);

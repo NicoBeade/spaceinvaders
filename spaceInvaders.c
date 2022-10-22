@@ -87,29 +87,22 @@ typedef struct{
 #define INPUT_THREAD inputRPIThread             //Thread encargado de leer el input en la RPI
 #define DISPLAY_THREAD_GAME displayRPIThread    //Thread encargado de actualizar el display durante la ejecucion del juego en la RPI
 #define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
-
 #define SIGUIENTE ((menu->keys)->x == -1)
 #define ANTERIOR ((menu->keys)->x == 1)
-#define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
-#define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
-#define ARRIBA_INPUT ((menu->keys)->y == 1)
-#define ABAJO_INPUT  ((menu->keys)->y == -1)
 
 #endif
 
 #ifdef ALLEGRO
 
 #define INPUT_THREAD allegroThread
-
 #define SIGUIENTE ((menu->keys)->y == -1)
 #define ANTERIOR ((menu->keys)->y == 1)
+#endif
+
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
 #define ARRIBA_INPUT ((menu->keys)->y == 1)
 #define ABAJO_INPUT  ((menu->keys)->y == -1)
-#endif
-
-
 #define PRESS_INPUT     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -324,13 +317,13 @@ int main(void){
                 break;
             
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
-
+                printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
 
                 if(GAME_STATUS.nivelActual == 0){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets("rpi", &carpetaAssets);   
+                    loadAllAssets(platform, &carpetaAssets);   
                     int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
 
                     if(levelStatus == -1){
@@ -400,9 +393,11 @@ int main(void){
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
+
                 break;
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
+                printf("ENTRO A IN_GAME \n");
                 sem_post(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
 
@@ -412,6 +407,7 @@ int main(void){
                 break;
 
             case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
+                printf("ENTRO A DESTROY_LEVEL \n");
                 GAME_STATUS.inGame = 0;
 
                 usleep(50 * U_SEC2M_SEC);
@@ -441,6 +437,7 @@ int main(void){
                 break;
 
             case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
+                printf("ENTRO A QUIT_GAME\n");
                 GAME_STATUS.inGame = 0;
 
                 usleep(50 * U_SEC2M_SEC);
@@ -580,6 +577,7 @@ static void* menuHandlerThread(void * data){
 
             if (PRESS_INPUT){//Si se selecciona la opcion
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
+                toText = emptyText(toText);
             }
             
         }
