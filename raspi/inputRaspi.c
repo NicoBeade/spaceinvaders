@@ -45,7 +45,7 @@ void* inputRPIThread(void* argInputRPI){
             //Esta seccion detecta si se presiono el boton del joystick.
             ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 1 : 0;
 
-            printf("Press: %d", ((keys_t*)argInputRPI) -> press)
+            printf("Press: %d", ((keys_t*)argInputRPI) -> press);
             
         }
     }
