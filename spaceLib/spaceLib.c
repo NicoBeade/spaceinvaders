@@ -448,6 +448,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBarreras->lives -= 1;
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
                     printf("ListBarreras: %p\n", listBarreras);
+                    printf("BarrerasList: %p\n", barrerasList);
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
                     listBarreras = *barrerasList;
                 }
