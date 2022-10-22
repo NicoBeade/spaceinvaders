@@ -33,3 +33,43 @@ type 50
 posX 3
 posY 11
 END
+BARRERA ;Barrera 2
+type 50
+posX 7
+posY 11
+END
+BARRERA
+type 50
+posX 8
+posY 12
+END
+BARRERA
+type 50
+posX 7
+posY 12
+END
+BARRERA
+type 50
+posX 8
+posY 11
+END
+BARRERA ;Barrera 3
+type 50
+posX 12
+posY 11
+END
+BARRERA
+type 50
+posX 13
+posY 12
+END
+BARRERA
+type 50
+posX 12
+posY 12
+END
+BARRERA
+type 50
+posX 13
+posY 11
+END

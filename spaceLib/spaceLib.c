@@ -415,7 +415,7 @@ void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** balasEnemigas, object_t ** balasUsr){
+void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
@@ -428,6 +428,11 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
         printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
+        return;
+    }
+    object_t * listBarreras = *barrerasList;
+    if(listBarreras == NULL){
+        printf("Err in spaceLib.c barrerasList cannot be NULL in collider.\n");
         return;
     }
     object_t * listBalasEnemigas = *balasEnemigas;
@@ -454,7 +459,24 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
             }
         }
-        //else if() HAY QUE CHEQUEAR SI GOLPEA UNA BARRERA
+        else if(listBarreras != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, barrerasList->pos, barrerasList->type)){
+            collition = 0;
+            listBarreras->lives -= 1;
+            if(listBarreras->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
+                *alienList = destroyObj(*barrerasList, listBarreras);
+                listBarreras = *barrerasList;
+            }
+            listBalasUsr->lives -= 1;
+            if(listBalasUsr->lives == 0){//Si la bala debe morir
+                object_t * balaADestruir = listBalasUsr;
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+                *balasUsr = destroyObj(*balasUsr, balaADestruir);
+                listBalasUsr = *balasUsr;
+            }
+            else{//Si la bala no debe morir
+            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+            }
+        }
         else{
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
