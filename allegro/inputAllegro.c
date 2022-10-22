@@ -39,7 +39,7 @@ extern sem_t semaforo;
 
 extern unsigned int timerTick;
 
-#define FPS 5
+#define FPS 2
 
 void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
@@ -55,7 +55,7 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
     while(!*data->close_display){
 
-        usleep(10 * U_SEC2M_SEC);
+        //usleep(10 * U_SEC2M_SEC);
 
         if(*data->keyboardDownFlag){
 
