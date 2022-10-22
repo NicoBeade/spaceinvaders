@@ -90,6 +90,8 @@ typedef struct{
 #define SIGUIENTE ((menu->keys)->x == -1)
 #define ANTERIOR ((menu->keys)->x == 1)
 
+printf("Boooo\n");
+
 #endif
 
 #ifdef ALLEGRO
