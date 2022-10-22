@@ -64,9 +64,9 @@ typedef struct{
 	level_setting_t * levelSettings;
     object_t ** alienList;
     object_t ** usrList;
+    object_t ** barriersList;
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
-    object_t ** barriersList;
 }argCollider_t;
 
 /*******************************************************************************************************************************************
