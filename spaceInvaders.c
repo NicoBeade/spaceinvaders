@@ -758,7 +758,7 @@ void * colliderThread(void * argCollider){
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
             printf("Collider\n");
-            collider(data -> levelSettings, data -> alienList, data -> usrList, data -> balasEnemigas, data -> balasUsr);
+            collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
             sem_post(&SEM_GAME);
         }
     }
