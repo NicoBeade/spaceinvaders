@@ -468,6 +468,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             }
         }
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition){
+            collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
                 GAME_STATUS.pantallaActual = MENU;
@@ -485,9 +486,10 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
             }
         }
-        if(collition){//Si no hubo colision
+        else if(collition){//Si no hubo colision
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
+        
         collition = 1;
     }
 
