@@ -52,7 +52,7 @@ typedef struct {
 }punteros_t;
 
 //Struct de datos para el thread de allegro
-typedef struct ALLEGRO {
+typedef struct {
 
     punteros_t punteros;
     texto_t ** textToShow;

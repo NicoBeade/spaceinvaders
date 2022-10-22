@@ -13,7 +13,6 @@
 *   
 *
  **********************************************************************************************************************************************************/
-
 #include <stdio.h>
 #include <stdint.h>
 #include <pthread.h>
@@ -89,6 +88,8 @@ typedef struct{
 #define DISPLAY_THREAD_GAME displayRPIThread    //Thread encargado de actualizar el display durante la ejecucion del juego en la RPI
 #define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
 
+#define SIGUIENTE ((menu->keys)->x == -1)
+#define ANTERIOR ((menu->keys)->x == 1)
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
 #define ARRIBA_INPUT ((menu->keys)->y == 1)
@@ -100,6 +101,8 @@ typedef struct{
 
 #define INPUT_THREAD allegroThread
 
+#define SIGUIENTE ((menu->keys)->y == -1)
+#define ANTERIOR ((menu->keys)->y == 1)
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
 #define ARRIBA_INPUT ((menu->keys)->y == 1)
@@ -206,7 +209,13 @@ level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos 
 
 unsigned int timerTick = 1000000;
 int velInput = 1;
+
+#ifdef RASPI
 int velMenu = 20;
+#endif
+#ifdef ALLEGRO
+int velMenu = 10;
+#endif
 int velDispAnimation = 2;
 int velInputGame = 5;
 int velAliens = 100;
@@ -531,9 +540,8 @@ static void* menuHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             
-            if (DERECHA_INPUT){//Si se presiona para ir a la siguiente opcion
+            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
 
-                printf("Siguiente opcion \n");
                 preSelect = select;
                 select += 1;
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
@@ -551,7 +559,7 @@ static void* menuHandlerThread(void * data){
                 
             }
 
-            if (IZQUIERDA_INPUT){//Si se presiona para ir a la opcion anterior
+            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
 
                 preSelect = select;
                 select -= 1;

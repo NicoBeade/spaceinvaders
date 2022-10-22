@@ -24,12 +24,7 @@
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
-#define SNAVE "sprites/nave.png"
-#define SALIEN1 "sprites/alien1.png"
-#define SALIEN2 "sprites/alien2.png"
-#define SALIEN3 "sprites/alien3.png"
-#define SBARRERA "sprites/nave.png"
-#define SBALA "sprites/bala.png"
+
 #define PUNTEROS(n) *(data->punteros.n)
 
 extern sem_t SEM_GAME;
@@ -104,12 +99,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
             //Se dibujan los elementos y textos en el buffer
-            /*showObjects(PUNTEROS(alienList));
+            showObjects(PUNTEROS(alienList));
             showObjects(PUNTEROS(UsrList));
             showObjects(PUNTEROS(barrerasList));
             showObjects(PUNTEROS(balasUsr));
             showObjects(PUNTEROS(balasAlien));
-            showObjects(PUNTEROS(mothershipList));*/
+            showObjects(PUNTEROS(mothershipList));
             showTexts(*data->text, fuente);
             //Se muestra en pantalla
             al_flip_display();
@@ -141,7 +136,9 @@ int showEntity(object_t * entity){
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
 
     //Se busca la direccion del sprite
-    char * sprite = "spritesAllegro/alien1";
+    objectType_t * asset = getObjType(entity->type);
+    
+    char * sprite = asset->sprite1;
 
     image = al_load_bitmap(sprite);    //Se carga en el bitmap
 

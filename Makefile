@@ -1,8 +1,8 @@
 #*******************************************************************************************************************************************
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
-mainRaspi: spaceInvaders.o inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o utilidades.h
-	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o spaceInvaders.o -pthread -Wall -o spaceInvaders -g -D RASPI
+mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o utilidades.h spaceInvaders.c
+	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
 
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h
@@ -25,8 +25,8 @@ cleanRaspi:
 
 COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 --libs --cflags)
 
-mainAllegro: spaceLib.o levelLoader.o spaceInvaders.o allegro.o displayAllegro.o inputAllegro.o
-	gcc spaceInvaders.o spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
+mainAllegro: spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o spaceInvaders.c
+	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
 
 allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
@@ -41,11 +41,6 @@ inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h utilidades.h
 
 
 
-
-
-
-spaceInvaders.o: spaceInvaders.c utilidades.h
-	gcc -c -g spaceInvaders.c -Wall 
 
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c -g spaceLib/spaceLib.c -o spaceLib.o

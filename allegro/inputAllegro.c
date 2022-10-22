@@ -61,10 +61,19 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
             if(*data->keycode == ALLEGRO_KEY_SPACE){
                 key_pressed[SPACE]= true;
-            }     
-            else{
-                key_pressed[KEYCODE]= true;
             }
+            if(*data->keycode == ALLEGRO_KEY_DOWN){
+                key_pressed[DOWN]= true;
+            }
+            if(*data->keycode == ALLEGRO_KEY_UP){
+                key_pressed[UP]= true;
+            }
+            if(*data->keycode == ALLEGRO_KEY_RIGHT){
+                key_pressed[RIGHT]= true;
+            }
+            if(*data->keycode == ALLEGRO_KEY_LEFT){
+                key_pressed[LEFT]= true;
+            } 
 
             *data->keyboardDownFlag= false;       
         }
@@ -72,9 +81,18 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
             if(*data->keycode == ALLEGRO_KEY_SPACE){
                 key_pressed[SPACE]= false;
-            }     
-            else{
-                key_pressed[KEYCODE]= false;
+            }
+            if(*data->keycode == ALLEGRO_KEY_DOWN){
+                key_pressed[DOWN]= false;
+            }
+            if(*data->keycode == ALLEGRO_KEY_UP){
+                key_pressed[UP]= false;
+            }
+            if(*data->keycode == ALLEGRO_KEY_RIGHT){
+                key_pressed[RIGHT]= false;
+            }
+            if(*data->keycode == ALLEGRO_KEY_LEFT){
+                key_pressed[LEFT]= false;
             }
 
             *data->keyboardUpFlag= false;       
@@ -84,24 +102,24 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
             if(key_pressed[UP]){
                 (*data->keys).y = 1;
-            }else{
-                (*data->keys).y = 0;
             }
-            if(key_pressed[DOWN]){
+            else if(key_pressed[DOWN]){
                 (*data->keys).y = -1;
-            }else{
+            }
+            else{
                 (*data->keys).y = 0;
             }
+
             if(key_pressed[RIGHT]){
                 (*data->keys).x = 1; 
-            }else{
-                (*data->keys).x = 0;
             }
-            if(key_pressed[LEFT]){
+            else if(key_pressed[LEFT]){
                 (*data->keys).x = -1;
-            }else{
+            }
+            else{
                 (*data->keys).x = 0;
             }
+            
             if(key_pressed[SPACE]){
                 (*data->keys).press = 1;
             }else{
