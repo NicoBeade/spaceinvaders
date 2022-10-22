@@ -33,7 +33,7 @@ void* inputRPIThread(void* argInputRPI){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velInput) == 0 ){//Determina cada cuanto se actualiza el input.
-
+            printf("Boooo\n");
             joy_update();
             coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
             switchJoy =  joy_get_switch();
