@@ -55,21 +55,21 @@ posY 11
 END
 BARRERA ;Barrera 3
 type 50
-posX 12
+posX 11
 posY 11
 END
 BARRERA
 type 50
-posX 13
-posY 12
-END
-BARRERA
-type 50
 posX 12
 posY 12
 END
 BARRERA
 type 50
-posX 13
+posX 11
+posY 12
+END
+BARRERA
+type 50
+posX 12
 posY 11
 END
