@@ -492,7 +492,6 @@ static void* menuHandlerThread(void * data){
 	menu_t * menu = (menu_t *) data;
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
-    int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
@@ -527,6 +526,7 @@ static void* menuHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
+    int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
     toText = allegroMenu(MENUES[GAME_STATUS.menuActual], toText);
     #endif
     //***************************************************************************************************************************
@@ -577,7 +577,9 @@ static void* menuHandlerThread(void * data){
 
             if (PRESS_INPUT){//Si se selecciona la opcion
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
+                #ifdef ALLEGRO
                 toText = emptyText(toText);
+                #endif
             }
             
         }
