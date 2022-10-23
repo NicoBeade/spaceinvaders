@@ -446,7 +446,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
-        while(listBarreras != NULL  &&  collition){//Chequea todas las barreras
+        while(listBarreras != NULL  &&  collition && listBalasEnemigas != NULL){//Chequea todas las barreras
             if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
 
                 collition = 0;
