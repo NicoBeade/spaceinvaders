@@ -125,7 +125,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 break;
                         }
                         
-                        else{   //Si la linea no finalizo se incrementa el index de la lietra y se lee un nuevo caracter
+                        if(caracter != 0){   //Si la linea no finalizo se incrementa el index de la lietra y se lee un nuevo caracter
                             letra++;          
                             caracter = lineaStr[letra]; //Se lee un nuevo caracter
                         }
