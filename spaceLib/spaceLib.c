@@ -345,6 +345,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
+    printf("Balas Actuales: %d \n",balasActuales);
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
