@@ -717,7 +717,6 @@ void * moveBalaThread(void * argMoveBala){
 
             sem_wait(&SEM_GAME);
 
-            printf("Balas enemigas en main: %p\n", *(data -> balasEnemigas));
             if(*(data -> balasEnemigas) != NULL){
 
                 (*(data -> balasEnemigas))  = moveBala(data -> balasEnemigas, data -> levelSettings);
@@ -726,7 +725,6 @@ void * moveBalaThread(void * argMoveBala){
             if(*(data -> alienList) != NULL){
 
                 (*(data -> balasEnemigas)) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
-                printLista((*(data -> balasEnemigas)), "EL DIEGO");
             }
             else{
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");

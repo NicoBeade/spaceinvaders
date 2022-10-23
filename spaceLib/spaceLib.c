@@ -88,7 +88,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 }
 
 object_t * destroyObj(object_t * ListObj, object_t * RipObj){
-    printLista(ListObj, "EL DESTRUCTOR DE PEPES");
+
     object_t * Obj = ListObj;
     if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
         if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
@@ -102,12 +102,10 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
             Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
         }
         free(RipObj);                          //Se libera la memoria del objeto eliminado
-        printf("RipObj Pointer %p\n", RipObj);
     }
     else{
         printf("Err in gameLib, destroyObj function: The list %p and the node %p to delete cannot be empty\n", ListObj, RipObj); //Si no existen devuelve error
     }
-    printLista(Obj, "EL DESTRUCTOR AL FINAL");
     return Obj;             //Se devuelve la lista
 }
 
@@ -329,7 +327,6 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     int yMin = levelSetting -> yMin;
     if(Bala != NULL){
         while(Bala != NULL){
-            printf("Pos bala en moveBala: %d Bala %p   Bala id %d\n", Bala -> pos.y,Bala, Bala->type); 
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
@@ -340,7 +337,6 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
                 Bala = Bala -> next;
                 newList = destroyObj(*ListBalasEnemy, balaADestruir);     //Se destruye la bala
                 *ListBalasEnemy = newList;
-                printf("List Balas  Enemy Pointer %p\n", newList);
             }                                                                                          
             
         }
@@ -353,7 +349,6 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
-    printf("Balas Actuales: %d \n",balasActuales);
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
@@ -447,6 +442,8 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     object_t * listBalasUsr = *balasUsr;
 
+    object_t * balaADestruir;
+
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
         while(listBarreras != NULL  &&  collition){//Chequea todas las barreras
@@ -461,7 +458,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
-                    object_t * balaADestruir = listBalasEnemigas;
+                    balaADestruir = listBalasEnemigas;
                     listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
                     printf("ListBalas: %p\n", balaADestruir);
                     printf("balasEnemigas: %p\n", *balasEnemigas);
