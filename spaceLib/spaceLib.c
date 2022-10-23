@@ -702,3 +702,18 @@ void imprimirARRAY(void){
         printf("TIPO N: %d\n\tID: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n",index, (objtypes[index]).id, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3);
     }
 }
+
+void printLista(object_t * aux){
+    if (aux != NULL){
+        int x;
+        for(x = 0; aux->next != NULL; x++){
+            printf("Nodo %d %p\n", x, aux);
+            aux = aux -> next;
+        }
+        printf("Nodo %d %p\n", x, aux);
+        
+    }
+    else{
+        printf("Lista vacia \n");
+    }
+}
