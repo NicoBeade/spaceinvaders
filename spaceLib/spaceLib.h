@@ -178,7 +178,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLiv
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.                                                     
 void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
-void printLista(lista);
+void printLista(object_t * lista);
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
