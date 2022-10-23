@@ -287,7 +287,7 @@ int main(void){
     #endif
 
     #ifdef RASPI
-    keys_t dataInput = KEYS;
+    keys_t dataInput = &KEYS;
     #endif
 
     pthread_create(&inputT, NULL, INPUT_THREAD, &dataInput);
