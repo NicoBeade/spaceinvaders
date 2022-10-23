@@ -334,6 +334,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
                 newList = destroyObj(*ListBalasEnemy, Bala);     //Se destruye la bala
+                printf("List Balas  Enemy Pointer %p\n", newList);
             }                                                                                          
             Bala = Bala -> next;
         }
