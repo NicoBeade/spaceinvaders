@@ -470,7 +470,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBarreras = listBarreras->next;
             }
         }
-
+        printLista(listBalasEnemigas, "Balas Pepe");
         if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listBalasEnemigas != NULL){
 
             collition = 0;
