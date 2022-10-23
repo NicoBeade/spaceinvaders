@@ -471,7 +471,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             }
         }
         printLista(listBalasEnemigas, "Balas Pepe");
-        if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listBalasEnemigas != NULL){
+        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition){
 
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
@@ -491,7 +491,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
             }
         }
-        else if(collition && listBalasEnemigas != NULL){//Si no hubo colision
+        else if(listBalasEnemigas != NULL && collition){//Si no hubo colision
             listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
         }
         
