@@ -271,6 +271,7 @@ int main(void){
     
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
+    sem_init(&SEM_DRIVER, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
 
