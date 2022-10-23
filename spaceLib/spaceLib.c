@@ -107,8 +107,8 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
     else{
         printf("Err in gameLib, destroyObj function: The list %p and the node %p to delete cannot be empty\n", ListObj, RipObj); //Si no existen devuelve error
     }
-    return Obj;             //Se devuelve la lista
     printLista(Obj, "EL DESTRUCTOR AL FINAL");
+    return Obj;             //Se devuelve la lista
 }
 
 object_t* removeList(object_t* lista){
