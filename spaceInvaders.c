@@ -15,13 +15,14 @@
  **********************************************************************************************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include "utilidades.h"
 #include "spaceLib/spaceLib.h"
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
- 
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
@@ -257,7 +258,7 @@ void * timer(){
  ******************************************************************************************************************************************/
 
 int main(void){
-
+    srand(time(NULL));
     #ifdef RASPI
     disp_init();
     joy_init();
