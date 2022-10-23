@@ -327,7 +327,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     int yMin = levelSetting -> yMin;
     if(Bala != NULL){
         while(Bala != NULL){
-            printf("Pos bala en moveBala: %d\n", Bala -> pos.y); 
+            printf("Pos bala en moveBala: %d Bala %p   Bala id %d\n", Bala -> pos.y,Bala, Bala->type); 
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
