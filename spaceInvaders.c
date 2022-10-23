@@ -207,7 +207,7 @@ int velInput = 1;
 #ifdef RASPI
 int velMenu = 20;
 int velBalas = 10;
-int velCollider = 5;
+int velCollider = 3;
 #endif
 #ifdef ALLEGRO
 int velMenu = 10;
