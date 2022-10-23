@@ -331,12 +331,15 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
+                Bala = Bala -> next;
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
-                newList = destroyObj(*ListBalasEnemy, Bala);     //Se destruye la bala
+                object_t* balaADestruir = Bala;
+                Bala = Bala -> next;
+                newList = destroyObj(*ListBalasEnemy, balaADestruir);     //Se destruye la bala
                 printf("List Balas  Enemy Pointer %p\n", newList);
             }                                                                                          
-            Bala = Bala -> next;
+            
         }
     }
     else{
