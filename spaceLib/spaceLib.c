@@ -703,17 +703,17 @@ void imprimirARRAY(void){
     }
 }
 
-void printLista(object_t * aux){
+void printLista(object_t * aux, int id){
     if (aux != NULL){
         int x;
         for(x = 0; aux->next != NULL; x++){
-            printf("Nodo %d %p\n", x, aux);
+            printf("Lista ID: %d  -  Nodo %d %p\n", id, x, aux);
             aux = aux -> next;
         }
-        printf("Nodo %d %p\n", x, aux);
+        printf("Lista ID: %d  - Nodo %d %p\n", id,  x, aux);
         
     }
     else{
-        printf("Lista vacia \n");
+        printf("Lista ID: %s VACIA \n", id);
     }
 }
