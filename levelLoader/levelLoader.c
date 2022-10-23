@@ -74,7 +74,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
                                     break;
                                 }
-                                else if(caracter == ';' || caracter == '\r' || caracter == '\n' caracter == '\0' ){   //Si encuentra un comentario o un finalizador de linea
+                                else if(caracter == ';' || caracter == '\r' || caracter == '\n' || caracter == '\0' ){   //Si encuentra un comentario o un finalizador de linea
                                     ignoreComment = 1;
                                     break;
                                 }
