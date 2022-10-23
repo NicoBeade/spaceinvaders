@@ -17,6 +17,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h> //Manejo de ttfs
+#include <allegro5/allegro_primitives.h>
 #include <pthread.h>
 #include <stdio.h>
 #include "displayAllegro.h"
@@ -24,8 +25,6 @@
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
-
-#define PUNTEROS(n) *(data->punteros.n)
 
 extern sem_t SEM_GAME;
 
@@ -76,19 +75,17 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     ALLEGRO_FONT * fuente = NULL;
 
     display = al_create_display(X_MAX,Y_MAX);
-
-    printf("Puntero al texto: %p\n", *(data->text));
     
     al_init_image_addon();
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon(); // initialize the ttf (True Type Font) addon
+    al_init_primitives_addon();
 
     fuente = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0);
     
-
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
-    
+   
     while(!*data->close_display){
 
         usleep(10 * U_SEC2M_SEC);    
@@ -99,12 +96,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
             //Se dibujan los elementos y textos en el buffer
-            showObjects(PUNTEROS(alienList));
-            showObjects(PUNTEROS(UsrList));
-            showObjects(PUNTEROS(barrerasList));
-            showObjects(PUNTEROS(balasUsr));
-            showObjects(PUNTEROS(balasAlien));
-            showObjects(PUNTEROS(mothershipList));
+            showObjects( *((*data).punteros.alienList) );
+            showObjects( *((*data).punteros.UsrList) );
+            showObjects( *((*data).punteros.barrerasList) );
+            showObjects( *((*data).punteros.balasUsr) );
+            showObjects( *((*data).punteros.balasAlien) );
+            showObjects( *((*data).punteros.mothershipList) );
             showTexts(*data->text, fuente);
             //Se muestra en pantalla
             al_flip_display();
@@ -128,7 +125,20 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 void showText(texto_t * data, ALLEGRO_FONT * fuente){
 
     //Comando para escribir un texto en el buffer
-    al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+    
+    al_draw_rectangle(data->posx - 10, data->posy - 5, 
+    data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
+
+    al_draw_rectangle(data->posx - 5, data->posy -10, 
+    data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
+
+    al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
+    data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
+
+    al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
+    data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
+
+    al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
 }
 
 int showEntity(object_t * entity){
@@ -194,7 +204,7 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
     if(puntero == NULL){
         return -1;
     }
-
+    
     else {
         //Se muestra el primer objeto
         showText(puntero, fuente);
@@ -232,9 +242,12 @@ texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
         firstObj = newText;
     }
 
+
 	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
 	newText -> posx = posx;
 	newText -> posy = posy;
+    newText -> lenght = strlen(texto);
+
     newText -> next = NULL;
 
 	return firstObj;//Devuelve un puntero al primer elemento.

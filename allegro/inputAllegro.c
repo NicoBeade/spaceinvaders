@@ -122,8 +122,7 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
             
             if(key_pressed[SPACE]){
                 (*data->keys).press = 1;
-            }else{
-                (*data->keys).press = 0;
+                key_pressed[SPACE] = false;
             }
 
         }

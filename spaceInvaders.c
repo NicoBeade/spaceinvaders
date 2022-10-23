@@ -205,16 +205,18 @@ int velInput = 1;
 
 #ifdef RASPI
 int velMenu = 20;
+int velBalas = 10;
+int velCollider = 5;
 #endif
 #ifdef ALLEGRO
 int velMenu = 10;
+int velBalas = 10;
+int velCollider = 10;
 #endif
 int velDispAnimation = 2;
 int velInputGame = 5;
 int velAliens = 100;
 int velMothership = 70;
-int velBalas = 10;
-int velCollider = 5;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -285,10 +287,10 @@ int main(void){
     #endif
 
     #ifdef RASPI
-        keys_t* dataInput = &KEYS;
+    keys_t dataInput = KEYS;
     #endif
 
-    pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);
+    pthread_create(&inputT, NULL, INPUT_THREAD, &dataInput);
 
 
     #ifdef RASPI
@@ -366,6 +368,7 @@ int main(void){
                 mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
+                printf("AlienList en spaceInvaders.c: %p\n", alienList);
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
@@ -582,6 +585,7 @@ static void* menuHandlerThread(void * data){
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 #ifdef ALLEGRO
                 toText = emptyText(toText);
+                KEYS.press=0;
                 #endif
             }
             
@@ -606,6 +610,9 @@ static void* levelHandlerThread(void * data){
                 GAME_STATUS.menuActual = MENU_PAUSA;//Indica que se pauso el juego.
                 GAME_STATUS.pantallaActual = MENU;
                 menu -> exitStatus = 0;//Indica que hay que salir del level Handler
+                #ifdef ALLEGRO
+                KEYS.press = 0;
+                #endif
         }
 
         usleep(10 * U_SEC2M_SEC);

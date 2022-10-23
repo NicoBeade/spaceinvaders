@@ -23,7 +23,7 @@ cleanRaspi:
 #													MAKEFILE ALLEGRO
 #*******************************************************************************************************************************************
 
-COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 --libs --cflags)
+COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 --libs --cflags)
 
 mainAllegro: spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o spaceInvaders.c
 	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO

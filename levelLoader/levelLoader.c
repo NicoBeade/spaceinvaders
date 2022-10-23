@@ -17,6 +17,8 @@ typedef struct{
     char value[MAX_VALUE_LETTERS];          //String del valor asociado
 }lineaArchivo_t;   
 
+//PROTOTIPO 
+int getLevelNoOfFile(char * fileName, int maxFileLenght, char * nameOut);
 
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
 
@@ -322,7 +324,10 @@ int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t *
         printf("Error in levelLoader.c, loadAllAssets function : archivoCounter reached maximum of %d max files in the loaded directory", MAX_FILES_IN_FOLDER);
         return -1; 
     }
-    //Faltaria poner el quicksort 
+    //Faltaria poner el quicksort
+
+    //AGREGADO////////////////////////////////////////////////////////////
+    return 0; 
 }
 
 int getLevelNoOfFile(char * fileName, int maxFileLenght, char * nameOut){

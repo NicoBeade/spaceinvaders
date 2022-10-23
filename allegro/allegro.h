@@ -8,6 +8,7 @@ typedef struct TEXTO
     char* texto;
     int posx;
     int posy;
+    int lenght;
 
     struct TEXTO * next;
 }texto_t;

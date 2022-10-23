@@ -11,7 +11,17 @@
 #include "inputAllegro.h"
 #include "allegro.h"
 
+/************************************************************************************************
+ * 
+ *                              CONSTANTES
+ * 
+*************************************************************************************************/
+
 #define FPS 2
+#define MENUX 150   //Posicion x del menu
+#define MENUY 100   //Posicion y del menu
+#define ESPACIADOMENU 100   //Espaciado entre opciones del menu
+#define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
 
 //Timer tick
 extern int timerTick;
@@ -161,14 +171,14 @@ texto_t * allegroMenu(menu_t * data, texto_t * toshow){
     for( i = 0; i<data->cantOpciones; i++){
         //Se agregan los textos de las opciones a la lista de textos
         if(i==0){
-            toshow=addText(toshow, data->textOpciones[i], 130, (i+1)*100);
+            toshow=addText(toshow, data->textOpciones[i], MENUX + SELECTOR, MENUY + i * ESPACIADOMENU);
         }
         else{
-            toshow=addText(toshow, data->textOpciones[i], 100, (i+1)*100);
+            toshow=addText(toshow, data->textOpciones[i], MENUX , MENUY + i * ESPACIADOMENU);
         }
     }
     //se agrega el selector
-    toshow = addText(toshow, "> ", 100, 100);
+    toshow = addText(toshow, ">", MENUX, MENUY);
     return toshow;
 }
 
@@ -184,7 +194,7 @@ void changeOption(void * dataIn){
         puntero = puntero->next;
     }
     //la muevo
-    puntero->posx-=30;
+    puntero->posx-= SELECTOR;
     
     //busco la nueva opcion seleccionada
     puntero = *data->toText;
@@ -193,7 +203,7 @@ void changeOption(void * dataIn){
     }
     
     //la muevo
-    puntero->posx +=30;
+    puntero->posx += SELECTOR;
 
     //busco el selector
     puntero = *data->toText;
@@ -201,14 +211,15 @@ void changeOption(void * dataIn){
         puntero = puntero->next;
     }
     
-    puntero->posx=100;
-    puntero->posy=(data->nextOp+1)*100;
+    puntero->posx= MENUX;
+    puntero->posy= MENUY + data->nextOp * ESPACIADOMENU;
 
 }
 
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
     GAME_STATUS.pantallaActual = START_LEVEL;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
     return 0;
 }
 

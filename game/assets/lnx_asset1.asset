@@ -6,6 +6,6 @@ initLives 5
 shootProb 6
 maxBullets 7
 balaID 8
-sprite1 /game/spritesAllegro/alien1.png
-sprite2 /game/spritesAllegro/alien1.png
-sprite3 /game/spritesAllegro/alien1.png
+sprite1 game/spritesAllegro/alien1.png
+sprite2 game/spritesAllegro/alien1.png
+sprite3 game/spritesAllegro/alien1.png
