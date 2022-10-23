@@ -619,15 +619,21 @@ static void* levelHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
             if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
+                sem_wait(&SEM_GAME);
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
+                sem_post(&SEM_GAME);
             }
 
             if (DERECHA_INPUT){//Mueve al usuario
+                sem_wait(&SEM_GAME);
                 moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, DERECHA);
+                sem_post(&SEM_GAME);
             }
 
             if (IZQUIERDA_INPUT){
+                sem_wait(&SEM_GAME);
                 moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, IZQUIERDA);
+                sem_post(&SEM_GAME);
             }
         }
     }

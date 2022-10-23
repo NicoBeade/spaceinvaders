@@ -69,12 +69,15 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                 int ignoreComment = 0;             //Se crea variable auxiliar ingnorar comentario
                 if(caracter != ';'){    //Si no es un comentario
                     while(caracter != 0){    //Mientras no sea un un 0 recorre los caracteres de una linea
+                        if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r' || lineaStr[letra+1] == ';' || lineaStr[letra] == ';'){   //Si el siguiente caracter es un finalizador de la linea, se termina el while
+                            caracter = 0;
+                        }
                         switch(state){      //Dependiendo de en donde se encuentre leyendo (parametro, espacio o valor)
                             case START:     //Si es el primer caracter
                                 if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
                                     break;
                                 }
-                                else if(caracter == ';' || caracter == '\r' || caracter == '\n' || caracter == 0 ){   //Si encuentra un comentario o un finalizador de linea
+                                else if(caracter == 0 ){   //Si encuentra un comentario o un finalizador de linea
                                     ignoreComment = 1;
                                     break;
                                 }
@@ -121,9 +124,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                                 }
                                 break;
                         }
-                        if(lineaStr[letra+1] == 0 || lineaStr[letra+1] == '\n' || lineaStr[letra+1] == '\r' || lineaStr[letra+1] == ';' || lineaStr[letra] == ';'){   //Si el siguiente caracter es un finalizador de la linea, se termina el while
-                            caracter = 0;
-                        }
+                        
                         else{   //Si la linea no finalizo se incrementa el index de la lietra y se lee un nuevo caracter
                             letra++;          
                             caracter = lineaStr[letra]; //Se lee un nuevo caracter
