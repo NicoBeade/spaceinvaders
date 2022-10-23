@@ -3,7 +3,8 @@ type  13
 posX  5
 posY  1
 END
-;
+  
+
 ALIEN
 type  1
 posX  1
@@ -57,7 +58,8 @@ type 50
 posX 8
 posY 11
 END
-;
+
+
 BARRERA ;Barrera 3
 type 50
 posX 11

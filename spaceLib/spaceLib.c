@@ -458,12 +458,13 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
+                    printLista(*balasEnemigas, "Balas George");
                     balaADestruir = listBalasEnemigas;
                     listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
-                    printf("ListBalas: %p\n", balaADestruir);
-                    printf("balasEnemigas: %p\n", *balasEnemigas);
+
                     *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
-                    printf("Se destruyo la bala");
+
+                    printLista(*balasEnemigas, "Balas Jeremy");
                 }
                 else{//Si la bala no debe morir
                 listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
