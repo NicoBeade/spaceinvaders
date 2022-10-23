@@ -154,6 +154,7 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
+sem_t SEM_DRIVER;
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 

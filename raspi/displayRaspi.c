@@ -760,7 +760,9 @@ void printLetter(caracteres_t letter){ //imprime una letra barriendo los 32 pixe
             }
         }
     }
+    sem_wait(&SEM_DRIVERS);
     disp_update();
+    sem_post(&SEM_DRIVERS);
 }
 
 void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barriendo los 256 pixeles de una matriz de 16x16
@@ -778,7 +780,9 @@ void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barrien
             }
         }
     }
+    sem_wait(&SEM_DRIVERS);
     disp_update();
+    sem_post(&SEM_DRIVERS);
 }
 
 void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de la pantalla barriendo los 128 pixeles de una matriz
@@ -806,7 +810,9 @@ void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de
             }
         }
     }
+    sem_wait(&SEM_DRIVERS);
     disp_update();
+    sem_post(&SEM_DRIVERS);
 }
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -974,7 +980,9 @@ void* displayRPIThread (void* argDisplayRPI){
 
             
             if(GAME_STATUS.inGame){
+                sem_wait(&SEM_DRIVERS);
                 disp_update(); //se transfiere del buffer al display de la RPI
+                sem_post(&SEM_DRIVERS);
             }
             sem_post(&SEM_GAME);
 
