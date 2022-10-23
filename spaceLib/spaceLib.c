@@ -88,7 +88,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 }
 
 object_t * destroyObj(object_t * ListObj, object_t * RipObj){
-    printLista((*(data -> balasEnemigas)), "EL DESTRUCTOR");
+    printLista(ListObj, "EL DESTRUCTOR");
     object_t * Obj = ListObj;
     if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
         if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
