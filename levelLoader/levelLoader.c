@@ -281,7 +281,7 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
     }
     loadDirectory(ASSETSDIR, directoryStore);       //Carga los archivos del directorio de assets
     int archivoCounter;     //Contador de numero de archivos
-    for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0; archivoCounter++){   //Por cada archivo
+    for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0){       //Si el archivo es de la plataforma elegida
             char direccionAsset[MAX_FILE_NAME]; //Variable auxiar para guardar la direccion del archivo a leer
@@ -289,9 +289,88 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
             strcat(direccionAsset, "/");    //Se agrega el slash
             strcat(direccionAsset, (*directoryStore)[archivoCounter]);  //Se agrega el final de la direccion(el nombre del archivo)
             loadAsset(direccionAsset);
-;        }
+;       }
     }
+     if(archivoCounter >= MAX_FILES_IN_FOLDER){
+        printf("Error in levelLoader.c, loadAllAssets function : archivoCounter reached maximum of %d max files in te loaded directory", MAX_FILES_IN_FOLDER);
+        return -1; 
+    } 
+
     return 0;
+}
+
+int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t * levelArray){  //Almacena todos los niveles
+    if(platform == NULL){
+        printf("Error in levelLoader.c, indexAllLevels function : platform cannot be a null pointer\n");
+        return -1;
+    }
+    loadDirectory(LEVELSDIR, directoryStore); //Carga los archivos del directorio de niveles
+    int archivoCounter; //Contador de numero de archivos
+    int nivel=0;        //Contador de niveles encontrados
+    for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
+        int longitud = strlen(platform);
+        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0){       //Si el archivo es de la plataforma elegida
+            levelArray->levels[nivel] = getLevelNoOfFile(&((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
+            nivel++;
+;       }
+        if(nivel >= levelArray->maxLevels){
+            printf("Error in levelLoader.c, loadAllAssets function : nivel reached maximum of %d max levels in the levelArray", levelArray->maxLevels);
+            return -1; 
+        }
+    }
+    if(archivoCounter >= MAX_FILES_IN_FOLDER){
+        printf("Error in levelLoader.c, loadAllAssets function : archivoCounter reached maximum of %d max files in the loaded directory", MAX_FILES_IN_FOLDER);
+        return -1; 
+    }
+    //Faltaria poner el quicksort 
+}
+
+int getLevelNoOfFile(char * fileName, int maxFileLenght, char * nameOut){
+    //nameOut is an optional output, set to NULL if not needed
+    char * fileNameP = fileName;    //Variable auxiliar para recorrer el nombre
+    char auxNo[MAX_FILE_NAME];      //Variable auxiliar para almacenar el numero
+    int inside=0;                   //Flag auxiliar para indicar si esta adentro del numero
+    int contadorChar = 0;
+    int contadorDigitos = 0;
+    int resultado = 0;  //Variable auxiliar que guarda el resultado
+    int numberTrue = 1; //Si el No del nivel es siempre un numero
+    while(*fileNameP != 0 && contadorChar < maxFileLenght - 1 && inside != -1){    //Mientras que el caracter no sea el terminador o un punto
+        if(*fileNameP == '_' && inside == 0){      //Si es un _ entra adentro del numero
+            inside = 1;
+        }
+        else if(*fileNameP != '_' &&  *fileNameP != '.' && inside == 1){        //Si no es un _ y esta adentro del numero comienza a guardar en la variable auxiliar
+            auxNo[contadorDigitos] = *fileNameP;    //Se copia el caracter 
+            contadorDigitos++;
+            if(!ISNUM(*fileNameP) && *fileNameP != '-'){      //Si no es un numero o un menos
+                numberTrue = 0;     //Se setea el flag en 0
+                resultado += (int) *fileNameP;  //Se suma 
+            }
+        }
+        else if((*fileNameP == '_' || *fileNameP == '.' ) && inside == 1){   //Si esta dentro y encuentra un _ o un punto sale
+            inside = -1;
+            auxNo[contadorDigitos] = 0;     //Agrega el terminador
+        }
+        fileNameP++;    //Apunta al siguiente
+        contadorChar++;
+    }
+    if(contadorChar >= maxFileLenght - 1){
+        printf("Error in levelLoader.c, getLevelNoOfFile function : %s reached maximum of %d max file lenght",fileName, maxFileLenght);
+        return -1; 
+    }
+    else if (*fileNameP == 0){
+        printf("Error in levelLoader.c, getLevelNoOfFile function : found a terminator inside the file name %s or missing dot/underscore", fileName);
+        return -1; 
+    }
+    else {
+        if(nameOut != NULL){        //Si se ingreso un nameOut, se copia la salida al mismo
+            strcpy(nameOut, auxNo);
+        }
+        if(numberTrue){     //Si se ingreso verdaderamente un numero
+            resultado = atoi(auxNo);
+        }
+        return resultado; //Devuelve el numero
+    }
+    
 }
 
 int loadDirectory(char * carpeta, directory_t * directoryStore){
@@ -302,13 +381,17 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
         return -1;
     }
     int fileCounter = 0;
-    while ((directoryEntry = readdir(directoryPointer)) != NULL){
+    while ((directoryEntry = readdir(directoryPointer)) != NULL && fileCounter < MAX_FILES_IN_FOLDER){
         if(strlen(directoryEntry->d_name) >= 3){    //Si el archivo es un archivo valido debe tener 3 letras como minimo
             strcpy((*directoryStore)[fileCounter], directoryEntry->d_name);
             fileCounter++;
-        }
+        } 
     }
-    closedir(directoryPointer);    
+    closedir(directoryPointer);   
+    if(fileCounter >= MAX_FILES_IN_FOLDER){
+        printf("Error in levelLoader.c, loadDirectory function : fileCounter reached maximum of %d max files in folder", MAX_FILES_IN_FOLDER);
+        return -1; 
+    } 
     return 0;
 }
 

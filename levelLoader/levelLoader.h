@@ -21,7 +21,10 @@ typedef char fileName_t[MAX_FILE_NAME];
 
 typedef fileName_t directory_t[MAX_FILES_IN_FOLDER];
 
-
+typedef struct{
+    int levels[MAX_LEVEL];
+    int maxLevels;
+}levelArray_t;
 
 void clearFileBuffer(void);
 int readFile(char * file);
