@@ -22,6 +22,7 @@
 #include "inputRaspi.h"
 #include <pthread.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 
 void* inputRPIThread(void* argInputRPI){
