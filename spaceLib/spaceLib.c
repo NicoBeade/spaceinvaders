@@ -339,6 +339,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
                 object_t* balaADestruir = Bala;
                 Bala = Bala -> next;
                 newList = destroyObj(*ListBalasEnemy, balaADestruir);     //Se destruye la bala
+                *ListBalasEnemy = newList;
                 printf("List Balas  Enemy Pointer %p\n", newList);
             }                                                                                          
             
