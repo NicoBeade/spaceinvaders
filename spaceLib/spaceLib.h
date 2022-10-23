@@ -182,7 +182,7 @@ void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
-object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting);
+object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting);
 object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting);
 
 

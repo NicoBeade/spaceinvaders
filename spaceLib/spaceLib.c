@@ -319,9 +319,9 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
  * 
  ******************************************************************************************************************************************/
 
-object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting){      //Mueve las balas de un tipo especifico.
-    object_t * Bala = ListBalasEnemy;
-    object_t * newList = ListBalasEnemy;
+object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){      //Mueve las balas de un tipo especifico.
+    object_t * Bala = *ListBalasEnemy;
+    object_t * newList = *ListBalasEnemy;
     int yMax = levelSetting -> yMax;
     int yMin = levelSetting -> yMin;
     if(Bala != NULL){
@@ -331,7 +331,7 @@ object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting){ 
                 (Bala -> pos.y) += (balaType -> velocidad);
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
-                newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
+                newList = destroyObj(*ListBalasEnemy, Bala);     //Se destruye la bala
             }  
             printf("Bala: %d\n", Bala -> pos.y);                                                                                         
             Bala = Bala -> next;

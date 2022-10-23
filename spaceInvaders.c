@@ -726,11 +726,11 @@ void * moveBalaThread(void * argMoveBala){
 
             if(*(data -> balasEnemigas) != NULL){
 
-                (*(data -> balasEnemigas))  = moveBala(*(data -> balasEnemigas), data -> levelSettings);
+                (*(data -> balasEnemigas))  = moveBala(data -> balasEnemigas, data -> levelSettings);
             }
             if(*(data -> balasUsr) != NULL){
 
-                (*(data -> balasUsr)) = moveBala(*(data -> balasUsr), data -> levelSettings);
+                (*(data -> balasUsr)) = moveBala(data -> balasUsr, data -> levelSettings);
             }
             sem_post(&SEM_GAME);
         } 
@@ -764,7 +764,7 @@ void * colliderThread(void * argCollider){
             sem_wait(&SEM_GAME);
 
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
-            
+
             sem_post(&SEM_GAME);
         }
     }
