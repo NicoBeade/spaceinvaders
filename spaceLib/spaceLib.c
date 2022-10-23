@@ -446,7 +446,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
 
-        while(listBarreras != NULL  &&  collition && listBalasEnemigas != NULL && *balasEnemigas != NULL ){//Chequea todas las barreras
+        while(listBarreras != NULL  &&  collition && listBalasEnemigas != NULL && *balasEnemigas != NULL ){//Chequea si se golpeo una barrera
             if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
 
                 collition = 0;
@@ -458,20 +458,19 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
-                    printLista(*balasEnemigas, "Balas George");
+
                     balaADestruir = listBalasEnemigas;
                     listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
 
                     *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
-                    printLista(*balasEnemigas, "Balas Jeremy");
                 }
             }
             else{//Si no golpeo a esa barrera chequea el siguiente
                 listBarreras = listBarreras->next;
             }
         }
-        printLista(listBalasEnemigas, "Balas Pepe");
-        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition){
+
+        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition){//Chequea si se golpeo al usuario
 
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.

@@ -1213,7 +1213,9 @@ int selectQuitGame(void){
     printf("Select Quit Game\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = QUIT_GAME;
+    sem_wait(&SEM_DRIVER);
     disp_clear();
+    sem_post(&SEM_DRIVER);
     return 0;
 }
 
