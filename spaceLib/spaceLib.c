@@ -703,14 +703,14 @@ void imprimirARRAY(void){
     }
 }
 
-void printLista(object_t * aux, int id){
+void printLista(object_t * aux, char * id){
     if (aux != NULL){
         int x;
         for(x = 0; aux->next != NULL; x++){
-            printf("Lista ID: %d  -  Nodo %d %p\n", id, x, aux);
+            printf("Lista ID: %s  -  Nodo %d %p\n", id, x, aux);
             aux = aux -> next;
         }
-        printf("Lista ID: %d  - Nodo %d %p\n", id,  x, aux);
+        printf("Lista ID: %s  - Nodo %d %p\n", id,  x, aux);
         
     }
     else{
