@@ -101,6 +101,7 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
             Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
         }
         free(RipObj);                          //Se libera la memoria del objeto eliminado
+        printf("RipObj Pointer %p", R)
     }
     else{
         printf("Err in gameLib, destroyObj function: The list %p and the node %p to delete cannot be empty\n", ListObj, RipObj); //Si no existen devuelve error
@@ -326,14 +327,14 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     int yMin = levelSetting -> yMin;
     if(Bala != NULL){
         while(Bala != NULL){
+            printf("Pos bala en moveBala: %d\n", Bala -> pos.y); 
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
                 newList = destroyObj(*ListBalasEnemy, Bala);     //Se destruye la bala
-            }  
-            printf("Bala: %d\n", Bala -> pos.y);                                                                                         
+            }                                                                                          
             Bala = Bala -> next;
         }
     }
