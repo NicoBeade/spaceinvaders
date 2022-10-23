@@ -101,7 +101,7 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
             Obj = RipObj -> next;                 //Devuelve puntero al segundo objeto si es que existe
         }
         free(RipObj);                          //Se libera la memoria del objeto eliminado
-        printf("RipObj Pointer %p", R)
+        printf("RipObj Pointer %p\m", RipObj);
     }
     else{
         printf("Err in gameLib, destroyObj function: The list %p and the node %p to delete cannot be empty\n", ListObj, RipObj); //Si no existen devuelve error
