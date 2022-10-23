@@ -723,7 +723,7 @@ void * moveBalaThread(void * argMoveBala){
             else{
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");
             }
-
+            printf("Balas enemigas en main: %p\n", *(data -> balasEnemigas));
             if(*(data -> balasEnemigas) != NULL){
 
                 (*(data -> balasEnemigas))  = moveBala(data -> balasEnemigas, data -> levelSettings);
