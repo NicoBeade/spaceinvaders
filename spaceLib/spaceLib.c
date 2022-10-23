@@ -325,16 +325,17 @@ object_t * moveBala(object_t * ListBalasEnemy, level_setting_t * levelSetting){ 
     int yMax = levelSetting -> yMax;
     int yMin = levelSetting -> yMin;
     if(Bala != NULL){
-        do{
+        while(Bala != NULL){
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
                 newList = destroyObj(ListBalasEnemy, Bala);     //Se destruye la bala
-            }                                                                                           
+            }  
+            printf("Bala: %d", Bala -> pos.y);                                                                                         
             Bala = Bala -> next;
-        }while(Bala != NULL);
+        }
     }
     else{
         printf("Err in gameLib, moveBala function: listBalas cannot be empty (null)\n");
@@ -453,7 +454,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     object_t * balaADestruir = listBalasEnemigas;
                     listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
                     printf("ListBalas: %p\n", balaADestruir);
-                    printf("balasEnemigas: %p", *balasEnemigas);
+                    printf("balasEnemigas: %p\n", *balasEnemigas);
                     *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
                 }
                 else{//Si la bala no debe morir
