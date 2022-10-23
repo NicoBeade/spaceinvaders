@@ -88,7 +88,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 }
 
 object_t * destroyObj(object_t * ListObj, object_t * RipObj){
-    printLista(ListObj, "EL DESTRUCTOR");
+    printLista(ListObj, "EL DESTRUCTOR DE PEPES");
     object_t * Obj = ListObj;
     if(Obj != NULL && RipObj != NULL){        //Si la lista y el objeto existe
         if(Obj != RipObj){                    //Si el objeto no es el primero de la lista
@@ -108,6 +108,7 @@ object_t * destroyObj(object_t * ListObj, object_t * RipObj){
         printf("Err in gameLib, destroyObj function: The list %p and the node %p to delete cannot be empty\n", ListObj, RipObj); //Si no existen devuelve error
     }
     return Obj;             //Se devuelve la lista
+    printLista(Obj, "EL DESTRUCTOR AL FINAL");
 }
 
 object_t* removeList(object_t* lista){
