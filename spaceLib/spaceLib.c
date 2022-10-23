@@ -371,7 +371,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2;
             posicionBala.y = nave->pos.y; 
-            
+            printf("nave->pos.y: %d \n",nave->pos.y);
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             balasDisponibles--;
         }
