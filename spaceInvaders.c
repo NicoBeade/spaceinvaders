@@ -286,7 +286,8 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList};
-    data_allegro_t dataInput = {punteros, &toText, &KEYS};
+    data_allegro_t dataIn = {punteros, &toText, &KEYS};
+    data_allegro_t * dataInput = &dataIn;
     #endif
 
     #ifdef RASPI
