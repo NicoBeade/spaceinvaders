@@ -26,7 +26,7 @@ void* soundThread(void* audio){
     else{
 			
 		printf(RED_TEXT "System not ready did you run init_sound() ? \n" WHITE_TEXT );		
-		return (-1);		
+        pthread_exit(0);		
 	}
 
     while(1){};
