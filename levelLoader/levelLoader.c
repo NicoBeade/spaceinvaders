@@ -301,10 +301,6 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
 }
 
 int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
-<<<<<<< HEAD
-   int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
-=======
->>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
     if(platform == NULL){
         printf("Error in levelLoader.c, indexAllLevels function : platform cannot be a null pointer\n");
         return -1;
@@ -316,12 +312,7 @@ int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryS
         int longitud = strlen(platform);
         int longitudPrefijo = longitud + strlen(levelPrefix); //Cantidad de caracteres que debe ignorar la funcion getLevelNoOfFile
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
-<<<<<<< HEAD
             (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
-=======
-            printf("george %s  y jorge %s\n",&((*directoryStore)[archivoCounter][0]),&((*directoryStore)[archivoCounter][0])+longitudPrefijo);
-            (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, &(((levelArray[nivel]).levelName)[0])); //Se obtiene el numero de nivel
->>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
             nivel++;
         }
         if(nivel >= MAX_LEVEL){
