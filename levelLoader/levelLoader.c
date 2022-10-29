@@ -70,7 +70,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                     while(caracter != 0){    //Mientras no sea un un 0 recorre los caracteres de una linea                        
                         switch(state){      //Dependiendo de en donde se encuentre leyendo (parametro, espacio o valor)
                             case START:     //Si es el primer caracter
-                                if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
+                                if(caracter == ' ' || caracter == '\t'){    //Si es un espacio o un enter lo ignora
                                     break;
                                 }
                                 else if(caracter == ';' || caracter == '\r' || caracter == '\n' || caracter == 0 ){   //Si encuentra un comentario o un finalizador de linea
@@ -772,7 +772,7 @@ int stringEndCmp(char * string, char * end){
     return !strncmp(string + lenString-lenEnd, end, lenEnd) && (lenEnd <= lenString); //Devuelve 1 si el sufijo es igual y si es mas corto que el string
 }
 
-/*
+
 
 int main(){
 
@@ -793,7 +793,7 @@ game_t menuGame;
 gameStatus_t GAME_STATUS;
 
 int timerTick;
-*/
+
 
 void imprimirNIVELES(level_t levelArray[]){
     int level;  //Contador de niveles
