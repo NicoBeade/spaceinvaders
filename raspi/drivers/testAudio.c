@@ -9,24 +9,32 @@
 char AudioFile[]="./Musica/LiveItUp.wav";
 char Booo[]="./Musica/Booo.wav";
 
+pthread_t soundT, soundT1;
+
+
+void* soundThread(void audio){
+
+    if(player_status()==READY){
+
+        printf(GREEN_TEXT "Playing: %s \n",(char*)audio); 	printf(WHITE_TEXT);
+	
+		set_file_to_play((char*)audio);      // Load file 			
+	
+		play_sound(); 
+    }
+
+    while(1){};
+}
+
 int main(void){
 
     init_sound();
 
-    if(player_status()==READY){
+    pthread_create(&soundT, NULL, soundThread, AudioFile);
 
-        printf(GREEN_TEXT "Playing: %s \n",AudioFile); 	printf(WHITE_TEXT);
-	
-		set_file_to_play(AudioFile);      // Load file 			
-	
-		play_sound(); 
+    pthread_create(&soundT1, NULL, soundThread, Booo);
 
-        set_file_to_play(Booo);
-
-        play_sound();
-    }
-
-    while(1){};
+    pthread_join(soundT1, NULL);
 
     return 0;
 }
