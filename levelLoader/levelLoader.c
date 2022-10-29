@@ -17,8 +17,7 @@ typedef struct{
     char value[MAX_VALUE_LETTERS];          //String del valor asociado
 }lineaArchivo_t;   
 
-//PROTOTIPO 
-int getLevelNoOfFile(char * fileName, int maxFileLenght, char * nameOut);
+
 
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
 
@@ -71,7 +70,7 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
                     while(caracter != 0){    //Mientras no sea un un 0 recorre los caracteres de una linea                        
                         switch(state){      //Dependiendo de en donde se encuentre leyendo (parametro, espacio o valor)
                             case START:     //Si es el primer caracter
-                                if(caracter == ' ' || caracter == '\t' || lineaStr[letra] == '\n' || lineaStr[letra] == '\r'){    //Si es un espacio o un enter lo ignora
+                                if(caracter == ' ' || caracter == '\t'){    //Si es un espacio o un enter lo ignora
                                     break;
                                 }
                                 else if(caracter == ';' || caracter == '\r' || caracter == '\n' || caracter == 0 ){   //Si encuentra un comentario o un finalizador de linea
@@ -285,7 +284,7 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
     int archivoCounter;     //Contador de numero de archivos
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
-        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0) && stringEndCmp((*directoryStore)[archivoCounter], ASSETFORMAT){       //Si el archivo es de la plataforma elegida y tiene el formato indicado
+        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], ASSETFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato indicado
             char direccionAsset[MAX_FILE_NAME]; //Variable auxiar para guardar la direccion del archivo a leer
             strcpy(direccionAsset, ASSETSDIR);  //Se copia el principio de la direccion
             strcat(direccionAsset, "/");    //Se agrega el slash
@@ -302,7 +301,10 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
 }
 
 int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
+<<<<<<< HEAD
    int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
+=======
+>>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
     if(platform == NULL){
         printf("Error in levelLoader.c, indexAllLevels function : platform cannot be a null pointer\n");
         return -1;
@@ -312,14 +314,22 @@ int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryS
     int nivel=0;        //Contador de niveles encontrados
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
-        int longitudPrefijo = longitud + strlen(levelPrefix);
+        int longitudPrefijo = longitud + strlen(levelPrefix); //Cantidad de caracteres que debe ignorar la funcion getLevelNoOfFile
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
+<<<<<<< HEAD
             (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
+=======
+            printf("george %s  y jorge %s\n",&((*directoryStore)[archivoCounter][0]),&((*directoryStore)[archivoCounter][0])+longitudPrefijo);
+            (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, &(((levelArray[nivel]).levelName)[0])); //Se obtiene el numero de nivel
+>>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
             nivel++;
         }
         if(nivel >= MAX_LEVEL){
             printf("Error in levelLoader.c, loadAllAssets function : level %d reached maximum of %d max levels in the levelArray",nivel, MAX_LEVEL);
             return -1; 
+        }
+        if(*((*directoryStore)[archivoCounter+1]) == 0){  //Si es el ultimo nivel
+            (levelArray[nivel]).lastLevelTrue = 1;  //Se pone verdadero al lastLevel
         }
     }
     if(archivoCounter >= MAX_FILES_IN_FOLDER){
@@ -386,6 +396,7 @@ int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLengh
 int loadDirectory(char * carpeta, directory_t * directoryStore){
     struct dirent *directoryEntry;
     DIR *directoryPointer = opendir(carpeta);
+    printf("ADENTRO LOAD DIRECTORY: CARPETA %s    PUNTERO %p\n", carpeta, directoryPointer);
     if(directoryPointer == NULL){
         printf("Error in levelLoader.c, loadDirectory function : \"%s\" could not open directory\n", carpeta);
         return -1;
@@ -767,4 +778,37 @@ int stringEndCmp(char * string, char * end){
     int lenString = strlen(string); //variable auxiliar que guarda la longitud del string
     int lenEnd = strlen(end);       //Variable auxiliar que guarda la longitud del final a comparar
     return !strncmp(string + lenString-lenEnd, end, lenEnd) && (lenEnd <= lenString); //Devuelve 1 si el sufijo es igual y si es mas corto que el string
+}
+
+
+
+int main(){
+
+    directory_t carpetaAssets = {};
+    loadAllAssets("rpi", &carpetaAssets);
+    imprimirARRAY();
+    clearFileBuffer();
+    printf("%d\n",getLevelNoOfFile(strlen("rpi")+strlen("_level")+strlen(LEVELSDIR)+1, "../game/levels/lnx_level0.level", MAX_FILE_ROW_LENGHT, NULL));
+
+    directory_t carpetaNiveles = {};
+    level_t levelArray[100];
+    indexAllLevels("rpi", "_level", &carpetaNiveles, levelArray);
+    imprimirNIVELES(levelArray);
+
+}
+
+game_t menuGame;
+gameStatus_t GAME_STATUS;
+
+int timerTick;
+
+
+void imprimirNIVELES(level_t levelArray[]){
+    int level;  //Contador de niveles
+    for(level = 0; levelArray[level].lastLevelTrue != 1 && level <= MAX_LEVEL; level++){
+        printf("Nivel %d:  .level= %d \t .levelName= %s\n", level, levelArray[level].level, levelArray[level].levelName);
+    }
+    if(level >= MAX_LEVEL){
+        printf("Error in levelLoader.c, imprimirNIVELES function : terminator of levels: lastLevelTrue not found");
+    }
 }

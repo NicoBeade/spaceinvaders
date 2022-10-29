@@ -11,8 +11,8 @@
 
 #define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 
-#define ASSETSDIR "game/assets"
-#define LEVELSDIR "game/levels"
+#define ASSETSDIR "../game/assets"
+#define LEVELSDIR "../game/levels"
 
 #define LEVELPREFIX "_level"
 #define ASSETPREFIX "_"
@@ -38,10 +38,16 @@ int readFile(char * file);
 void printFile(void);
 int loadAsset(char * file);
 int loadDirectory(char * carpeta, directory_t * directoryStore);
+<<<<<<< HEAD
 int loadAllAssets(char * platform, directory_t * directoryStore);
+=======
+int loadAllAssets(char * platform,  directory_t * directoryStore);
+>>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
 int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
 int stringEndCmp(char * string, char * end);
+int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut);
+void imprimirNIVELES(level_t levelArray[]);
 #endif
