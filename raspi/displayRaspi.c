@@ -652,7 +652,7 @@ caracteres_t letraEspacio ={
     {0,0,0,0},
 };
 
-caracteres_t flechaScore{
+caracteres_t flechaScore ={
     {0,0,0,0},
     {0,1,0,0},
     {0,0,1,0},
@@ -677,7 +677,7 @@ caracteres_t flechaScore{
  ******************************************************************************************************************************************/
 #define FRAMERATE 4 //tasa de refresco del display
 
-caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
+caracteres_t* alfabeto [43] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
 &letraU,&letraV,&letraW,&letraX,&letraY,&letraZ,&letra0,&letra1,&letra2,&letra3,&letra4,&letra5,
 &letra6,&letra7,&letra8,&letra9,&letraGuion,&letraPunto,&letraEspacio,&alienChar1,&alienChar2,&alienChar3,&flechaScore};
@@ -1217,7 +1217,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
     //Primero se agregan los puntajes.
     for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
         char copiaLeaderboard [ROWSIZE];
-        char puntajeMenu [ROWSIZE];
+        char* puntajeMenu;
         //char name [5];
         //int letra;
         //int caracter = 1;
