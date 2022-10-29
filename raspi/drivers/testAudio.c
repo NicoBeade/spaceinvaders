@@ -23,6 +23,11 @@ void* soundThread(void* audio){
 	
 		play_sound(); 
     }
+    else{
+			
+		printf(RED_TEXT "System not ready did you run init_sound() ? \n" WHITE_TEXT );		
+		return (-1);		
+	}
 
     while(1){};
 }
