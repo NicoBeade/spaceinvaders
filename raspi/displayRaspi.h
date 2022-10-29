@@ -23,7 +23,9 @@
 #include "drivers/termlib.h"
 #include "../spaceLib/spaceLib.h"
 #include "../utilidades.h"
+#include "../spaceLib/score/score.h"
 #include <semaphore.h>
+#include <string.h>
 
 /*******************************************************************************************************************************************
  * 
@@ -167,6 +169,9 @@ void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion
 void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del display.
 void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla.
 
+//*****************SCORE
+void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
+void nameToHalfDisplay(halfDisp_t * nombre);  //Adapte el nombre del usuario a un halfdisplay_t.
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);

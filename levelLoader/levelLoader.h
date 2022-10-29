@@ -28,9 +28,10 @@ typedef char fileName_t[MAX_FILE_NAME];
 typedef fileName_t directory_t[MAX_FILES_IN_FOLDER];
 
 typedef struct{
-    int levels[MAX_LEVEL];
-    int maxLevels;
-}levelArray_t;
+    int level;
+    char levelName[MAX_FILE_NAME];
+    char lastLevelTrue;
+}level_t;
 
 void clearFileBuffer(void);
 int readFile(char * file);
@@ -38,7 +39,7 @@ void printFile(void);
 int loadAsset(char * file);
 int loadDirectory(char * carpeta, directory_t * directoryStore);
 int loadAllAssets(char * platform, directory_t * directoryStore);
-
+int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);

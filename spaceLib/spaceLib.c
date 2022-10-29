@@ -376,6 +376,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             posicionBala.y = nave->pos.y; 
             printf("nave->pos.y: %d \n",nave->pos.y);
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
+            
             balasDisponibles--;
         }
         nave = nave -> next;
@@ -423,7 +424,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
  ******************************************************************************************************************************************/
 void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
-    printf("Timertick 1: %d\n", timerTick);
+
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
@@ -533,7 +534,6 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
         collition = 1;
     }
-    printf("Timertick 222222222: %d\n", timerTick);
 }
 
 

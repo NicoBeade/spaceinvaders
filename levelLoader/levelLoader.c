@@ -301,7 +301,8 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
     return 0;
 }
 
-int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, levelArray_t * levelArray){  //Almacena todos los niveles
+int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
+   int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
     if(platform == NULL){
         printf("Error in levelLoader.c, indexAllLevels function : platform cannot be a null pointer\n");
         return -1;
@@ -313,11 +314,11 @@ int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryS
         int longitud = strlen(platform);
         int longitudPrefijo = longitud + strlen(levelPrefix);
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
-            levelArray->levels[nivel] = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
+            (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
             nivel++;
         }
-        if(nivel >= levelArray->maxLevels){
-            printf("Error in levelLoader.c, loadAllAssets function : nivel reached maximum of %d max levels in the levelArray", levelArray->maxLevels);
+        if(nivel >= MAX_LEVEL){
+            printf("Error in levelLoader.c, loadAllAssets function : level %d reached maximum of %d max levels in the levelArray",nivel, MAX_LEVEL);
             return -1; 
         }
     }
@@ -340,7 +341,7 @@ int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLengh
     int contadorDigitos = 0;
     int resultado = 0;  //Variable auxiliar que guarda el resultado
     int numberTrue = 1; //Si el No del nivel es siempre un numero
-    if(ISNUM(*fileNameP) || *fileNameP == '_'){   //Si es un numero o un menos entonces ya arranca adentro
+    if(ISNUM(*fileNameP) || *fileNameP == '-'){   //Si es un numero o un menos entonces ya arranca adentro
         inside = 1;
     }
     while(*fileNameP != 0 && contadorChar < maxFileLenght - 1 && inside != -1){    //Mientras que el caracter no sea el terminador o un punto

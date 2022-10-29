@@ -159,7 +159,7 @@ typedef struct{
 enum PANTALLAS { MENU , START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
 
 //*************MENUES
-enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, START_LEVEL_MENU};//Determinan un valor para cada pantalla
+enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, START_LEVEL_MENU};//Determinan un valor para cada pantalla
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

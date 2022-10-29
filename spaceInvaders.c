@@ -178,13 +178,18 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
                       {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
                       {&halfDispRestart, &halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
                       7 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
+                      10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
 #ifdef ALLEGRO
 texto_t * toText = NULL;
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
-                      {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
-                      4, 1, changeOption };//Estructura del menu de inicio.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectVolume, selectQuitGame},
+                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Volume    ", "Quit Game    "}, 
+                      5, 1, changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
@@ -199,7 +204,7 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
                       7, 1, changeOption };//Estructura del menu de pausa.
 #endif
 
-menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
@@ -502,6 +507,11 @@ static void* menuHandlerThread(void * data){
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
+
+        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
+            fillLeaderboardMenu(menu);
+        }
+
         pthread_t displayMenuT;
         halfDisp_t higherDispMenu = {//Parte superior del display
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -629,15 +639,13 @@ static void* levelHandlerThread(void * data){
                     sem_post(&SEM_GAME);
                 }
                 if (DERECHA_INPUT){//Mueve al usuario
-                    //sem_wait(&SEM_GAME);
+
                     moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
-                    //sem_post(&SEM_GAME);
                 }
 
                 if (IZQUIERDA_INPUT){
-                    //sem_wait(&SEM_GAME);
+
                     moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
-                    //sem_post(&SEM_GAME);
                 }
             }
         }

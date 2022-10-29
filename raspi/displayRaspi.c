@@ -651,6 +651,17 @@ caracteres_t letraEspacio ={
     {0,0,0,0},
     {0,0,0,0},
 };
+
+caracteres_t flechaScore{
+    {0,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {0,0,0,1},
+    {0,0,1,0},
+    {0,1,0,0},
+    {0,0,0,0},
+    {0,0,0,0},
+};
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -669,7 +680,7 @@ caracteres_t letraEspacio ={
 caracteres_t* alfabeto [42] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
 &letraU,&letraV,&letraW,&letraX,&letraY,&letraZ,&letra0,&letra1,&letra2,&letra3,&letra4,&letra5,
-&letra6,&letra7,&letra8,&letra9,&letraGuion,&letraPunto,&letraEspacio,&alienChar1,&alienChar2,&alienChar3};
+&letra6,&letra7,&letra8,&letra9,&letraGuion,&letraPunto,&letraEspacio,&alienChar1,&alienChar2,&alienChar3,&flechaScore};
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -1074,6 +1085,9 @@ static int offsetAlfabeto(char caracter){
     else if(caracter == ' '){//Si es un espacio.
         offset = OFFSETCHARESP + 2;
     }
+    else if(caracter == '>'){//Si es un espacio.
+        offset = OFFSETCHARESP + 6;
+    }
     return offset;
 }
 
@@ -1182,6 +1196,67 @@ void changeOption(void* argChangeOption){
 *******************************************************************************************************************************************/
 
 
+
+/*******************************************************************************************************************************************
+ * 
+                                                     ___                        
+                                                    / __|  __   ___   _ _   ___ 
+                                                    \__ \ / _| / _ \ | '_| / -_)
+                                                    |___/ \__| \___/ |_|   \___|
+                                                                                                                                                            
+ * 
+ ******************************************************************************************************************************************/
+
+void fillLeaderboardMenu(menu_t * menuLeaderboard){
+
+    int i;
+
+    leaderboard_t leaderboard;
+    parseScore(leaderboard);  //Se lee el leaderboard de score.txt
+
+    //Primero se agregan los puntajes.
+    for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
+        char copiaLeaderboard [ROWSIZE];
+        char puntajeMenu [ROWSIZE];
+        //char name [5];
+        //int letra;
+        //int caracter = 1;
+        
+        strcpy(copiaLeaderboard, leaderboard[i]); //Accede al valor numerico de puntaje de cada posicion
+        strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
+        sprintf(puntajeMenu, "%d. %s    ",i,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
+        
+        /*name [0] = '>';
+        name [4] = 0;
+        for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){
+            name[caracter]=leaderboard[i][letra];
+            caracter++;
+        }
+        printf("%s\n",name);
+
+        strcpy*/
+
+        
+    }
+    
+}
+
+/*
+void nameToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
+    
+    int offset; //Variable para desreferenciar en el arreglo de alfabeto.
+    int i, j;
+
+    for
+}
+*/
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
+
 /*******************************************************************************************************************************************
  * 
              ___                      _                                _           __  __                                
@@ -1244,6 +1319,13 @@ int selectMainMenu(void){
 }
 
 int selectDificulty(void){
+    return 0;
+}
+
+int selectLeaderboard(void){
+    printf("Select Leaderboard");
+    velDispAnimation = 1;
+    GAME_STATUS.menuActual = MENU_LEADERBOARD;
     return 0;
 }
 
