@@ -1217,7 +1217,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
     //Primero se agregan los puntajes.
     for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
         char copiaLeaderboard [ROWSIZE];
-        char* puntajeMenu;
+        char puntajeMenu[60];
         //char name [5];
         //int letra;
         //int caracter = 1;

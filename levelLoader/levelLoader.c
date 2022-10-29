@@ -772,7 +772,7 @@ int stringEndCmp(char * string, char * end){
 }
 
 
-
+/*
 int main(){
 
     directory_t carpetaAssets = {};
@@ -787,6 +787,7 @@ int main(){
     imprimirNIVELES(levelArray);
 
 }
+*/
 
 game_t menuGame;
 gameStatus_t GAME_STATUS;
