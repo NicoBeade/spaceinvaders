@@ -216,7 +216,7 @@ int velBalas = 10;
 int velCollider = 10;
 #endif
 int velDispAnimation = 2;
-int velInputGame = 10;
+int velInputGame = 5;
 int velAliens = 100;
 int velMothership = 70;
 /*******************************************************************************************************************************************

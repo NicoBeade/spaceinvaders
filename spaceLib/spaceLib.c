@@ -27,7 +27,7 @@
 #include "spaceLib.h"
 #include <string.h>
 
-
+extern unsigned int timerTick;
 /*******************************************************************************************************************************************
  * 
                                  ___               _           _     _                   
@@ -497,8 +497,9 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         collition = 1;
     }
 
+    collition = 1;
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
-
+        printf("Timertick 1: %d\n", timerTick);
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
 
@@ -531,6 +532,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
         }
         collition = 1;
+        printf("Timertick 222222222: %d\n", timerTick);
     }
 }
 
