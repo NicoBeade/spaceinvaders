@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include "libaudio.h"
 #include <pthread.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
+#include <unistd.h>
+#include <SDL2/SDL.h>
+#include "libaudio.h"
 
 
 char AudioFile[]="./Musica/LiveItUp.wav";

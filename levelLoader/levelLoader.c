@@ -311,6 +311,7 @@ int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t *
     int nivel=0;        //Contador de niveles encontrados
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
+        int longitudPrefijo = longitud + strlen()
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
             levelArray->levels[nivel] = getLevelNoOfFile(&((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
             nivel++;
@@ -330,9 +331,9 @@ int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t *
     return 0; 
 }
 
-int getLevelNoOfFile(char * platform, char * prefix, char * fileName, int maxFileLenght, char * nameOut){
+int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut){
     //nameOut is an optional output, set to NULL if not needed
-    int contadorChar = strlen(platform) + strlen(prefix); //El contador de char se incrementa hasta pasar la plataforma y el prefijo
+    int contadorChar = prefixLenghtToIgnore; //El contador de char se incrementa hasta pasar la plataforma y el prefijo
     char * fileNameP = fileName + contadorChar;    //Variable auxiliar para recorrer el nombre
     char auxNo[MAX_FILE_NAME];      //Variable auxiliar para almacenar el numero
     int inside=0;                   //Flag auxiliar para indicar si esta adentro del numero
