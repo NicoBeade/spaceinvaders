@@ -774,11 +774,11 @@ void * colliderThread(void * argCollider){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
-            sem_wait(&SEM_GAME);
+            //sem_wait(&SEM_GAME);
 
             collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
 
-            sem_post(&SEM_GAME);
+            //sem_post(&SEM_GAME);
         }
     }
     printf("Killed collider\n");
