@@ -13,9 +13,9 @@ pthread_t soundT, soundT1;
 
 
 void* soundThread(void* audio){
-    init_sound();
-
     sleep(1);
+    
+    init_sound();
 
     if(player_status()==READY){
 
