@@ -91,7 +91,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
  * 
  ******************************************************************************************************************************************/
 
-#define TAMLETRAX 18
+#define TAMLETRAX 20
 #define TAMLETRAY 36
 
 #define X_MAX 840              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.

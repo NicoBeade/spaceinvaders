@@ -1,6 +1,11 @@
  #ifndef ALLEGRO_H
  #define ALLEGRO_H
 
+/******************************************************************
+ * 
+ *                          Structs
+ * 
+*******************************************************************/
 typedef int (*option_t)(void);
 
 typedef struct TEXTO
@@ -33,15 +38,6 @@ typedef struct{
 
 }changeOptionData_t;
 
-//allegroMenu: Esta funcion se encarga de preparar las listas para mostrar un menu en pantalla
-//Como segundo parametro debe recibir el puntero a la lista de textos de allegro
-texto_t * allegroMenu(menu_t * data, texto_t * toshow);
-texto_t * emptyText(texto_t * firstText);
-
-//changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
-void changeOption(void * data);
-
-/******************************************************************************************************/
 typedef struct {
 
     object_t ** alienList;
@@ -62,9 +58,26 @@ typedef struct {
 
 }data_allegro_t;
 
+/******************************************************************
+ * 
+ *                          Prototipos
+ * 
+*******************************************************************/
+
 //protoripo de thread principal de allegro
 void * allegroThread (void * arg);
 
+
+//allegroMenu: Esta funcion se encarga de preparar las listas para mostrar un menu en pantalla
+//Como segundo parametro debe recibir el puntero a la lista de textos de allegro
+texto_t * allegroMenu(menu_t * data, texto_t * toshow);
+texto_t * emptyText(texto_t * firstText);
+
+//changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
+void changeOption(void * data);
+
+//Opciones de menu
+/**************************************/
 int selectPlayInicio(void);
 int selectLevels(void);
 int selectVolume(void);
@@ -73,6 +86,6 @@ int selectResume(void);
 int selectRestartLevel(void);
 int selectMainMenu(void);
 int selectDificulty(void);
-/*******************************************************************************************************/
+/**************************************/
 
 #endif

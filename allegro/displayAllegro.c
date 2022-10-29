@@ -54,9 +54,6 @@ int showEntity(object_t * entity);
 int showObjects(object_t * inicial);
 void showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
-texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
-texto_t * emptyText(texto_t * firstText);
-
 
 /***********************************************************************************************************************************************************
  * 
@@ -122,25 +119,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-void showText(texto_t * data, ALLEGRO_FONT * fuente){
-
-    //Comando para escribir un texto en el buffer
-    
-    al_draw_rectangle(data->posx - 10, data->posy - 5, 
-    data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
-
-    al_draw_rectangle(data->posx - 5, data->posy -10, 
-    data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
-
-    al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
-    data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
-
-    al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
-    data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
-
-    al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
-}
-
 int showEntity(object_t * entity){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
@@ -195,6 +173,26 @@ int showObjects(object_t * inicial){
     return 0;
 }
 
+void showText(texto_t * data, ALLEGRO_FONT * fuente){
+
+    //Comando para escribir un texto en el buffer
+    
+    printf("%d", data->lenght);
+    al_draw_rectangle(data->posx - 10, data->posy - 5, 
+    data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
+
+    al_draw_rectangle(data->posx - 5, data->posy -10, 
+    data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
+
+    al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
+    data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
+
+    al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
+    data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
+
+    al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+}
+
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
     //punter al primer objeto de la lista
@@ -219,61 +217,5 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
     return 0;
 
 }
-
-texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
-// Esta funcion se encarga de agregar un nuevo texto a la lista
-
-	texto_t * newText = malloc(sizeof(texto_t));//Agrega el nuevo texto
-
-	if(newText == NULL){//Si no se puede hacer el malloc indica error.
-		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
-		return NULL; //error
-	}
-
-    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        texto_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
-
-		while(lastObj -> next != NULL){
-			lastObj = lastObj -> next;
-		}
-        lastObj -> next = newText;
-	}
-    else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstObj = newText;
-    }
-
-
-	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
-	newText -> posx = posx;
-	newText -> posy = posy;
-    newText -> lenght = strlen(texto);
-
-    newText -> next = NULL;
-
-	return firstObj;//Devuelve un puntero al primer elemento.
-}
-
-texto_t * emptyText(texto_t * firstText){
-//Esta funcion se encarga de limpiar la lista de textos a escribir
-    texto_t * first = firstText;
-
-    //Recorre la lista y libera el espacio
-    if(first != NULL){
-        if(first->next == NULL){
-            free(first);
-        }
-        else{
-            texto_t * sig = first->next;
-            do{
-                sig = first->next;
-                free(first);
-                first = sig;
-            }while(sig!=NULL);
-        }
-
-    }
-    return first;             //Se devuelve la lista
-}
-
 
 /**********************************************************************************************************************************************************/
