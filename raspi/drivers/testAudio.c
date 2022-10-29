@@ -14,7 +14,7 @@ pthread_t soundT, soundT1;
 
 void* soundThread(void* audio){
     sleep(1);
-    
+
     init_sound();
 
     if(player_status()==READY){
@@ -40,7 +40,7 @@ int main(void){
 
     pthread_create(&soundT1, NULL, soundThread, Booo);
 
-    pthread_join(soundT1, NULL);
+    pthread_join(soundT, NULL);
 
     return 0;
 }
