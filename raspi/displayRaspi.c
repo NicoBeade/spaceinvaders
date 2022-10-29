@@ -1210,10 +1210,8 @@ void changeOption(void* argChangeOption){
 void fillLeaderboardMenu(menu_t * menuLeaderboard){
 
     int i;
-    printf("Ya entro a fillLeaderboardMenu, esta por parsear el archivo\n");
     leaderboard_t leaderboard;
     parseScore(leaderboard);  //Se lee el leaderboard de score.txt
-    printf("Ya  parseo el archivo\n");
 
     //Primero se agregan los puntajes.
     for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
@@ -1224,11 +1222,12 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         //int caracter = 1;
         
         strcpy(copiaLeaderboard, leaderboard[i]); //Accede al valor numerico de puntaje de cada posicion
-        printf("Copia leadeboard: %s\n",copiaLeaderboard);
         strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
+        printf("Copia leaderboard: %s\n",copiaLeaderboard);
         sprintf(puntajeMenu, "%d. %s    ",i,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        printf("PuntajeMenu: %s\n",puntajeMenu);
         strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
-        
+        printf("Puntero al string a escribir: %s\n", (menuLeaderboard->textOpciones)[i]);
         /*name [0] = '>';
         name [4] = 0;
         for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){
