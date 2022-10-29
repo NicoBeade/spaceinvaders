@@ -15,7 +15,7 @@ pthread_t soundT, soundT1;
 void* soundThread(void* audio){
     sleep(1);
 
-    printf("Audio selected: %s\n", (char*)audio)
+    printf("Audio selected: %s\n", (char*)audio);
 
     init_sound();
 
