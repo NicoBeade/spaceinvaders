@@ -187,7 +187,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
 
 
 //*****************USUARIO
-void moveNaveUsuario(object_t * naveUsuario, level_setting_t* levelSettings, int direccion); //Se encarga de actualizar la posicion de la nave del usuari
+void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int direccion); //Se encarga de actualizar la posicion de la nave del usuari
 
 
 //*****************COLLIDER
