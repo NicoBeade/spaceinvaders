@@ -5,7 +5,7 @@
 
 #define LEADERBOARD 10
 #define ROWSIZE 15
-#define FILENAME_SCORE "score.txt"
+#define FILENAME_SCORE "spaceLib/score/score.txt"
 
 //TIPOS DE DATOS
 

@@ -1323,7 +1323,7 @@ int selectDificulty(void){
 }
 
 int selectLeaderboard(void){
-    printf("Select Leaderboard");
+    printf("Select Leaderboard\n");
     velDispAnimation = 1;
     GAME_STATUS.menuActual = MENU_LEADERBOARD;
     return 0;
