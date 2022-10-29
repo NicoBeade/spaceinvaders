@@ -12,7 +12,7 @@ char Booo[]="./Musica/Booo.wav";
 pthread_t soundT, soundT1;
 
 
-void* soundThread(void audio){
+void* soundThread(void* audio){
 
     if(player_status()==READY){
 
