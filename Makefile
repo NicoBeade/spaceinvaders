@@ -1,8 +1,8 @@
 #*******************************************************************************************************************************************
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
-mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o utilidades.h spaceInvaders.c
-	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
+mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o utilidades.h spaceInvaders.c
+	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o score.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
 
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h
@@ -47,3 +47,6 @@ spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 
 levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
 	gcc -c -g levelLoader/levelLoader.c -Wall -o levelLoader.o
+
+score.o: spaceLib/score/score.c spaceLib/score/score.h
+	gcc -c -g spaceLib/score/score.c -Wall -o score.o
