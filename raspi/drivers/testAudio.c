@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "libaudio.h"
 #include <pthread.h>
-#include <sdlib.h>
+#include <stdlib.h>
 #include <SDL/SDL.h>
 
 
