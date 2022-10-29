@@ -15,6 +15,8 @@ pthread_t soundT, soundT1;
 void* soundThread(void* audio){
     init_sound();
 
+    sleep(1);
+
     if(player_status()==READY){
 
         printf(GREEN_TEXT "Playing: %s \n",(char*)audio); 	printf(WHITE_TEXT);
