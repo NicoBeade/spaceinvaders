@@ -14,6 +14,12 @@
 #define ASSETSDIR "game/assets"
 #define LEVELSDIR "game/levels"
 
+#define LEVELPREFIX "_level"
+#define ASSETPREFIX "_"
+
+#define LEVELFORMAT ".level"
+#define ASSETFORMAT ".asset"
+
 #define MAX_DIR_LENGTH 150       //Maxaima longitud de un directorio
 
 #define MAX_LEVEL 999       //Maximo nivel
@@ -36,4 +42,5 @@ int loadAllAssets(char * platform, directory_t * directoryStore);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
+int stringEndCmp(char * string, char * end);
 #endif

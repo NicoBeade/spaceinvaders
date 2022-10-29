@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-#define ISNUM(caracter) (((caracter) > '0' ) && ((caracter) < '9' ))
+#define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
 
 enum paramType {ENTERO, ARCHIVO, BINARIO};      //Identifica el tipo de valor que tiene un parametro
 enum estados {START, PARAM, VALUE, SPACE};
@@ -285,7 +285,7 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
     int archivoCounter;     //Contador de numero de archivos
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
-        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0){       //Si el archivo es de la plataforma elegida
+        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0) && stringEndCmp((*directoryStore)[archivoCounter], ASSETFORMAT){       //Si el archivo es de la plataforma elegida y tiene el formato indicado
             char direccionAsset[MAX_FILE_NAME]; //Variable auxiar para guardar la direccion del archivo a leer
             strcpy(direccionAsset, ASSETSDIR);  //Se copia el principio de la direccion
             strcat(direccionAsset, "/");    //Se agrega el slash
@@ -311,7 +311,7 @@ int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t *
     int nivel=0;        //Contador de niveles encontrados
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
         int longitud = strlen(platform);
-        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0){       //Si el archivo es de la plataforma elegida
+        if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
             levelArray->levels[nivel] = getLevelNoOfFile(&((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
             nivel++;
 ;       }
@@ -330,15 +330,16 @@ int indexAllLevels(char * platform, directory_t * directoryStore, levelArray_t *
     return 0; 
 }
 
-int getLevelNoOfFile(char * fileName, int maxFileLenght, char * nameOut){
+int getLevelNoOfFile(char * platform, char * prefix, char * fileName, int maxFileLenght, char * nameOut){
     //nameOut is an optional output, set to NULL if not needed
-    char * fileNameP = fileName;    //Variable auxiliar para recorrer el nombre
+    int contadorChar = strlen(platform) + strlen(prefix); //El contador de char se incrementa hasta pasar la plataforma y el prefijo
+    char * fileNameP = fileName + contadorChar;    //Variable auxiliar para recorrer el nombre
     char auxNo[MAX_FILE_NAME];      //Variable auxiliar para almacenar el numero
     int inside=0;                   //Flag auxiliar para indicar si esta adentro del numero
-    int contadorChar = 0;
     int contadorDigitos = 0;
     int resultado = 0;  //Variable auxiliar que guarda el resultado
     int numberTrue = 1; //Si el No del nivel es siempre un numero
+
     while(*fileNameP != 0 && contadorChar < maxFileLenght - 1 && inside != -1){    //Mientras que el caracter no sea el terminador o un punto
         if(*fileNameP == '_' && inside == 0){      //Si es un _ entra adentro del numero
             inside = 1;
@@ -583,7 +584,7 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
-    sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo,".level"); //Genera el string del archivo a leer
+    sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo, LEVELFORMAT); //Genera el string del archivo a leer
     printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         printf("LEVEL SETTING ATRODEN YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings->yMax, levelSettings->yMin, levelSettings->xMax, levelSettings->xMin);
@@ -758,3 +759,8 @@ int main (){
 */
 
 
+int stringEndCmp(char * string, char * end){
+    int lenString = strlen(string); //variable auxiliar que guarda la longitud del string
+    int lenEnd = strlen(end);       //Variable auxiliar que guarda la longitud del final a comparar
+    return !strncmp(string + lenString-lenEnd, end, lenEnd) && (lenEnd <= lenString); //Devuelve 1 si el sufijo es igual y si es mas corto que el string
+}
