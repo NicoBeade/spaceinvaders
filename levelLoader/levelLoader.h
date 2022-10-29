@@ -38,11 +38,8 @@ int readFile(char * file);
 void printFile(void);
 int loadAsset(char * file);
 int loadDirectory(char * carpeta, directory_t * directoryStore);
-<<<<<<< HEAD
 int loadAllAssets(char * platform, directory_t * directoryStore);
-=======
 int loadAllAssets(char * platform,  directory_t * directoryStore);
->>>>>>> 94b59aa01b00cdddc23faa0b489587379a0b303a
 int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
