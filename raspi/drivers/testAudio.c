@@ -13,6 +13,7 @@ pthread_t soundT, soundT1;
 
 
 void* soundThread(void* audio){
+    init_sound();
 
     if(player_status()==READY){
 
@@ -27,8 +28,6 @@ void* soundThread(void* audio){
 }
 
 int main(void){
-
-    init_sound();
 
     pthread_create(&soundT, NULL, soundThread, AudioFile);
 
