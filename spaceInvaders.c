@@ -628,15 +628,15 @@ static void* levelHandlerThread(void * data){
                 }
 
                 if (DERECHA_INPUT){//Mueve al usuario
-                    sem_wait(&SEM_GAME);
+                    //sem_wait(&SEM_GAME);
                     moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, DERECHA);
-                    sem_post(&SEM_GAME);
+                    //sem_post(&SEM_GAME);
                 }
 
                 if (IZQUIERDA_INPUT){
-                    sem_wait(&SEM_GAME);
+                    //sem_wait(&SEM_GAME);
                     moveNaveUsuario(*(menu -> naveUsr), menu -> levelSettings, IZQUIERDA);
-                    sem_post(&SEM_GAME);
+                    //sem_post(&SEM_GAME);
                 }
             }
         }
