@@ -1224,9 +1224,9 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         strcpy(copiaLeaderboard, leaderboard[i]); //Accede al valor numerico de puntaje de cada posicion
         strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
         printf("Copia leaderboard: %s\n",copiaLeaderboard);
-        sprintf(puntajeMenu, "%d. %s    ",i,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        sprintf(puntajeMenu, "%d. %s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
         printf("PuntajeMenu: %s\n",puntajeMenu);
-        strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
+        (menuLeaderboard->textOpciones)[i] = puntajeMenu[0]; //Guarda el valor de puntaje en cada posicion del menu.
         printf("Puntero al string a escribir: %s\n", (menuLeaderboard->textOpciones)[i]);
         /*name [0] = '>';
         name [4] = 0;
@@ -1237,8 +1237,6 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         printf("%s\n",name);
 
         strcpy*/
-
-        
     }
     
 }
