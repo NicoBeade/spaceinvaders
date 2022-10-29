@@ -15,6 +15,8 @@ pthread_t soundT, soundT1;
 void* soundThread(void* audio){
     sleep(1);
 
+    printf("Audio selected: %s\n", (char*)audio)
+
     init_sound();
 
     if(player_status()==READY){
@@ -37,6 +39,8 @@ void* soundThread(void* audio){
 int main(void){
 
     pthread_create(&soundT, NULL, soundThread, AudioFile);
+
+    sleep(1);
 
     pthread_create(&soundT1, NULL, soundThread, Booo);
 

@@ -340,7 +340,9 @@ int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLengh
     int contadorDigitos = 0;
     int resultado = 0;  //Variable auxiliar que guarda el resultado
     int numberTrue = 1; //Si el No del nivel es siempre un numero
-
+    if(ISNUM(*fileNameP) || *fileNameP == '_'){   //Si es un numero o un menos entonces ya arranca adentro
+        inside = 1;
+    }
     while(*fileNameP != 0 && contadorChar < maxFileLenght - 1 && inside != -1){    //Mientras que el caracter no sea el terminador o un punto
         if(*fileNameP == '_' && inside == 0){      //Si es un _ entra adentro del numero
             inside = 1;
