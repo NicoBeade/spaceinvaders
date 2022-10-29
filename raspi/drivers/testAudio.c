@@ -20,6 +20,10 @@ int main(void){
 		set_file_to_play(AudioFile);      // Load file 			
 	
 		play_sound(); 
+
+        set_file_to_play(Booo);
+
+        play_sound();
     }
 
     while(1){};
