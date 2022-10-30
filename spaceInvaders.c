@@ -180,7 +180,7 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
                       7 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
-                      char arrays[10][10], 
+                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
