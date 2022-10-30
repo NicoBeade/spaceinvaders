@@ -11,9 +11,8 @@
 
 #define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 
-#define ASSETSDIR "/game/assets"
-#define LEVELSDIR "/game/levels"
-
+#define ASSETSDIR "game/assets"
+#define LEVELSDIR "game/levels"
 #define LEVELPREFIX "_level"
 #define ASSETPREFIX "_"
 

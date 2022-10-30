@@ -787,12 +787,15 @@ int main(){
     imprimirNIVELES(levelArray);
 
 }
-*/
 
 game_t menuGame;
 gameStatus_t GAME_STATUS;
 
 int timerTick;
+
+*/
+
+
 
 
 void imprimirNIVELES(level_t levelArray[]){
