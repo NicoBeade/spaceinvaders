@@ -1285,7 +1285,7 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
         for(j = 0; j < 8; j++){//Recorre las filas del halfDisplay
 
             for(k = l; k < l+4; k++){//Recorre las columnas del halfDisplay
-                (*nombre)[j][k] = (*caracter)[j][k]; //Copia el caracter en el halfDisplay
+                (*nombre)[j][k] = (*caracter)[j][k-l]; //Copia el caracter en el halfDisplay
             }
         }
 
