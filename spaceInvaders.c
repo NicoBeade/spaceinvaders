@@ -181,7 +181,7 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
 
 menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
-                      {halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders, halfDispAlienSpaceInvaders}, 
+                      {}, 
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
@@ -584,7 +584,7 @@ static void* menuHandlerThread(void * data){
                 }
 
                 #ifdef RASPI
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, &(menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
