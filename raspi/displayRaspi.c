@@ -1277,14 +1277,14 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
     int i, j, k;
     int l = 0;
 
-    for(i = 0, i < 4, i++){ //Recorre todas las letras del nombre
+    for(i = 0; i < 4; i++){ //Recorre todas las letras del nombre
 
         offset = offsetAlfabeto(nombreStr[i]);
         caracter = *(alfabeto[offset]);
 
-        for(j = 0, j < 8, j++){//Recorre las filas del halfDisplay
+        for(j = 0; j < 8; j++){//Recorre las filas del halfDisplay
 
-            for(k = l, k < l+4, l++){//Recorre las columnas del halfDisplay
+            for(k = l; k < l+4; k++){//Recorre las columnas del halfDisplay
                 nombre[j][k] = caracter[j][k]; //Copia el caracter en el halfDisplay
             }
         }
