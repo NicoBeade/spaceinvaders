@@ -1257,8 +1257,8 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
     
     name [0] = '>'; //Agrega una flecha al principio del nombre
     name [4] = 0;  //Terminador
-    for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){ //Copia el nombre del jugador en un string
-        name[caracter]=leaderboard[i][letra];
+    for (letra=strlen(copiaLeaderboard)+1; leaderboard[select][letra]!=0; letra++){ //Copia el nombre del jugador en un string
+        name[caracter]=leaderboard[select][letra];
         caracter++;
     }
     printf("%s\n",name);
@@ -1271,7 +1271,7 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
 
 halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
 
-    caracteres_t caracter; //Variable que almacena el dibujo del caracter en pixeles.
+    caracteres_t* caracter; //Variable que almacena el dibujo del caracter en pixeles.
     
     int offset; //Variable para desreferenciar en el arreglo de alfabeto.
     int i, j, k;
