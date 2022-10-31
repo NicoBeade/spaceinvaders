@@ -202,6 +202,10 @@ menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLeve
 menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
                       {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
+
+menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},  
+                      10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
