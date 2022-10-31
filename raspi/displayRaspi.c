@@ -1278,7 +1278,7 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
     int l = 0;
 
     for(i = 0; i < 4; i++){ //Recorre todas las letras del nombre
-
+        printf("Char: %c\n", nombreStr[i]);
         offset = offsetAlfabeto(nombreStr[i]);
         caracter = alfabeto[offset];
 
