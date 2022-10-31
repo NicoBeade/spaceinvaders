@@ -374,7 +374,6 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2;
             posicionBala.y = nave->pos.y; 
-            printf("nave->pos.y: %d \n",nave->pos.y);
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             
             balasDisponibles--;
@@ -502,6 +501,8 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
         
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
+            printf("Bala x: %d", listBalasUsr->pos.x);
+            printf("Bala y: %d", listBalasUsr->pos.y);
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
 
                 collition = 0;
