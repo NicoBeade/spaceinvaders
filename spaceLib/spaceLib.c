@@ -530,6 +530,9 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listAliens = listAliens->next;
             }
         }
+        if(*alienList != NULL){
+            listAliens = *alienList;
+        }
         if(collition){//Si no hubo colision
             listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
         }
