@@ -377,7 +377,7 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                mothershipList = addObj(mothershipList, Booo, 0, 0);
+                //mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
@@ -385,7 +385,7 @@ int main(void){
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
