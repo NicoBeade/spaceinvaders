@@ -1208,7 +1208,7 @@ void changeOption(void* argChangeOption){
  ******************************************************************************************************************************************/
 
 void fillLeaderboardMenu(menu_t * menuLeaderboard){
-
+//Esta funcion lee el archivo del leaderboard y rellena la variable menu_t con los puntajes de cada usuario.
     int i;
     leaderboard_t leaderboard;
     parseScore(leaderboard);  //Se lee el leaderboard de score.txt
@@ -1239,6 +1239,31 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         strcpy*/
     }
     
+}
+
+getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
+
+    leaderboard_t leaderboard;
+    parseScore(leaderboard);  //Se lee el leaderboard de score.txt
+
+    char copiaLeaderboard [ROWSIZE];
+    char name [5];
+    int letra;
+    int caracter = 1;
+    
+    strcpy(copiaLeaderboard, leaderboard[select]); //Accede al valor numerico de puntaje de cada posicion
+    strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
+    printf("Copia leaderboard: %s\n",copiaLeaderboard);
+    
+    name [0] = '>';
+    name [4] = 0;
+    for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){
+        name[caracter]=leaderboard[i][letra];
+        caracter++;
+    }
+    printf("%s\n",name);
+
+    strcpy
 }
 
 /*

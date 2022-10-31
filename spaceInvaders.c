@@ -187,8 +187,8 @@ menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, sele
 
 #ifdef ALLEGRO
 texto_t * toText = NULL;
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectVolume, selectQuitGame},
-                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Volume    ", "Quit Game    "}, 
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
+                      {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
                       5, 1, changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
@@ -509,7 +509,20 @@ static void* menuHandlerThread(void * data){
     #ifdef RASPI
 
         if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
+            halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+            };
             fillLeaderboardMenu(menu);
+            getLeaderBoardName(&nameDispMenu, select);
+
+            (menu -> drawingOpciones)[select];
         }
 
         pthread_t displayMenuT;
@@ -539,7 +552,7 @@ static void* menuHandlerThread(void * data){
 
         argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
     
-    pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
+        pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
 
     #ifdef ALLEGRO
