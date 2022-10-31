@@ -524,9 +524,7 @@ static void* menuHandlerThread(void * data){
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
             fillLeaderboardMenu(menu);
-            getLeaderBoardName(&nameDispMenu, select);
-
-            (menu -> drawingOpciones)[select];
+            (menu -> drawingOpciones)[select] = getLeaderBoardName(&nameDispMenu, select);;
         }
 
         pthread_t displayMenuT;
