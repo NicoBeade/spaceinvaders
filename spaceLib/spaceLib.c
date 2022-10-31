@@ -501,8 +501,8 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
         
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
-            printf("Bala x: %d", listBalasUsr->pos.x);
-            printf("Bala y: %d", listBalasUsr->pos.y);
+            printf("Bala x: %d\n", listBalasUsr->pos.x);
+            printf("Bala y: %d\n", listBalasUsr->pos.y);
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
 
                 collition = 0;
