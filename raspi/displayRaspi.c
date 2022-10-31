@@ -1241,7 +1241,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
     
 }
 
-getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
+halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
 
     leaderboard_t leaderboard;
     parseScore(leaderboard);  //Se lee el leaderboard de score.txt
@@ -1255,26 +1255,46 @@ getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
     strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
     printf("Copia leaderboard: %s\n",copiaLeaderboard);
     
-    name [0] = '>';
-    name [4] = 0;
-    for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){
+    name [0] = '>'; //Agrega una flecha al principio del nombre
+    name [4] = 0;  //Terminador
+    for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){ //Copia el nombre del jugador en un string
         name[caracter]=leaderboard[i][letra];
         caracter++;
     }
     printf("%s\n",name);
 
-    strcpy
+    nameDispMenu = strToHalfDisplay(nameDispMenu, name); //Convierte el string a algo que se puede mostrar en el display.
+
+    return nameDispMenu;
 }
 
-/*
-void nameToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
+
+halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
+
+    caracteres_t caracter; //Variable que almacena el dibujo del caracter en pixeles.
     
     int offset; //Variable para desreferenciar en el arreglo de alfabeto.
-    int i, j;
+    int i, j, k;
+    int l = 0;
 
-    for
+    for(i = 0, i < 4, i++){ //Recorre todas las letras del nombre
+
+        offset = offsetAlfabeto(nombreStr[i]);
+        caracter = *(alfabeto[offset]);
+
+        for(j = 0, j < 8, j++){//Recorre las filas del halfDisplay
+
+            for(k = l, k < l+4, l++){//Recorre las columnas del halfDisplay
+                nombre[j][k] = caracter[j][k]; //Copia el caracter en el halfDisplay
+            }
+        }
+
+        l += 4;
+    }
+
+    return nombre;
 }
-*/
+
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

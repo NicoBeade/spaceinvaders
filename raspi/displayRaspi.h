@@ -171,7 +171,8 @@ void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla
 
 //*****************SCORE
 void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
-void nameToHalfDisplay(halfDisp_t * nombre);  //Adapte el nombre del usuario a un halfdisplay_t.
+halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select);  //Se utiliza para mostrar el nombre del usuario del leaderBoard en el menu.
+halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr);  //Adapte el nombre del usuario a un halfdisplay_t.
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);
