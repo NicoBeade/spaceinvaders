@@ -512,7 +512,7 @@ static void* menuHandlerThread(void * data){
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
 
-        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
+        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
             halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -524,7 +524,7 @@ static void* menuHandlerThread(void * data){
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
             fillLeaderboardMenu(menu);
-            (menu -> drawingOpciones)[select] = getLeaderBoardName(&nameDispMenu, select);;
+            (menu -> drawingOpciones)[select] = getLeaderBoardName(&nameDispMenu, select);
         }
 
         pthread_t displayMenuT;
@@ -599,6 +599,9 @@ static void* menuHandlerThread(void * data){
                 }
 
                 #ifdef RASPI
+                if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
+                    (menu -> drawingOpciones)[select] = getLeaderBoardName(&nameDispMenu, select);
+                }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 #endif
                 #ifdef ALLEGRO
