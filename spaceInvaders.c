@@ -537,7 +537,7 @@ static void* menuHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, &(menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
     
     pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
