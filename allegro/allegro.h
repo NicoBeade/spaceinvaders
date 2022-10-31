@@ -72,6 +72,7 @@ void * allegroThread (void * arg);
 //Como segundo parametro debe recibir el puntero a la lista de textos de allegro
 texto_t * allegroMenu(menu_t * data, texto_t * toshow);
 texto_t * emptyText(texto_t * firstText);
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
 
 //changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
 void changeOption(void * data);

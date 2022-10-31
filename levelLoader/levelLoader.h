@@ -7,7 +7,7 @@
 
 #define MAX_FILE_ROW_LENGHT 100     //Maximo tamaño de fila para un archivo
 
-#define MAX_FILE_NAME 50        //Maximo tamaño de archivo
+#define MAX_FILE_NAME 100        //Maximo tamaño de archivo
 
 #define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 

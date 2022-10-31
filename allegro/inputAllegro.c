@@ -22,16 +22,6 @@
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
-/*
-    LEFT 82
-    RIGTH 83
-    UP 84
-    DOWN 85
-    SPACE 75
-
-*/
-
-#define KEYCODE ALLEGRO_KEY_DOWN-*data->keycode
 
 enum keycodes {DOWN, UP, RIGHT, LEFT, SPACE};
 
@@ -39,7 +29,7 @@ extern sem_t semaforo;
 
 extern unsigned int timerTick;
 
-#define FPS 5
+#define FPS 2
 
 void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
@@ -57,44 +47,31 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
         //usleep(10 * U_SEC2M_SEC);
 
-        if(*data->keyboardDownFlag){
+        
+        if(*data->keyboardDownFlag || *data->keyboardUpFlag){
 
-            if(*data->keycode == ALLEGRO_KEY_SPACE){
-                key_pressed[SPACE]= true;
-            }
-            if(*data->keycode == ALLEGRO_KEY_DOWN){
-                key_pressed[DOWN]= true;
-            }
-            if(*data->keycode == ALLEGRO_KEY_UP){
-                key_pressed[UP]= true;
-            }
-            if(*data->keycode == ALLEGRO_KEY_RIGHT){
-                key_pressed[RIGHT]= true;
-            }
-            if(*data->keycode == ALLEGRO_KEY_LEFT){
-                key_pressed[LEFT]= true;
-            } 
+            switch (*data->keycode)
+                {
+                case ALLEGRO_KEY_SPACE:
+                    key_pressed[SPACE]= *data->keyboardDownFlag;
+                    break;
+                case ALLEGRO_KEY_DOWN:
+                    key_pressed[DOWN]= *data->keyboardDownFlag;
+                    break;
+                case ALLEGRO_KEY_UP:
+                    key_pressed[UP]= *data->keyboardDownFlag;
+                    break;
+                case ALLEGRO_KEY_RIGHT:
+                    key_pressed[RIGHT]= *data->keyboardDownFlag;
+                    break;
+                case ALLEGRO_KEY_LEFT:
+                    key_pressed[LEFT]= *data->keyboardDownFlag;
+                    break;
+                default:
+                    break;
+                }
 
-            *data->keyboardDownFlag= false;       
-        }
-        else if(*data->keyboardUpFlag){
-
-            if(*data->keycode == ALLEGRO_KEY_SPACE){
-                key_pressed[SPACE]= false;
-            }
-            if(*data->keycode == ALLEGRO_KEY_DOWN){
-                key_pressed[DOWN]= false;
-            }
-            if(*data->keycode == ALLEGRO_KEY_UP){
-                key_pressed[UP]= false;
-            }
-            if(*data->keycode == ALLEGRO_KEY_RIGHT){
-                key_pressed[RIGHT]= false;
-            }
-            if(*data->keycode == ALLEGRO_KEY_LEFT){
-                key_pressed[LEFT]= false;
-            }
-
+            *data->keyboardDownFlag= false; 
             *data->keyboardUpFlag= false;       
         }
 

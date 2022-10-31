@@ -25,8 +25,9 @@
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 
-
+extern gameStatus_t GAME_STATUS;
 extern sem_t SEM_GAME;
+extern sem_t SEM_MENU;
 
 /***********************************************************************************************************************************************************
  * 
@@ -89,15 +90,20 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
         if(*data->displayFlag){
         
-            //sem_wait(&SEM_GAME);
+            if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
+                sem_wait(&SEM_GAME);
+            }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
+                sem_wait(&SEM_MENU);
+            }
+
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
             //Se dibujan los elementos y textos en el buffer
+            showObjects( *((*data).punteros.balasUsr) );
+            showObjects( *((*data).punteros.balasAlien) );
             showObjects( *((*data).punteros.alienList) );
             showObjects( *((*data).punteros.UsrList) );
             showObjects( *((*data).punteros.barrerasList) );
-            showObjects( *((*data).punteros.balasUsr) );
-            showObjects( *((*data).punteros.balasAlien) );
             showObjects( *((*data).punteros.mothershipList) );
             showTexts(*data->text, fuente);
             //Se muestra en pantalla
@@ -105,7 +111,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
             *data->displayFlag= false;
 
-            //sem_post(&SEM_GAME);
+            if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
+                sem_post(&SEM_GAME);
+            }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
+                sem_post(&SEM_MENU);
+            }
+
         }
     }
     pthread_exit(0);
@@ -177,20 +188,21 @@ void showText(texto_t * data, ALLEGRO_FONT * fuente){
 
     //Comando para escribir un texto en el buffer
     
-    printf("%d", data->lenght);
-    al_draw_rectangle(data->posx - 10, data->posy - 5, 
-    data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
+    if(data){
+        al_draw_rectangle(data->posx - 10, data->posy - 5, 
+        data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
 
-    al_draw_rectangle(data->posx - 5, data->posy -10, 
-    data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
+        al_draw_rectangle(data->posx - 5, data->posy -10, 
+        data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
 
-    al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
-    data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
+        al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
+        data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
 
-    al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
-    data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
+        al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
+        data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
 
-    al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+        al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+    }
 }
 
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){

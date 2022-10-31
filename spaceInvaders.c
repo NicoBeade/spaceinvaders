@@ -189,7 +189,7 @@ menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, sele
 texto_t * toText = NULL;
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
                       {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
-                      5, 1, changeOption };//Estructura del menu de inicio.
+                      4, 1, changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
@@ -244,7 +244,6 @@ void * timer(){
 /* Este thread es el encargado de controlar el tiempo del juego. Cuenta de una variable que se decrementa cada 10mS luego el resto de los
     threads utilizan esta variable para determinar cuando se deben ejecutar.
 */
-    printf("Timer set\n");
     while(GAME_STATUS.exitStatus){
         usleep(10 * U_SEC2M_SEC); //Sleep 10mS.
         timerTick -= 1;
@@ -378,16 +377,15 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                mothershipList = addObj(mothershipList, Booo, 0, 0);
+                //mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
-                printf("AlienList en spaceInvaders.c: %p\n", alienList);
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -414,7 +412,7 @@ int main(void){
 
             case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
                 printf("ENTRO A IN_GAME \n");
-                sem_post(&SEM_MENU);
+                sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
 
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
@@ -619,7 +617,6 @@ static void* menuHandlerThread(void * data){
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
-                printf("Press\n");
                 menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 #ifdef ALLEGRO
                 toText = emptyText(toText);
@@ -663,7 +660,6 @@ static void* levelHandlerThread(void * data){
                     sem_post(&SEM_GAME);
                 }
                 if (DERECHA_INPUT){//Mueve al usuario
-
                     moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
                 }
 

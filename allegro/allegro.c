@@ -6,6 +6,7 @@
 #include "../utilidades.h"
 #include "displayAllegro.h"
 #include "inputAllegro.h"
+#include "audioAllegro.h"
 #include "allegro.h"
 
 /************************************************************************************************
@@ -25,7 +26,7 @@ extern int timerTick;
 extern gameStatus_t GAME_STATUS;
 
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn);
-texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
+
 
 typedef struct {
 
@@ -60,7 +61,7 @@ void * allegroThread (void * dataIn){
 
     ALLEGRO_EVENT_QUEUE * event_queue = NULL;
     ALLEGRO_EVENT ev;
-    ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard; 
+    ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard, * taudio; 
 
     /**************************************************************
      * 
@@ -85,6 +86,7 @@ void * allegroThread (void * dataIn){
 
     display_data_t dataD = {&event_queue, data->punteros, data->textToShow, &close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
+    audio_data_t dataA = {&event_queue, &close_display};
 
     /*************************************************************************************************************
      * 
@@ -99,23 +101,79 @@ void * allegroThread (void * dataIn){
     teventH = al_create_thread(eventHandler, &dataH);
     tdisplay = al_create_thread(displayt, &dataD);
     tkeyboard = al_create_thread(keyboardt, &dataK);
+    taudio = al_create_thread(audiot, &dataA);
     al_start_thread(teventH);
     al_start_thread(tdisplay);
     al_start_thread(tkeyboard);
-
+    al_start_thread(taudio);
     
     al_join_thread(teventH, NULL);
     al_join_thread(tdisplay, NULL);
     al_join_thread(tkeyboard, NULL);
+    al_join_thread(taudio, NULL);
     al_destroy_thread(teventH);
     al_destroy_thread(tdisplay);
     al_destroy_thread(tkeyboard);
+    al_destroy_thread(taudio);
 
     pthread_exit(0);
     
 }
 
 /*******************************************************/
+
+texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
+// Esta funcion se encarga de agregar un nuevo texto a la lista
+	texto_t * newText = malloc(sizeof(texto_t));//Agrega el nuevo texto
+
+	if(newText == NULL){//Si no se puede hacer el malloc indica error.
+		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
+		return NULL; //error
+	}
+
+    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
+        texto_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
+		while(lastObj -> next != NULL){
+			lastObj = lastObj -> next;
+		}
+        lastObj -> next = newText;
+	}
+
+    else{//Si es el primero de la lista debemos devolver ese puntero.
+        firstObj = newText;
+    }
+
+
+	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
+	newText -> posx = posx;
+	newText -> posy = posy;
+    newText -> lenght = strlen(texto);
+
+    newText -> next = NULL;
+
+	return firstObj;//Devuelve un puntero al primer elemento.
+}
+
+
+texto_t * emptyText(texto_t * firstText){
+//Esta funcion se encarga de limpiar la lista de textos a escribir
+    texto_t * first = firstText;
+    //Recorre la lista y libera el espacio
+    if(first != NULL){
+        if(first->next == NULL){
+            free(first);
+        }
+        else{
+            texto_t * sig = first->next;
+            do{
+                sig = first->next;
+                free(first);
+                first = sig;
+            }while(sig!=NULL);
+        }
+    }
+    return first;             //Se devuelve la lista
+}
 
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
