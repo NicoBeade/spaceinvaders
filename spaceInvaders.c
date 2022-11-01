@@ -165,7 +165,7 @@ game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame},
                       {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispTrophy, &halfDispTrophy, &halfDispVolume, &halfDispRestart}, 
-                      5 , 1 , changeOption };//Estructura del menu de inicio.
+                      6 , 1 , changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
