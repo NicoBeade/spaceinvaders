@@ -1039,7 +1039,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     
     //Primero imprimimos las primeras 4 letras y el dibujo.
     argSwipeDrawing_t argSwipeDrawing = { ((argTextAnimMenu_t*)argTextAnimMenu) -> higherDispMenu, ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion, ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing };
-
+    sem_wait(&SEM_MENU);
     pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
 
     for(i = firstLetter ; i != lastLetter ; i -= (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion)){
@@ -1050,8 +1050,8 @@ void* textAnimMenu(void* argTextAnimMenu){
     
     pthread_join(drawingSwipeT, NULL);
     
-
-    usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
+    sem_wait(&SEM_MENU);
+    usleep(900 * U_SEC2M_SEC);
 
     if(velDispAnimation != 1){
         velDispAnimation = VEL_DISP_ANIMATION;
