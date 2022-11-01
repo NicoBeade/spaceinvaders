@@ -658,7 +658,7 @@ static void* saveScoreHandlerThread(void * data){
 	saveScore_t * menu = (saveScore_t *) data;
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu. 
-    char letraActual[3] = {'A', 'A', 'A'}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
+    char letraActual[3] = {'B', 'A', 'A'}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
     char titilar = 1; //Flag que indica si se debe titilar la letra.
 
