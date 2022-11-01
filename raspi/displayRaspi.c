@@ -1317,7 +1317,7 @@ void* letterFlashThread(void* data){
                 *(letterFlash->display)[i][j] = (*caracter)[i][j];
                 printf("%d", *(letterFlash->display)[i][j]);
             }
-            printf("/n");
+            printf("\n");
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
@@ -1333,7 +1333,9 @@ void* letterFlashThread(void* data){
 
             for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 *(letterFlash->display)[i][j] = 0;
+                printf("%d", *(letterFlash->display)[i][j]);
             }
+            printf("\n");
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
