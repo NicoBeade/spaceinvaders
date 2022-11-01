@@ -1307,6 +1307,9 @@ void* letterFlashThread(void* data){
         offset = offsetAlfabeto(*(letterFlash->letra));
         caracter = alfabeto[offset];
 
+        printf("Letra x: %d", (letterFlash->pos)->x);
+        printf("Letra y: %d", (letterFlash->pos)->y);
+
         //Primero imprime la letra
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
 
