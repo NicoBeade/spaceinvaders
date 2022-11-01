@@ -666,7 +666,7 @@ static void* saveScoreHandlerThread(void * data){
     #ifdef RASPI
 
         char letraTitileo = letraActual[select];
-        vector_t posLetra = {4,1};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
+        vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
 
         pthread_t displayMenuT, titileoT;
         halfDisp_t higherDispMenu = {//Parte superior del display
