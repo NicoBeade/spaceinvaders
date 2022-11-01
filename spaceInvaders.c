@@ -633,11 +633,8 @@ static void* menuHandlerThread(void * data){
                 
             }
 
-            if (PRESS_INPUT){//Si se presiona enter
-                menu -> exitStatus = 0;
-
-                GAME_STATUS.pantallaActual = MENU;
-
+            if (PRESS_INPUT){//Si se selecciona la opcion
+                menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 #ifdef ALLEGRO
                 toText = emptyText(toText);
                 KEYS.press=0;
