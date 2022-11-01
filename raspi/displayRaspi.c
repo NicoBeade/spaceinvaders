@@ -1327,6 +1327,7 @@ void* letterFlashThread(void* data){
 
             for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 *(letterFlash->display)[i][j] = 0;
+                printf("j: %d", j);
             }
         }
         if(*(letterFlash->titilar)){
