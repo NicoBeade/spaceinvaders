@@ -1303,7 +1303,7 @@ void* letterFlashThread(void* data){
     int i, j;
 
     while(*(letterFlash->exitStatus)){
-        printf("letra a titilar: %c", *(letterFlash->letra));
+        printf("letra a titilar: %c\n", *(letterFlash->letra));
         offset = offsetAlfabeto(*(letterFlash->letra));
         caracter = alfabeto[offset];
 

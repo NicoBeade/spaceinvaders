@@ -130,7 +130,7 @@ enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
 #define OFFSETCHARESP 36
 #define OFFSETNUM 26
 
-#define VEL_TITILEO 50
+#define VEL_TITILEO 200
 
 #define MAX_SPRITES 200
 /*******************************************************************************************************************************************
