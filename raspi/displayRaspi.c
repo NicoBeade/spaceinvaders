@@ -1301,7 +1301,6 @@ void* letterFlashThread(void* data){
     
     int offset; //Variable para desreferenciar en el arreglo de alfabeto.
     int i, j;
-    int l = 0;
 
     offset = offsetAlfabeto(*(letterFlash->letra));
     caracter = alfabeto[offset];
