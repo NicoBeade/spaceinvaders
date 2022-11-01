@@ -697,7 +697,7 @@ static void* saveScoreHandlerThread(void * data){
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 
-        usleep(1000 * U_SEC2M_SEC);
+        usleep(1800 * U_SEC2M_SEC);
 
         letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &(menu->exitStatus)};
         pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
