@@ -1317,7 +1317,7 @@ void* letterFlashThread(void* data){
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
-            printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
 
@@ -1332,7 +1332,7 @@ void* letterFlashThread(void* data){
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
-            printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
 
