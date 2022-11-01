@@ -1302,10 +1302,10 @@ void* letterFlashThread(void* data){
     int offset; //Variable para desreferenciar en el arreglo de alfabeto.
     int i, j;
 
-    offset = offsetAlfabeto(*(letterFlash->letra));
-    caracter = alfabeto[offset];
-
     while(*(letterFlash->exitStatus)){
+
+        offset = offsetAlfabeto(*(letterFlash->letra));
+        caracter = alfabeto[offset];
 
         //Primero imprime la letra
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
@@ -1316,7 +1316,7 @@ void* letterFlashThread(void* data){
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
-            printHalfDisp(letterFlash->display, 'S');//Muestra el contenido en el display.
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
 
@@ -1325,13 +1325,13 @@ void* letterFlashThread(void* data){
         //Luego apaga todos los pixeles
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
 
-            for(j = (letterFlash->pos)->x ; i < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
+            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 *(letterFlash->display)[i][j] = 0;
             }
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
-            printHalfDisp(letterFlash->display, 'S');//Muestra el contenido en el display.
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
 
