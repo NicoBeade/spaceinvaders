@@ -1310,7 +1310,7 @@ void* letterFlashThread(void* data){
         //Primero imprime la letra
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
 
-            for(j = (letterFlash->pos)->x ; i < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
+            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 *(letterFlash->display)[i][j] = (*caracter)[i][j];
             }
         }
