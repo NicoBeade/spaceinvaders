@@ -1307,8 +1307,8 @@ void* letterFlashThread(void* data){
         offset = offsetAlfabeto(*(letterFlash->letra));
         caracter = alfabeto[offset];
 
-        printf("Letra x: %d", (letterFlash->pos)->x);
-        printf("Letra y: %d", (letterFlash->pos)->y);
+        printf("Letra x: %d\n", (letterFlash->pos)->x);
+        printf("Letra y: %d\n", (letterFlash->pos)->y);
 
         //Primero imprime la letra
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
@@ -1319,6 +1319,7 @@ void* letterFlashThread(void* data){
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
+            printf("Titilando 1\n");
             printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
@@ -1334,6 +1335,7 @@ void* letterFlashThread(void* data){
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
+            printf("Titilando 2\n");
             printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
