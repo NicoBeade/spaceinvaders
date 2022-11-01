@@ -138,6 +138,7 @@ extern halfDisp_t halfDispAlienSpaceInvaders;
 extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
+extern halfDisp_t halfDispAAA;
 #endif
 
 #define VEL_SHOOT_USR 15
@@ -393,7 +394,7 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                //mothershipList = addObj(mothershipList, Booo, 0, 0);
+                mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
@@ -401,7 +402,7 @@ int main(void){
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -662,12 +663,12 @@ static void* saveScoreHandlerThread(void * data){
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu. 
     char letraActual[3] = {'A', 'A', 'A'}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
-    char letraTitileo = letraActual[select];
     char titilar = 1; //Flag que indica si se debe titilar la letra.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
 
+        char letraTitileo = letraActual[select];
         vector_t posLetra = {4,1};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
 
         pthread_t displayMenuT, titileoT;
@@ -701,7 +702,7 @@ static void* saveScoreHandlerThread(void * data){
 
         usleep(200 * U_SEC2M_SEC);
 
-        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &(menu->exitStatus)};
+        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &(menu->exitStatus)};
         pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
     #endif
 
