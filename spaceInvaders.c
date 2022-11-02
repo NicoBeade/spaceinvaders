@@ -13,6 +13,7 @@
 *   
 *
  **********************************************************************************************************************************************************/
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -324,6 +325,7 @@ int main(void){
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
+                //toAudio = addAudio(toAudio, audio1);
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.

@@ -58,7 +58,8 @@ int showObjects(object_t * inicial);
 void showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLES ** samples);
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample);
+
 /***********************************************************************************************************************************************************
  * 
  *                                                                      THREAD PRINCIPAL
@@ -188,7 +189,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //si hay mas de uno
             while(audioActual != NULL){
 
-                audioActual = play(audioActual, &(samples[0]));
+                audioActual = play(audioActual, samples[audioActual->audioId]);
             }
 
             *data->audio = NULL;
@@ -315,11 +316,11 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
 /*********AUDIO*************/
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLES ** samples){
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample){
 
     audio_t * sig = firstAudio->next;
     
-    al_play_sample((*samples)[firstAudio->audioId], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     
     free(firstAudio);
     
