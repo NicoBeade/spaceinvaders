@@ -25,20 +25,18 @@ cleanRaspi:
 
 COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_audio-5 allegro_acodec-5 --libs --cflags)
 
-mainAllegro: spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o audioAllegro.o spaceInvaders.c
-	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o displayAllegro.o inputAllegro.o audioAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
+mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o spaceInvaders.c
+	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
 
 allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
 
-displayAllegro.o: allegro/displayAllegro.c allegro/displayAllegro.h utilidades.h spaceLib/spaceLib.h
-	gcc -c -g allegro/displayAllegro.c -Wall $(COMPILACION_ALLEGRO)
+outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h utilidades.h spaceLib/spaceLib.h
+	gcc -c -g allegro/outputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h utilidades.h
 	gcc -c -g allegro/inputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
-audioAllegro.o: allegro/audioAllegro.c allegro/audioAllegro.h utilidades.h
-	gcc -c -g allegro/audioAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 
 

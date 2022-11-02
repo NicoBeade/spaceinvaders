@@ -4,9 +4,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include "../utilidades.h"
-#include "displayAllegro.h"
+#include "outputAllegro.h"
 #include "inputAllegro.h"
-#include "audioAllegro.h"
 #include "allegro.h"
 
 /************************************************************************************************
@@ -17,7 +16,7 @@
 
 #define FPS 2
 #define MENUX 150   //Posicion x del menu
-#define MENUY 100   //Posicion y del menu
+#define MENUY 300   //Posicion y del menu
 #define ESPACIADOMENU 100   //Espaciado entre opciones del menu
 #define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
 
@@ -61,7 +60,7 @@ void * allegroThread (void * dataIn){
 
     ALLEGRO_EVENT_QUEUE * event_queue = NULL;
     ALLEGRO_EVENT ev;
-    ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard, * taudio; 
+    ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard; 
 
     /**************************************************************
      * 
@@ -86,7 +85,6 @@ void * allegroThread (void * dataIn){
 
     display_data_t dataD = {&event_queue, data->punteros, data->textToShow, &close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
-    audio_data_t dataA = {&event_queue, &close_display};
 
     /*************************************************************************************************************
      * 
@@ -101,20 +99,16 @@ void * allegroThread (void * dataIn){
     teventH = al_create_thread(eventHandler, &dataH);
     tdisplay = al_create_thread(displayt, &dataD);
     tkeyboard = al_create_thread(keyboardt, &dataK);
-    taudio = al_create_thread(audiot, &dataA);
     al_start_thread(teventH);
     al_start_thread(tdisplay);
     al_start_thread(tkeyboard);
-    al_start_thread(taudio);
     
     al_join_thread(teventH, NULL);
     al_join_thread(tdisplay, NULL);
     al_join_thread(tkeyboard, NULL);
-    al_join_thread(taudio, NULL);
     al_destroy_thread(teventH);
     al_destroy_thread(tdisplay);
     al_destroy_thread(tkeyboard);
-    al_destroy_thread(taudio);
 
     pthread_exit(0);
     
@@ -242,8 +236,39 @@ void changeOption(void * dataIn){
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
     texto_t * puntero = *data->toText;
     int i = 0, j= 0;
+    int esc = 0;
 
+    if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
+
+        esc = -(data->menu)->cantOpciones + 1;
+
+    }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
+
+        esc = (data->menu)->cantOpciones - 1;
+
+    }else if(data->nextOp > data->actualOp){
+
+        esc = -1;
+
+    }else{
+
+        esc = 1;
+
+    }
     
+    for(i = 0; i < (data->menu)->cantOpciones; i++ ){
+
+        puntero->posy += esc * ESPACIADOMENU;
+
+        if(i == data->actualOp){
+            puntero->posx-= SELECTOR;
+        }
+        if(i == data->nextOp){
+            puntero->posx += SELECTOR;
+        }
+        puntero = puntero->next;
+    }
+    /*
     //Busco la opcion seleccionada
     for(i = 0; i<data->actualOp; i++){
         puntero = puntero->next;
@@ -259,7 +284,7 @@ void changeOption(void * dataIn){
     
     //la muevo
     puntero->posx += SELECTOR;
-
+    
     //busco el selector
     puntero = *data->toText;
     for(j = 0; j< (data->menu)->cantOpciones; j++){
@@ -268,7 +293,7 @@ void changeOption(void * dataIn){
     
     puntero->posx= MENUX;
     puntero->posy= MENUY + data->nextOp * ESPACIADOMENU;
-
+    */
 }
 
 int selectPlayInicio(void){

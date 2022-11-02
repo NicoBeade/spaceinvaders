@@ -1,6 +1,8 @@
  #ifndef ALLEGRO_H
  #define ALLEGRO_H
 
+ #include "../spaceLib/spaceLib.h"
+
 /******************************************************************
  * 
  *                          Structs

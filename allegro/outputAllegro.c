@@ -18,9 +18,11 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h> //Manejo de ttfs
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h> 
 #include <pthread.h>
 #include <stdio.h>
-#include "displayAllegro.h"
+#include "outputAllegro.h"
 #include "allegro.h"
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
@@ -68,57 +70,90 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
 
-    ALLEGRO_DISPLAY * display = NULL;
+    //---------INICIALIZACION PARA EL USO DEL DISPLAY
 
+    ALLEGRO_DISPLAY * display = NULL; 
     ALLEGRO_FONT * fuente = NULL;
 
-    display = al_create_display(X_MAX,Y_MAX);
-    
     al_init_image_addon();
-    al_init_font_addon(); // initialize the font addon
-    al_init_ttf_addon(); // initialize the ttf (True Type Font) addon
+    al_init_font_addon();
+    al_init_ttf_addon();
     al_init_primitives_addon();
 
+    display = al_create_display(X_MAX,Y_MAX); //Se crea el display
     fuente = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0);
     
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
-   
+    //-------------------------------------------------
+    //---------INICIALIZACION PARA EL USO DEL AUDIO
+
+    al_install_audio();
+    al_init_acodec_addon();
+    al_reserve_samples(1);
+
+    //-------------------------------------------------
+
     while(!*data->close_display){
 
         usleep(10 * U_SEC2M_SEC);    
 
+
+
+
+        /**************************************************************
+         * 
+         *              DISPLAY
+         * 
+         * ***********************************************************/
+        
         if(*data->displayFlag){
         
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
                 sem_wait(&SEM_GAME);
+
+                //Se limpia la pantalla
+                al_clear_to_color(al_map_rgb(BGCOLOR));
+                
+                //Se dibujan los elementos y textos en el buffer
+                showObjects( *((*data).punteros.balasUsr) );
+                showObjects( *((*data).punteros.balasAlien) );
+                showObjects( *((*data).punteros.alienList) );
+                showObjects( *((*data).punteros.UsrList) );
+                showObjects( *((*data).punteros.barrerasList) );
+                showObjects( *((*data).punteros.mothershipList) );
+                
+                //Se muestra en pantalla
+                al_flip_display();
+
+                sem_post(&SEM_GAME);
+
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);
-            }
 
-            //Se limpia la pantalla
-            al_clear_to_color(al_map_rgb(BGCOLOR));
-            //Se dibujan los elementos y textos en el buffer
-            showObjects( *((*data).punteros.balasUsr) );
-            showObjects( *((*data).punteros.balasAlien) );
-            showObjects( *((*data).punteros.alienList) );
-            showObjects( *((*data).punteros.UsrList) );
-            showObjects( *((*data).punteros.barrerasList) );
-            showObjects( *((*data).punteros.mothershipList) );
-            showTexts(*data->text, fuente);
-            //Se muestra en pantalla
-            al_flip_display();
+                //Se limpia la pantalla
+                al_clear_to_color(al_map_rgb(BGCOLOR));
+
+                //Se escriben los textos en el buffer
+                showTexts(*data->text, fuente);
+                
+                //Se muestra en pantalla
+                al_flip_display();
+
+                sem_post(&SEM_MENU);
+
+
+            }
 
             *data->displayFlag= false;
 
-            if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                sem_post(&SEM_GAME);
-            }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
-                sem_post(&SEM_MENU);
-            }
-
         }
+
+        //--------------------------------------------------------------
     }
+
+    al_destroy_display(display);
+    al_uninstall_audio();
     pthread_exit(0);
 }
 

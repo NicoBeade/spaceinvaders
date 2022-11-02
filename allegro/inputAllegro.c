@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <time.h>
 #include "inputAllegro.h"
-#include "../utilidades.h"
-#include "displayAllegro.h"
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 

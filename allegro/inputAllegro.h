@@ -19,7 +19,7 @@
  #include <allegro5/allegro.h>
  #include <allegro5/allegro_image.h>
  #include "../utilidades.h"
- #include "displayAllegro.h"
+ #include "outputAllegro.h"
 
  #define EVENTO (*(data->ev))
 
