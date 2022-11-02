@@ -709,6 +709,8 @@ static void* saveScoreHandlerThread(void * data){
     #endif
     //***************************************************************************************************************************
 
+    usleep(200 * U_SEC2M_SEC);
+
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
