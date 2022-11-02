@@ -714,6 +714,13 @@ static void* saveScoreHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
+
+            for(int i = 0 ; i < 8 ; i++){
+
+                for(int j = 0 ; j < 16 ; j++){
+                    printf("%d", higherDispMenu);
+                }
+            }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
