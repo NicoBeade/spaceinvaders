@@ -8,6 +8,8 @@
  *                          Structs
  * 
 *******************************************************************/
+enum audios {audio1 = 0, audio2, audioMax};
+
 typedef int (*option_t)(void);
 
 typedef struct TEXTO
@@ -15,10 +17,16 @@ typedef struct TEXTO
     char* texto;
     int posx;
     int posy;
-    int lenght;
 
     struct TEXTO * next;
 }texto_t;
+
+typedef struct AUDIO
+{
+    int audioId;
+
+    struct AUDIO * next;
+}audio_t;
 
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
@@ -56,6 +64,7 @@ typedef struct {
 
     punteros_t punteros;
     texto_t ** textToShow;
+    audio_t ** audioToPlay;
     keys_t * keys;
 
 }data_allegro_t;
@@ -75,6 +84,7 @@ void * allegroThread (void * arg);
 texto_t * allegroMenu(menu_t * data, texto_t * toshow);
 texto_t * emptyText(texto_t * firstText);
 texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy);
+audio_t* addAudio(audio_t * firstObj, int audioId);
 
 //changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
 void changeOption(void * data);

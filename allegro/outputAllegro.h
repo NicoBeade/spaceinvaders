@@ -48,11 +48,12 @@ typedef struct
 
     punteros_t punteros;
     texto_t ** text;
+    audio_t ** audio;
 
     bool * close_display;
     bool * displayFlag;
 
-}display_data_t;
+}output_data_t;
     
 
 /*******************************************************************************************************************************************
@@ -91,7 +92,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
  * 
  ******************************************************************************************************************************************/
 
-#define TAMLETRAX 20
+#define BGHEIGHT 768
+#define BGVEL 5
+#define TAMLETRAX 24
 #define TAMLETRAY 36
 
 #define X_MAX 840              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.

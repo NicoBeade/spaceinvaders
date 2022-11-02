@@ -58,6 +58,7 @@ int showObjects(object_t * inicial);
 void showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLES ** samples);
 /***********************************************************************************************************************************************************
  * 
  *                                                                      THREAD PRINCIPAL
@@ -66,9 +67,14 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 
 void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
-    display_data_t * data = (display_data_t *) dataIn;
+    output_data_t * data = (output_data_t *) dataIn;
 
     ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
+
+    ALLEGRO_BITMAP * background = NULL;
+
+    int bgpos = 0;
+    int bgtimer = 0;
 
     //---------INICIALIZACION PARA EL USO DEL DISPLAY
 
@@ -90,16 +96,37 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     al_install_audio();
     al_init_acodec_addon();
-    al_reserve_samples(1);
+    al_reserve_samples(audioMax);
+
+    ALLEGRO_SAMPLE * samples[audioMax];
+
+    audio_t * audioActual = NULL;
+
+    samples[audio1] = al_load_sample("allegro/violin.wav");
+    samples[audio2] = al_load_sample("allegro/violin.wav");
+    
 
     //-------------------------------------------------
+
+    background = al_load_bitmap("allegro/fondo2.png");
+    if(!background){
+         printf("fallo\n");
+    }
 
     while(!*data->close_display){
 
         usleep(10 * U_SEC2M_SEC);    
 
+        bgtimer += 1;
 
+        if(bgtimer % BGVEL == 0){
 
+            bgpos += 1;
+            bgtimer = 0;
+        }
+        if(bgpos == BGHEIGHT){
+            bgpos = 0;
+        }
 
         /**************************************************************
          * 
@@ -109,12 +136,15 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
         
         if(*data->displayFlag){
         
+            //Se limpia la pantalla
+            al_clear_to_color(al_map_rgb(BGCOLOR));
+
+            al_draw_bitmap(background, 0, bgpos, 0);
+            al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
+
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
                 sem_wait(&SEM_GAME);
-
-                //Se limpia la pantalla
-                al_clear_to_color(al_map_rgb(BGCOLOR));
-                
+ 
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
                 showObjects( *((*data).punteros.balasAlien) );
@@ -122,34 +152,49 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.UsrList) );
                 showObjects( *((*data).punteros.barrerasList) );
                 showObjects( *((*data).punteros.mothershipList) );
-                
-                //Se muestra en pantalla
-                al_flip_display();
 
                 sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);
 
-                //Se limpia la pantalla
-                al_clear_to_color(al_map_rgb(BGCOLOR));
-
                 //Se escriben los textos en el buffer
                 showTexts(*data->text, fuente);
-                
-                //Se muestra en pantalla
-                al_flip_display();
 
                 sem_post(&SEM_MENU);
 
-
             }
+
+            //Se muestra en pantalla
+            al_flip_display();
 
             *data->displayFlag= false;
 
         }
 
-        //--------------------------------------------------------------
+         /*************************************************************/
+         /**************************************************************
+         * 
+         *              AUDIO
+         * 
+         * ***********************************************************/
+
+        //Si hay audios para reproducir
+        if(*data->audio != NULL){
+
+            //apunto al primer audio
+            audioActual = *data->audio;
+
+            //si hay mas de uno
+            while(audioActual != NULL){
+
+                audioActual = play(audioActual, &(samples[0]));
+            }
+
+            *data->audio = NULL;
+        }
+
+         /*************************************************************/
     }
 
     al_destroy_display(display);
@@ -164,6 +209,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
  *                                                                      FUNCIONES SECUNDARIAS
  * 
  * ********************************************************************************************************************************************************/
+
+/*********DISPLAY*************/
 
 int showEntity(object_t * entity){
   
@@ -222,21 +269,22 @@ int showObjects(object_t * inicial){
 void showText(texto_t * data, ALLEGRO_FONT * fuente){
 
     //Comando para escribir un texto en el buffer
-    
+    //int lenght = strlen(data->texto);
+
     if(data){
-        al_draw_rectangle(data->posx - 10, data->posy - 5, 
-        data->posx + data->lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
+        /*al_draw_rectangle(data->posx - 10, data->posy - 5, 
+        data->posx + lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
 
         al_draw_rectangle(data->posx - 5, data->posy -10, 
-        data->posx + data->lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
+        data->posx + lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
 
         al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
-        data->posx + data->lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
+        data->posx + lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
 
         al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
-        data->posx + data->lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));
+        data->posx + lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));*/
 
-        al_draw_text(fuente, al_map_rgb(80,80,80) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+        al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
     }
 }
 
@@ -265,4 +313,16 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
 }
 
+/*********AUDIO*************/
+
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLES ** samples){
+
+    audio_t * sig = firstAudio->next;
+    
+    al_play_sample((*samples)[firstAudio->audioId], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    
+    free(firstAudio);
+    
+    return sig;
+}
 /**********************************************************************************************************************************************************/

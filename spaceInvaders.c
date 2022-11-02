@@ -189,21 +189,22 @@ menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, sele
 #endif
 
 #ifdef ALLEGRO
+audio_t * toAudio = NULL;
 texto_t * toText = NULL;
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
-                      {"Quick Play    ", "Levels    ", "Volume    ", "Quit Game    "}, 
+                      {"Quick Play ", "Levels ", "Volume ", "Quit Game "}, 
                       4, 1, changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
-                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
+                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Dificulty ", "Volume ", "Quit Game "}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
-                      {"Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "},  
+                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},  
                       6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
-                      {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
+                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
@@ -297,7 +298,7 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList};
-    data_allegro_t dataIn = {punteros, &toText, &KEYS};
+    data_allegro_t dataIn = {punteros, &toText, &toAudio, &KEYS};
     data_allegro_t * dataInput = &dataIn;
     #endif
 

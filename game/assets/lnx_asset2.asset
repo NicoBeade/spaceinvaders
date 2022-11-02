@@ -3,7 +3,7 @@ vel 10
 ancho 60
 alto 40
 initLives 5
-shootProb 6
+shootProb 3
 maxBullets 7
 balaID 8
 sprite1 game/spritesAllegro/alien2.png
