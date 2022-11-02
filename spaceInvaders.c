@@ -813,6 +813,9 @@ static void* saveScoreHandlerThread(void * data){
                 
                 //Aca se tiene que guardar el nombre en el leaderboard.
 
+                GAME_STATUS.pantallaActual = MENU;
+                menu -> exitStatus = 0;
+
                 #ifdef ALLEGRO
                 toText = emptyText(toText);
                 KEYS.press=0;
