@@ -718,8 +718,9 @@ static void* saveScoreHandlerThread(void * data){
             for(int i = 0 ; i < 8 ; i++){
 
                 for(int j = 0 ; j < 16 ; j++){
-                    printf("%d", higherDispMenu);
+                    printf("%d", (int)higherDispMenu);
                 }
+                printf("\n");
             }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
