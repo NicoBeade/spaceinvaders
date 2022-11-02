@@ -87,6 +87,23 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
 } menu_t;
 
+typedef struct {
+
+    keys_t * keys;
+    char puntaje[10];//String que contiene el puntaje del usuario.
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+    int cantOpciones;//Cantidad de letras del usuario.
+} saveScore_t;
+
+typedef struct {
+
+    char* letra;//Apunta a la letra que se debe mostrar.
+    halfDisp_t* display;//Apunta a medio display donde se mostrara la letra.
+    vector_t* pos;//Posicion de donde se hara titilar la letra.
+    char* titilar;//Flag que indica si debe titilar o no.
+    int* exitStatus;//Flag que indica cuando salir del thread.
+} letterFlash_t;
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -112,6 +129,8 @@ enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
 #define OFFSETALIEN 39
 #define OFFSETCHARESP 36
 #define OFFSETNUM 26
+
+#define VEL_TITILEO 200
 
 #define MAX_SPRITES 200
 /*******************************************************************************************************************************************
@@ -173,6 +192,7 @@ void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla
 void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
 halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select);  //Se utiliza para mostrar el nombre del usuario del leaderBoard en el menu.
 halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr);  //Adapte el nombre del usuario a un halfdisplay_t.
+void* letterFlashThread(void*); //Thread encargado de hacer titilar una letra en el display.
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);
@@ -184,6 +204,7 @@ int selectRestartLevel(void);
 int selectMainMenu(void);
 int selectDificulty(void);
 int selectLeaderboard(void);
+int selectSaveScore(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

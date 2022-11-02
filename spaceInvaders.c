@@ -118,6 +118,8 @@ void * colliderThread(void * argCollider);
 
 static void* menuHandlerThread(void * data);
 
+static void* saveScoreHandlerThread(void * data);
+
 static void* levelHandlerThread(void * data);
 
 /*******************************************************************************************************************************************
@@ -136,6 +138,7 @@ extern halfDisp_t halfDispAlienSpaceInvaders;
 extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
+extern halfDisp_t halfDispAAA;
 #endif
 
 #define VEL_SHOOT_USR 15
@@ -159,10 +162,10 @@ sem_t SEM_DRIVER;
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
 #ifdef RASPI
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectVolume, selectQuitGame},
-                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Volume    ", "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispTrophy, &halfDispVolume, &halfDispRestart}, 
-                      5 , 1 , changeOption };//Estructura del menu de inicio.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame},
+                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispTrophy, &halfDispTrophy, &halfDispVolume, &halfDispRestart}, 
+                      6 , 1 , changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
@@ -275,7 +278,7 @@ int main(void){
     pthread_t displayT;
     #endif
 
-    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT;
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT;
     
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
@@ -330,6 +333,20 @@ int main(void){
 
                 break;
             
+            case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
+                
+                sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
+
+                saveScore_t saveScore = { &KEYS, "23015", 1, 3, };
+
+                pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
+                
+                pthread_join(saveScoreT, NULL);
+
+                sem_post(&SEM_GAME);
+
+                break;
+
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
@@ -377,7 +394,7 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                //mothershipList = addObj(mothershipList, Booo, 0, 0);
+                mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
@@ -385,7 +402,7 @@ int main(void){
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -629,6 +646,196 @@ static void* menuHandlerThread(void * data){
     #ifdef RASPI
     animStatus = 0;
     pthread_join(displayMenuT, NULL);
+    #endif
+
+    pthread_exit(0);
+}
+
+
+static void* saveScoreHandlerThread(void * data){
+/*Este thread es el encargado de manejar los menues.
+*/
+	saveScore_t * menu = (saveScore_t *) data;
+
+    int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu. 
+    char letraActual[3] = {'B', 'A', 'A'}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
+    char letraAnterior;
+    char titilar = 1; //Flag que indica si se debe titilar la letra.
+
+    //*****************************************     Inicializa el thread que barre el display       *****************************
+    #ifdef RASPI
+
+        char letraTitileo = letraActual[select];
+        vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
+
+        pthread_t displayMenuT, titileoT;
+        halfDisp_t higherDispMenu = {//Parte superior del display
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
+
+        halfDisp_t lowerDispMenu = {//Parte inferior del display
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+        };
+
+        int animStatus = 1;
+
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus};
+    
+        pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
+
+        usleep(1800 * U_SEC2M_SEC);
+
+        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &(menu->exitStatus)};
+        pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
+    #endif
+
+    #ifdef ALLEGRO
+    int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
+    toText = allegroMenu(MENUES[GAME_STATUS.menuActual], toText);
+    #endif
+    //***************************************************************************************************************************
+
+    usleep(200 * U_SEC2M_SEC);
+
+    while(menu -> exitStatus){
+        usleep(10 * U_SEC2M_SEC);
+        if( (timerTick % velMenu) == 0 ){
+
+            for(int i = 0 ; i < 8 ; i++){
+
+                for(int j = 0 ; j < 16 ; j++){
+                    printf("%d", (int)higherDispMenu);
+                }
+                printf("\n");
+            }
+            
+            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+                #ifdef ALLEGRO
+                preSelect = select;
+                #endif
+                select += 1;
+                #ifdef RASPI
+                posLetra.x += 4;
+                #endif
+                if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
+                    select = 0;
+                    #ifdef RASPI
+                    posLetra.x = 4;
+                    #endif
+                }
+
+                #ifdef RASPI
+                letraTitileo = letraActual[select];
+                #endif
+                #ifdef ALLEGRO
+                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                #endif
+            }
+
+            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+                #ifdef ALLEGRO
+                preSelect = select;
+                #endif
+                select -= 1;
+                #ifdef RASPI
+                posLetra.x -= 4;
+                #endif
+                if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
+                    select = (menu -> cantOpciones) - 1;
+                    #ifdef RASPI
+                    posLetra.x = 12;
+                    #endif
+                }
+
+                #ifdef RASPI
+                letraTitileo = letraActual[select];
+                #endif
+                #ifdef ALLEGRO
+                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                #endif                
+            }
+
+            if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
+                letraAnterior = letraActual[select];
+                letraActual[select] += 1; //Apunta a la siguiente letra.
+
+                switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
+                case '[':
+                    letraActual[select] = ' ';
+                    break;
+                case '!':
+                    letraActual[select] = '0';
+                    break;
+                case ':':
+                    letraActual[select] = 'A';
+                default:
+                    break;
+                }
+
+                #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra
+                //LLAMAR A LA FUNCION DEL BARRIDO
+                titilar = 1;//Comenzamos a titilar de vuelta.
+                #endif
+            }
+
+            if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
+                letraAnterior = letraActual[select];
+                letraActual[select] -= 1; //Apunta a la siguiente letra.
+
+                switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
+                case '@':
+                    letraActual[select] = '9';
+                    break;
+                case '/':
+                    letraActual[select] = ' ';
+                    break;
+                case '_':
+                    letraActual[select] = 'Z';
+                default:
+                    break;
+                }
+
+                #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra
+                //LLAMAR A LA FUNCION DEL BARRIDO
+                titilar = 1;//Comenzamos a titilar de vuelta.
+                #endif
+            }
+
+            if (PRESS_INPUT){//Si se selecciona la opcion
+                
+                //Aca se tiene que guardar el nombre en el leaderboard.
+
+                GAME_STATUS.pantallaActual = MENU;
+                menu -> exitStatus = 0;
+
+                #ifdef ALLEGRO
+                toText = emptyText(toText);
+                KEYS.press=0;
+                #endif
+            }
+            
+        }
+    }
+    #ifdef RASPI
+    animStatus = 0;
+    pthread_join(displayMenuT, NULL);
+    pthread_join(titileoT, NULL);
     #endif
 
     pthread_exit(0);

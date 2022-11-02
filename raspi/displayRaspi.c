@@ -176,6 +176,16 @@ halfDisp_t halfDispRestart = {
     {0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0},
 };
 
+halfDisp_t halfDispAAA = {
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,0,0,0,1,1,1,0,1,1,1,0,1,1,1,0},
+    {0,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0},
+    {0,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0},
+    {0,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0},
+    {1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+};
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -1115,7 +1125,7 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
         }
         
         sem_wait(&SEM_MENU);
-        printHalfDisp(*lowerDispMenu, 'I');//Muetra el contenido en el display.
+        printHalfDisp(*lowerDispMenu, 'I');//Muestra el contenido en el display.
         sem_post(&SEM_MENU);
     }
     
@@ -1148,7 +1158,7 @@ void* swipeDrawing(void* data){
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
         }
         sem_wait(&SEM_MENU);
-        printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muetra el contenido en el display.
+        printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
         sem_post(&SEM_MENU);
     }
     pthread_exit(0);
@@ -1217,26 +1227,12 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
     for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
         char copiaLeaderboard [ROWSIZE];
         char puntajeMenu[60];
-        //char name [5];
-        //int letra;
-        //int caracter = 1;
         
         strcpy(copiaLeaderboard, leaderboard[i]); //Accede al valor numerico de puntaje de cada posicion
         strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
-        printf("Copia leaderboard: %s\n",copiaLeaderboard);
-        sprintf(puntajeMenu, "%d.%s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
-        printf("PuntajeMenu: %s\n",puntajeMenu);
-        strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
-        printf("Puntero al string a escribir: %s\n", (menuLeaderboard->textOpciones)[i]);
-        /*name [0] = '>';
-        name [4] = 0;
-        for (letra=strlen(copiaLeaderboard)+1; leaderboard[i][letra]!=0; letra++){
-            name[caracter]=leaderboard[i][letra];
-            caracter++;
-        }
-        printf("%s\n",name);
 
-        strcpy*/
+        sprintf(puntajeMenu, "%d.%s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
     }
     
 }
@@ -1270,6 +1266,7 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
 
 
 halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
+//Esta funcion convierte un string de 4 letras en un halfDisplay_t.
 
     caracteres_t* caracter; //Variable que almacena el dibujo del caracter en pixeles.
     
@@ -1295,6 +1292,63 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
     return nombre;
 }
 
+void* letterFlashThread(void* data){
+//Este thread se encarga de hacer titilar una letra en el display.
+
+    letterFlash_t* letterFlash = (letterFlash_t*)data;
+
+    caracteres_t* caracter; //Variable que almacena el dibujo del caracter en pixeles.
+    
+    int offset; //Variable para desreferenciar en el arreglo de alfabeto.
+    int i, j;
+
+    while(*(letterFlash->exitStatus)){
+        printf("letra a titilar: %c\n", *(letterFlash->letra));
+        offset = offsetAlfabeto(*(letterFlash->letra));
+        caracter = alfabeto[offset];
+
+        printf("Letra x: %d\n", (letterFlash->pos)->x);
+        printf("Letra y: %d\n", (letterFlash->pos)->y);
+
+        //Primero imprime la letra
+        for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
+
+            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
+                *(letterFlash->display)[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
+                //printf("%d", *(letterFlash->display)[i][j]);
+            }
+            //printf("\n");
+        }
+        if(*(letterFlash->titilar)){
+            sem_wait(&SEM_MENU);
+            printf("Titilando 1\n");
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
+            sem_post(&SEM_MENU);
+        }
+
+        usleep(2 * VEL_TITILEO * U_SEC2M_SEC);
+
+        //Luego apaga todos los pixeles
+        for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
+
+            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
+                *(letterFlash->display)[i][j] = 0;
+                //printf("%d", *(letterFlash->display)[i][j]);
+            }
+            //printf("\n");
+        }
+        if(*(letterFlash->titilar)){
+            sem_wait(&SEM_MENU);
+            printf("Titilando 2\n");
+            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
+            sem_post(&SEM_MENU);
+        }
+
+        usleep(VEL_TITILEO * U_SEC2M_SEC);
+    }
+
+    pthread_exit(0);
+}
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -1370,6 +1424,14 @@ int selectLeaderboard(void){
     printf("Select Leaderboard\n");
     velDispAnimation = 1;
     GAME_STATUS.menuActual = MENU_LEADERBOARD;
+    GAME_STATUS.pantallaActual = MENU;
+    return 0;
+}
+
+int selectSaveScore(void){
+    printf("Select Save Score\n");
+    velDispAnimation = 1;
+    GAME_STATUS.pantallaActual = SAVE_SCORE;
     return 0;
 }
 
