@@ -1254,7 +1254,6 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
     
     strcpy(copiaLeaderboard, leaderboard[select]); //Accede al valor numerico de puntaje de cada posicion
     strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
-    printf("Copia leaderboard: %s\n",copiaLeaderboard);
     
     name [0] = '>'; //Agrega una flecha al principio del nombre
     name [4] = 0;  //Terminador
@@ -1280,7 +1279,6 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
     int l = 0;
 
     for(i = 0; i < 4; i++){ //Recorre todas las letras del nombre
-        printf("Char: %c\n", nombreStr[i]);
         offset = offsetAlfabeto(nombreStr[i]);
         caracter = alfabeto[offset];
 
@@ -1308,12 +1306,8 @@ void* letterFlashThread(void* data){
     int i, j;
 
     while(*(letterFlash->exitStatus)){
-        printf("letra a titilar: %c\n", *(letterFlash->letra));
         offset = offsetAlfabeto(*(letterFlash->letra));
         caracter = alfabeto[offset];
-
-        printf("Letra x: %d\n", (letterFlash->pos)->x);
-        printf("Letra y: %d\n", (letterFlash->pos)->y);
 
         //Primero apaga todos los pixeles
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
