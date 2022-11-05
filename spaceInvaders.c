@@ -801,7 +801,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                //LLAMAR A LA FUNCION DEL BARRIDO
+                barridoLetra(letraAnterior, letraActual[select],1, posLetra);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
             }
@@ -825,7 +825,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                //LLAMAR A LA FUNCION DEL BARRIDO
+                barridoLetra(letraAnterior, letraActual[select],-1, posLetra);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
             }
