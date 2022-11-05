@@ -1373,8 +1373,7 @@ static void sweepMatrix(uint8_t matriz [8][4], int sentido){
     int i,j;
     for (j=0; j<7; j++){
         for(i=0; i<4; i++){
-            matriz[FIRSTROW(sentido)+j*sentido][i]= matriz[FIRSTROW(sentido)+sentido+j*sentido][i];
-            //matriz[j][i]= matriz[j+1][i];
+            matriz[FIRSTROW(sentido)+sentido+j*sentido][i]= matriz[FIRSTROW(sentido)+j*sentido][i];
         }
     }
 }

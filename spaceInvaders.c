@@ -471,7 +471,6 @@ int main(void){
                 break;
 
             case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
-                printf("ENTRO A QUIT_GAME\n");
                 GAME_STATUS.inGame = 0;
 
                 usleep(50 * U_SEC2M_SEC);
@@ -721,9 +720,7 @@ static void* saveScoreHandlerThread(void * data){
             for(int i = 0 ; i < 8 ; i++){
 
                 for(int j = 0 ; j < 16 ; j++){
-                    printf("%d", (int)higherDispMenu);
                 }
-                printf("\n");
             }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
