@@ -705,7 +705,7 @@ static void* saveScoreHandlerThread(void * data){
 
         usleep(1800 * U_SEC2M_SEC);
 
-        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &(menu->exitStatus)};
+        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &titilar};
         pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
     #endif
 
@@ -730,7 +730,8 @@ static void* saveScoreHandlerThread(void * data){
             }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
-                sem_wait(&SEM_SAVE_SCORE);
+                titilar = 0;
+                pthread_join(titileoT, NULL);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -753,11 +754,12 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
-                sem_post(&SEM_SAVE_SCORE);
+                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
-                sem_wait(&SEM_SAVE_SCORE);
+                titilar = 0;
+                pthread_join(titileoT, NULL);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -780,11 +782,12 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
-                sem_post(&SEM_SAVE_SCORE);                
+                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.              
             }
 
             if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
-                sem_wait(&SEM_SAVE_SCORE);
+                titilar = 0;
+                pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
 
@@ -812,11 +815,12 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
-                sem_post(&SEM_SAVE_SCORE);
+                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
             }
 
             if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
-                sem_wait(&SEM_SAVE_SCORE);
+                titilar = 0;
+                pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
 
@@ -840,7 +844,7 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
-                sem_post(&SEM_SAVE_SCORE);
+                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
