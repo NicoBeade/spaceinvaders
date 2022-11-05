@@ -744,7 +744,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                usleep(50 * U_SEC2M_SEC);
+                usleep(100 * U_SEC2M_SEC);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
@@ -770,7 +770,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                usleep(50 * U_SEC2M_SEC);
+                usleep(100 * U_SEC2M_SEC);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
