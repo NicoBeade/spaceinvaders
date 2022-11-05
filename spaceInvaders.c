@@ -89,8 +89,8 @@ typedef struct{
 #define INPUT_THREAD inputRPIThread             //Thread encargado de leer el input en la RPI
 #define DISPLAY_THREAD_GAME displayRPIThread    //Thread encargado de actualizar el display durante la ejecucion del juego en la RPI
 #define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
-#define SIGUIENTE ((menu->keys)->x == -1)
-#define ANTERIOR ((menu->keys)->x == 1)
+#define SIGUIENTE ((menu->keys)->x == 1)
+#define ANTERIOR ((menu->keys)->x == -1)
 
 #endif
 
@@ -655,7 +655,7 @@ static void* menuHandlerThread(void * data){
 }
 
 
-/*static void* saveScoreHandlerThread(void * data){
+static void* saveScoreHandlerThread(void * data){
 //Este thread es el encargado de manejar los menues.
 
 	saveScore_t * menu = (saveScore_t *) data;
@@ -732,6 +732,7 @@ static void* menuHandlerThread(void * data){
                 #endif
                 select += 1;
                 #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra
                 posLetra.x += 4;
                 #endif
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
@@ -742,6 +743,7 @@ static void* menuHandlerThread(void * data){
                 }
 
                 #ifdef RASPI
+                titilar = 1;//Comenzamos a titilar de vuelta.
                 letraTitileo = letraActual[select];
                 #endif
                 #ifdef ALLEGRO
@@ -755,6 +757,7 @@ static void* menuHandlerThread(void * data){
                 #endif
                 select -= 1;
                 #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra
                 posLetra.x -= 4;
                 #endif
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
@@ -766,6 +769,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
+                titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
@@ -842,7 +846,7 @@ static void* menuHandlerThread(void * data){
     #endif
 
     pthread_exit(0);
-} */
+} 
 
 
 

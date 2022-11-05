@@ -1319,12 +1319,10 @@ void* letterFlashThread(void* data){
             }
             //printf("\n");
         }
-        if(*(letterFlash->titilar)){
-            sem_wait(&SEM_MENU);
-            printf("Titilando 1\n");
-            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-            sem_post(&SEM_MENU);
-        }
+        sem_wait(&SEM_MENU);
+        printf("Titilando 1\n");
+        printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
+        sem_post(&SEM_MENU);
 
         usleep(2 * VEL_TITILEO * U_SEC2M_SEC);
 
