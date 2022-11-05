@@ -1322,9 +1322,9 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
             }
         }
-        sem_wait(&SEM_SAVE_SCORE);
+        sem_wait(&SEM_MENU);
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_SAVE_SCORE);
+        sem_post(&SEM_MENU);
 
         usleep(2 * VEL_TITILEO * U_SEC2M_SEC);
 
@@ -1335,11 +1335,9 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = 0;
             }
         }
-        if(*(letterFlash->titilar)){
-            sem_wait(&SEM_SAVE_SCORE);
-            printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-            sem_post(&SEM_SAVE_SCORE);
-        }
+        sem_wait(&SEM_MENU);
+        printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
+        sem_post(&SEM_MENU);
 
         usleep(VEL_TITILEO * U_SEC2M_SEC);
         

@@ -705,7 +705,7 @@ static void* saveScoreHandlerThread(void * data){
 
         usleep(1800 * U_SEC2M_SEC);
 
-        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar, &titilar};
+        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar};
         pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
     #endif
 
@@ -848,6 +848,9 @@ static void* saveScoreHandlerThread(void * data){
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
+
+                titilar = 0;
+                pthread_join(titileoT, NULL);
                 
                 //Aca se tiene que guardar el nombre en el leaderboard.
 
@@ -864,7 +867,6 @@ static void* saveScoreHandlerThread(void * data){
     }
     #ifdef RASPI
     animStatus = 0;
-    pthread_join(displayMenuT, NULL);
     pthread_join(titileoT, NULL);
     #endif
 

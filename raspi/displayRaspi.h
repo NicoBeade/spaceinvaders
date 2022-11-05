@@ -100,7 +100,6 @@ typedef struct {
     char* letra;//Apunta a la letra que se debe mostrar.
     halfDisp_t* display;//Apunta a medio display donde se mostrara la letra.
     vector_t* pos;//Posicion de donde se hara titilar la letra.
-    char* titilar;//Flag que indica si debe titilar o no.
     char* exitStatus;//Flag que indica cuando salir del thread.
 } letterFlash_t;
 
