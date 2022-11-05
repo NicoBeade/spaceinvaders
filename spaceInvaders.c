@@ -728,14 +728,13 @@ static void* saveScoreHandlerThread(void * data){
             }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+                sem_wait(&SEM_MENU);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
                 select += 1;
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                usleep(50 * U_SEC2M_SEC);
-                sem_wait(&SEM_MENU);
                 posLetra.x += 4;
                 #endif
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
@@ -747,23 +746,22 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                sem_post(&SEM_MENU);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
+                sem_post(&SEM_MENU);
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+                sem_wait(&SEM_MENU);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
                 select -= 1;
                 #ifdef RASPI
-                titilar = 0;//Dejamos de titilar la letra
-                usleep(50 * U_SEC2M_SEC);
-                sem_wait(&SEM_MENU);
+                titilar = 0;//Dejamos de titilar la letra                
                 posLetra.x -= 4;
                 #endif
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
@@ -775,15 +773,16 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                sem_post(&SEM_MENU);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
-                #endif                
+                #endif
+                sem_post(&SEM_MENU);                
             }
 
             if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
+                sem_wait(&SEM_MENU);
                 letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
 
@@ -807,9 +806,11 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
+                sem_post(&SEM_MENU);
             }
 
             if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
+                sem_wait(&SEM_MENU);
                 letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
 
@@ -833,6 +834,7 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
+                sem_post(&SEM_MENU);
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
