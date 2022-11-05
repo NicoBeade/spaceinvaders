@@ -745,9 +745,8 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                
-                titilar = 1;//Comenzamos a titilar de vuelta.
                 sem_post(&SEM_MENU);
+                titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
@@ -773,9 +772,8 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-
-                titilar = 1;//Comenzamos a titilar de vuelta.
                 sem_post(&SEM_MENU);
+                titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
