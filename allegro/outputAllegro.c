@@ -58,7 +58,7 @@ int showObjects(object_t * inicial);
 void showText(texto_t * data, ALLEGRO_FONT * fuente);
 int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample);
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol);
 
 /***********************************************************************************************************************************************************
  * 
@@ -103,8 +103,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     audio_t * audioActual = NULL;
 
-    samples[aUsrDeath] = al_load_sample("../game/audio/explosion.wav");
-    samples[aShoot] = al_load_sample("../game/audio/shoot.wav");
+    samples[aUsrDeath] = al_load_sample("game/audio/explosion.wav");
+    samples[aShoot] = al_load_sample("game/audio/shoot.wav");
     
 
     //-------------------------------------------------
@@ -189,7 +189,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //si hay mas de uno
             while(audioActual != NULL){
 
-                audioActual = play(audioActual, samples[audioActual->audioId]);
+                audioActual = play(audioActual, samples[audioActual->audioId], 70);
             }
 
             *data->audio = NULL;
@@ -316,11 +316,11 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
 /*********AUDIO*************/
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample){
+audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol){
 
     audio_t * sig = firstAudio->next;
     
-    al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(sample, vol/100, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     
     free(firstAudio);
     
