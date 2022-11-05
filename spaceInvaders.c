@@ -733,6 +733,7 @@ static void* saveScoreHandlerThread(void * data){
                 select += 1;
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
+                usleep(50 * U_SEC2M_SEC);
                 sem_wait(&SEM_MENU);
                 posLetra.x += 4;
                 #endif
@@ -760,6 +761,7 @@ static void* saveScoreHandlerThread(void * data){
                 select -= 1;
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
+                usleep(50 * U_SEC2M_SEC);
                 sem_wait(&SEM_MENU);
                 posLetra.x -= 4;
                 #endif

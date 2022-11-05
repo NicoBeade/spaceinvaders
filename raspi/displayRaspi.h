@@ -176,7 +176,7 @@ extern int velDispAnimation;
 void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
 void cleanSprite(dcoord_t);
 void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
-void printLetter(caracteres_t letter); //imprime letra en display
+void printLetter(caracteres_t letter, dcoord_t coordenada); //imprime letra en display en la coordenada correspondiente
 void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
 void printHalfDisp(halfDisp_t halfDispSprite, char mitad); //Imprime una mitad del display.
 
