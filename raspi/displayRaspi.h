@@ -193,6 +193,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar lo
 halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select);  //Se utiliza para mostrar el nombre del usuario del leaderBoard en el menu.
 halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr);  //Adapte el nombre del usuario a un halfdisplay_t.
 void* letterFlashThread(void*); //Thread encargado de hacer titilar una letra en el display.
+void barridoLetra(char, char, int sentido, dcoord_t); //Barrido vertical de letra
 
 //*****************MENU DE INICIO
 int selectPlayInicio(void);
