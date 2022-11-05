@@ -1315,20 +1315,7 @@ void* letterFlashThread(void* data){
         printf("Letra x: %d\n", (letterFlash->pos)->x);
         printf("Letra y: %d\n", (letterFlash->pos)->y);
 
-        //Primero imprime la letra
-        for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
-
-            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
-                (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
-            }
-        }
-        sem_wait(&SEM_MENU);
-        printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
-
-        usleep(2 * VEL_TITILEO * U_SEC2M_SEC);
-
-        //Luego apaga todos los pixeles
+        //Primero apaga todos los pixeles
         for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
 
             for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
@@ -1340,7 +1327,19 @@ void* letterFlashThread(void* data){
         sem_post(&SEM_MENU);
 
         usleep(VEL_TITILEO * U_SEC2M_SEC);
-        
+
+        //Luego imprime la letra
+        for(i = (letterFlash->pos)->y ; i < (letterFlash->pos)->y + 8 ; i++){//Recorre las filas
+
+            for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
+                (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
+            }
+        }
+        sem_wait(&SEM_MENU);
+        printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
+        sem_post(&SEM_MENU);
+
+        usleep(2 * VEL_TITILEO * U_SEC2M_SEC);        
     }
 
     pthread_exit(0);
