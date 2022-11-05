@@ -803,7 +803,7 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = posLetra.y
+                posLetraDisplay.y = posLetra.y;
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
@@ -829,7 +829,7 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = posLetra.y
+                posLetraDisplay.y = posLetra.y;
                 barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
