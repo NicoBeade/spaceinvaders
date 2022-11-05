@@ -325,7 +325,7 @@ int main(void){
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
-                //toAudio = addAudio(toAudio, audio1);
+                
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
@@ -335,7 +335,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-            
+            /*
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
@@ -349,7 +349,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-
+            */
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
@@ -397,15 +397,15 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                mothershipList = addObj(mothershipList, Booo, 0, 0);
+                //mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
-                argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
+                //argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -652,7 +652,7 @@ static void* menuHandlerThread(void * data){
 
     pthread_exit(0);
 }
-
+/*
 
 static void* saveScoreHandlerThread(void * data){
 //Este thread es el encargado de manejar los menues.
@@ -864,7 +864,7 @@ static void* saveScoreHandlerThread(void * data){
     pthread_exit(0);
 } 
 
-
+*/
 
 static void* levelHandlerThread(void * data){
 
@@ -887,6 +887,9 @@ static void* levelHandlerThread(void * data){
                 if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
                     sem_wait(&SEM_GAME);
                     *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
+                    #ifdef ALLEGRO
+                    toAudio = addAudio(toAudio, aShoot);
+                    #endif
                     sem_post(&SEM_GAME);
                 }
                 if (DERECHA_INPUT){//Mueve al usuario
