@@ -710,7 +710,6 @@ caracteres_t* alfabeto [43] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,
 //*****************THREAD DISPLAY DURANTE MENUES
 static int offsetAlfabeto(char caracter); //Se utiliza para obtener el offset necesario para acceder al string "alfabeto".
 static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion); //Agrega un caracter completo al buffer.
-static void printLetra(caracteres_t, dcoord_t);//Impresion en display de letra
 static void copyMatrixLetter(char,uint8_t [8][4]); //Copia de matrices de letra
 static void sweepMatrix(uint8_t [8][4], int ); //Barrido de letra x1 linea 
 static void addRow(uint8_t [8][4], uint8_t [4], int ); //Agrega una linea en la matriz con las celdas correspondientes
@@ -772,14 +771,14 @@ void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprit
     }
 }
 
-void printLetter(caracteres_t letter){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
+void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
     int i,j;
     dcoord_t punto;
     for (i=0; i<8; i++){
         for (j=0; j<4; j++){
             punto.x=j;
             punto.y=i;
-            if (letter [i][j]==1){
+            if (letter [i+coordenada.x][j+coordenada.y]==1){
                 disp_write(punto,D_ON);
             }
             else{
@@ -1361,7 +1360,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     for (i = 0; i<8 ; i++){
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
-        printLetra(matriz, coordenada);
+        printLetter(matriz, coordenada);
         usleep(20000);
     }
     return;
@@ -1398,20 +1397,6 @@ static void copyMatrixLetter(char letra, uint8_t matriz [8][4]){
         }
     }
 
-    return;
-}
-
-
-//Esta funcion imprime una letra en la coordenada indicada en el display de RPI de 16x16
-static void printLetra(caracteres_t letra, dcoord_t coordenada){
-    int i,j;
-    for(j = 0; j<8; j++){
-        for(i = 0; i<4 ; i++){
-            printf("%s", letra[j][i]?"██":"  ");
-        }
-        printf("\n");
-    }
-    printf("\n\n");
     return;
 }
 
