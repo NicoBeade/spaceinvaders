@@ -335,7 +335,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-            /*
+            
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
@@ -349,7 +349,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-            */
+            
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
