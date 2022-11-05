@@ -805,6 +805,10 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
                 posLetraDisplay.y = posLetra.y;
+                printf("posX: %d\n", posLetraDisplay.x);
+                printf("posY: %d\n", posLetraDisplay.y);
+                printf("letraAnterior: %c\n", letraAnterior);
+                printf("letraActual: %d\n", letraActual[select]);
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
