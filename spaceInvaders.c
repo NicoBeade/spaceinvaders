@@ -670,6 +670,7 @@ static void* saveScoreHandlerThread(void * data){
 
         char letraTitileo = letraActual[select];
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
+        dcoord_t posLetraDisplay;
 
         pthread_t displayMenuT, titileoT;
         halfDisp_t higherDispMenu = {//Parte superior del display
@@ -801,7 +802,9 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                barridoLetra(letraAnterior, letraActual[select],1, posLetra);
+                posLetraDisplay.x = posLetra.x;
+                posLetraDisplay.y = posLetra.y
+                barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
             }
@@ -825,7 +828,9 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                barridoLetra(letraAnterior, letraActual[select],-1, posLetra);
+                posLetraDisplay.x = posLetra.x;
+                posLetraDisplay.y = posLetra.y
+                barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
             }
