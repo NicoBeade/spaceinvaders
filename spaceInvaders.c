@@ -159,6 +159,7 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 sem_t SEM_DRIVER;
+sem_t SEM_SAVE_SCORE;
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
@@ -285,6 +286,7 @@ int main(void){
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
     sem_init(&SEM_DRIVER, 0, 1);
+    sem_init(&SEM_SAVE_SCORE, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
 
@@ -728,7 +730,7 @@ static void* saveScoreHandlerThread(void * data){
             }
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
-                sem_wait(&SEM_MENU);
+                sem_wait(&SEM_SAVE_SCORE);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -751,11 +753,11 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
-                sem_post(&SEM_MENU);
+                sem_post(&SEM_SAVE_SCORE);
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
-                sem_wait(&SEM_MENU);
+                sem_wait(&SEM_SAVE_SCORE);
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -778,11 +780,11 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
-                sem_post(&SEM_MENU);                
+                sem_post(&SEM_SAVE_SCORE);                
             }
 
             if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
-                sem_wait(&SEM_MENU);
+                sem_wait(&SEM_SAVE_SCORE);
                 letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
 
@@ -806,11 +808,11 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
-                sem_post(&SEM_MENU);
+                sem_post(&SEM_SAVE_SCORE);
             }
 
             if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
-                sem_wait(&SEM_MENU);
+                sem_wait(&SEM_SAVE_SCORE);
                 letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
 
@@ -834,7 +836,7 @@ static void* saveScoreHandlerThread(void * data){
                 barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
-                sem_post(&SEM_MENU);
+                sem_post(&SEM_SAVE_SCORE);
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion

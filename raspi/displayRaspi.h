@@ -157,6 +157,7 @@ extern level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de
 extern sem_t SEM_GAME;
 extern sem_t SEM_MENU; 
 extern sem_t SEM_DRIVER;
+extern sem_t SEM_SAVE_SCORE;
 
 extern int velDispAnimation;
 

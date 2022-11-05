@@ -1308,7 +1308,7 @@ void* letterFlashThread(void* data){
     int i, j;
 
     while(*(letterFlash->exitStatus)){
-        sem_wait(&SEM_MENU);
+        sem_wait(&SEM_SAVE_SCORE);
         printf("letra a titilar: %c\n", *(letterFlash->letra));
         offset = offsetAlfabeto(*(letterFlash->letra));
         caracter = alfabeto[offset];
@@ -1343,7 +1343,7 @@ void* letterFlashThread(void* data){
         }
 
         usleep(VEL_TITILEO * U_SEC2M_SEC);
-        sem_post(&SEM_MENU);
+        sem_post(&SEM_SAVE_SCORE);
     }
 
     pthread_exit(0);
