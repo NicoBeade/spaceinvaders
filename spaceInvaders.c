@@ -159,7 +159,6 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 sem_t SEM_DRIVER;
-sem_t SEM_SAVE_SCORE;
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
@@ -286,7 +285,6 @@ int main(void){
     sem_init(&SEM_GAME, 0, 1);
     sem_init(&SEM_MENU, 0, 1);
     sem_init(&SEM_DRIVER, 0, 1);
-    sem_init(&SEM_SAVE_SCORE, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
 
@@ -808,10 +806,6 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
                 posLetraDisplay.y = posLetra.y;
-                printf("posX: %d\n", posLetraDisplay.x);
-                printf("posY: %d\n", posLetraDisplay.y);
-                printf("letraAnterior: %c\n", letraAnterior);
-                printf("letraActual: %d\n", letraActual[select]);
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
@@ -849,9 +843,6 @@ static void* saveScoreHandlerThread(void * data){
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
-
-                titilar = 0;
-                pthread_join(titileoT, NULL);
                 
                 //Aca se tiene que guardar el nombre en el leaderboard.
 
@@ -868,7 +859,9 @@ static void* saveScoreHandlerThread(void * data){
     }
     #ifdef RASPI
     animStatus = 0;
+    titilar = 0;
     pthread_join(titileoT, NULL);
+    pthread_join(displayMenuT, NULL);
     #endif
 
     pthread_exit(0);
