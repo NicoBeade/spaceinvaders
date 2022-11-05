@@ -670,7 +670,6 @@ static void* saveScoreHandlerThread(void * data){
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
 
-        char letraTitileo = letraActual[select];
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
         dcoord_t posLetraDisplay;
 
@@ -705,7 +704,7 @@ static void* saveScoreHandlerThread(void * data){
 
         usleep(1800 * U_SEC2M_SEC);
 
-        letterFlash_t letterFlash = {&letraTitileo, &higherDispMenu, &posLetra, &titilar};
+        letterFlash_t letterFlash = {&letraActual[select], &higherDispMenu, &posLetra, &titilar};
         pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
     #endif
 
@@ -748,7 +747,7 @@ static void* saveScoreHandlerThread(void * data){
                 }
 
                 #ifdef RASPI
-                letraTitileo = letraActual[select];
+                letterFlash.letra = &letraActual[select];
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
@@ -776,7 +775,7 @@ static void* saveScoreHandlerThread(void * data){
                 }
 
                 #ifdef RASPI
-                letraTitileo = letraActual[select];
+                letterFlash.letra = &letraActual[select];
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 #endif
                 #ifdef ALLEGRO
@@ -790,6 +789,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
+                letterFlash.letra = &letraActual[select];
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
                 case '[':
@@ -823,6 +823,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
+                letterFlash.letra = &letraActual[select];
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
                 case '@':
