@@ -1349,7 +1349,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     uint8_t matrizCopy [8][4];
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
-    for (i = 0; i<8 ; i++){
+    for (i = 0; i<9 ; i++){
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);
@@ -1373,7 +1373,7 @@ static void sweepMatrix(uint8_t matriz [8][4], int sentido){
     int i,j;
     for (j=0; j<7; j++){
         for(i=0; i<4; i++){
-            matriz[FIRSTROW(sentido)+sentido+j*sentido][i]= matriz[FIRSTROW(sentido)+j*sentido][i];
+            matriz[FIRSTROW(sentido)+j*sentido][i]= matriz[FIRSTROW(sentido)+sentido+j*sentido][i];
         }
     }
 }
