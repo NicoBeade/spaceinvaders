@@ -733,6 +733,7 @@ static void* saveScoreHandlerThread(void * data){
                 select += 1;
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
+                sem_wait(&SEM_MENU);
                 posLetra.x += 4;
                 #endif
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
@@ -744,8 +745,9 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                usleep(100 * U_SEC2M_SEC);
+                
                 titilar = 1;//Comenzamos a titilar de vuelta.
+                sem_post(&SEM_MENU);
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
@@ -759,6 +761,7 @@ static void* saveScoreHandlerThread(void * data){
                 select -= 1;
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
+                sem_wait(&SEM_MENU);
                 posLetra.x -= 4;
                 #endif
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
@@ -770,8 +773,9 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 letraTitileo = letraActual[select];
-                usleep(100 * U_SEC2M_SEC);
+
                 titilar = 1;//Comenzamos a titilar de vuelta.
+                sem_post(&SEM_MENU);
                 #endif
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};

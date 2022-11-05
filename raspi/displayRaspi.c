@@ -686,6 +686,8 @@ caracteres_t flechaScore ={
  * 
  ******************************************************************************************************************************************/
 #define FRAMERATE 4 //tasa de refresco del display
+#define FIRSTROW(a) (((a)==1)? 0: 7) //Macro para el barrido vertical de las letras. Ubica la primer linea en funcion del sentido
+
 
 caracteres_t* alfabeto [43] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,&letraG,&letraH,
 &letraI,&letraJ,&letraK,&letraL,&letraM,&letraN,&letraO,&letraP,&letraQ,&letraR,&letraS,&letraT,
@@ -708,6 +710,10 @@ caracteres_t* alfabeto [43] =  {&letraA,&letraB,&letraC,&letraD,&letraE,&letraF,
 //*****************THREAD DISPLAY DURANTE MENUES
 static int offsetAlfabeto(char caracter); //Se utiliza para obtener el offset necesario para acceder al string "alfabeto".
 static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int direccion); //Agrega un caracter completo al buffer.
+static void printLetra(caracteres_t, dcoord_t);//Impresion en display de letra
+static void copyMatrixLetter(char,uint8_t [8][4]); //Copia de matrices de letra
+static void sweepMatrix(uint8_t [8][4], int ); //Barrido de letra x1 linea 
+static void addRow(uint8_t [8][4], uint8_t [4], int ); //Agrega una linea en la matriz con las celdas correspondientes
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -1315,12 +1321,9 @@ void* letterFlashThread(void* data){
 
             for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
-                //printf("%d", *(letterFlash->display)[i][j]);
             }
-            //printf("\n");
         }
         sem_wait(&SEM_MENU);
-        printf("Titilando 1\n");
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
         sem_post(&SEM_MENU);
 
@@ -1331,13 +1334,10 @@ void* letterFlashThread(void* data){
 
             for(j = (letterFlash->pos)->x ; j < (letterFlash->pos)->x + 4 ; j++){//Recorre las columnas
                 (*(letterFlash->display))[i][j] = 0;
-                //printf("%d", *(letterFlash->display)[i][j]);
             }
-            //printf("\n");
         }
         if(*(letterFlash->titilar)){
             sem_wait(&SEM_MENU);
-            printf("Titilando 2\n");
             printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
             sem_post(&SEM_MENU);
         }
@@ -1346,6 +1346,73 @@ void* letterFlashThread(void* data){
     }
 
     pthread_exit(0);
+}
+
+
+//BARRIDO LETRA: recibe la primer y segunda letra a barrer, el sentido del barrido y la coordenada a imprimir el barrido
+//Esta funcion hace el barrido vertical de las letras en el display 
+//Asumo el display ya correctamente incializado
+void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenada ){
+    int i;
+    uint8_t matriz [8][4];
+    uint8_t matrizCopy [8][4];
+    copyMatrixLetter(letraUno, matriz);
+    copyMatrixLetter(letraDos, matrizCopy);
+    for (i = 0; i<8 ; i++){
+        sweepMatrix(matriz, sentido);
+        addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
+        printLetra(matriz, coordenada);
+        usleep(20000);
+    }
+    return;
+}
+
+
+//Esta funcion agrega la linea correspondiente en la matriz al hacer el barrido vertical de las letras
+static void addRow(uint8_t matriz [8][4], uint8_t rowToAdd [4], int sentido){
+    int i;
+    for (i=0; i<4; i++){
+        matriz[FIRSTROW(-sentido)][i]=rowToAdd[i];
+    }
+    return;
+}
+
+//Esta funcion barre una fila la matriz indicada en la direccion correspondiente. La ultima fila va a ser sobreescrita por addRow
+static void sweepMatrix(uint8_t matriz [8][4], int sentido){
+    int i,j;
+    for (j=0; j<7; j++){
+        for(i=0; i<4; i++){
+            matriz[FIRSTROW(sentido)+j*sentido][i]= matriz[FIRSTROW(sentido)+sentido+j*sentido][i];
+            //matriz[j][i]= matriz[j+1][i];
+        }
+    }
+}
+
+
+//Esta matriz copia la matriz de letra indicada en la matriz correspondiente
+static void copyMatrixLetter(char letra, uint8_t matriz [8][4]){
+    int i,j;
+    for (j=0; j<8; j++){
+        for(i=0; i<4; i++){
+            matriz[j][i]= (*(alfabeto[offsetAlfabeto(letra)]))[j][i];
+        }
+    }
+
+    return;
+}
+
+
+//Esta funcion imprime una letra en la coordenada indicada en el display de RPI de 16x16
+static void printLetra(caracteres_t letra, dcoord_t coordenada){
+    int i,j;
+    for(j = 0; j<8; j++){
+        for(i = 0; i<4 ; i++){
+            printf("%s", letra[j][i]?"██":"  ");
+        }
+        printf("\n");
+    }
+    printf("\n\n");
+    return;
 }
 
 /*******************************************************************************************************************************************
