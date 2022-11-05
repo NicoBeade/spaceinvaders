@@ -103,8 +103,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     audio_t * audioActual = NULL;
 
-    samples[audio1] = al_load_sample("allegro/violin.wav");
-    samples[audio2] = al_load_sample("allegro/violin.wav");
+    samples[aUsrDeath] = al_load_sample("../game/audio/explosion.wav");
+    samples[aShoot] = al_load_sample("../game/audio/shoot.wav");
     
 
     //-------------------------------------------------
