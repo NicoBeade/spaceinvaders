@@ -778,7 +778,7 @@ void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una letra 
         for (j=0; j<4; j++){
             punto.x=j+coordenada.x;
             punto.y=i+coordenada.y;
-            if (letter [punto.x][punto.y]==1){
+            if (letter [punto.y][punto.x]==1){
                 disp_write(punto,D_ON);
             }
             else{
