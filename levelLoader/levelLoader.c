@@ -9,28 +9,28 @@
 #define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
 
 enum paramType {ENTERO, ARCHIVO, BINARIO};      //Identifica el tipo de valor que tiene un parametro
-enum estados {START, PARAM, VALUE, SPACE};
+enum estados {START, PARAM, VALUE, SPACE};      //Identifica el estado del lector de archivos
 
 
 typedef struct{
     char parameter[MAX_PARAM_LETTERS];      //String del parametro
     char value[MAX_VALUE_LETTERS];          //String del valor asociado
 }lineaArchivo_t;   
-
+//Almacena una linea de un archivo
 
 
 static lineaArchivo_t decodedFile[MAX_FILE_ROWS];       //Array de parametros+valores de todo el archivo
 
-void printAliens(object_t ** listAliens){
+void printAliens(object_t ** listAliens){           //Funcion que muestra en la consola una lista
     
-    object_t * listaAliens = *listAliens;
+    object_t * listaAliens = *listAliens;       //Variable aux
     if(listaAliens == NULL){
-        printf("ERROR PETE\n");
+        printf("Lista Vacia\n");
         return;
     }
-    while (listaAliens != NULL){
-        printf("POSX:%d\t POSY:%d\t LIV:%d\t ANIM:%d\t\n", listaAliens->pos.x, listaAliens->pos.y, listaAliens->lives, listaAliens->animationStatus);
-        listaAliens=listaAliens->next;
+    while (listaAliens != NULL){    //Si la lista no esa vacia
+        printf("POSX:%d\t POSY:%d\t LIV:%d\t ANIM:%d\t\n", listaAliens->pos.x, listaAliens->pos.y, listaAliens->lives, listaAliens->animationStatus);   //Imprime todos los campos
+        listaAliens=listaAliens->next;  //Siguiente nodo
     }
 }
 
@@ -157,33 +157,33 @@ int readFile(char * file){       //Funcion leer archivo, recibe la direccion
 }
 
 
-void clearFileBuffer(void){
-    int index;   
-    int index2;
-    int index3;
-    for(index = 0; index < MAX_FILE_ROWS; index++){
-        for(index2 = 0; index2 < MAX_PARAM_LETTERS; index2++){
-            decodedFile[index].parameter[index2] = 0;
+void clearFileBuffer(void){     //Funcion que borra el buffer del archivo
+    int index;              //Variable aux que recorre las filas
+    int index2;             //Variable aux que recorre los caracteres de cada parametro en cada fila
+    int index3;             //Variable aux que recorre los caracteres de cada valor en cada fila
+    for(index = 0; index < MAX_FILE_ROWS; index++){     //Por cada fila
+        for(index2 = 0; index2 < MAX_PARAM_LETTERS; index2++){      //Por cada caracter del parametro de esa fila
+            decodedFile[index].parameter[index2] = 0;               //Se borra
         }
-        for(index3 = 0; index3 < MAX_VALUE_LETTERS; index3++){
-            decodedFile[index].value[index3] = 0;
+        for(index3 = 0; index3 < MAX_VALUE_LETTERS; index3++){      //Por cada caracter del valor de esa fila
+            decodedFile[index].value[index3] = 0;                   //Se borra
         }
     }
 }
 
-void printFile(void){
-    int index;
-    for(index = 0; decodedFile[index].parameter[0] != 0; index++){
-        printf("PARAMETRO: %s VALOR: %s\n", decodedFile[index].parameter, decodedFile[index].value);
+void printFile(void){       //Funcion que muestra en consola el archivo
+    int index;          //Contador de filas
+    for(index = 0; decodedFile[index].parameter[0] != 0; index++){      //Por cada fila
+        printf("PARAMETRO: %s VALOR: %s\n", decodedFile[index].parameter, decodedFile[index].value);    //Se muestra la fila
     }
 }
 
-int loadAsset(char * file){
+int loadAsset(char * file){     //Funcion que carga un asset recibiendo el address de ese archivo
     if(readFile(file) != 0){ //Si no se pudo leer correctamente
         return -1;      //Devuelve error
     }
     int paramNo;        //Variable que cuenta los parametros
-
+    //Se crean variables auxiliares para todos los campos
     int id;
     int vel;
     int ancho;
@@ -192,11 +192,10 @@ int loadAsset(char * file){
     int shootProb;
     int maxBullets;
     int balaID;
-
     char * sprite1;
     char * sprite2;
     char * sprite3;
-
+    //Se crean variables auxiliares que indican si se encontro cada campo
     char id_found = 0;
     char vel_found = 0;
     char ancho_found = 0;
@@ -210,9 +209,9 @@ int loadAsset(char * file){
     char sprite3_found = 0;
 
     for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
-        if(id_found == 0 && strcmp(decodedFile[paramNo].parameter, "id") == 0){
-            id = atoi(decodedFile[paramNo].value);
-            id_found++;
+        if(id_found == 0 && strcmp(decodedFile[paramNo].parameter, "id") == 0){     //Si no se encontro ese campo y lo escrito en la fila coincide con el nombre del campo
+            id = atoi(decodedFile[paramNo].value);                                  //Se guarda en value
+            id_found++;                                                             //Se incrementa el contador que indica cuantas veces se encontro el campo
         }
         else if(vel_found == 0 && strcmp(decodedFile[paramNo].parameter, "vel") == 0){
             vel = atoi(decodedFile[paramNo].value);
@@ -243,7 +242,7 @@ int loadAsset(char * file){
             balaID_found++;
         }
         else if(sprite1_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite1") == 0){
-            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){   //Si la direccion del sprite guardado en el archivo es muy larga entonces salta error
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
@@ -267,6 +266,7 @@ int loadAsset(char * file){
             sprite3_found++;
         }
     }
+    //Si todos los campos se encontraron entonces añade el asset a la lista de object types
     if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 ){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
@@ -292,7 +292,7 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
             loadAsset(direccionAsset);
 ;       }
     }
-     if(archivoCounter >= MAX_FILES_IN_FOLDER){
+     if(archivoCounter >= MAX_FILES_IN_FOLDER){ //Si el contador de archivos supera el maximo de numero de archivos en una carpeta salta error
         printf("Error in levelLoader.c, loadAllAssets function : archivoCounter reached maximum of %d max files in te loaded directory", MAX_FILES_IN_FOLDER);
         return -1; 
     } 
@@ -407,7 +407,7 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
     return 0;
 }
 
-int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings){
+int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings){ // Carga los levelsettings de un archivo de nivel, si checkAllFields esta en 1 revisa todos los campos, sino solo los que se encuentren
     if(readFile(file) != 0){ //Si no se pudo leer correctamente
         return -1;      //Devuelve error
     }
@@ -427,7 +427,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
     int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
     int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
-    int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
+    int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
 
     char xMin_found = 0;
     char xMax_found = 0;
@@ -513,11 +513,13 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             desplazamientoUsr_found++;
         }
     }
+    //Si checkAllFields esta activado y no se encontraron todos los campos tira error
     if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || anchoUsr_found != 1 || margenX_found != 1 || margenY_found != 1 || disInicialUsrX_found != 1 || disInicialUsrY_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
     printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + distInicialX_found + distInicialY_found + anchoUsr_found + margenX_found + margenY_found + disInicialUsrX_found + disInicialUsrY_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
+    //Para los campos que se encontraron se actualiza el level setting
     if(anchoUsr_found){
         levelSettings->anchoUsr = anchoUsr;
     }
@@ -554,6 +556,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     if(saltoY_found){
         levelSettings->saltoY = saltoY;
     }
+    //Si se cambian las constantes del display en un nivel que no es el 0, osea durante el juego, tira error
     if(checkAllFields == 0 && (xMax_found || xMin_found || yMax_found || yMin_found)){
         printf("Error in levelLoader.c, readLevelSettings function : Display constants found in a non-zero level\n");
         return -1;
@@ -765,7 +768,7 @@ int main (){
 */
 
 
-int stringEndCmp(char * string, char * end){
+int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings terminan de la misma manera
     int lenString = strlen(string); //variable auxiliar que guarda la longitud del string
     int lenEnd = strlen(end);       //Variable auxiliar que guarda la longitud del final a comparar
     return !strncmp(string + lenString-lenEnd, end, lenEnd) && (lenEnd <= lenString); //Devuelve 1 si el sufijo es igual y si es mas corto que el string
@@ -798,12 +801,12 @@ int timerTick;
 
 
 
-void imprimirNIVELES(level_t levelArray[]){
+void imprimirNIVELES(level_t levelArray[]){ //Funcion que imprime los datos de cada nivel
     int level;  //Contador de niveles
-    for(level = 0; levelArray[level].lastLevelTrue != 1 && level <= MAX_LEVEL; level++){
-        printf("Nivel %d:  .level= %d \t .levelName= %s\n", level, levelArray[level].level, levelArray[level].levelName);
+    for(level = 0; levelArray[level].lastLevelTrue != 1 && level <= MAX_LEVEL; level++){    //Para cada nivel
+        printf("Nivel %d:  .level= %d \t .levelName= %s\n", level, levelArray[level].level, levelArray[level].levelName);   //Se muestra en consola
     }
-    if(level >= MAX_LEVEL){
+    if(level >= MAX_LEVEL){ //Si hay mas niveles que el maximo disponible tira error
         printf("Error in levelLoader.c, imprimirNIVELES function : terminator of levels: lastLevelTrue not found");
     }
 }
