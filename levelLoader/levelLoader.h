@@ -39,7 +39,7 @@ int loadAsset(char * file);
 int loadDirectory(char * carpeta, directory_t * directoryStore);
 int loadAllAssets(char * platform, directory_t * directoryStore);
 int loadAllAssets(char * platform,  directory_t * directoryStore);
-int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
+int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);

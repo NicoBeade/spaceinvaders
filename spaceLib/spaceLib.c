@@ -26,8 +26,11 @@
 #include <stdarg.h>
 #include "spaceLib.h"
 #include <string.h>
-
-extern unsigned int timerTick;
+#ifdef FIX_UNDEF_EXTERNS
+gameStatus_t GAME_STATUS;
+game_t menuGame;
+#endif
+//extern unsigned int timerTick;
 /*******************************************************************************************************************************************
  * 
                                  ___               _           _     _                   

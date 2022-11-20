@@ -300,12 +300,12 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
     return 0;
 }
 
-int indexAllLevels(char * platform, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
+int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]){  //Almacena todos los niveles
     if(platform == NULL){
         printf("Error in levelLoader.c, indexAllLevels function : platform cannot be a null pointer\n");
         return -1;
     }
-    loadDirectory(LEVELSDIR, directoryStore); //Carga los archivos del directorio de niveles
+    loadDirectory(levelsDir, directoryStore); //Carga los archivos del directorio de niveles
     int archivoCounter; //Contador de numero de archivos
     int nivel=0;        //Contador de niveles encontrados
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
@@ -775,9 +775,9 @@ int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings term
 }
 
 
-/*
+#ifdef LEVELTESTER
 int main(){
-
+/*
     directory_t carpetaAssets = {};
     loadAllAssets("rpi", &carpetaAssets);
     imprimirARRAY();
@@ -788,16 +788,70 @@ int main(){
     level_t levelArray[100];
     indexAllLevels("rpi", "_level", &carpetaNiveles, levelArray);
     imprimirNIVELES(levelArray);
-
+*/  
+    object_t * alienList;
+    object_t * UsrList;
+    object_t * barrerasList;
+    level_setting_t levelSettings;
+    #define MAX 100
+    printf("Bienvenido al lector de niveles....\n");
+    char plataforma[MAX]= "123";
+    do{
+        if(strlen(plataforma) != 3){
+            printf("Error introduzca plataforma valida\n");
+        }
+        printf("Introduzca la plataforma\n");
+        scanf("%s", plataforma);  
+    }
+    while(strlen(plataforma) != 3);
+    directory_t carpetaNiveles = {};
+    level_t levelArray[100];
+    indexAllLevels(plataforma,"../game/levels", "_level", &carpetaNiveles, levelArray);
+    imprimirNIVELES(levelArray);
+    int nivel;
+    int nivel_found = 0;
+    do{
+        if(strlen(plataforma) != 3){
+            printf("Error introduzca plataforma valida\n");
+        }
+        printf("Seleccione el numero de nivel a leer\n");
+        scanf("%d", &nivel);  
+        int contador;
+        for(contador = 0; levelArray[contador].lastLevelTrue != 1 && nivel_found == 0; contador++){
+            if(levelArray[contador].level == nivel){
+                nivel_found = 1;
+            }
+        }
+        if(nivel_found == 0){
+            printf("Nivel no valido\n");
+        }
+    }
+    while(nivel_found == 0);
+    printf("\n\n.........\n\n Desea cargar el nivel 0 tambien? Y/N\n");
+    char respuesta[MAX];
+    do{
+        scanf("%s", respuesta);
+        if(respuesta[0] != 'y' || respuesta[0] != 'Y' || respuesta[0] != 'n' || respuesta[0] != 'N' || respuesta[0] != 's' || respuesta[0] != 'S' || respuesta[0] != 'n' || respuesta[0] != 'N'){
+            respuesta[0] = 0;
+        }
+    }
+    while(respuesta == 0);
+    int levelStatus;
+    printf("%s", respuesta);
+    if( respuesta[0] == 'Y' || respuesta[0] == 'S' || respuesta[0] == 'y' || respuesta[0] == 'Y'){
+        levelStatus = loadLevel(0, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+        if(levelStatus == -1){
+            printf("Error no se encontro el nivel 0\n");
+            return -1;
+        }
+        else{
+            printf("\n\n...Nivel 0 cargado correctamente...\n\n");
+        }
+    }
+    
+                    
 }
-
-game_t menuGame;
-gameStatus_t GAME_STATUS;
-
-int timerTick;
-
-*/
-
+#endif
 
 
 
