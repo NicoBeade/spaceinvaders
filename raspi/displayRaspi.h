@@ -79,12 +79,13 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
 	keys_t * keys;
-	option_t selectOption[10];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+	option_t selectOption[11];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    char menuAnterior;//Indica el menu anterior al actual.
     char textOpciones[10][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
     halfDisp_t* drawingOpciones[10];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
     int cantOpciones;//Cantidad de opciones del menu.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.}
 } menu_t;
 
 typedef struct {
@@ -205,6 +206,7 @@ int selectMainMenu(void);
 int selectDificulty(void);
 int selectLeaderboard(void);
 int selectSaveScore(void);
+int backMenuAnterior(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

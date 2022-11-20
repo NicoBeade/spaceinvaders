@@ -1412,14 +1412,17 @@ int selectPlayInicio(void){
     printf("Select Play Inicio\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = START_LEVEL;
+    GAME_STATUS.menuAnterior = -1;
     return 0;
 }
 
 int selectLevels(void){
+    GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
     return 1;
 }
 
 int selectVolume(void){
+    GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
     return 1;
 }
 
@@ -1436,6 +1439,7 @@ int selectQuitGame(void){
 int selectResume(void){
     printf("Select Resume\n");
     velDispAnimation = 1;
+    GAME_STATUS.menuAnterior = -1;
     GAME_STATUS.pantallaActual = IN_GAME;
     menuGame.exitStatus = 1;
     return 0;
@@ -1446,6 +1450,7 @@ int selectRestartLevel(void){
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = START_LEVEL_MENU;
+    GAME_STATUS.menuAnterior = -1;
     return 0;
 }
 
@@ -1454,16 +1459,19 @@ int selectMainMenu(void){
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = MENU_INICIO;
+    GAME_STATUS.menuAnterior = -1;
     return 0;
 }
 
 int selectDificulty(void){
+    GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
     return 0;
 }
 
 int selectLeaderboard(void){
     printf("Select Leaderboard\n");
     velDispAnimation = 1;
+    GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
     GAME_STATUS.menuActual = MENU_LEADERBOARD;
     GAME_STATUS.pantallaActual = MENU;
     return 0;
@@ -1473,6 +1481,21 @@ int selectSaveScore(void){
     printf("Select Save Score\n");
     velDispAnimation = 1;
     GAME_STATUS.pantallaActual = SAVE_SCORE;
+    return 0;
+}
+
+int backMenuAnterior(void){
+    printf("Select Back Menu Anterior\n");
+    velDispAnimation = 1;
+    GAME_STATUS.pantallaActual = MENU;
+    GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
+    GAME_STATUS.menuAnterior = -1;
+    return 0;
+}
+
+int playLevel(int nivel){
+
+    GAME_STATUS.nivelActual = nivel;
     return 0;
 }
 
