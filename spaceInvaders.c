@@ -24,6 +24,7 @@
 #include "spaceLib/spaceLib.h"
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
+#include "selectOptions.h"
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"

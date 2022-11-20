@@ -79,10 +79,10 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
 	keys_t * keys;
-	option_t selectOption[11];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+	option_t selectOption[20];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
     char menuAnterior;//Indica el menu anterior al actual.
-    char textOpciones[10][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
-    halfDisp_t* drawingOpciones[10];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
+    char textOpciones[20][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
+    halfDisp_t* drawingOpciones[20];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
     int cantOpciones;//Cantidad de opciones del menu.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.}
@@ -195,18 +195,6 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr);  //Adapte el
 void* letterFlashThread(void*); //Thread encargado de hacer titilar una letra en el display.
 void barridoLetra(char, char, int sentido, dcoord_t); //Barrido vertical de letra
 
-//*****************MENU DE INICIO
-int selectPlayInicio(void);
-int selectLevels(void);
-int selectVolume(void);
-int selectQuitGame(void);
-int selectResume(void);
-int selectRestartLevel(void);
-int selectMainMenu(void);
-int selectDificulty(void);
-int selectLeaderboard(void);
-int selectSaveScore(void);
-int backMenuAnterior(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
