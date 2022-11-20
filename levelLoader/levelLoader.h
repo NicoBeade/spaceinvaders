@@ -46,4 +46,5 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
 int stringEndCmp(char * string, char * end);
 int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut);
 void imprimirNIVELES(level_t levelArray[]);
+int getLevelNoOfArray(level_t levelArray[], int levelNumber);
 #endif

@@ -313,6 +313,7 @@ int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, direct
         int longitudPrefijo = longitud + strlen(levelPrefix); //Cantidad de caracteres que debe ignorar la funcion getLevelNoOfFile
         if(strncmp((*directoryStore)[archivoCounter], platform, longitud) == 0 && stringEndCmp((*directoryStore)[archivoCounter], LEVELFORMAT)){       //Si el archivo es de la plataforma elegida y tiene el formato del nivel
             (levelArray[nivel]).level = getLevelNoOfFile(longitudPrefijo, &((*directoryStore)[archivoCounter][0]), MAX_FILE_NAME, NULL); //Se obtiene el numero de nivel
+            strcpy(levelArray[nivel].levelName,(*directoryStore)[archivoCounter]);   //Se copia el nombre
             nivel++;
         }
         if(nivel >= MAX_LEVEL){
@@ -322,6 +323,7 @@ int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, direct
         if(*((*directoryStore)[archivoCounter+1]) == 0){  //Si es el ultimo nivel
             (levelArray[nivel]).lastLevelTrue = 1;  //Se pone verdadero al lastLevel
         }
+        
     }
     if(archivoCounter >= MAX_FILES_IN_FOLDER){
         printf("Error in levelLoader.c, loadAllAssets function : archivoCounter reached maximum of %d max files in the loaded directory", MAX_FILES_IN_FOLDER);
@@ -354,7 +356,7 @@ int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLengh
             contadorDigitos++;
             if(!ISNUM(*fileNameP) && *fileNameP != '-'){      //Si no es un numero o un menos
                 numberTrue = 0;     //Se setea el flag en 0
-                resultado += (int) *fileNameP;  //Se suma 
+                //resultado += (int) *fileNameP;  //Se suma 
             }
         }
         else if((*fileNameP == '_' || *fileNameP == '.' ) && inside == 1){   //Si esta dentro y encuentra un _ o un punto sale
@@ -570,7 +572,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     return 0;
 }
 
-int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
+int loadLevel(int levelNo, level_t levelArray[100], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     int level0True =  levelNo? 0 : 1;
     if(platform == NULL){
@@ -593,7 +595,12 @@ int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, obj
         printf("Error in levelLoader.c, loadLevel function : NULL pointer in a level > 0\n");
         return -1;
     }
-    sprintf(levelFile, "%s/%s%s%d%s", LEVELSDIR, platform, "_level", levelNo, LEVELFORMAT); //Genera el string del archivo a leer
+    int levelIndex = getLevelNoOfArray(levelArray, levelNo);    //Se carga el index del nivel
+    if(levelIndex == -1){
+        printf("Error in levelLoader.c, loadLevel function : Level %d not found\n", levelNo);
+        return -1;
+    }
+    sprintf(levelFile, "%s/%s", LEVELSDIR, &(levelArray[levelIndex].levelName[0])); //Genera el string del archivo a leer
     printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         printf("LEVEL SETTING ATRODEN YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings->yMax, levelSettings->yMin, levelSettings->xMax, levelSettings->xMin);
@@ -704,6 +711,20 @@ int readObj(int paramNo, object_t * objOut){
     return fila;
 }
 
+int getLevelNoOfArray(level_t levelArray[], int levelNumber){
+    if(levelArray == NULL){
+        printf("Error in levelLoader.c, getLevelNoOfArray function : levelArray is NULL\n");
+        return -1;
+    }
+    int nivel;  //Se crea un contador de niveles
+    for(nivel = 0; levelArray[nivel].lastLevelTrue != 1 && nivel < MAX_LEVEL; nivel++){
+        if (levelArray[nivel].level == levelNumber){
+            return nivel;
+        }
+    }
+    printf("Error in levelLoader.c, getLevelNoOfArray function : level %d not found in the array\n", levelNumber);
+     return -1;
+}
 /*
 int main (){
     //loadAsset("../game/assets/test.asset");

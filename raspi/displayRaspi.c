@@ -1417,8 +1417,10 @@ int selectPlayInicio(void){
 }
 
 int selectLevels(void){
+    GAME_STATUS.pantallaActual = MENU;
     GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
-    return 1;
+    GAME_STATUS.menuActual = MENU_LEVELS;
+    return 0;
 }
 
 int selectVolume(void){
@@ -1490,12 +1492,6 @@ int backMenuAnterior(void){
     GAME_STATUS.pantallaActual = MENU;
     GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
     GAME_STATUS.menuAnterior = -1;
-    return 0;
-}
-
-int playLevel(int nivel){
-
-    GAME_STATUS.nivelActual = nivel;
     return 0;
 }
 

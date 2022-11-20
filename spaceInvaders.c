@@ -183,9 +183,14 @@ menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectM
                       {&halfDispRestart, &halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume, backMenuAnterior}, 
                       7 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior}, 
+menu_t menuLeaderboard = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
+                      10 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
+                      {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
@@ -213,7 +218,7 @@ menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, sele
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
-menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard, &menuLevels};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
@@ -636,11 +641,18 @@ static void* menuHandlerThread(void * data){
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
-                menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
-                #ifdef ALLEGRO
-                toText = emptyText(toText);
-                KEYS.press=0;
-                #endif
+
+                if(GAME_STATUS.menuActual == MENU_LEVELS){
+                    GAME_STATUS.nivelActual = select;
+                    menu -> exitStatus = 0;
+                }
+                else{
+                    menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
+                    #ifdef ALLEGRO
+                    toText = emptyText(toText);
+                    KEYS.press=0;
+                    #endif
+                }
             }
 
             if(ABAJO_INPUT && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
@@ -937,7 +949,10 @@ void * moveAlienThread(void* argMoveAlien){
 
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
+            velAliens -= 2; //Incrementa la velocidad de los aliens.
+
             sem_post(&SEM_GAME);
+
         }   
     }
     printf("Killed moveAliens\n");
