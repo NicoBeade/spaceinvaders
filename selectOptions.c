@@ -11,6 +11,30 @@
 
 #include "selectOptions.h"
 
+
+void fillLeaderboardMenu(menu_t * menuLeaderboard){
+//Esta funcion lee el archivo del leaderboard y rellena la variable menu_t con los puntajes de cada usuario.
+    int i;
+    leaderboard_t leaderboard;
+    parseScore(leaderboard);  //Se lee el leaderboard de score.txt
+
+    //Primero se agregan los puntajes.
+    for(i = 0 ; i<LEADERBOARD ; i++){ //Se cargan en las pantallas del menu cada una de las posiciones del leaderboard
+        char copiaLeaderboard [ROWSIZE];
+        char puntajeMenu[60];
+        
+        strcpy(copiaLeaderboard, leaderboard[i]); //Accede al valor numerico de puntaje de cada posicion
+        #ifdef RASPI
+        strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
+        #endif
+
+        sprintf(puntajeMenu, "%d.%s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
+    }
+    
+}
+
+
 int selectPlayInicio(void){
     printf("Select Play Inicio\n");
     #ifdef RASPI
@@ -40,11 +64,11 @@ int selectQuitGame(void){
     printf("Select Quit Game\n");
     #ifdef RASPI
     velDispAnimation = 1;
-    #endif
-    GAME_STATUS.pantallaActual = QUIT_GAME;
     sem_wait(&SEM_DRIVER);
     disp_clear();
     sem_post(&SEM_DRIVER);
+    #endif
+    GAME_STATUS.pantallaActual = QUIT_GAME;
     return 0;
 }
 

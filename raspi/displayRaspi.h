@@ -189,7 +189,6 @@ void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del display.
 void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla.
 
 //*****************SCORE
-void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
 halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select);  //Se utiliza para mostrar el nombre del usuario del leaderBoard en el menu.
 halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr);  //Adapte el nombre del usuario a un halfdisplay_t.
 void* letterFlashThread(void*); //Thread encargado de hacer titilar una letra en el display.

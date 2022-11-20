@@ -1,8 +1,8 @@
 #*******************************************************************************************************************************************
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
-mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o utilidades.h spaceInvaders.c
-	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o score.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
+mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o selectOptions.o utilidades.h spaceInvaders.c
+	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o score.o selectOptions.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
 
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h
@@ -25,8 +25,8 @@ cleanRaspi:
 
 COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_audio-5 allegro_acodec-5 --libs --cflags)
 
-mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o spaceInvaders.c
-	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
+mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o selectOptions.o spaceInvaders.c
+	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o selectOptions.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
 
 allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
@@ -44,8 +44,11 @@ inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h utilidades.h
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c -g spaceLib/spaceLib.c -o spaceLib.o
 
-levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
-	gcc -c -g levelLoader/levelLoader.c -Wall -o levelLoader.o
+#levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
+#	gcc -c -g levelLoader/levelLoader.c -Wall -o levelLoader.o
 
 score.o: spaceLib/score/score.c spaceLib/score/score.h
 	gcc -c -g spaceLib/score/score.c -Wall -o score.o
+
+selectOptions.o: selectOptions.h selectOptions.c
+	gcc -c -g selectOptions.c -Wall -o selectOptions.o

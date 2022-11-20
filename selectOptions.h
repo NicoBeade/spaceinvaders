@@ -13,8 +13,14 @@
 #define SELECT_OPTIONS_H
 
 #include "spaceLib/spaceLib.h"
+#include "spaceLib/score/score.h"
 #include <stdio.h>
 #include <semaphore.h>
+
+//#include "raspi/displayRaspi.h"
+
+#include "allegro/allegro.h"
+
 /*******************************************************************************************************************************************
  * 
                                         ___               _           _     _                   
@@ -24,6 +30,7 @@
                                                                                 |_|                                                            
  * 
  ******************************************************************************************************************************************/
+void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
 int selectPlayInicio(void);
 int selectLevels(void);
 int selectVolume(void);

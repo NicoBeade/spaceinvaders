@@ -92,7 +92,7 @@ typedef struct{
 #define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
 #define SIGUIENTE ((menu->keys)->x == 1)
 #define ANTERIOR ((menu->keys)->x == -1)
-
+#define ATRAS   ((menu->keys)->y == -1)
 #endif
 
 #ifdef ALLEGRO
@@ -100,6 +100,7 @@ typedef struct{
 #define INPUT_THREAD allegroThread
 #define SIGUIENTE ((menu->keys)->y == -1)
 #define ANTERIOR ((menu->keys)->y == 1)
+#define ATRAS   ((menu->keys)->x == -1)
 #endif
 
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
@@ -120,7 +121,7 @@ void * colliderThread(void * argCollider);
 
 static void* menuHandlerThread(void * data);
 
-static void* saveScoreHandlerThread(void * data);
+//static void* saveScoreHandlerThread(void * data);
 
 static void* levelHandlerThread(void * data);
 
@@ -198,25 +199,29 @@ menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N
 #ifdef ALLEGRO
 audio_t * toAudio = NULL;
 texto_t * toText = NULL;
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectVolume, selectQuitGame},
-                      {"Quick Play ", "Levels ", "Volume ", "Quit Game "}, 
-                      4, 1, changeOption };//Estructura del menu de inicio.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame, backMenuAnterior},
+                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
+                      6 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame},
+menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame, backMenuAnterior},
                       {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Dificulty ", "Volume ", "Quit Game "}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
                       {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},  
                       6, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
                       {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuLeaderboard = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame},
+menu_t menuLeaderboard = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, backMenuAnterior},
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},  
                       10 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, backMenuAnterior}, 
+                      {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "}, 
+                      20 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard, &menuLevels};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
@@ -342,7 +347,7 @@ int main(void){
 
                 break;
             
-            case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
+            /*case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
@@ -355,7 +360,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-            
+            */
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
@@ -403,15 +408,15 @@ int main(void){
 
                 //HARDCODED
                 vector_t Booo = {0,0};
-                mothershipList = addObj(mothershipList, Booo, 0, 0);
+                //mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
-                argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
+                //argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
-                pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
+                //pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
@@ -549,7 +554,6 @@ static void* menuHandlerThread(void * data){
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
             halfDispNameScore = &nameDispMenu;
-            fillLeaderboardMenu(menu);
             (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
         }
 
@@ -589,6 +593,11 @@ static void* menuHandlerThread(void * data){
     #endif
     //***************************************************************************************************************************
 
+    if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
+
+        fillLeaderboardMenu(menu);
+    }
+
     usleep(200 * U_SEC2M_SEC);
 
     while(menu -> exitStatus){
@@ -610,6 +619,7 @@ static void* menuHandlerThread(void * data){
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 #endif
+
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
@@ -633,6 +643,7 @@ static void* menuHandlerThread(void * data){
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 #endif
+
                 #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
                 #endif
@@ -649,15 +660,22 @@ static void* menuHandlerThread(void * data){
                 }
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
-                    #ifdef ALLEGRO
-                    toText = emptyText(toText);
-                    KEYS.press=0;
-                    #endif
                 }
-            }
+                
+                #ifdef ALLEGRO
+                toText = emptyText(toText);
+                KEYS.press=0;
+                #endif
 
-            if(ABAJO_INPUT && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
+            }
+            
+            if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.
+            
+                #ifdef ALLEGRO
+                toText = emptyText(toText);
+                KEYS.press=0;
+                #endif
             }
             
         }
@@ -670,7 +688,7 @@ static void* menuHandlerThread(void * data){
     pthread_exit(0);
 }
 
-
+/*
 static void* saveScoreHandlerThread(void * data){
 //Este thread es el encargado de manejar los menues.
 
@@ -880,7 +898,7 @@ static void* saveScoreHandlerThread(void * data){
 
     pthread_exit(0);
 } 
-
+*/
 
 
 static void* levelHandlerThread(void * data){
@@ -950,7 +968,7 @@ void * moveAlienThread(void* argMoveAlien){
 
             moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
-            velAliens -= 2; //Incrementa la velocidad de los aliens.
+            //velAliens -= 2; //Incrementa la velocidad de los aliens.
 
             sem_post(&SEM_GAME);
 
