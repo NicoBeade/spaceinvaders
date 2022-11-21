@@ -31,6 +31,7 @@ extern gameStatus_t GAME_STATUS;
 extern sem_t SEM_GAME;
 extern sem_t SEM_MENU;
 
+static ALLEGRO_FONT * fuentes[FONTMAX] = {NULL};
 /***********************************************************************************************************************************************************
  * 
  *                                                                      PROTOTIPOS DE FUNCIONES LOCALES
@@ -55,8 +56,10 @@ int showEntity(object_t * entity);
      * ***************************************************************************/
 
 int showObjects(object_t * inicial);
-void showText(texto_t * data, ALLEGRO_FONT * fuente);
-int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente);
+void showText(texto_t * data);
+int showTexts(texto_t * inicial);
+int showSprite(sprite_t * sprite);
+int showSprites(sprite_t * inicial);
 
 audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol);
 
@@ -80,7 +83,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     //---------INICIALIZACION PARA EL USO DEL DISPLAY
 
     ALLEGRO_DISPLAY * display = NULL; 
-    ALLEGRO_FONT * fuente = NULL;
 
     al_init_image_addon();
     al_init_font_addon();
@@ -88,7 +90,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     al_init_primitives_addon();
 
     display = al_create_display(X_MAX,Y_MAX); //Se crea el display
-    fuente = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0);
+    fuentes[smallF] = al_load_ttf_font("allegro/spaceInv.ttf", 20, 0); //fuente small
+
+    fuentes[mediumF] = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0); //fuente medium
+
+    fuentes[largeF] = al_load_ttf_font("allegro/spaceInv.ttf", 50, 0); //fuente large
+
+    fuentes[bigF] = al_load_ttf_font("allegro/spaceInv.ttf", 80, 0); //fuente big
     
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
@@ -111,7 +119,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     background = al_load_bitmap("allegro/fondo2.png");
     if(!background){
-         printf("fallo\n");
+         printf("fallo background\n");
     }
 
     while(!*data->close_display){
@@ -153,6 +161,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.UsrList) );
                 showObjects( *((*data).punteros.barrerasList) );
                 showObjects( *((*data).punteros.mothershipList) );
+                //Objectos varios
+                showSprites( *((*data).punteros.screenObjects) );
 
                 sem_post(&SEM_GAME);
 
@@ -160,7 +170,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 sem_wait(&SEM_MENU);
 
                 //Se escriben los textos en el buffer
-                showTexts(*data->text, fuente);
+                showTexts(*data->text);
 
                 sem_post(&SEM_MENU);
 
@@ -211,8 +221,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-/*********DISPLAY*************/
+        /**************************************************************
+         * 
+         *              DISPLAY
+         * 
+         * ***********************************************************/
 
+/*****************ENTIDADES**********************/
 int showEntity(object_t * entity){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
@@ -232,7 +247,6 @@ int showEntity(object_t * entity){
 
     //Si no se pudo cargar salta error
     if (!image) {
-        //fprintf(stderr, "failed to load image ! %s\n", sprite);
         return -1;
     }
 
@@ -267,16 +281,17 @@ int showObjects(object_t * inicial){
     return 0;
 }
 
-void showText(texto_t * data, ALLEGRO_FONT * fuente){
+/*****************TEXTOS**********************/
+void showText(texto_t * data){
 
     //Comando para escribir un texto en el buffer
 
     if(data){
-        al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
+        al_draw_text(fuentes[data->fuente], al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
     }
 }
 
-int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
+int showTexts(texto_t * inicial){
 
     //punter al primer objeto de la lista
     texto_t * puntero = inicial;
@@ -288,12 +303,12 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
     
     else {
         //Se muestra el primer objeto
-        showText(puntero, fuente);
+        showText(puntero);
 
         //Se muestran los siguientes
         while(puntero->next != NULL){
             puntero = puntero->next;
-            showText(puntero, fuente);
+            showText(puntero);
         }
     }
     
@@ -301,7 +316,62 @@ int showTexts(texto_t * inicial, ALLEGRO_FONT * fuente){
 
 }
 
-/*********AUDIO*************/
+/*****************TEXTOS**********************/
+int showSprite(sprite_t * sprite){
+  
+    ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
+
+    char * dir = sprite->direccion;
+
+    if (dir == NULL){
+        return -1;
+    }
+    else{
+        image = al_load_bitmap(dir);    //Se carga en el bitmap
+    }
+    
+
+    //Si no se pudo cargar salta error
+    if (!image) {
+        return -1;
+    }
+
+    al_draw_bitmap(image, sprite->posx, sprite->posy, 0);     //Se dibuja en el display
+
+    al_destroy_bitmap(image);       //Se eleimina la imagen
+
+    return 0;
+}
+
+int showSprites(sprite_t * inicial){
+
+    //punter al primer objeto de la lista
+    sprite_t * puntero = inicial;
+
+    //Si se paso un NULL salta error
+    if(puntero == NULL){
+        return -1;
+    }
+
+    else {
+        //Se muestra el primer objeto
+        showSprite(puntero);
+
+        //Se muestran los siguientes
+        while(puntero->next != NULL){
+            puntero = puntero->next;
+            showSprite(puntero);
+        }
+    }
+    
+    return 0;
+}
+
+        /**************************************************************
+         * 
+         *              AUDIO
+         * 
+         * ***********************************************************/
 
 audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol){
 

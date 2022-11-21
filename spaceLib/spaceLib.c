@@ -121,7 +121,7 @@ object_t* removeList(object_t* lista){
         lista = nextObj;
     }
 
-    return lista;
+    return NULL;
 }
 
 static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos de una lista de obj
@@ -148,18 +148,8 @@ static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos 
  ******************************************************************************************************************************************/
 
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...){      
-/*Utiliza la funcion addAlien para crear la lista con todos los aliesn al empezar un nivel. Devuelve un puntero al primer elemento de la lista.
-    Recibe como parametros:
-        -listAliens: puntero al primer elemento de la lista.
-        -xMax: tamano en x del display.
-        -yMax: tamano en y del display.
-        -distInicialX: distancia minima a la que se puede encontrar el primer alien respecto al borde izquierdo.
-        -distInicialX: distancia minima a la que se puede encontrar el primer alien respecto al borde superior.
-        -saltoX: distancia en x entre la coordenada 0 en x de cada columna de aliens (TAM_ALIENS_X + ESP_ALIENS_X).
-        -saltoY: distancia en y entre la coordenada 0 en y de cada fila de aliens (TAM_ALIENS_Y + ESP_ALIENS_Y).
-        -str: puntero a un string que contiene la cantidad de aliens que debe haber en cada fila.
-        -Argumentos variables: indican en orden el tipo de alien que tendra cada fila.
-*/
+/*Utiliza la funcion addAlien para crear la lista con todos los aliesn al empezar un nivel. Devuelve un puntero al primer elemento de la lista.*/
+
     va_list tipos;             //Puntero a la lista de argumentos variables
     va_start(tipos, str);      //Inicializa los argumentos variables
     char * string = str;        //String auxiliar para recorrer la entrada
@@ -203,7 +193,7 @@ object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, cha
 }     
 
 
-void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
+char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
     if(*alienList == NULL){
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
     }
@@ -234,6 +224,13 @@ void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
         auxiliar->pos.y += vy;
         auxiliar->animationStatus++;
         auxiliar = auxiliar -> next;
+    }
+
+    if(vy == 1){//Si los aliens llegaron al borde, indica que hay que incrementar la velocidad de los aliens.
+        return FASTER_ALIENS;
+    }
+    else{
+        return 0;
     }
 }
 
@@ -424,7 +421,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
@@ -437,7 +434,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
         printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
-        return;
+        return 0;
     }
     object_t * listBarreras = *barrerasList;
 
@@ -478,9 +475,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
-                GAME_STATUS.pantallaActual = MENU;
-                GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                menuGame.exitStatus = 0;
+                return LOST_LEVEL;
             }
             listBalasEnemigas->lives -= 1;
             if(listBalasEnemigas-> lives == 0){//Si la bala debe morir
@@ -514,9 +509,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
-                        GAME_STATUS.pantallaActual = MENU;
-                        GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                        menuGame.exitStatus = 0;
+                        return WON_LEVEL;
                     }
                 }
                 listBalasUsr->lives -= 1;
@@ -541,6 +534,7 @@ void collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
         collition = 1;
     }
+    return 0;
 }
 
 

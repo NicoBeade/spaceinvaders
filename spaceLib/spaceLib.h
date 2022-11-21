@@ -160,7 +160,10 @@ typedef struct{
 enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
 
 //*************MENUES
-enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, START_LEVEL_MENU};//Determinan un valor para cada pantalla
+enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, START_LEVEL_MENU};//Determinan un valor para cada menu
+
+//*************ESTADO DE PARTIDA
+enum GAME_VALUE { WON_LEVEL, LOST_LEVEL, FASTER_ALIENS };//Se utilizan para determinar cuando se gana o pierde una partida.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -177,7 +180,7 @@ enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, M
 //*****************ALIENS
 object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
 object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.                                                     
-void moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
+char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 void printLista(object_t * lista, char * id);
 //*****************BALAS
@@ -192,7 +195,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
 
 
 //*****************COLLIDER
-void collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr); //Recorre todas las listas para chequear si hubo colisiones
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr); //Recorre todas las listas para chequear si hubo colisiones
 int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType); //Detecta si hubo colision entre dos objetos.
 
 //*****************OBJTYPES
@@ -224,22 +227,6 @@ object_t* removeList(object_t* lista);                                          
 
 #define ASCII2HEXA(c)    ( ( (c) >= '0' && (c) <= '9' ) ? (c) - '0' : (c) - 'A' + 0xA )   //Convierte un numero de ascii a hexadecimal.
 #define MAXCANTINPUT    27 //Cantidad de letras en el abecedario + el espacio
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-
-/*******************************************************************************************************************************************
- * 
-                                             ___         _                           
-                                            | __| __ __ | |_   ___   _ _   _ _    ___
-                                            | _|  \ \ / |  _| / -_) | '_| | ' \  (_-<
-                                            |___| /_\_\  \__| \___| |_|   |_||_| /__/                                                                                                                      
- * 
- ******************************************************************************************************************************************/
-
-extern gameStatus_t GAME_STATUS; //Variable que indica el estado del juego.
-extern game_t menuGame;
-
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

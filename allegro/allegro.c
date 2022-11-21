@@ -16,14 +16,14 @@
 #define FPS 2
 #define MENUX 150   //Posicion x del menu
 #define MENUY 300   //Posicion y del menu
-#define ESPACIADOMENU 100   //Espaciado entre opciones del menu
+#define ESPACIADOMENU 120   //Espaciado entre opciones del menu
 #define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
 
 #define CANTOP 5
-#define SPACELETX 60
-#define SPACELETY 50 
-#define SCOREX X_MAX/2 - TAMLETRAX*(1.5)
-#define SCOREY 100
+#define SPACELETX 70
+#define SPACELETY 70 
+#define SCOREX X_MAX/2
+#define SCOREY 70
 #define LETRAX X_MAX/2 - TAMLETRAX*(0.5) - SPACELETX
 #define LETRAY 200
 
@@ -47,7 +47,12 @@ typedef struct {
 
 } eventH_data_t;
 
-/*******************************************************/
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      THREAD PRINCIPAL
+ * 
+ * ********************************************************************************************************************************************************/
+
 void * allegroThread (void * dataIn){
 
     /*************************************************************************************************************
@@ -151,7 +156,7 @@ audio_t* addAudio(audio_t * firstObj, int audioId){
 	return firstObj;//Devuelve un puntero al primer elemento.
 }
 
-texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
+texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy){
 // Esta funcion se encarga de agregar un nuevo texto a la lista
 	texto_t * newText = malloc(sizeof(texto_t));//Agrega el nuevo texto
 
@@ -173,7 +178,8 @@ texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
     }
 
 	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del texto.
-	newText -> posx = posx;
+	newText -> fuente = fuente;
+    newText -> posx = posx;
 	newText -> posy = posy;
 
     newText -> next = NULL;
@@ -198,8 +204,59 @@ texto_t * emptyText(texto_t * firstText){
             }while(sig!=NULL);
         }
     }
-    return first;             //Se devuelve la lista
+    return NULL;             //Se devuelve la lista
 }
+
+sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy){
+// Esta funcion se encarga de agregar un nuevo sprite a la lista
+	sprite_t * newText = malloc(sizeof(sprite_t));//Agrega el nuevo sprite
+
+	if(newText == NULL){//Si no se puede hacer el malloc indica error.
+		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
+		return NULL; //error
+	}
+
+    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
+        sprite_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
+		while(lastObj -> next != NULL){
+			lastObj = lastObj -> next;
+		}
+        lastObj -> next = newText;
+	}
+
+    else{//Si es el primero de la lista debemos devolver ese puntero.
+        firstObj = newText;
+    }
+
+	newText -> direccion = direccion;//Asigna los valores indicados en los distitntos campos del sprite.
+    newText -> posx = posx;
+	newText -> posy = posy;
+
+    newText -> next = NULL;
+
+	return firstObj;//Devuelve un puntero al primer elemento.
+}
+
+sprite_t * emptySprite(sprite_t * firstSprite){
+//Esta funcion se encarga de limpiar la lista de sprites a escribir
+    sprite_t * first = firstSprite;
+    //Recorre la lista y libera el espacio
+    if(first != NULL){
+        if(first->next == NULL){
+            free(first);
+        }
+        else{
+            sprite_t * sig = first->next;
+            do{
+                sig = first->next;
+                free(first);
+                first = sig;
+            }while(sig!=NULL);
+        }
+    }
+    return NULL;             //Se devuelve la lista
+}
+
 
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
@@ -245,22 +302,27 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-texto_t * allegroMenu(menu_t * data, texto_t * toshow){
+TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
 //Esta funcion se utiliza para mostrar los menues en pantalla
     
     int i;
+    TextObj_t salida = {NULL,NULL};
+
     for( i = 0; i<data->cantOpciones; i++){
         //Se agregan los textos de las opciones a la lista de textos
         if(i==0){
-            toshow=addText(toshow, data->textOpciones[i], MENUX + SELECTOR, MENUY + i * ESPACIADOMENU);
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], largeF, MENUX + SELECTOR, MENUY + i * ESPACIADOMENU);
         }
         else{
-            toshow=addText(toshow, data->textOpciones[i], MENUX , MENUY + i * ESPACIADOMENU);
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, MENUX , MENUY + i * ESPACIADOMENU);
         }
     }
     //se agrega el selector
-    toshow = addText(toshow, ">", MENUX, MENUY);
-    return toshow;
+    salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
+
+
+    lists->textoList= salida.textoList;
+    return lists;
 }
 
 void changeOption(void * dataIn){
@@ -268,19 +330,19 @@ void changeOption(void * dataIn){
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
     texto_t * puntero = *data->toText;
     int i = 0;
-    int esc = 0;
+    int esc = 0; //Esta variable se encarga de saber si hay que subir o bajar las opciones
 
     if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
 
-        esc = -(data->menu)->cantOpciones + 1;
+        esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo
 
     }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
 
-        esc = (data->menu)->cantOpciones - 1;
+        esc = (data->menu)->cantOpciones - 1; //Si estoy en la ultima opcion tengo que bajar todo
 
-    }else if(data->nextOp > data->actualOp){
+    }else if(data->nextOp > data->actualOp){ //En las otras situaciones muevo todo un lugar para arriba o abajo
 
-        esc = -1;
+        esc = -1; 
 
     }else{
 
@@ -289,14 +351,16 @@ void changeOption(void * dataIn){
     }
     
     for(i = 0; i < (data->menu)->cantOpciones; i++ ){
-
-        puntero->posy += esc * ESPACIADOMENU;
+        //Recorro la lista
+        puntero->posy += esc * ESPACIADOMENU; //Muevo todo segun la variable esc
 
         if(i == data->actualOp){
-            puntero->posx-= SELECTOR;
+            puntero->posx-= SELECTOR; //La opcion actual la muevo hacia la izquierda
+            puntero->fuente = mediumF; //Reduzco el tamaño de letras
         }
         if(i == data->nextOp){
-            puntero->posx += SELECTOR;
+            puntero->posx += SELECTOR; //La nueva opcion la muevo hacia la derecha
+            puntero->fuente = largeF; //Incremento el tamaño de letras
         }
         puntero = puntero->next;
     }
@@ -308,22 +372,36 @@ void changeOption(void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
-texto_t * allegroScore(texto_t * toshow, char* scoreActual, char letras[15][2]){
+TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2]){
     
     int i, j;
+    float scoreLen = strlen(scoreActual);
+    TextObj_t salida = {NULL,NULL};
 
     for(i = 0; i < 3; i++){
     //Se recorren las columnas
         for(j = 0; j < CANTOP; j++){
             //Se recorren las letras que se muestran en cada columna
             //Se añaden los textos que permiten mostrar las letras
-            toshow = addText(toshow, letras[i*CANTOP+j], LETRAX + SPACELETX*i, LETRAY + SPACELETY*j);
 
+            if(j == (CANTOP/2)){
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], largeF, LETRAX + SPACELETX*i - 5, LETRAY + SPACELETY*j);
+            }else if(j == 0){
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 5, LETRAY + SPACELETY*j+40);
+            }else if(j == CANTOP-1){
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 5, LETRAY + SPACELETY*j-15);
+            }else if(j == 1){
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+10);
+            }else{
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j);  
+            }
         }
     }
-    toshow = addText(toshow, ">", LETRAX - 25 , LETRAY + SPACELETY* 2); //se añade el cursor
-    toshow = addText(toshow, scoreActual, SCOREX, SCOREY); //se añade el score 
-    return toshow;
+    salida.textoList = addText(salida.textoList, ">", largeF, LETRAX - 35 , LETRAY + SPACELETY* 2); //se añade el cursor
+    salida.textoList = addText(salida.textoList, scoreActual, bigF, SCOREX - (scoreLen/2.0)*58, SCOREY); //se añade el score 
+    
+    lists->textoList= salida.textoList;
+    return lists;
 }
 
 void changeLetra(char letras[15][2], int letraActual, int dir){
@@ -361,6 +439,23 @@ texto_t * changeCol(texto_t * toshow, int nextOp){
         puntero = puntero->next; //Se llega a el selector
     }
 
-    puntero->posx = LETRAX - 25 + nextOp*SPACELETX; //Se mueve el selector
+    puntero->posx = LETRAX - 35 + nextOp*SPACELETX; //Se mueve el selector
     return toshow;
+}
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      LIDERBOARD
+ * 
+ * ********************************************************************************************************************************************************/
+
+TextObj_t * allegroLiderboard(TextObj_t * lists){
+    
+    int i;
+    TextObj_t salida = {NULL,NULL};
+
+
+
+    lists->textoList= salida.textoList;
+    return lists;
 }
