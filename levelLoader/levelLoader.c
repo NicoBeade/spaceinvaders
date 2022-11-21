@@ -810,9 +810,9 @@ int main(){
     indexAllLevels("rpi", "_level", &carpetaNiveles, levelArray);
     imprimirNIVELES(levelArray);
 */  
-    object_t * alienList;
-    object_t * UsrList;
-    object_t * barrerasList;
+    object_t * alienList = NULL;
+    object_t * UsrList = NULL;
+    object_t * barrerasList = NULL;
     level_setting_t levelSettings;
     #define MAX 100
     printf("Bienvenido al lector de niveles....\n");
@@ -848,7 +848,17 @@ int main(){
         }
     }
     while(nivel_found == 0);
-    levelStatus = loadLevel(0, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+    int levelStatus;
+    directory_t carpetaAssets = {};
+    loadDirectory("../game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
+    if(loadAllAssets(plataforma, &carpetaAssets) == -1){
+        printf("Error no se pudieron cargar los assets\n");
+        return -1;
+        }
+    else{
+        printf("\n\n...Assets cargados correctamente...\n\n");
+    }
+    levelStatus = loadLevel(0, levelArray, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
     if(levelStatus == -1){
         printf("Error no se encontro el nivel 0\n");
         return -1;
@@ -856,7 +866,8 @@ int main(){
     else{
         printf("\n\n...Nivel 0 cargado correctamente...\n\n");
     }
-    levelStatus = loadLevel(nivel, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+    levelStatus = loadLevel(nivel,levelArray, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+    printf("JORGIT\n");
     if(levelStatus == -1){
         printf("Error no se encontro el nivel %d\n", nivel);
         return -1;
@@ -864,24 +875,19 @@ int main(){
     else{
         printf("\n\n...Nivel %d cargado correctamente...\n\n", nivel);
     }
+    char matrix[800][800]={};
+    int maxX, maxY;
+    int divisor = 1;
     if(strcmp(plataforma,"rpi") == 0){
-        char matrix[16][16]={};
-        int maxX = 15;
-        int maxY = 15;
+        maxX = 15;
+        maxY = 15;
     }
     else if(strcmp(plataforma,"lnx") == 0){
-        char matrix[600][800]={};
-        int maxX = 800;
-        int maxY = 600;
+        maxX = 80;
+        maxY = 60;
+        divisor = 10;
     }
-    object_t * alienList;
-    object_t * barrerasList;
-    object_t * usrList;
-    directory_t carpetaAssets = {};
-    loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-
-
-    loadAllAssets(platform, &carpetaAssets);  
+ 
     object_t * lista = alienList;
     objectType_t * objectType;
     
@@ -889,23 +895,54 @@ int main(){
         objectType = getObjType(lista->type);
         int pintX;
         int pintY;
-        for(pintY = lista->posY; pintY <= objectType->alto && pintY <= maxY; pintY++){
-            for(pintX = lista->posX; pintX <= objectType->ancho && pintX <= maxX; pintX++){
-            matrix[pintX][pintY]++;
+        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+           //printf("%p %d\n\n", lista, pintY);
+            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+            matrix[pintY][pintX]++;
+            //printf("        %p %d\n\n", lista, pintX);
             }
         }
-        
+       // printf("it 1\n");
+        lista = lista->next;
+    }
+    lista = UsrList;
+    while(lista != NULL){
+        objectType = getObjType(lista->type);
+        int pintX;
+        int pintY;
+        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+           //printf("%p %d\n\n", lista, pintY);
+            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+            matrix[pintY][pintX]++;
+            //printf("        %p %d\n\n", lista, pintX);
+            }
+        }
+       // printf("it 1\n");
+        lista = lista->next;
+    }
+    lista = barrerasList;
+    while(lista != NULL){
+        objectType = getObjType(lista->type);
+        int pintX;
+        int pintY;
+        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+           //printf("%p %d\n\n", lista, pintY);
+            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+            matrix[pintY][pintX]++;
+            //printf("        %p %d\n\n", lista, pintX);
+            }
+        }
+       // printf("it 1\n");
         lista = lista->next;
     }
     int fila;
     int columna;
-        for(fila = 0; fila <= maxY; fila++){
-            for(columna = 0; columna <= maxX; columna++){
-                printf("%d", matrix[fila][columna]);
+        for(fila = 0; fila <= maxX; fila++){
+            for(columna = 0; columna <= maxY; columna++){
+                printf(" %d", matrix[fila][columna]);
             }
             printf("\n");
         }
-    }
                     
 }
 #endif
