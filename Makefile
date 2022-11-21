@@ -44,8 +44,8 @@ inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h utilidades.h
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c -g spaceLib/spaceLib.c -o spaceLib.o
 
-#levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
-#	gcc -c -g levelLoader/levelLoader.c -Wall -o levelLoader.o
+levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
+	gcc -c -g levelLoader/levelLoader.c -Wall -o levelLoader.o
 
 score.o: spaceLib/score/score.c spaceLib/score/score.h
 	gcc -c -g spaceLib/score/score.c -Wall -o score.o

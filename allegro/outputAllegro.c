@@ -270,21 +270,8 @@ int showObjects(object_t * inicial){
 void showText(texto_t * data, ALLEGRO_FONT * fuente){
 
     //Comando para escribir un texto en el buffer
-    //int lenght = strlen(data->texto);
 
     if(data){
-        /*al_draw_rectangle(data->posx - 10, data->posy - 5, 
-        data->posx + lenght*TAMLETRAX +10 , data->posy + TAMLETRAY + 5, al_map_rgb(0,0,255), 3);
-
-        al_draw_rectangle(data->posx - 5, data->posy -10, 
-        data->posx + lenght*TAMLETRAX + 5, data->posy + TAMLETRAY +10, al_map_rgb(0,0,255), 3);
-
-        al_draw_filled_rectangle(data->posx - 7, data->posy - 2, 
-        data->posx + lenght*TAMLETRAX + 10, data->posy + TAMLETRAY +2, al_map_rgb(0,0,0));
-
-        al_draw_filled_rectangle(data->posx - 2, data->posy -7, 
-        data->posx + lenght*TAMLETRAX + 2, data->posy + TAMLETRAY + 7, al_map_rgb(0,0,0));*/
-
         al_draw_text(fuente, al_map_rgb(255,255,255) , data->posx, data->posy, ALLEGRO_ALIGN_LEFT, data->texto);
     }
 }

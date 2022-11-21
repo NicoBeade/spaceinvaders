@@ -572,7 +572,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     return 0;
 }
 
-int loadLevel(int levelNo, level_t levelArray[100], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
+int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     int level0True =  levelNo? 0 : 1;
     if(platform == NULL){
@@ -848,28 +848,64 @@ int main(){
         }
     }
     while(nivel_found == 0);
-    printf("\n\n.........\n\n Desea cargar el nivel 0 tambien? Y/N\n");
-    char respuesta[MAX];
-    do{
-        scanf("%s", respuesta);
-        if(respuesta[0] != 'y' || respuesta[0] != 'Y' || respuesta[0] != 'n' || respuesta[0] != 'N' || respuesta[0] != 's' || respuesta[0] != 'S' || respuesta[0] != 'n' || respuesta[0] != 'N'){
-            respuesta[0] = 0;
+    levelStatus = loadLevel(0, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+    if(levelStatus == -1){
+        printf("Error no se encontro el nivel 0\n");
+        return -1;
         }
+    else{
+        printf("\n\n...Nivel 0 cargado correctamente...\n\n");
     }
-    while(respuesta == 0);
-    int levelStatus;
-    printf("%s", respuesta);
-    if( respuesta[0] == 'Y' || respuesta[0] == 'S' || respuesta[0] == 'y' || respuesta[0] == 'Y'){
-        levelStatus = loadLevel(0, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
-        if(levelStatus == -1){
-            printf("Error no se encontro el nivel 0\n");
-            return -1;
-        }
-        else{
-            printf("\n\n...Nivel 0 cargado correctamente...\n\n");
-        }
+    levelStatus = loadLevel(nivel, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
+    if(levelStatus == -1){
+        printf("Error no se encontro el nivel %d\n", nivel);
+        return -1;
     }
+    else{
+        printf("\n\n...Nivel %d cargado correctamente...\n\n", nivel);
+    }
+    if(strcmp(plataforma,"rpi") == 0){
+        char matrix[16][16]={};
+        int maxX = 15;
+        int maxY = 15;
+    }
+    else if(strcmp(plataforma,"lnx") == 0){
+        char matrix[600][800]={};
+        int maxX = 800;
+        int maxY = 600;
+    }
+    object_t * alienList;
+    object_t * barrerasList;
+    object_t * usrList;
+    directory_t carpetaAssets = {};
+    loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
+
+
+    loadAllAssets(platform, &carpetaAssets);  
+    object_t * lista = alienList;
+    objectType_t * objectType;
     
+    while(lista != NULL){
+        objectType = getObjType(lista->type);
+        int pintX;
+        int pintY;
+        for(pintY = lista->posY; pintY <= objectType->alto && pintY <= maxY; pintY++){
+            for(pintX = lista->posX; pintX <= objectType->ancho && pintX <= maxX; pintX++){
+            matrix[pintX][pintY]++;
+            }
+        }
+        
+        lista = lista->next;
+    }
+    int fila;
+    int columna;
+        for(fila = 0; fila <= maxY; fila++){
+            for(columna = 0; columna <= maxX; columna++){
+                printf("%d", matrix[fila][columna]);
+            }
+            printf("\n");
+        }
+    }
                     
 }
 #endif

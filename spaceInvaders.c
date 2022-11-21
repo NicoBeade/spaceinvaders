@@ -92,6 +92,10 @@ typedef struct{
 #define DISP_ANIM_MENU  textAnimMenu            //Thread encargado de actualizar el display durante un menu en la RPI.
 #define SIGUIENTE ((menu->keys)->x == 1)
 #define ANTERIOR ((menu->keys)->x == -1)
+#define SIGUIENTESCORE ((menu->keys)->x == 1)
+#define ANTERIORSCORE ((menu->keys)->x == -1)
+#define ARRIBA_INPUT ((menu->keys)->y == 1)
+#define ABAJO_INPUT  ((menu->keys)->y == -1)
 #define ATRAS   ((menu->keys)->y == -1)
 #endif
 
@@ -100,13 +104,16 @@ typedef struct{
 #define INPUT_THREAD allegroThread
 #define SIGUIENTE ((menu->keys)->y == -1)
 #define ANTERIOR ((menu->keys)->y == 1)
+#define SIGUIENTESCORE ((menu->keys)->x == 1)
+#define ANTERIORSCORE ((menu->keys)->x == -1)
+#define ARRIBA_INPUT ((menu->keys)->y == 1)
+#define ABAJO_INPUT  ((menu->keys)->y == -1)
 #define ATRAS   ((menu->keys)->x == -1)
 #endif
 
 #define DERECHA_INPUT ((menu->keys)->x == 1)    //Macros para detectar como se movio el joystick.
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
-#define ARRIBA_INPUT ((menu->keys)->y == 1)
-#define ABAJO_INPUT  ((menu->keys)->y == -1)
+
 #define PRESS_INPUT     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -121,7 +128,7 @@ void * colliderThread(void * argCollider);
 
 static void* menuHandlerThread(void * data);
 
-//static void* saveScoreHandlerThread(void * data);
+static void* saveScoreHandlerThread(void * data);
 
 static void* levelHandlerThread(void * data);
 
@@ -284,10 +291,10 @@ void * timer(){
 
 int main(void){
     srand(time(NULL));
+    directory_t carpetaNiveles = {};
     #ifdef RASPI
     disp_init();
     joy_init();
-
     pthread_t displayT;
     #endif
 
@@ -327,7 +334,8 @@ int main(void){
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
-
+    level_t levelArray[MAX_LEVEL];
+    indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -347,11 +355,11 @@ int main(void){
 
                 break;
             
-            /*case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
+            case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
-                saveScore_t saveScore = { &KEYS, "23015", 1, 3, };
+                saveScore_t saveScore = { &KEYS, "23015", 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -360,7 +368,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 break;
-            */
+            
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
@@ -369,7 +377,7 @@ int main(void){
                     directory_t carpetaAssets = {};
                     loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
                     loadAllAssets(platform, &carpetaAssets);   
-                    int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+                    int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
 
                     if(levelStatus == -1){
                         printf("Error in spaceInvaders.c, level number 0 not found\n");
@@ -378,7 +386,7 @@ int main(void){
                     GAME_STATUS.nivelActual++;
                 }
 
-                int levelStatus = loadLevel(GAME_STATUS.nivelActual, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+                int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
 
                 printf("LEVEL SETTING YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings.yMax, levelSettings.yMin, levelSettings.xMax, levelSettings.xMin);
 
@@ -688,16 +696,20 @@ static void* menuHandlerThread(void * data){
     pthread_exit(0);
 }
 
-/*
+
 static void* saveScoreHandlerThread(void * data){
 //Este thread es el encargado de manejar los menues.
 
 	saveScore_t * menu = (saveScore_t *) data;
 
-    int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu. 
+    int select = 0;//Esta variable se utiliza para indicar la letra seleccionada dentro del menu. 
     char letraActual[3] = {'A', 'A', 'A'}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
     char titilar = 1; //Flag que indica si se debe titilar la letra.
+
+    #ifdef ALLEGRO
+    char letras[15][2] = {"Y","Z","A","B","C","Y","Z","A","B","C","Y","Z","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
+    #endif
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
@@ -742,8 +754,9 @@ static void* saveScoreHandlerThread(void * data){
 
     #ifdef ALLEGRO
     int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
-    toText = allegroMenu(MENUES[GAME_STATUS.menuActual], toText);
+    toText = allegroScore(toText, "200", letras);
     #endif
+
     //***************************************************************************************************************************
 
     usleep(200 * U_SEC2M_SEC);
@@ -752,23 +765,15 @@ static void* saveScoreHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             
-            for(int i = 0 ; i < 8 ; i++){
-
-                for(int j = 0 ; j < 16 ; j++){
-                }
-            }
-            
-            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
-                titilar = 0;
-                pthread_join(titileoT, NULL);
-                #ifdef ALLEGRO
-                preSelect = select;
-                #endif
-                select += 1;
+            if (SIGUIENTESCORE){//Si se presiona para ir a la siguiente opcion
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
+                pthread_join(titileoT, NULL);
                 posLetra.x += 4;
                 #endif
+
+                select += 1;
+
                 if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                     #ifdef RASPI
@@ -776,27 +781,28 @@ static void* saveScoreHandlerThread(void * data){
                     #endif
                 }
 
+                #ifdef ALLEGRO
+                toText = changeCol(toText, select);
+                #endif
+                
                 #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
                 titilar = 1;//Comenzamos a titilar de vuelta.
-                #endif
-                #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
-                #endif
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
+                #endif
+
+                
             }
 
-            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
-                titilar = 0;
-                pthread_join(titileoT, NULL);
-                #ifdef ALLEGRO
-                preSelect = select;
-                #endif
-                select -= 1;
+            if (ANTERIORSCORE){//Si se presiona para ir a la opcion anterior
                 #ifdef RASPI
-                titilar = 0;//Dejamos de titilar la letra                
+                titilar = 0;//Dejamos de titilar la letra    
+                pthread_join(titileoT, NULL);            
                 posLetra.x -= 4;
                 #endif
+
+                select -= 1;
+
                 if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu -> cantOpciones) - 1;
                     #ifdef RASPI
@@ -804,22 +810,36 @@ static void* saveScoreHandlerThread(void * data){
                     #endif
                 }
 
+                #ifdef ALLEGRO
+                toText = changeCol(toText, select);
+                #endif
+
                 #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
                 titilar = 1;//Comenzamos a titilar de vuelta.
+                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.  
                 #endif
-                #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
-                #endif
-                pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.              
+
+                
             }
 
             if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
-                titilar = 0;
-                pthread_join(titileoT, NULL);
+                #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra    
+                pthread_join(titileoT, NULL);            
+                #endif
+
                 letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
+
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
+                #endif
+
+                #ifdef ALLEGRO
+                changeLetra(letras, select, 1);
+                printf("%s", letras[0]);
+                #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
                 case '[':
@@ -838,18 +858,28 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
                 posLetraDisplay.y = posLetra.y;
-                barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay);
+                barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
-                #endif
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
+                #endif
             }
 
             if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
-                titilar = 0;
-                pthread_join(titileoT, NULL);
+                #ifdef RASPI
+                titilar = 0;//Dejamos de titilar la letra    
+                pthread_join(titileoT, NULL);            
+                #endif
+
                 letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
+
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
+                #endif
+
+                #ifdef ALLEGRO
+                changeLetra(letras, select, -1);
+                #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
                 case '@':
@@ -868,10 +898,10 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
                 posLetraDisplay.y = posLetra.y;
-                barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay);
+                barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
-                #endif
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
+                #endif
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
@@ -898,7 +928,6 @@ static void* saveScoreHandlerThread(void * data){
 
     pthread_exit(0);
 } 
-*/
 
 
 static void* levelHandlerThread(void * data){

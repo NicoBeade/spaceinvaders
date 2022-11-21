@@ -7,7 +7,6 @@
 #include "outputAllegro.h"
 #include "inputAllegro.h"
 #include "allegro.h"
-
 /************************************************************************************************
  * 
  *                              CONSTANTES
@@ -19,6 +18,14 @@
 #define MENUY 300   //Posicion y del menu
 #define ESPACIADOMENU 100   //Espaciado entre opciones del menu
 #define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
+
+#define CANTOP 5
+#define SPACELETX 60
+#define SPACELETY 50 
+#define SCOREX X_MAX/2 - TAMLETRAX*(1.5)
+#define SCOREY 100
+#define LETRAX X_MAX/2 - TAMLETRAX*(0.5) - SPACELETX
+#define LETRAY 200
 
 //Timer tick
 extern int timerTick;
@@ -165,8 +172,7 @@ texto_t* addText(texto_t * firstObj, char * texto, int posx, int posy){
         firstObj = newText;
     }
 
-
-	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del alien.
+	newText -> texto = texto;//Asigna los valores indicados en los distitntos campos del texto.
 	newText -> posx = posx;
 	newText -> posy = posy;
 
@@ -261,7 +267,7 @@ void changeOption(void * dataIn){
 //Esta funcion realiza la animacion de cambio de oipcion
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
     texto_t * puntero = *data->toText;
-    int i = 0, j= 0;
+    int i = 0;
     int esc = 0;
 
     if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
@@ -296,3 +302,65 @@ void changeOption(void * dataIn){
     }
 }
 
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      SCORE
+ * 
+ * ********************************************************************************************************************************************************/
+
+texto_t * allegroScore(texto_t * toshow, char* scoreActual, char letras[15][2]){
+    
+    int i, j;
+
+    for(i = 0; i < 3; i++){
+    //Se recorren las columnas
+        for(j = 0; j < CANTOP; j++){
+            //Se recorren las letras que se muestran en cada columna
+            //Se añaden los textos que permiten mostrar las letras
+            toshow = addText(toshow, letras[i*CANTOP+j], LETRAX + SPACELETX*i, LETRAY + SPACELETY*j);
+
+        }
+    }
+    toshow = addText(toshow, ">", LETRAX - 25 , LETRAY + SPACELETY* 2); //se añade el cursor
+    toshow = addText(toshow, scoreActual, SCOREX, SCOREY); //se añade el score 
+    return toshow;
+}
+
+void changeLetra(char letras[15][2], int letraActual, int dir){
+
+    int i;
+    char (* puntero)[2] = &(letras[0]); //Se crea un puntero temporal
+    char str[2]={0,0}; //Se crea un string temporal
+
+    puntero += letraActual*CANTOP; //Se mueve el puntero hacia la primer letra a cambiar
+
+    for(i = 0; i < CANTOP; i++){
+        
+        strcpy(str, *puntero); //Se guarda la letra a cambiar en el string temporal
+
+        str[0]+=dir; //Se modifica el string temporal
+
+        if(dir<0 && str[0] == 'A'-1){
+            str[0] = 'Z';
+        }else if(dir>0 && str[0] == 'Z'+1){
+            str[0] = 'A';
+        }
+
+        strcpy(*puntero,str); //Se modifica el string original
+        puntero++;
+    }
+
+}
+
+texto_t * changeCol(texto_t * toshow, int nextOp){
+
+    texto_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
+    int i;
+
+    for(i = 0; i < 3*CANTOP; i++ ){
+        puntero = puntero->next; //Se llega a el selector
+    }
+
+    puntero->posx = LETRAX - 25 + nextOp*SPACELETX; //Se mueve el selector
+    return toshow;
+}

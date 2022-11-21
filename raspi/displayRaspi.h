@@ -90,14 +90,6 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 
 typedef struct {
 
-    keys_t * keys;
-    char puntaje[10];//String que contiene el puntaje del usuario.
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    int cantOpciones;//Cantidad de letras del usuario.
-} saveScore_t;
-
-typedef struct {
-
     char* letra;//Apunta a la letra que se debe mostrar.
     halfDisp_t* display;//Apunta a medio display donde se mostrara la letra.
     vector_t* pos;//Posicion de donde se hara titilar la letra.

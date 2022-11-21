@@ -42,7 +42,7 @@ int loadAllAssets(char * platform,  directory_t * directoryStore);
 int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, directory_t * directoryStore, level_t levelArray[]);
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
-int loadLevel(int levelNo, level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
+int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
 int stringEndCmp(char * string, char * end);
 int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut);
 void imprimirNIVELES(level_t levelArray[]);
