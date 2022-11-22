@@ -275,7 +275,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             sprite3 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             sprite3_found++;
         }
-        else if(shootSound == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
+        else if(shootSound_found == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SOUND_FILE_LENGTH){
                 printf("Error in levelLoader.c, loadAsset function : shootSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
                 return -1;
@@ -283,7 +283,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             shootSound = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             shootSound_found++;
         }
-        else if(deathSound == 0 && strcmp(decodedFile[paramNo].parameter, "deathSound") == 0){
+        else if(deathSound_found == 0 && strcmp(decodedFile[paramNo].parameter, "deathSound") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SOUND_FILE_LENGTH){
                 printf("Error in levelLoader.c, loadAsset function : deathSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
                 return -1;
