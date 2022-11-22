@@ -27,6 +27,7 @@
 
 void* inputRPIThread(void* argInputRPI){
 
+    printf("Keys en input: %p", (keys_t*)argInputRPI);
     jcoord_t coordJoy;
     jswitch_t switchJoy;
 

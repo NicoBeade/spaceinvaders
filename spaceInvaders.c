@@ -230,6 +230,8 @@ int main(void){
                 
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
+                printf("Keys en main: %p", &KEYS);
+
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
                 pthread_join(menuHandlerT, NULL);
@@ -426,6 +428,8 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
+    printf("Keys en menu: %p", menu->keys);
+
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
@@ -502,7 +506,7 @@ static void* menuHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            printf("Joy: %d \n", (menu->keys)->x);
+            //printf("Joy: %d \n", (menu->keys)->x);
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
