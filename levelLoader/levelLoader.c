@@ -256,7 +256,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite1 = &(decodedFile[paramNo].value)[0];
+            sprite1 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             sprite1_found++;
         }
         else if(sprite2_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite2") == 0){
@@ -264,7 +264,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite2 = &(decodedFile[paramNo].value)[0];
+            sprite2 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             sprite2_found++;
         }
         else if(sprite3_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite3") == 0){
@@ -272,7 +272,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite3 = &(decodedFile[paramNo].value)[0];
+            sprite3 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             sprite3_found++;
         }
         else if(shootSound == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
@@ -280,7 +280,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : shootSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
                 return -1;
             }
-            shootSound = &(decodedFile[paramNo].value)[0];
+            shootSound = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             shootSound_found++;
         }
         else if(deathSound == 0 && strcmp(decodedFile[paramNo].parameter, "deathSound") == 0){
@@ -288,7 +288,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : deathSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
                 return -1;
             }
-            deathSound = &(decodedFile[paramNo].value)[0];
+            deathSound = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             deathSound_found++;
         }
     }
