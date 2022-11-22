@@ -14,7 +14,7 @@
 *************************************************************************************************/
 
 #define FPS 2
-#define MENUX 150   //Posicion x del menu
+#define MENUX 80   //Posicion x del menu
 #define MENUY 300   //Posicion y del menu
 #define ESPACIADOMENU 120   //Espaciado entre opciones del menu
 #define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
@@ -32,6 +32,8 @@
 #define LEFTCOLUMNX 100
 #define COLUMNY 220
 #define RIGHTCOLUMNX X_MAX-300
+
+#define SPRITESDIR "game/spritesAllegro/"
 
 //Timer tick
 extern int timerTick;
@@ -326,6 +328,8 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     //se agrega el selector
     salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
 
+    salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/spriteQP.png", X_MAX - 300, Y_MAX/2 -150);
+
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
     return lists;
@@ -335,6 +339,8 @@ void changeOption(void * dataIn){
 //Esta funcion realiza la animacion de cambio de oipcion
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
     texto_t * puntero = *data->toText;
+    sprite_t * sprite = *data->toSprite;
+    
     int i = 0;
     int esc = 0; //Esta variable se encarga de saber si hay que subir o bajar las opciones
 
@@ -370,6 +376,10 @@ void changeOption(void * dataIn){
         }
         puntero = puntero->next;
     }
+
+    if(((data->menu)->spritesDir)[0] != NULL){
+        sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
+    }
 }
 
 /***********************************************************************************************************************************************************
@@ -399,7 +409,7 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
             }else if(j == 1){
                 salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+5);
             }else{
-                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+5;  
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+5);  
             }
         }
     }
@@ -438,24 +448,9 @@ void changeLetra(char letras[15][2], int letraActual, int dir){
 
 }
 
-/*
-texto_t * changeCol(texto_t * toshow, int nextOp){
-
-    texto_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
-    int i;
-
-    for(i = 0; i < 3*CANTOP; i++ ){
-        puntero = puntero->next; //Se llega a el selector
-    }
-
-    puntero->posx = LETRAX - 35 + nextOp*SPACELETX; //Se mueve el selector
-    return toshow;
-}*/
-
 sprite_t * changeCol(sprite_t * toshow, int nextOp){
 
     sprite_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
-    int i;
 
     puntero->posx = LETRAX - 15 + nextOp*SPACELETX; //Se mueve el selector
     return toshow;

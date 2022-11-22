@@ -56,26 +56,32 @@ menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N
 #ifdef ALLEGRO
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame, backMenuAnterior},
                       {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
+                      {"game/spritesAllegro/spriteQP.png", "game/spritesAllegro/spriteLVL.png", "game/spritesAllegro/spriteLB.png", "game/spritesAllegro/spriteSS.png", "game/spritesAllegro/spriteV.png", "game/spritesAllegro/spriteQG.png"},
                       6 , 1 , changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame, backMenuAnterior},
-                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Dificulty ", "Volume ", "Quit Game "}, 
+                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Dificulty ", "Volume ", "Quit Game "},
+                      {NULL}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
-                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},  
+                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},
+                      {NULL},  
                       6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
-                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "}, 
+                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},
+                      {NULL}, 
                       7, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, backMenuAnterior},
-                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},  
+                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},
+                      {NULL},  
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, backMenuAnterior}, 
-                      {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "}, 
+                      {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "},
+                      {NULL}, 
                       20 , 1 , changeOption };//Estructura del menu de pausa.
 #endif
 /*******************************************************************************************************************************************

@@ -51,6 +51,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 	keys_t * keys;
 	option_t selectOption[21];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
     char textOpciones[21][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
+    char spritesDir[40][50];
     int cantOpciones;//Cantidad de opciones del menu.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
@@ -61,6 +62,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 typedef struct{
 
     texto_t ** toText; //Lista a textos
+    sprite_t ** toSprite; //Lista de sprites
     int actualOp;      //Opcion acutal
     int nextOp;        //Nueva opcion
     menu_t * menu;     //Datos del menu actual
