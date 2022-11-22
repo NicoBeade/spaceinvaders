@@ -271,7 +271,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID, sprite1, sprite2, sprite3); //Añade el tipo de objeto
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3,NULL,NULL,0); //Añade el tipo de objeto
     return 0;
 }
 
