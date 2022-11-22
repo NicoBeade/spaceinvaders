@@ -242,7 +242,11 @@ int main(void){
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
-                saveScore_t saveScore = { &KEYS, "23015", 1, 3};
+                objectType_t * userAsset = getObjType(UsrList->type);
+                char stringWithScore[20];
+                sprintf(stringWithScore,"%d    ",userAsset->score);
+
+                saveScore_t saveScore = { &KEYS, stringWithScore, 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -754,7 +758,7 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = 0; //DEBUG NICO
+                posLetraDisplay.y = posLetra.y;
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.

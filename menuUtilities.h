@@ -121,7 +121,7 @@ extern menu_t menuLevels;
 typedef struct {
 
     keys_t * keys;
-    char puntaje[10];//String que contiene el puntaje del usuario.
+    char puntaje[20];//String que contiene el puntaje del usuario.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int cantOpciones;//Cantidad de letras del usuario.
 } saveScore_t;
