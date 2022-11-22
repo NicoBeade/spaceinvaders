@@ -207,6 +207,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     char shootProb_found = 0;
     char maxBullets_found = 0;
     char balaID_found = 0;
+    char score_found = 0;
     char sprite1_found = 0;
     char sprite2_found = 0;
     char sprite3_found = 0;
@@ -247,8 +248,8 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             balaID_found++;
         }
         else if(score_found == 0 && strcmp(decodedFile[paramNo].parameter, "score") == 0){
-            balaID = atoi(decodedFile[paramNo].value);
-            balaID_found++;
+            score = atoi(decodedFile[paramNo].value);
+            score_found++;
         }
         else if(sprite1_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite1") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){   //Si la direccion del sprite guardado en el archivo es muy larga entonces salta error
