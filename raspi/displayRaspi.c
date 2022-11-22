@@ -385,7 +385,6 @@ void* textAnimMenu(void* argTextAnimMenu){
     int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
     
     //Primero imprimimos las primeras 4 letras y el dibujo.
-    printf("Puntero al dibujo en textAnimMenu: %p", ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing);
     argSwipeDrawing_t argSwipeDrawing = { ((argTextAnimMenu_t*)argTextAnimMenu) -> higherDispMenu, ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion, ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing };
 
     pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
@@ -503,14 +502,10 @@ void* swipeDrawing(void* data){
         }
 
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
-            printf("puntero random: %p\n", argSwipeDrawing -> drawing);
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
-            printf("Aca se buguea\n");
         }
         sem_wait(&SEM_MENU);
-        printf("Antes de imprimir el display\n");
         printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
-        printf("Despues de imprimir el display\n");
         sem_post(&SEM_MENU);
     }
     pthread_exit(0);
