@@ -241,7 +241,7 @@ int main(void){
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
-
+                printf("Type: %d\n", UsrList->type);
                 objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
                 printf("Score en numero: %d\n", userAsset->score);
