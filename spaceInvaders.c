@@ -98,6 +98,8 @@ static void* levelHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
+keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
+
 gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .exitStatus = 1};
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
