@@ -9,3 +9,6 @@ balaID 0
 sprite1 game/spritesAllegro/bala.png
 sprite2 game/spritesAllegro/bala.png
 sprite3 game/spritesAllegro/bala.png
+score 5
+deathSound 0
+shootSound 0

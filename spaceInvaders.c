@@ -754,7 +754,7 @@ static void* saveScoreHandlerThread(void * data){
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
                 posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = posLetra.y;
+                posLetraDisplay.y = 0; //DEBUG NICO
                 barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.

@@ -9,3 +9,6 @@ balaID 8
 sprite1 game/spritesAllegro/alien2.png
 sprite2 game/spritesAllegro/alien2.png
 sprite3 game/spritesAllegro/alien2.png
+score 5
+deathSound 0
+shootSound 0
