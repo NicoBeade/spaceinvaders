@@ -226,7 +226,6 @@ int main(void){
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
-                
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.

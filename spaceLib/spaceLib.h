@@ -128,8 +128,8 @@ typedef struct{
     char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
     char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
     int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien
-    //char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
-    //char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
+    char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
+    char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
 }objectType_t;
 
 
@@ -196,7 +196,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3);	//Añade un tipo de objeto
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * deathSound, char * shootSound, int score);	//Añade un tipo de objeto
 int delObjType(int id);			
 object_t* removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
