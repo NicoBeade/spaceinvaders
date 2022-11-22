@@ -385,6 +385,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
     
     //Primero imprimimos las primeras 4 letras y el dibujo.
+    printf("Puntero al dibujo en textAnimMenu: %p", ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing);
     argSwipeDrawing_t argSwipeDrawing = { ((argTextAnimMenu_t*)argTextAnimMenu) -> higherDispMenu, ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion, ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing };
 
     pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
