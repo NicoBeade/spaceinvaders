@@ -247,7 +247,7 @@ int main(void){
                 printf("Score en numero: %d\n", userAsset->score);
                 sprintf(stringWithScore,"%d    ",userAsset->score);
                 printf("Score en string: %s\n", stringWithScore);
-                saveScore_t saveScore = { &KEYS, &stringWithScore, 1, 3};
+                saveScore_t saveScore = { &KEYS, stringWithScore, 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
