@@ -283,13 +283,21 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             shootSound = &(decodedFile[paramNo].value)[0];
             shootSound_found++;
         }
+        else if(deathSound == 0 && strcmp(decodedFile[paramNo].parameter, "deathSound") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SOUND_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : deathSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
+                return -1;
+            }
+            deathSound = &(decodedFile[paramNo].value)[0];
+            deathSound_found++;
+        }
     }
     //Si todos los campos se encontraron entonces añade el asset a la lista de object types
-    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 ){   //Si no se encontraron todos los campos devuelve error
+    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || score_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 || shootSound_found != 1 || deathSound_found != 1){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3,NULL,NULL,0); //Añade el tipo de objeto
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3, shootSound,deathSound,score); //Añade el tipo de objeto
     return 0;
 }
 
