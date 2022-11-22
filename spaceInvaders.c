@@ -523,7 +523,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
@@ -550,7 +550,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
