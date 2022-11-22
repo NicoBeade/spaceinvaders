@@ -239,15 +239,14 @@ int main(void){
                 break;
             
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
-                printf("Hola desde save score\n");
+
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
-                printf("Type: %d\n", UsrList->type);
+
                 objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
-                printf("Score en numero: %d\n", userAsset->score);
                 sprintf(stringWithScore,"%d    ",userAsset->score);
-                printf("Score en string: %s\n", stringWithScore);
-                saveScore_t saveScore = { &KEYS, stringWithScore, 1, 3};
+
+                saveScore_t saveScore = { &KEYS, stringWithScore, userAsset->score, 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -808,8 +807,11 @@ static void* saveScoreHandlerThread(void * data){
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
-                
-                //Aca se tiene que guardar el nombre en el leaderboard.
+                leaderboard_t leaderboard;
+                parseScore(leaderboard);//Obtiene el valor actual del leaderboard
+                addScore(leaderboard, menu -> puntajeNumerico, letraActual);//Modifica el leaderboard con el valor a guardar
+                //Si el score no entra en el leaderboard entonces no modifica el leaderboard
+                saveScore(leaderboard);
 
                 GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_INICIO;

@@ -508,7 +508,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
                     objectType_t * alienRipedAsset = getObjType(listAliens->type);
                     objectType_t * userAsset = getObjType((*usrList)->type);
-                    userAsset->score += alienRipedAsset->score; 
+                    //userAsset->score += alienRipedAsset->score; 
+                    userAsset->score += 1000; 
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;
                     printf("\n\nSCORE: %d\n\n", userAsset->score);

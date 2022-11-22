@@ -122,6 +122,7 @@ typedef struct {
 
     keys_t * keys;
     char* puntaje;//String que contiene el puntaje del usuario.
+    int puntajeNumerico;//Contiene el puntaje numerico.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int cantOpciones;//Cantidad de letras del usuario.
 } saveScore_t;
