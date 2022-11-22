@@ -10,15 +10,6 @@
  * 
  ***********************************************************************************************************************************************************
 *   Este archivo contiene las funciones y threads encargadas de todas las acciones relacionadas a las balas y los aliens.
-*   Contiene los siguientes threads:
-*       -moveAlien: se encarga de realizar el movimiento de los aliens. Para ello utiliza las siguientes funciones:
-*           -detectarDireccion.
-*               -tocaBorde.
-*       -moveBala:
-*
-*   Ademas contiene las siguientes funciones:
-*       -initAliens: crea la lista de los aliens. Esta funcion a su vez utiliza:
-*           -addObj: agrega un nuevo alien a la lista.
 *
  **********************************************************************************************************************************************************/
 
@@ -135,6 +126,9 @@ typedef struct{
     char sprite1[MAX_SPRITE_FILE_LENGTH];    //Sprite 1
     char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
     char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
+    int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien.
+    char shootSound[MAX_SOUND_FILE_LENGTH];
+
 }objectType_t;
 
 

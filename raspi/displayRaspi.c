@@ -24,6 +24,7 @@
 #include "displayRaspi.h"
 #include <stdio.h>
 
+
 /*int main (void){
     dcoord_t p = {5,5};
     disp_init();
@@ -670,7 +671,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     uint8_t matrizCopy [8][4];
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
-    for (i = 0; i<8-sentido ; i++){
+    for (i = 0; i<8 ; i++){
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);

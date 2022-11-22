@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
+#include "sprites.h"
 #include "../spaceLib/spaceLib.h"
 #include "../utilidades.h"
 #include "../spaceLib/score/score.h"
