@@ -213,6 +213,7 @@ int selectSaveScore(void){
     velDispAnimation = 1;
     #endif
     GAME_STATUS.pantallaActual = SAVE_SCORE;
+    printf("Save score saliendo\n");
     return 0;
 }
 

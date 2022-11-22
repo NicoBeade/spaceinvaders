@@ -239,7 +239,7 @@ int main(void){
                 break;
             
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
-                
+                printf("Hola desde save score\n");
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 printf("Type: %d\n", UsrList->type);
                 objectType_t * userAsset = getObjType(UsrList->type);
