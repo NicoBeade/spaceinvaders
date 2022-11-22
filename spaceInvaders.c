@@ -790,7 +790,7 @@ static void* saveScoreHandlerThread(void * data){
                 case '/':
                     letraActual[select] = ' ';
                     break;
-                case '_':
+                case '\31':
                     letraActual[select] = 'Z';
                 default:
                     break;
