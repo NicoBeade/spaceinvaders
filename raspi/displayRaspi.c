@@ -121,7 +121,7 @@ void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una letra 
             punto.x=j+coordenada.x;
             punto.y=i+coordenada.y;
             printf("COORDENADA EN Y %d   COORDENADA EN X %d\n", punto.y, punto.x);
-            if (letter [punto.y][punto.x]==1){
+            if (letter [i][j]==1){
                 disp_write(punto,D_ON);
             }
             else{
@@ -665,6 +665,7 @@ void* letterFlashThread(void* data){
 
 void printTerminalMatrix(uint8_t matriz[8][4]){
     int i,j;
+    printf("------------------------\n");
     for(i = 0 ; i < 8 ; i++){
         for(j = 0 ; j < 4 ; j ++){
             printf("%s",matriz[i][j]?"██":"  "); 
@@ -687,6 +688,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     uint8_t matrizCopy [8][4];
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
+    printTerminalMatrix(matriz);
     for (i = 0; i<8 ; i++){
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
