@@ -44,9 +44,9 @@ typedef struct OBJECT{//Cada alien, barrera, bala y la nave del usuario es un st
     int type;//Tipo de objeto y categoria dentro del tipo
     int lives;//Cantidad de vidas del objeto, cada objeto podria tener distinta cantidad de vidas
     char animationStatus;//Estado de la animacion de cada nave, puede ser distinto para cada nave
-    struct OBJECT * next;//Puntero al siguiente objeto de la lista.
+    struct OBJECT * next;//Puntero al siguiente objeto de la lista
 }object_t;
-
+ 
 
 //-----------------------------------------------------------------LEVEL SETTINGS---------------------------------------------------------------------------------
 // Este struct contiene toda la informacion necesaria para crear un nivel.
