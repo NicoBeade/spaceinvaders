@@ -90,9 +90,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     al_init_primitives_addon();
 
     display = al_create_display(X_MAX,Y_MAX); //Se crea el display
-    fuentes[smallF] = al_load_ttf_font("allegro/spaceInv.ttf", 26, 0); //fuente small
+    fuentes[smallF] = al_load_ttf_font("allegro/spaceInv.ttf", 20, 0); //fuente small
 
-    fuentes[mediumF] = al_load_ttf_font("allegro/spaceInv.ttf", 36, 0); //fuente medium
+    fuentes[mediumF] = al_load_ttf_font("allegro/spaceInv.ttf", 30, 0); //fuente medium
 
     fuentes[largeF] = al_load_ttf_font("allegro/spaceInv.ttf", 50, 0); //fuente large
 
@@ -336,7 +336,6 @@ int showSprite(sprite_t * sprite){
 
     //Si no se pudo cargar salta error
     if (!image) {
-        printf("no se cargo el sprite\n");
         return -1;
     }
 

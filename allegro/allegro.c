@@ -33,7 +33,6 @@
 #define COLUMNY 220
 #define RIGHTCOLUMNX X_MAX-300
 
-#define SPRITESDIR "game/spritesAllegro/"
 
 //Timer tick
 extern int timerTick;
@@ -328,8 +327,10 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     //se agrega el selector
     salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
 
-    salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/spriteQP.png", X_MAX - 300, Y_MAX/2 -150);
-
+    salida.spriteList = addSprite(salida.spriteList, ((data->spritesDir)[0]), X_MAX - 400, Y_MAX/2);
+    if(GAME_STATUS.menuActual == MENU_INICIO){
+        salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2, 0);
+    };
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
     return lists;
