@@ -244,9 +244,10 @@ int main(void){
 
                 objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
-                sprintf(stringWithScore,"%d    \0",userAsset->score);
-
-                saveScore_t saveScore = { &KEYS, stringWithScore, 1, 3};
+                printf("Score en numero: %d\n", userAsset->score);
+                sprintf(stringWithScore,"%d    ",userAsset->score);
+                printf("Score en string: %s\n", stringWithScore);
+                saveScore_t saveScore = { &KEYS, &stringWithScore, 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
