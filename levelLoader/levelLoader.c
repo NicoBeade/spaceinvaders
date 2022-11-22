@@ -192,9 +192,12 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     int shootProb;
     int maxBullets;
     int balaID;
+    int score;
     char * sprite1;
     char * sprite2;
     char * sprite3;
+    char * shootSound;
+    char * deathSound;
     //Se crean variables auxiliares que indican si se encontro cada campo
     char id_found = 0;
     char vel_found = 0;
@@ -207,6 +210,8 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     char sprite1_found = 0;
     char sprite2_found = 0;
     char sprite3_found = 0;
+    char shootSound_found = 0;
+    char deathSound_found = 0;
 
     for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
         if(id_found == 0 && strcmp(decodedFile[paramNo].parameter, "id") == 0){     //Si no se encontro ese campo y lo escrito en la fila coincide con el nombre del campo
@@ -238,6 +243,10 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             maxBullets_found++;
         }
         else if(balaID_found == 0 && strcmp(decodedFile[paramNo].parameter, "balaID") == 0){
+            balaID = atoi(decodedFile[paramNo].value);
+            balaID_found++;
+        }
+        else if(score_found == 0 && strcmp(decodedFile[paramNo].parameter, "score") == 0){
             balaID = atoi(decodedFile[paramNo].value);
             balaID_found++;
         }
