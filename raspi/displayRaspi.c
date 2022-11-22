@@ -688,10 +688,10 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
     for (i = 0; i<8 ; i++){
+        printTerminalMatrix(matriz);
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);
-        printTerminalMatrix(matriz);
         usleep(20000);
     }
     return;
