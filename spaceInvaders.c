@@ -565,23 +565,13 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-                
-                #ifdef ALLEGRO
-                toText = emptyText(toText);
-                screenObjects = emptySprite(screenObjects);
-                KEYS.press=0;
-                #endif
 
             }
             
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.
             
-                #ifdef ALLEGRO
-                toText = emptyText(toText);
-                screenObjects = emptySprite(screenObjects);
-                KEYS.press=0;
-                #endif
+                
             }
             
         }
@@ -589,6 +579,12 @@ static void* menuHandlerThread(void * data){
     #ifdef RASPI
     animStatus = 0;
     pthread_join(displayMenuT, NULL);
+    #endif
+
+    #ifdef ALLEGRO
+        toText = emptyText(toText);
+        screenObjects = emptySprite(screenObjects);
+        KEYS.press=0;
     #endif
 
     pthread_exit(0);
@@ -683,7 +679,7 @@ static void* saveScoreHandlerThread(void * data){
                 }
 
                 #ifdef ALLEGRO
-                toText = changeCol(toText, select);
+                    screenObjects = changeCol(screenObjects, select);
                 #endif
                 
                 #ifdef RASPI
@@ -712,7 +708,7 @@ static void* saveScoreHandlerThread(void * data){
                 }
 
                 #ifdef ALLEGRO
-                toText = changeCol(toText, select);
+                    screenObjects = changeCol(screenObjects, select);
                 #endif
 
                 #ifdef RASPI
@@ -812,11 +808,6 @@ static void* saveScoreHandlerThread(void * data){
                 GAME_STATUS.menuActual = MENU_INICIO;
                 menu -> exitStatus = 0;
 
-                #ifdef ALLEGRO
-                toText = emptyText(toText);
-                screenObjects = emptySprite(screenObjects);
-                KEYS.press=0;
-                #endif
             }
             
         }
@@ -826,6 +817,12 @@ static void* saveScoreHandlerThread(void * data){
     titilar = 0;
     pthread_join(titileoT, NULL);
     pthread_join(displayMenuT, NULL);
+    #endif
+
+    #ifdef ALLEGRO
+        toText = emptyText(toText);
+        screenObjects = emptySprite(screenObjects);
+        KEYS.press=0;
     #endif
 
     pthread_exit(0);

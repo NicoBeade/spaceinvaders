@@ -326,7 +326,7 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     //se agrega el selector
     salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
 
-
+    lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
     return lists;
 }
@@ -397,16 +397,18 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
             }else if(j == CANTOP-1){
                 salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 3, LETRAY + SPACELETY*j-15);
             }else if(j == 1){
-                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+10);
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+5);
             }else{
-                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j);  
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+5;  
             }
         }
     }
-    salida.textoList = addText(salida.textoList, ">", largeF, LETRAX - 35 , LETRAY + SPACELETY* 2); //se añade el cursor
+    //salida.textoList = addText(salida.textoList, ">", largeF, LETRAX - 35 , LETRAY + SPACELETY* 2); //se añade el cursor
     salida.textoList = addText(salida.textoList, scoreActual, bigF, SCOREX - (scoreLen/2.0)*58, SCOREY); //se añade el score 
     
+    salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/Selector1.png", LETRAX -15, LETRAY + 123);
     lists->textoList= salida.textoList;
+    lists->spriteList=salida.spriteList;
     return lists;
 }
 
@@ -436,6 +438,7 @@ void changeLetra(char letras[15][2], int letraActual, int dir){
 
 }
 
+/*
 texto_t * changeCol(texto_t * toshow, int nextOp){
 
     texto_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
@@ -446,6 +449,15 @@ texto_t * changeCol(texto_t * toshow, int nextOp){
     }
 
     puntero->posx = LETRAX - 35 + nextOp*SPACELETX; //Se mueve el selector
+    return toshow;
+}*/
+
+sprite_t * changeCol(sprite_t * toshow, int nextOp){
+
+    sprite_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
+    int i;
+
+    puntero->posx = LETRAX - 15 + nextOp*SPACELETX; //Se mueve el selector
     return toshow;
 }
 
@@ -474,6 +486,7 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
         }
     }
 
+    lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
     return lists;
 }

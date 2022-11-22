@@ -162,7 +162,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.barrerasList) );
                 showObjects( *((*data).punteros.mothershipList) );
                 //Objectos varios
-                showSprites( *((*data).punteros.screenObjects) );
+                
 
                 sem_post(&SEM_GAME);
 
@@ -171,7 +171,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
                 //Se escriben los textos en el buffer
                 showTexts(*data->text);
-
+                showSprites( *((*data).punteros.screenObjects) );
                 sem_post(&SEM_MENU);
 
             }
@@ -321,6 +321,10 @@ int showSprite(sprite_t * sprite){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
 
+    if (sprite == NULL){
+        return -1;
+    }
+
     char * dir = sprite->direccion;
 
     if (dir == NULL){
@@ -329,10 +333,10 @@ int showSprite(sprite_t * sprite){
     else{
         image = al_load_bitmap(dir);    //Se carga en el bitmap
     }
-    
 
     //Si no se pudo cargar salta error
     if (!image) {
+        printf("no se cargo el sprite\n");
         return -1;
     }
 

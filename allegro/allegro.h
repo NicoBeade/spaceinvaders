@@ -112,7 +112,8 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
 //changeLetra: Se encarga de realizar la animacion de cambio de letras en el menu de score
 void changeLetra(char letras[15][2], int letraActual, int dir);
 //changeCol: se encarga de cambiar de columna en el menu de score
-texto_t * changeCol(texto_t * toshow, int nextOp);
+//texto_t * changeCol(texto_t * toshow, int nextOp);
+sprite_t * changeCol(sprite_t * toshow, int nextOp);
 
 //allegroScore: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
 TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
