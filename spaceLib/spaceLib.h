@@ -128,8 +128,8 @@ typedef struct{
     char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
     char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
     int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien
-    char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
-    char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
+    //char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
+    //char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
 }objectType_t;
 
 
