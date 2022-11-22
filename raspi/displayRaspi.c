@@ -662,6 +662,20 @@ void* letterFlashThread(void* data){
 }
 
 
+void printTerminalMatrix(uint8_t matriz[8][4]){
+    int i,j;
+    for(i = 0 ; i < 8 ; i++){
+        for(j = 0 ; j < 4 ; j ++){
+            printf("%s",matriz[i][j]?"██":"  "); 
+        }
+        printf("\n");
+    }
+
+
+
+    return;
+}
+
 //BARRIDO LETRA: recibe la primer y segunda letra a barrer, el sentido del barrido y la coordenada a imprimir el barrido
 //Esta funcion hace el barrido vertical de las letras en el display 
 //Asumo el display ya correctamente incializado
@@ -675,6 +689,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);
+        printTerminalMatrix(matriz);
         usleep(20000);
     }
     return;
