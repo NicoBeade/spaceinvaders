@@ -660,7 +660,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         memcpy((objtypes[index]).sprite1, sprite1, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite2, sprite2, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite3, sprite3, MAX_SPRITE_FILE_LENGTH);
-        memcpy((objtypes[index]).shootSound, shootsound, MAX_SOUND_FILE_LENGTH);
+        memcpy((objtypes[index]).shootSound, shootSound, MAX_SOUND_FILE_LENGTH);
         memcpy((objtypes[index]).deathSound, deathSound, MAX_SOUND_FILE_LENGTH);
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
     }
