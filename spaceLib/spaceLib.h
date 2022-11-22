@@ -163,7 +163,7 @@ enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_G
 enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, START_LEVEL_MENU};//Determinan un valor para cada menu
 
 //*************ESTADO DE PARTIDA
-enum GAME_VALUE { WON_LEVEL, LOST_LEVEL, FASTER_ALIENS };//Se utilizan para determinar cuando se gana o pierde una partida.
+enum GAME_VALUE { WON_LEVEL = 1, LOST_LEVEL, FASTER_ALIENS };//Se utilizan para determinar cuando se gana o pierde una partida.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

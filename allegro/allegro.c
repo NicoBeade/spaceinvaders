@@ -27,6 +27,12 @@
 #define LETRAX X_MAX/2 - TAMLETRAX*(0.5) - SPACELETX
 #define LETRAY 200
 
+#define FIRSTX X_MAX/2
+#define FIRSTY 70
+#define LEFTCOLUMNX 100
+#define COLUMNY 220
+#define RIGHTCOLUMNX X_MAX-300
+
 //Timer tick
 extern int timerTick;
 extern gameStatus_t GAME_STATUS;
@@ -387,9 +393,9 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
             if(j == (CANTOP/2)){
                 salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], largeF, LETRAX + SPACELETX*i - 5, LETRAY + SPACELETY*j);
             }else if(j == 0){
-                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 5, LETRAY + SPACELETY*j+40);
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 3, LETRAY + SPACELETY*j+40);
             }else if(j == CANTOP-1){
-                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 5, LETRAY + SPACELETY*j-15);
+                salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], smallF, LETRAX + SPACELETX*i + 3, LETRAY + SPACELETY*j-15);
             }else if(j == 1){
                 salida.textoList = addText(salida.textoList, letras[i*CANTOP+j], mediumF, LETRAX + SPACELETX*i, LETRAY + SPACELETY*j+10);
             }else{
@@ -449,12 +455,24 @@ texto_t * changeCol(texto_t * toshow, int nextOp){
  * 
  * ********************************************************************************************************************************************************/
 
-TextObj_t * allegroLiderboard(TextObj_t * lists){
+TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
     
     int i;
     TextObj_t salida = {NULL,NULL};
+    float firstLen = strlen(data->textOpciones[0]);
 
+    float secondLen = strlen(data->textOpciones[1]);
 
+    salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX -(firstLen/2.0)*40 , FIRSTY);
+    salida.textoList=addText(salida.textoList, data->textOpciones[1], largeF, FIRSTX -(secondLen/2.0)*25 , FIRSTY + 120);
+
+    for(i=2; i < data->cantOpciones; i++){
+        if(i%2 == 0){
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, LEFTCOLUMNX , COLUMNY + 60*i/2);
+        }else{
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, RIGHTCOLUMNX , COLUMNY + 60* (i-1)/2);
+        }
+    }
 
     lists->textoList= salida.textoList;
     return lists;

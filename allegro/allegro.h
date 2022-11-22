@@ -114,6 +114,9 @@ void changeLetra(char letras[15][2], int letraActual, int dir);
 //changeCol: se encarga de cambiar de columna en el menu de score
 texto_t * changeCol(texto_t * toshow, int nextOp);
 
+//allegroScore: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
+TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
+
 //limpia una lista de textos_t
 texto_t * emptyText(texto_t * firstText); 
 //añade un texto_t a una lista

@@ -480,9 +480,15 @@ static void* menuHandlerThread(void * data){
 
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
-        allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
-        toText = allegroList->textoList;
-        screenObjects = allegroList->spriteList;
+        if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+            allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
+            toText = allegroList->textoList;
+            screenObjects = allegroList->spriteList;
+        }else{
+            allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
+            toText = allegroList->textoList;
+            screenObjects = allegroList->spriteList;
+        }
     #endif
     //***************************************************************************************************************************
 
@@ -511,13 +517,16 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                (menu -> changeOption)(&argChangeOption);
                 #endif
 
                 #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+                    changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                    (menu -> changeOption)(&argChangeOption);
+                }
                 #endif
 
-                (menu -> changeOption)(&argChangeOption);
                 
             }
 
@@ -535,13 +544,15 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                (menu -> changeOption)(&argChangeOption);
                 #endif
 
                 #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+                    changeOptionData_t argChangeOption = { &toText, preSelect, select, menu};
+                    (menu -> changeOption)(&argChangeOption);
+                }
                 #endif
-
-                (menu -> changeOption)(&argChangeOption);
                 
             }
 
