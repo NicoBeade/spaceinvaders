@@ -669,8 +669,9 @@ void printTerminalMatrix(uint8_t matriz[8][4]){
             printf("%s",matriz[i][j]?"██":"  "); 
         }
         printf("\n");
-    }
 
+    }
+    printf("------------------------\n");
 
 
     return;
