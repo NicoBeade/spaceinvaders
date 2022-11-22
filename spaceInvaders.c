@@ -235,13 +235,12 @@ int main(void){
                 pthread_join(menuHandlerT, NULL);
 
                 sem_post(&SEM_GAME);
- 
 
- 
                 break;
             
             case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
                 printf("Hola desde save score\n");
+                sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 printf("Type: %d\n", UsrList->type);
                 objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
@@ -254,7 +253,7 @@ int main(void){
                 
                 pthread_join(saveScoreT, NULL);
 
-                printf("Sexo\n");
+                sem_post(&SEM_GAME);
 
                 break;
             
@@ -357,9 +356,10 @@ int main(void){
                 if(alienList != NULL){
                     alienList = removeList(alienList); 
                 }
+                /*
                 if(UsrList != NULL){
                     UsrList = removeList(UsrList);
-                }
+                }*/
                 if(barrerasList != NULL){
                     barrerasList = removeList(barrerasList);
                 }
