@@ -275,6 +275,14 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             sprite3 = &(decodedFile[paramNo].value)[0];
             sprite3_found++;
         }
+        else if(shootSound == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SOUND_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : shootSound file directory overpassed the max of %d characters\n", MAX_SOUND_FILE_LENGTH);
+                return -1;
+            }
+            shootSound = &(decodedFile[paramNo].value)[0];
+            shootSound_found++;
+        }
     }
     //Si todos los campos se encontraron entonces añade el asset a la lista de object types
     if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 ){   //Si no se encontraron todos los campos devuelve error

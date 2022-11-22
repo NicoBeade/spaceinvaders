@@ -14,6 +14,7 @@
 
 #include "spaceLib/spaceLib.h"
 #include "spaceLib/score/score.h"
+#include "raspi/sprites.h"
 #include <stdio.h>
 #include <semaphore.h>
 #include <string.h>
