@@ -244,7 +244,7 @@ int main(void){
 
                 objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
-                sprintf(stringWithScore,"%d    ",userAsset->score);
+                sprintf(stringWithScore,"%d    \0",userAsset->score);
 
                 saveScore_t saveScore = { &KEYS, stringWithScore, 1, 3};
 
