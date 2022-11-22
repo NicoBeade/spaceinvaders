@@ -23,6 +23,7 @@
 #define DERECHA 1
 #define ABAJO 2
 #define MAX_SPRITE_FILE_LENGTH 100
+#define MAX_SOUND_FILE_LENGTH 100
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
@@ -128,7 +129,6 @@ typedef struct{
     char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
     int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien.
     char shootSound[MAX_SOUND_FILE_LENGTH];
-
 }objectType_t;
 
 
