@@ -502,6 +502,7 @@ void* swipeDrawing(void* data){
         }
 
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
+            printf("puntero random: %p\n", argSwipeDrawing -> drawing);
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
             printf("Aca se buguea\n");
         }
