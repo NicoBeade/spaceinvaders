@@ -120,7 +120,7 @@ void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una letra 
         for (j=0; j<4; j++){
             punto.x=j+coordenada.x;
             punto.y=i+coordenada.y;
-            printf("COORDENADA EN Y %d\n", coordenada.y);
+            printf("COORDENADA EN Y %d   COORDENADA EN X %d\n", punto.y, punto.x);
             if (letter [punto.y][punto.x]==1){
                 disp_write(punto,D_ON);
             }
@@ -688,10 +688,10 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
     for (i = 0; i<8 ; i++){
-        printLetter(matriz, coordenada);
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printTerminalMatrix(matriz);
+        printLetter(matriz, coordenada);
         usleep(20000);
     }
     return;
