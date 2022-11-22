@@ -9,3 +9,6 @@ balaID 0
 sprite1 9
 sprite2 10
 sprite3 11
+score 5
+deathSound NULL
+shootSound NULL

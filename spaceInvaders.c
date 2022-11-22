@@ -230,8 +230,6 @@ int main(void){
                 
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
-                printf("Keys en main: %p", &KEYS);
-
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
                 pthread_join(menuHandlerT, NULL);
@@ -427,8 +425,6 @@ static void* menuHandlerThread(void * data){
 /*Este thread es el encargado de manejar los menues.
 */
 	menu_t * menu = (menu_t *) data;
-
-    printf("Keys en menu: %p", menu->keys);
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
