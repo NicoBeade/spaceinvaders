@@ -744,13 +744,13 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
-                case '[':
+                case 'Z' + 1:
                     letraActual[select] = ' ';
                     break;
-                case '!':
+                case ' ' + 1:
                     letraActual[select] = '0';
                     break;
-                case ':':
+                case '9' + 1:
                     letraActual[select] = 'A';
                 default:
                     break;
@@ -784,13 +784,13 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
-                case '@':
+                case 'A' - 1:
                     letraActual[select] = '9';
                     break;
-                case '/':
+                case '0' - 1:
                     letraActual[select] = ' ';
                     break;
-                case '\31':
+                case ' ' - 1: 
                     letraActual[select] = 'Z';
                 default:
                     break;
