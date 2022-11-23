@@ -426,6 +426,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
+    static int score = 0; //Esta variable almacena el score del usuario para poder modificarlo solo cuando se gana el nivel.
+
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
@@ -497,8 +499,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     collition = 1;
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
-        printf("Bala x: %d\n", listBalasUsr->pos.x);
-        printf("Bala y: %d\n", listBalasUsr->pos.y);
+
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             
             if(collision(listBalasUsr->pos, listBalasUsr->type, listAliens->pos, listAliens->type)){//Si golpeo a un alien
@@ -506,14 +507,16 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 collition = 0;
                 listAliens->lives -= 1;
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
+
                     objectType_t * alienRipedAsset = getObjType(listAliens->type);
-                    objectType_t * userAsset = getObjType((*usrList)->type);
-                    //userAsset->score += alienRipedAsset->score; 
-                    userAsset->score += 1000; 
+                    score += alienRipedAsset->score; 
+                    
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;
-                    printf("\n\nSCORE: %d\n\n", userAsset->score);
+                    printf("\n\nSCORE: %d\n\n", score);
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
+                        objectType_t * userAsset = getObjType((*usrList)->type);//Carga el score en el campo del usuario.
+                        userAsset->score = score;
                         return WON_LEVEL;
                     }
                 }
