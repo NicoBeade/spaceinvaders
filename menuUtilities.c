@@ -59,20 +59,20 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
                       {"game/spritesAllegro/spriteQP.png", "game/spritesAllegro/spriteLVL.png", "game/spritesAllegro/spriteLB.png", "game/spritesAllegro/spriteSS.png", "game/spritesAllegro/spriteV.png", "game/spritesAllegro/spriteQG.png"},
                       6 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame, backMenuAnterior},
-                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Dificulty ", "Volume ", "Quit Game "},
+menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior},
+                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Volume ", "Quit Game "},
                       {NULL}, 
-                      7, 1, changeOption };//Estructura del menu de pausa.
-
-menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
-                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},
-                      {NULL},  
                       6, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior},
-                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Dificulty ", "Quit Game "},
+menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior},
+                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
+                      {NULL},  
+                      5, 1, changeOption };//Estructura del menu de pausa.
+
+menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior},
+                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
                       {NULL}, 
-                      7, 1, changeOption };//Estructura del menu de pausa.
+                      6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, backMenuAnterior},
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},

@@ -133,7 +133,8 @@ int velBalas = 10;
 int velCollider = 10;
 #endif
 int velDispAnimation = 2;
-int velInputGame = 5;
+int velInputGameShoot = 2;
+int velInputGameMoove = 5;
 int velAliens = 100;
 int velMothership = 70;
 /*******************************************************************************************************************************************
@@ -532,8 +533,6 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
-
-                
             }
 
             if (ANTERIOR){//Si se presiona para ir a la opcion anterior
@@ -840,6 +839,8 @@ static void* saveScoreHandlerThread(void * data){
 
 static void* levelHandlerThread(void * data){
 
+    unsigned char stopShoot = 1;
+
 	game_t * menu = (game_t *) data;
     while(menu -> exitStatus){
 
@@ -851,27 +852,30 @@ static void* levelHandlerThread(void * data){
                 KEYS.press = 0;
                 #endif
         }
+        usleep(10 * U_SEC2M_SEC);
+        if( ((timerTick % velInputGameShoot) == 0) && menu -> exitStatus ){
+            
+            if(stopShoot){
+                stopShoot -= 1;
+            }
+            if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
+                
+                *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
+                #ifdef ALLEGRO
+                toAudio = addAudio(toAudio, aShoot);
+                #endif
+                
+                stopShoot = 20;
+            }
+        }
+        if( ((timerTick % velInputGameMoove) == 0) && menu -> exitStatus ){
+            if (DERECHA_INPUT){//Mueve al usuario
+                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
+            }
 
-        else{
-            usleep(10 * U_SEC2M_SEC);
-            if( ((timerTick % velInputGame) == 0) && menu -> exitStatus ){
+            if (IZQUIERDA_INPUT){
 
-                if (ARRIBA_INPUT && !(timerTick % VEL_SHOOT_USR)){//Dispara una bala
-                    sem_wait(&SEM_GAME);
-                    *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
-                    #ifdef ALLEGRO
-                    toAudio = addAudio(toAudio, aShoot);
-                    #endif
-                    sem_post(&SEM_GAME);
-                }
-                if (DERECHA_INPUT){//Mueve al usuario
-                    moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, DERECHA);
-                }
-
-                if (IZQUIERDA_INPUT){
-
-                    moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
-                }
+                moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
             }
         }
     }

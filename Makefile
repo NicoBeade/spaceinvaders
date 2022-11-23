@@ -54,4 +54,4 @@ score.o: spaceLib/score/score.c spaceLib/score/score.h
 	gcc -c -g spaceLib/score/score.c -Wall -o score.o
 
 menuUtilities.o: menuUtilities.h menuUtilities.c
-	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D ALLEGRO
+	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D RASPI
