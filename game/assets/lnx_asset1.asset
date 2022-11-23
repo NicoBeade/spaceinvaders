@@ -1,7 +1,7 @@
 id 1
 vel 10    
-ancho 60
-alto 40
+ancho 54
+alto 39
 initLives 5
 shootProb 3
 maxBullets 7

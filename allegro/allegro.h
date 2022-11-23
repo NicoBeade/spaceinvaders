@@ -8,7 +8,7 @@
  *                          Structs
  * 
 *******************************************************************/
-enum audios {aUsrDeath, aShoot, audioMax};
+enum audios {aUsrDeath, aShoot, aBGMusic, audioMax};
 
 typedef int (*option_t)(void);
 

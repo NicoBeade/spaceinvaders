@@ -154,7 +154,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
 
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                sem_wait(&SEM_GAME);
+                //sem_wait(&SEM_GAME);
  
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
@@ -166,7 +166,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 //Objectos varios
                 
 
-                sem_post(&SEM_GAME);
+                //sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);

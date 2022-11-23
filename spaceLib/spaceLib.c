@@ -372,7 +372,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
         int vidaBala = balaType -> initLives;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            posicionBala.x = nave->pos.x + (naveType -> ancho)/2;
+            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 -1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             
@@ -431,7 +431,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
-        printf("Err in spaceLib.c alienList cannot be NULL in collider.\n");
+        printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
