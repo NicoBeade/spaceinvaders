@@ -372,7 +372,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
         int vidaBala = balaType -> initLives;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 -1;
+            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             
@@ -421,7 +421,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, int nivelActual){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
@@ -509,7 +509,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
 
                     objectType_t * alienRipedAsset = getObjType(listAliens->type);
-                    score += alienRipedAsset->score; 
+                    score += (alienRipedAsset->score) * nivelActual; 
                     
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;

@@ -71,6 +71,7 @@ typedef struct{
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
     int * score;//Almacena el score del usuario.
+    int nivelActual;//Indica el nivel que se esta jugando
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -316,7 +317,7 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
-                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score };
+                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, GAME_STATUS.nivelActual };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
@@ -1019,7 +1020,7 @@ void * colliderThread(void * argCollider){
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
 
-            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
+            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual);
 
             switch (gameData){//Detecta si se debe terminar el nivel o no.
             case LOST_LEVEL:
