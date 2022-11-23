@@ -113,7 +113,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     samples[aUsrDeath] = al_load_sample("game/audio/explosion.wav");
     samples[aShoot] = al_load_sample("game/audio/shoot.wav");
+    samples[aBGMusic] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
     
+    al_play_sample(samples[aBGMusic], 0.8, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
 
     //-------------------------------------------------
 
@@ -281,7 +283,7 @@ int showObjects(object_t * inicial){
     return 0;
 }
 
-/*****************TEXTOS**********************/
+/*******************TEXTOS***********************/
 void showText(texto_t * data){
 
     //Comando para escribir un texto en el buffer
@@ -316,7 +318,7 @@ int showTexts(texto_t * inicial){
 
 }
 
-/*****************TEXTOS**********************/
+/******************SPRITES***********************/
 int showSprite(sprite_t * sprite){
   
     ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
