@@ -117,7 +117,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     //-------------------------------------------------
 
-    background = al_load_bitmap("allegro/fondo2.png");
+    background = al_load_bitmap("game/spritesAllegro/fondo.png");
     if(!background){
          printf("fallo background\n");
     }
