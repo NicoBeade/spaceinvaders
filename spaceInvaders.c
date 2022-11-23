@@ -110,7 +110,6 @@ sem_t SEM_DRIVER;
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
 
 #ifdef ALLEGRO
-audio_t * toAudio = NULL;
 texto_t * toText = NULL;
 sprite_t * screenObjects = NULL;
 TextObj_t listasAllegro = {NULL, NULL};
@@ -207,7 +206,7 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
-    data_allegro_t dataIn = {punteros, &toText, &toAudio, &KEYS};
+    data_allegro_t dataIn = {punteros, &toText, &KEYS};
     data_allegro_t * dataInput = &dataIn;
     #endif
 
@@ -863,9 +862,6 @@ static void* levelHandlerThread(void * data){
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
                 *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
-                #ifdef ALLEGRO
-                toAudio = addAudio(toAudio, aShoot);
-                #endif
                 
                 stopShoot = 20;
             }

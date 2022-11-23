@@ -102,7 +102,7 @@ void * allegroThread (void * dataIn){
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
-    output_data_t dataD = {&event_queue, data->punteros, data->textToShow, data->audioToPlay ,&close_display, &displayFlag};
+    output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
 
     /*************************************************************************************************************
@@ -134,34 +134,6 @@ void * allegroThread (void * dataIn){
 }
 
 /*******************************************************/
-
-audio_t* addAudio(audio_t * firstObj, int audioId){
-// Esta funcion se encarga de agregar un nuevo audio a la lista
-	audio_t * newAudio = malloc(sizeof(audio_t));//Agrega el nuevo audio
-
-	if(newAudio == NULL){//Si no se puede hacer el malloc indica error.
-		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
-		return NULL; //error
-	}
-
-    if(firstObj != NULL){//Si no es el primero de la lista debe avanzar hasta el ultimo elemento.
-        audio_t * lastObj = firstObj;//Se almacena el puntero al primer elemento.
-		while(lastObj -> next != NULL){
-			lastObj = lastObj -> next;
-		}
-        lastObj -> next = newAudio;
-	}
-
-    else{//Si es el primero de la lista debemos devolver ese puntero.
-        firstObj = newAudio;
-    }
-
-	newAudio -> audioId = audioId ;
-
-    newAudio -> next = NULL;
-
-	return firstObj;//Devuelve un puntero al primer elemento.
-}
 
 texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy){
 // Esta funcion se encarga de agregar un nuevo texto a la lista

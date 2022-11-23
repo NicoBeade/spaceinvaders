@@ -31,12 +31,6 @@ typedef struct SPRITE
     struct SPRITE * next;
 }sprite_t;
 
-typedef struct AUDIO
-{
-    int audioId;
-
-    struct AUDIO * next;
-}audio_t;
 
 typedef struct
 {
@@ -87,7 +81,6 @@ typedef struct {
 
     punteros_t punteros;
     texto_t ** textToShow;
-    audio_t ** audioToPlay;
     keys_t * keys;
 
 }data_allegro_t;
@@ -128,10 +121,7 @@ texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int pos
 sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy);
 
 sprite_t * emptySprite(sprite_t * firstSprite);
-//añade un audio a una lista
-audio_t* addAudio(audio_t * firstObj, int audioId); 
 
-
-
+void aadAudio(int id);
 
 #endif
