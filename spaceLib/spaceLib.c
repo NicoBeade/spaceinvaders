@@ -41,8 +41,8 @@ game_t menuGame;
  * 
  ******************************************************************************************************************************************/
 
-static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens, int vx);    //Detecta en que direccion se debe mover a los aliens.
-static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens, int vx);  //Detecta si algun alien esta tocando un borde
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens);    //Detecta en que direccion se debe mover a los aliens.
+static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 static unsigned int countList(object_t * lista);
@@ -198,9 +198,9 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
     }
     object_t * auxiliar;
-    int vx = levelSettings -> desplazamientoX; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
+    int vx = 0; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
     int vy = 0;
-    *direccion = detectarDireccion(*direccion, levelSettings, *alienList, vx);  //Modifica la variable de direccion en funcion al estado actual de la direccion
+    *direccion = detectarDireccion(*direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
 
     switch (*direccion){//Primero detecta en que sentido debemos mover las naves.
         case IZQUIERDA:
@@ -238,7 +238,7 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 
 //*************************************************************************************************************************************
 
-static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens, int vx){
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
     esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
@@ -248,7 +248,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     switch(direccion){
         
         case DERECHA: //Si se viene moviendo para la derecha
-            if (tocaBorde(levelSettings, listAliens, vx) == DERECHA){ //y toca el borde derecho
+            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -257,7 +257,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case IZQUIERDA: //Si se viene moviendo para la izquierda
-            if (tocaBorde(levelSettings, listAliens, vx) == IZQUIERDA){ //y toca el borde izquierdo
+            if (tocaBorde(levelSettings, listAliens) == IZQUIERDA){ //y toca el borde izquierdo
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -266,9 +266,9 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(levelSettings, listAliens, vx) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
+            if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
             }
-            if (tocaBorde(levelSettings, listAliens, vx) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
+            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
                 return IZQUIERDA;
             }
             else {
@@ -283,7 +283,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     return 0;
 }
 
-static int tocaBorde(level_setting_t * levelSettings, object_t * alien, int vx){
+static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
 /* Esta funcion detecta si alguna de las naves toco algun borde, teniendo en cuenta todas las posibles combinaciones.
     Devuelve que borde fue tocado.
 */
@@ -294,10 +294,10 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien, int vx){
     int borde = 0;
     while ((alien != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         objectType_t * tipoAlien = getObjType(alien->type);
-        if (alien->pos.x + vx <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
+        if (alien->pos.x - levelSettings -> desplazamientoX <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x + vx > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
+        else if (alien->pos.x + levelSettings -> desplazamientoX >= levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo

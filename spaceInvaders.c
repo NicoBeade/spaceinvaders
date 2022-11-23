@@ -131,15 +131,15 @@ int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del d
 #endif
 #ifdef ALLEGRO
 const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
-const int velBalas = 5;         //Velocidad a la que se mueven las balas
+const int velBalas = 10;         //Velocidad a la que se mueven las balas
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInput = 1;
 
-int velAliens;
-int velMothership;
+int velAliens = 100;
+int velMothership = 70;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -308,6 +308,9 @@ int main(void){
                     return -1;
                 }
                 */
+
+                //velAliens = 
+                //velMothership = 
 
                 GAME_STATUS.inGame = 1;
 
@@ -897,7 +900,7 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 
-    static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
+    int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
 
     char fasterAliens = 0;
     while(GAME_STATUS.inGame){
@@ -909,7 +912,7 @@ void * moveAlienThread(void* argMoveAlien){
             fasterAliens = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             if(fasterAliens == FASTER_ALIENS){//Si los aliens llegan al borde,
-                velAliens -= 2; //Incrementa la velocidad de los aliens.
+                velAliens -= 5; //Incrementa la velocidad de los aliens.
             }
             sem_post(&SEM_GAME);
 
