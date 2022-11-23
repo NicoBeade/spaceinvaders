@@ -317,7 +317,7 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
-                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr };
+                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
