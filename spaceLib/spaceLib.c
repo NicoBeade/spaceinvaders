@@ -440,11 +440,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         return 0;
     }
     object_t * listBarreras = *barrerasList;
-
     object_t * listBalasEnemigas = *balasEnemigas;
-
     object_t * listBalasUsr = *balasUsr;
-
     object_t * balaADestruir;
 
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
