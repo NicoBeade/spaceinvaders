@@ -80,6 +80,12 @@ extern halfDisp_t halfDispVolume;
 extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
 extern halfDisp_t halfDispAAA;
+extern halfDisp_t halfDispSelectLevels;
+extern halfDisp_t halfDispSaveScore;
+extern halfDisp_t halfDispQuitGame;
+extern halfDisp_t halfDispHome;
+extern halfDisp_t halfDispLostGame;
+extern halfDisp_t halfDispNextLevel;
 
 extern caracteres_t alienChar1;
 extern caracteres_t alienChar2;

@@ -44,7 +44,6 @@ int selectQuitGame(void);
 int selectResume(void);
 int selectRestartLevel(void);
 int selectMainMenu(void);
-int selectDificulty(void);
 int selectLeaderboard(void);
 int selectSaveScore(void);
 int backMenuAnterior(void);

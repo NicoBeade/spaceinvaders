@@ -23,33 +23,33 @@
 #ifdef RASPI
 menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame, backMenuAnterior},
                       {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispTrophy, &halfDispTrophy, &halfDispVolume, &halfDispRestart}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispSaveScore, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectDificulty, selectVolume, selectQuitGame, backMenuAnterior},
-                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Dificulty    ", "Volume    ", "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispResume, &halfDispVolume, &halfDispRestart, &halfDispRestart, &halfDispRestart, &halfDispRestart}, 
-                      7 , 1 , changeOption };//Estructura del menu de pausa.
-
-menu_t menuLostLevel = { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior, backMenuAnterior}, 
-                      {"Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
-                      {&halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume},
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior},
+                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volume    ", "Quit Game    "}, 
+                      {&halfDispResume, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectDificulty, selectQuitGame, backMenuAnterior}, 
-                      {"Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Dificulty    ", "Quit Game    "}, 
-                      {&halfDispRestart, &halfDispRestart, &halfDispAlienSpaceInvaders, &halfDispVolume, &halfDispVolume, &halfDispRestart, &halfDispVolume}, 
-                      7 , 1 , changeOption };//Estructura del menu de pausa.
+menu_t menuLostLevel = { &KEYS , {selectNothing, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior, backMenuAnterior}, 
+                      {"Lost Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
+                      {&halfDispLostGame, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
+                      6 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
+
+menu_t menuWonLevel = { &KEYS , {selectNothing, selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior}, 
+                      {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
+                      {halfDispAlienSpaceInvader, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
+                      7 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, 
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
                       {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
-                      10 , 1 , changeOption };//Estructura del menu de pausa.
+                      10 , 1 , changeOption };//Estructura del menu del leaderboard.
 
 menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
                       {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
-                      10 , 1 , changeOption };//Estructura del menu de pausa.
+                      10 , 1 , changeOption };//Estructura del menu de seleccionar nivel.
 #endif
 
 
@@ -188,11 +188,6 @@ int selectMainMenu(void){
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = MENU_INICIO;
     GAME_STATUS.menuAnterior = -1;
-    return 0;
-}
-
-int selectDificulty(void){
-    GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
     return 0;
 }
 
