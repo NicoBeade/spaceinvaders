@@ -35,7 +35,7 @@ void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
 
     ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
 
-    bool key_pressed[6] = {false, false, false, false, false, false};
+    bool key_pressed[5] = {false, false, false, false, false};
 
     al_install_keyboard();
 
