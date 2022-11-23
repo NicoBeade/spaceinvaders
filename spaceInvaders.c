@@ -121,23 +121,25 @@ menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &men
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 unsigned int timerTick = 1000000;
-int velInput = 1;
 
+//------------------------    Variables de velocidad de ejecucion de threads     ------------------------
 #ifdef RASPI
-int velMenu = 20;
-int velBalas = 10;
-int velCollider = 1;
+const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
+const int velBalas = 10;        //Velocidad a la que se mueven las balas
+const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
+int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 #ifdef ALLEGRO
-int velMenu = 10;
-int velBalas = 10;
-int velCollider = 10;
+const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
+const int velBalas = 5;         //Velocidad a la que se mueven las balas
+const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
-int velDispAnimation = 2;
-int velInputGameShoot = 2;
-int velInputGameMoove = 5;
-int velAliens = 100;
-int velMothership = 70;
+const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
+const int velInput = 1;
+
+int velAliens;
+int velMothership;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -510,7 +512,6 @@ static void* menuHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            //printf("Joy: %d \n", (menu->keys)->x);
             
             if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
@@ -572,13 +573,10 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-
             }
             
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
-                menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.
-            
-                
+                menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             
         }
@@ -972,7 +970,7 @@ void * moveBalaThread(void * argMoveBala){
 
             if(*(data -> balasEnemigas) != NULL){
 
-                (*(data -> balasEnemigas))  = moveBala(data -> balasEnemigas, data -> levelSettings);
+                (*(data -> balasEnemigas)) = moveBala(data -> balasEnemigas, data -> levelSettings);
             }
 
             if(*(data -> alienList) != NULL){
@@ -1023,23 +1021,23 @@ void * colliderThread(void * argCollider){
             gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual);
 
             switch (gameData){//Detecta si se debe terminar el nivel o no.
-            case LOST_LEVEL:
-                GAME_STATUS.pantallaActual = MENU;
-                GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                menuGame.exitStatus = 0;
-                break;
-            
-            case WON_LEVEL:
-                GAME_STATUS.pantallaActual = MENU;
-                GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                menuGame.exitStatus = 0;
+                case LOST_LEVEL:
+                    GAME_STATUS.pantallaActual = MENU;
+                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                    menuGame.exitStatus = 0;
+                    break;
+                
+                case WON_LEVEL:
+                    GAME_STATUS.pantallaActual = MENU;
+                    GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                    menuGame.exitStatus = 0;
 
-                objectType_t * userAsset = getObjType((*(data->usrList))->type);//Obtiene el puntaje del usuario.
-                *(data->score) = userAsset->score;//Lo almacena en una variable para poder guardarlo si se desea.
-                break;
+                    objectType_t * userAsset = getObjType((*(data->usrList))->type);//Obtiene el puntaje del usuario.
+                    *(data->score) = userAsset->score;//Lo almacena en una variable para poder guardarlo si se desea.
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
             }
 
             sem_post(&SEM_GAME);
