@@ -3,11 +3,11 @@
 #include "../spaceLib/spaceLib.h"
 #define MAX_PARAM_LETTERS 30        //Maximo tamaño de char que ocupa un parametro
 #define MAX_VALUE_LETTERS 50        //Maximo tamaño de char que ocupa un valor
-#define MAX_FILE_ROWS 100           //Maxima cantidad de filas de un archivo
+#define MAX_FILE_ROWS 300           //Maxima cantidad de filas de un archivo
 
 #define MAX_FILE_ROW_LENGHT 100     //Maximo tamaño de fila para un archivo
 
-#define MAX_FILE_NAME 100        //Maximo tamaño de archivo
+#define MAX_FILE_NAME 150        //Maximo tamaño de archivo
 
 #define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
 

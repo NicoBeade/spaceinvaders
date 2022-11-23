@@ -70,6 +70,7 @@ typedef struct{
     object_t ** barriersList;
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
+    int * score;//Almacena el score del usuario.
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -106,7 +107,7 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 sem_t SEM_DRIVER;
 
-game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
+game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, 0}; //Estructura del level handler.
 
 #ifdef ALLEGRO
 audio_t * toAudio = NULL;
@@ -175,9 +176,11 @@ void * timer(){
  ******************************************************************************************************************************************/
 
 int main(void){
+
     srand(time(NULL));
     directory_t carpetaNiveles = {};
-    #ifdef RASPI
+
+    #ifdef RASPI//Inicializa los drives para la raspi
     disp_init();
     joy_init();
     pthread_t displayT;
@@ -185,7 +188,7 @@ int main(void){
 
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT;
     
-    sem_init(&SEM_GAME, 0, 1);
+    sem_init(&SEM_GAME, 0, 1);//Inicializa los semaforos
     sem_init(&SEM_MENU, 0, 1);
     sem_init(&SEM_DRIVER, 0, 1);
 
@@ -198,7 +201,9 @@ int main(void){
     object_t * balasAlien = NULL; //Se crea la lista de las balas de los aliens
     object_t * mothershipList = NULL; //Se crea la lista de la nave nodriza.
 
-    level_setting_t levelSettings;
+    level_setting_t levelSettings;//Esta variable almacena la informacion de cada nivel
+
+    int score = 0;  //Esta variable almacena el puntaje del usuario.
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
@@ -210,17 +215,20 @@ int main(void){
     keys_t * dataInput = &KEYS;
     #endif
 
-    pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);
+    pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
 
 
     #ifdef RASPI
     char platform[4] = "rpi";
     #endif
+
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
+
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
+
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -243,11 +251,10 @@ int main(void){
 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
-                objectType_t * userAsset = getObjType(UsrList->type);
                 char stringWithScore[20];
-                sprintf(stringWithScore,"%d    ",userAsset->score);
+                sprintf(stringWithScore,"%d    ",score);
 
-                saveScore_t saveScore = { &KEYS, stringWithScore, userAsset->score, 1, 3};
+                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -321,10 +328,6 @@ int main(void){
                 pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
                 #endif
 
-                #ifdef ALLEGRO
-                
-                #endif
-
                 menuGame.naveUsr = &UsrList;
                 menuGame.levelSettings = &levelSettings;
                 menuGame.balasUsr = &balasUsr;
@@ -356,10 +359,9 @@ int main(void){
                 if(alienList != NULL){
                     alienList = removeList(alienList); 
                 }
-                /*
                 if(UsrList != NULL){
                     UsrList = removeList(UsrList);
-                }*/
+                }
                 if(barrerasList != NULL){
                     barrerasList = removeList(barrerasList);
                 }
@@ -839,7 +841,7 @@ static void* saveScoreHandlerThread(void * data){
 
 static void* levelHandlerThread(void * data){
 
-    unsigned char stopShoot = 1;
+    unsigned char stopShoot = 1;//Esta variable se utiliza para evitar que el usuario pueda disparar mas de una bala a la vez
 
 	game_t * menu = (game_t *) data;
     while(menu -> exitStatus){
@@ -1034,6 +1036,9 @@ void * colliderThread(void * argCollider){
                 GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_WON_LEVEL;
                 menuGame.exitStatus = 0;
+
+                objectType_t * userAsset = getObjType((*(data->usrList))->type);//Obtiene el puntaje del usuario.
+                *(data->score) = userAsset->score;//Lo almacena en una variable para poder guardarlo si se desea.
                 break;
 
             default:
