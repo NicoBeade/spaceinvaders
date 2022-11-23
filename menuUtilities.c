@@ -38,7 +38,7 @@ menu_t menuLostLevel = { &KEYS , {selectNothing, selectRestartLevel, selectMainM
 
 menu_t menuWonLevel = { &KEYS , {selectNothing, selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior}, 
                       {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
-                      {halfDispAlienSpaceInvader, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
+                      {&halfDispAlienSpaceInvader, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       7 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, 
