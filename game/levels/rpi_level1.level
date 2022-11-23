@@ -1,12 +1,18 @@
 ALIEN
-    type  13
-    posX  5
+    type  1
+    posX  2
     posY  1
 END
 
 ALIEN
     type  1
-    posX  1
+    posX  6
+    posY  1
+END
+
+ALIEN
+    type  1
+    posX  11
     posY  1
 END
 
@@ -14,7 +20,7 @@ END
 ;Nave del usuario
 USUARIO
     type 40
-    posX 5
+    posX 6
     posY 14
 END
 
@@ -67,21 +73,21 @@ END
 ; Barrera 3
     BARRERA
         type 50
-        posX 11
+        posX 12
         posY 11
     END
     BARRERA
         type 50
-        posX 12
-        posY 12
-    END
-    BARRERA
-        type 50
-        posX 11
+        posX 13
         posY 12
     END
     BARRERA
         type 50
         posX 12
+        posY 12
+    END
+    BARRERA
+        type 50
+        posX 13
         posY 11
     END
