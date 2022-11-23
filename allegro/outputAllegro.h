@@ -48,7 +48,6 @@ typedef struct
 
     punteros_t punteros;
     texto_t ** text;
-    audio_t ** audio;
 
     bool * close_display;
     bool * displayFlag;

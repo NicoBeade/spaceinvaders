@@ -41,8 +41,8 @@ game_t menuGame;
  * 
  ******************************************************************************************************************************************/
 
-static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens);    //Detecta en que direccion se debe mover a los aliens.
-static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens);  //Detecta si algun alien esta tocando un borde
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens, int vx);    //Detecta en que direccion se debe mover a los aliens.
+static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens, int vx);  //Detecta si algun alien esta tocando un borde
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 static unsigned int countList(object_t * lista);
@@ -198,8 +198,9 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
     }
     object_t * auxiliar;
-    *direccion = detectarDireccion(*direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
-    int vx, vy;//Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
+    int vx = levelSettings -> desplazamientoX; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
+    int vy = 0;
+    *direccion = detectarDireccion(*direccion, levelSettings, *alienList, vx);  //Modifica la variable de direccion en funcion al estado actual de la direccion
 
     switch (*direccion){//Primero detecta en que sentido debemos mover las naves.
         case IZQUIERDA:
@@ -237,7 +238,7 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 
 //*************************************************************************************************************************************
 
-static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
+static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens, int vx){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
     esta variable. Ademas, si toca el borde inferior, pone la variable vidas en 0, pues si los aliens llegan a la parte inferior el usuario perdera.
@@ -247,7 +248,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     switch(direccion){
         
         case DERECHA: //Si se viene moviendo para la derecha
-            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //y toca el borde derecho
+            if (tocaBorde(levelSettings, listAliens, vx) == DERECHA){ //y toca el borde derecho
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -256,7 +257,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case IZQUIERDA: //Si se viene moviendo para la izquierda
-            if (tocaBorde(levelSettings, listAliens) == IZQUIERDA){ //y toca el borde izquierdo
+            if (tocaBorde(levelSettings, listAliens, vx) == IZQUIERDA){ //y toca el borde izquierdo
                 return ABAJO; //se mueve hacia abajo
             }
             else {
@@ -265,9 +266,9 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
+            if (tocaBorde(levelSettings, listAliens, vx) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
             }
-            if (tocaBorde(levelSettings, listAliens) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
+            if (tocaBorde(levelSettings, listAliens, vx) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
                 return IZQUIERDA;
             }
             else {
@@ -282,7 +283,7 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     return 0;
 }
 
-static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
+static int tocaBorde(level_setting_t * levelSettings, object_t * alien, int vx){
 /* Esta funcion detecta si alguna de las naves toco algun borde, teniendo en cuenta todas las posibles combinaciones.
     Devuelve que borde fue tocado.
 */
@@ -293,10 +294,10 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
     int borde = 0;
     while ((alien != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         objectType_t * tipoAlien = getObjType(alien->type);
-        if (alien->pos.x <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
+        if (alien->pos.x + vx <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho + 1){ //deteccion borde derecho
+        else if (alien->pos.x + vx > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
             borde = DERECHA;
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo
@@ -372,7 +373,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
         int vidaBala = balaType -> initLives;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            posicionBala.x = nave->pos.x + (naveType -> ancho)/2;
+            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             
@@ -421,7 +422,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, int nivelActual){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
@@ -431,7 +432,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
-        printf("Err in spaceLib.c alienList cannot be NULL in collider.\n");
+        printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
@@ -509,7 +510,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
 
                     objectType_t * alienRipedAsset = getObjType(listAliens->type);
-                    score += alienRipedAsset->score; 
+                    score += (alienRipedAsset->score) * nivelActual; 
                     
                     *alienList = destroyObj(*alienList, listAliens);
                     listAliens = *alienList;
@@ -582,61 +583,14 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 *******************************************************************************************************************************************/
 
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...){
-    int vidaMini = levelSetting -> miniBarreraLives;   //Cantidad de vidas de cada minibarrera
-    int anchoMini = levelSetting -> anchoMiniBarrera;     //Espacio que ocupa cada minibarrera en x
-    int altoMini = levelSetting -> altoMiniBarrera;         //Espacio que ocupa cada minibarrera en y
-    int espacioX = ((levelSetting->xMax - levelSetting->xMin + 1)-2*(levelSetting->barreraInicialX) - cantBarreras*anchoMini)/cantBarreras;
-    if(((levelSetting->barreraInicialY)*(miniBarrerasY) > levelSetting->yMax) || espacioX <= 0){
-        printf("Err in gameLib, initBarreras function: Barrier Out Of Bounds");
-        return NULL;
-    }
-    vector_t posicionBarrera = {levelSetting->barreraInicialX,levelSetting->barreraInicialY};         //Se crea variable que almacenara pos de minibarreras
-    va_list typeMiniBarrera;        //Puntero a argumentos variables
-    va_start(typeMiniBarrera, miniBarrerasX);    //Se inicializan los argumentos variables, tipo de minibarrera
-    object_t * barreras = NULL;               //Se crea variable que almacenara la lista de barreras
-    int barrera;                                        //Contador de barreras
-    int columna;                                   //Contador de minibarreras en una fila
-    int fila;                                      //Contador de filas de minibarreras
-    int tipoMiniId;                        //Tipo de minibarrera
-    int tiposArray[MAXCANTINPUT];        //Array de tipos de minibarrera ingresados en orden inicializado en 0
-    for(barrera=0; barrera < cantBarreras; barrera++){    //Por cada barrera
-        for(fila = 0; fila < miniBarrerasY; fila++){      //Por cada fila de minibarreras
-            for(columna = 0; columna < miniBarrerasX; columna++){   //Por cada minibarrera
-                if(barrera == 0){                           //Si es la primera barrera
-                    tipoMiniId = va_arg(typeMiniBarrera, int);    //Se toma el tipo de los argumentos variables de entrada
-                    tiposArray[columna+fila*miniBarrerasX] = tipoMiniId;    //Se agrega a la lista el tipo
-                }
-                else{
-                    tipoMiniId = tiposArray[columna+fila*miniBarrerasX];      //Si no es la primera, se recupera el tipo desde el array
-                }
-                barreras = addObj(barreras, posicionBarrera, tipoMiniId, vidaMini);       //Lo añade a la lista
-                posicionBarrera.x += anchoMini;                                                 //Se agrega la siguiente minibarrera a la derecha
-            }
-            posicionBarrera.y += altoMini;                                                      //Se pasa a la fila de abajo
-        }
-        posicionBarrera.y = levelSetting->barreraInicialY;                                      //Por cada barrera se resetea la posicion en Y
-        posicionBarrera.x += espacioX;                                                          //Por cada barrera se añade un salto en x
-    }
-    return barreras;                                                                            //Se devuelve la lista de barreras
-}  
-
-
-*/
-
-//FUNCIONES DE ROLES
+/*******************************************************************************************************************************************
+ * 
+                     ___                      _                                _           ___         _            
+                    | __|  _  _   _ _    __  (_)  ___   _ _    ___   ___    __| |  ___    | _ \  ___  | |  ___   ___
+                    | _|  | || | | ' \  / _| | | / _ \ | ' \  / -_) (_-<   / _` | / -_)   |   / / _ \ | | / -_) (_-<
+                    |_|    \_,_| |_||_| \__| |_| \___/ |_||_| \___| /__/   \__,_| \___|   |_|_\ \___/ |_| \___| /__/                                                                                      
+ * 
+ ******************************************************************************************************************************************/
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};    //Se inicializa un array de objectTypes 
 
@@ -728,3 +682,6 @@ void printLista(object_t * aux, char * id){
         printf("Lista ID: %s VACIA \n", id);
     }
 }
+
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/

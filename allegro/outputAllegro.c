@@ -61,13 +61,14 @@ int showTexts(texto_t * inicial);
 int showSprite(sprite_t * sprite);
 int showSprites(sprite_t * inicial);
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol);
 
 /***********************************************************************************************************************************************************
  * 
  *                                                                      THREAD PRINCIPAL
  * 
  * ********************************************************************************************************************************************************/
+
+static int idQeue[20];
 
 void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
@@ -79,6 +80,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     int bgpos = 0;
     int bgtimer = 0;
+    int i = 0; //Contador
 
     //---------INICIALIZACION PARA EL USO DEL DISPLAY
 
@@ -108,8 +110,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     al_reserve_samples(audioMax);
 
     ALLEGRO_SAMPLE * samples[audioMax];
-
-    audio_t * audioActual = NULL;
 
     samples[aUsrDeath] = al_load_sample("game/audio/explosion.wav");
     samples[aShoot] = al_load_sample("game/audio/shoot.wav");
@@ -154,7 +154,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
 
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                sem_wait(&SEM_GAME);
+                //sem_wait(&SEM_GAME);
  
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
@@ -166,7 +166,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 //Objectos varios
                 
 
-                sem_post(&SEM_GAME);
+                //sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);
@@ -192,20 +192,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
          * 
          * ***********************************************************/
 
-        //Si hay audios para reproducir
-        if(*data->audio != NULL){
-
-            //apunto al primer audio
-            audioActual = *data->audio;
-
-            //si hay mas de uno
-            while(audioActual != NULL){
-
-                audioActual = play(audioActual, samples[audioActual->audioId], 70);
+        for(i=0; i<20; i++){
+            if(idQeue[i] != 0){
+                al_play_sample(samples[idQeue[i]], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             }
-
-            *data->audio = NULL;
+            idQeue[i]=0;
         }
+              
 
          /*************************************************************/
     }
@@ -378,14 +371,17 @@ int showSprites(sprite_t * inicial){
          * 
          * ***********************************************************/
 
-audio_t * play(audio_t * firstAudio, ALLEGRO_SAMPLE * sample, double vol){
+void addAudio(int id){
+    
+    int i = 0;
 
-    audio_t * sig = firstAudio->next;
-    
-    al_play_sample(sample, vol/100, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    
-    free(firstAudio);
-    
-    return sig;
+    while (idQeue[i] != 0)
+    {
+        i++;
+    }
+
+    idQeue[i] = id;
+
 }
+
 /**********************************************************************************************************************************************************/
