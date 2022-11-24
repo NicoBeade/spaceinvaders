@@ -1,3 +1,15 @@
+/*Como compilar:
+
+gcc -Wall testAudio#.c ../libAudioSDL2.o -I/usr/local/include -L/usr/local/lib -lSDL2 -lpthread -o test#.out 
+
+Donde deben reemplazar el “#” por el número de ejemplo de audio que estén compilando. 
+Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
+
+#include "audio.h"
+#include <SDL2/SDL.h>
+
+
+
 //Paths a las musicas del juego
 #define MUS_MENU
 #define MUS_JUEGO
