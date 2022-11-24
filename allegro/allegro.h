@@ -8,7 +8,14 @@
  *                          Structs
  * 
 *******************************************************************/
-enum audios {aUsrDeath, aShoot, aBGMusic, audioMax};
+enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,
+              MOTHERSHIP_APARECE,
+              MOVIMIENTO_ALIENS,
+              BALA_USER,BALA_ALIEN,
+              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA,
+              SAVED_SCORE, AUDIOMAX};
+
+enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};
 
 typedef int (*option_t)(void);
 
@@ -124,5 +131,8 @@ sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy);
 sprite_t * emptySprite(sprite_t * firstSprite);
 
 void aadAudio(int id);
+
+texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
+void refreshDatos( char * toScore, char * toVidas, int score, int vidas);
 
 #endif

@@ -107,15 +107,24 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     al_install_audio();
     al_init_acodec_addon();
-    al_reserve_samples(audioMax);
+    al_reserve_samples(MUSICAMAX - 1);
 
-    ALLEGRO_SAMPLE * samples[audioMax];
+    ALLEGRO_SAMPLE * audios[AUDIOMAX];
+    ALLEGRO_SAMPLE * musica[MUSICAMAX - AUDIOMAX];
+    ALLEGRO_SAMPLE_ID * musicaActual = NULL;
 
-    samples[aUsrDeath] = al_load_sample("game/audio/explosion.wav");
-    samples[aShoot] = al_load_sample("game/audio/shoot.wav");
-    samples[aBGMusic] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
+    //Inicializacion de musica
+    musica[MUSICA_MENU - AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
+    musica[MUSICA_JUEGO - AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
+
+    //Inicializacion de Sonidos
+    audios[COLISION_ALIEN_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_tocado.wav");
+    audios[COLISION_ALIEN_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_muerto.wav");
+    audios[COLISION_USER_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_tocado.wav");
+    audios[COLISION_USER_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_muerto.wav");
+    audios[BALA_USER] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/bala_user.wav");
     
-    al_play_sample(samples[aBGMusic], 0.8, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
+    al_play_sample(musica[MUSICA_MENU - AUDIOMAX], 0.8, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
 
     //-------------------------------------------------
 
@@ -196,7 +205,14 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
         for(i=0; i<20; i++){
             if(idQeue[i] != 0){
-                al_play_sample(samples[idQeue[i]], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                if(idQeue[i] < AUDIOMAX){
+                    al_play_sample(audios[idQeue[i]], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                }
+                else if(idQeue[i] < MUSICAMAX){
+                    al_stop_sample(musicaActual);
+                    
+                    al_play_sample(musica[idQeue[i] - AUDIOMAX], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+                }
             }
             idQeue[i]=0;
         }

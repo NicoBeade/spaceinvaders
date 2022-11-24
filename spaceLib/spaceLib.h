@@ -115,6 +115,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
     object_t** balasUsr;
     level_setting_t* levelSettings;
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+    int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
 } game_t;
 
 typedef struct{

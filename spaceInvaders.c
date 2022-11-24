@@ -71,7 +71,8 @@ typedef struct{
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
     int * score;//Almacena el score del usuario.
-    int nivelActual;//Indica el nivel que se esta jugando
+    int * scoreInstantaneo;//Muestra el score a medida que se va actualizando sin necesidad de ganar el nivel.
+    int nivelActual;//Indica el nivel que se esta jugando.
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -108,7 +109,7 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 sem_t SEM_DRIVER;
 
-game_t menuGame = { &KEYS, NULL, NULL, NULL, 0}; //Estructura del level handler.
+game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL}; //Estructura del level handler.
 
 #ifdef ALLEGRO
 texto_t * toText = NULL;
@@ -119,6 +120,8 @@ TextObj_t * allegroList = &listasAllegro;
 
 menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard, &menuLevels};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
+
+char stringWithScore[20];
 
 unsigned int timerTick = 1000000;
 
@@ -205,6 +208,7 @@ int main(void){
     level_setting_t levelSettings;//Esta variable almacena la informacion de cada nivel
 
     int score = 0;  //Esta variable almacena el puntaje del usuario.
+    int scoreInstantaneo = 0; //Almacena el score en todo momento sin necesidad de ganar el nivel.
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
@@ -251,6 +255,12 @@ int main(void){
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
+
+                #ifdef RASPI
+                if(GAME_STATUS.menuActual == MENU_PAUSA){
+                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score:", score);
+                }
+                #endif
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
@@ -268,7 +278,6 @@ int main(void){
 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
-                char stringWithScore[20];
                 #ifdef RASPI
                 sprintf(stringWithScore,"%d    ",score);
                 #endif
@@ -331,7 +340,7 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
-                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, GAME_STATUS.nivelActual };
+                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, &scoreInstantaneo, GAME_STATUS.nivelActual };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
@@ -346,6 +355,7 @@ int main(void){
                 menuGame.levelSettings = &levelSettings;
                 menuGame.balasUsr = &balasUsr;
                 menuGame.exitStatus = 1;
+                menuGame.scoreInstantaneo = &scoreInstantaneo;
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
@@ -597,7 +607,7 @@ static void* menuHandlerThread(void * data){
                 }
             }
             
-            if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
+            if(ATRAS && GAME_STATUS.menuAnterior != -1 && GAME_STATUS.menuActual != MENU_INICIO){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             
@@ -836,6 +846,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_INICIO;
+                GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
 
             }
@@ -863,11 +874,21 @@ static void* levelHandlerThread(void * data){
     unsigned char stopShoot = 1;//Esta variable se utiliza para evitar que el usuario pueda disparar mas de una bala a la vez
 
 	game_t * menu = (game_t *) data;
+    
+    #ifdef ALLEGRO
+    char vidas[2] = {(*(menu -> naveUsr)) -> lives + '0', 0};
+    char score[7] = {'0', '0', '0', '0', '0', '0', 0}; 
+    toText = levelAllegro(toText, score, vidas);
+    #endif
     while(menu -> exitStatus){
-
+        
+        #ifdef ALLEGRO
+            refreshDatos(score, vidas, *(menu -> scoreInstantaneo), (*(menu -> naveUsr)) -> lives );
+        #endif
         if (PRESS_INPUT){//Si se presiono el joystick se debe pausar el juego.
                 GAME_STATUS.menuActual = MENU_PAUSA;//Indica que se pauso el juego.
                 GAME_STATUS.pantallaActual = MENU;
+
                 menu -> exitStatus = 0;//Indica que hay que salir del level Handler
                 #ifdef ALLEGRO
                 KEYS.press = 0;
@@ -1034,7 +1055,7 @@ void * colliderThread(void * argCollider){
     
     char gameData = 0;
 
-    int scoreInstantaneo = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
+    *(data->scoreInstantaneo) = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
 
     while(GAME_STATUS.inGame){
         
@@ -1042,7 +1063,7 @@ void * colliderThread(void * argCollider){
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
 
-            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, &scoreInstantaneo);
+            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, data->scoreInstantaneo);
 
             switch (gameData){//Detecta si se debe terminar el nivel o no.
                 case LOST_LEVEL:

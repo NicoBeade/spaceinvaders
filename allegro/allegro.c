@@ -7,6 +7,7 @@
 #include "outputAllegro.h"
 #include "inputAllegro.h"
 #include "allegro.h"
+
 /************************************************************************************************
  * 
  *                              CONSTANTES
@@ -458,3 +459,63 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
     lists->textoList= salida.textoList;
     return lists;
 }
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      LEVELS
+ * 
+ * ********************************************************************************************************************************************************/
+
+texto_t * levelAllegro(texto_t * toText, char * score, char * vidas ){
+
+    texto_t * temp = toText;
+
+    temp = addText(temp, vidas, mediumF, X_MAX - 100, Y_MAX - 50);
+    temp = addText(temp, "Lives :", mediumF, X_MAX - 250, Y_MAX - 50);
+    temp = addText(temp, score, mediumF, 20, Y_MAX - 50);
+
+    return temp;
+}
+
+int expo(int num, int exp){
+
+    int temp = num;
+    if (exp == 0){
+        return 1;
+    }
+    else{
+        for (int i = 0; i < exp - 1; i++){
+            num = num * temp;
+        }
+    }
+
+    return num;
+}
+
+int ceil(float num){
+
+    int i;
+
+    for(i=0; i<10; i++){
+        if(num < i+1 && num >= i){
+            return i;
+        }
+    }
+}
+
+void refreshDatos( char * toScore, char * toVidas, int score, int vidas){
+
+    int  i; 
+    float temp;
+    toVidas[0] = '0' + vidas;
+
+    for( i = 0; i < 6; i++){
+
+        temp = (float)((score % (expo(10, i)*10)) - (score % expo(10, i)));
+
+        toScore[5 - i] = '0' + ceil(temp / expo(10, i));
+        
+    }
+
+}
+
