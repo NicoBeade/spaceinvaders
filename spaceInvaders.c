@@ -229,7 +229,23 @@ int main(void){
 
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
+    
+    printf("Cantidad de niveles %d   %s", levelArrayLen(levelArray) -1, levelArray[1].levelName);
+    menuLevels.cantOpciones = levelArrayLen(levelArray) -1;
+    
+    //Se carga el nivel 0
 
+    directory_t carpetaAssets = {};
+    loadDirectory(ASSETSDIR, &carpetaAssets);   
+    loadAllAssets(platform, &carpetaAssets);   
+    int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+
+    if(levelStatus == -1){
+        printf("Error in spaceInvaders.c, level number 0 not found\n");
+        return -1;
+    }
+
+    //
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -268,19 +284,6 @@ int main(void){
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
-
-                if(GAME_STATUS.nivelActual == 0){
-                    directory_t carpetaAssets = {};
-                    loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets(platform, &carpetaAssets);   
-                    int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-
-                    if(levelStatus == -1){
-                        printf("Error in spaceInvaders.c, level number 0 not found\n");
-                        return -1;
-                    }
-                    GAME_STATUS.nivelActual++;
-                }
 
                 int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
 
@@ -577,7 +580,9 @@ static void* menuHandlerThread(void * data){
             if (PRESS_INPUT){//Si se selecciona la opcion
 
                 if(GAME_STATUS.menuActual == MENU_LEVELS){
-                    GAME_STATUS.nivelActual = select;
+                    GAME_STATUS.nivelActual = select + 1;
+                    GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
+                    GAME_STATUS.menuAnterior = -1;
                     menu -> exitStatus = 0;
                 }
                 else{
@@ -932,7 +937,7 @@ void * moveMothershipThread(void* argMoveMothership){
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
-                if( (timerTick % 500 && mothership->lives == 0)){
+        if( (timerTick % 500 && mothership->lives == 0)){
             mothership->type = timerTick%2;
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;
