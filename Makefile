@@ -19,7 +19,7 @@ menuUtilitiesRaspi.o: menuUtilities.h spaceLib/spaceLib.h spaceLib/score/score.h
 
 audioHandlerRaspi.o: raspi/audiosRaspi/audioHandlerRaspi.h raspi/audiosRaspi/audioHandlerRaspi.c raspi/audiosRaspi/audiosRaspi.h
 	gcc -c -g raspi/audiosRaspi/audioHandlerRaspi.c -Wall -o audioHandlerRaspi.o
-	
+
 cleanRaspi:
 	rm spaceLib.o levelLoader.o displayRaspi.o inputRaspi.o spaceInvaders.o
 
