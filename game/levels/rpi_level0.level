@@ -6,7 +6,7 @@ margenX             1
 margenY             1
 saltoX              4
 saltoY              4
-velAliens			10
+velAliens			100
 velBalas			10
 velMothership		10
 xMax                15
