@@ -129,7 +129,7 @@ const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 #ifdef ALLEGRO
-const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
+const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
@@ -229,7 +229,23 @@ int main(void){
 
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
+    
+    printf("Cantidad de niveles %d   %s", levelArrayLen(levelArray) -1, levelArray[1].levelName);
+    menuLevels.cantOpciones = levelArrayLen(levelArray) -1;
+    
+    //Se carga el nivel 0
 
+    directory_t carpetaAssets = {};
+    loadDirectory(ASSETSDIR, &carpetaAssets);   
+    loadAllAssets(platform, &carpetaAssets);   
+    int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+
+    if(levelStatus == -1){
+        printf("Error in spaceInvaders.c, level number 0 not found\n");
+        return -1;
+    }
+
+    //
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -268,19 +284,6 @@ int main(void){
             case START_LEVEL://Entra a este caso cuando se crea un nivel.
                 printf("ENTRO A START_LEVEL \n");
                 sem_wait(&SEM_MENU);
-
-                if(GAME_STATUS.nivelActual == 0){
-                    directory_t carpetaAssets = {};
-                    loadDirectory("game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
-                    loadAllAssets(platform, &carpetaAssets);   
-                    int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-
-                    if(levelStatus == -1){
-                        printf("Error in spaceInvaders.c, level number 0 not found\n");
-                        return -1;
-                    }
-                    GAME_STATUS.nivelActual++;
-                }
 
                 int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
 
@@ -439,6 +442,8 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
+    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
@@ -516,7 +521,11 @@ static void* menuHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             
-            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+            if(stopSweep){
+                stopSweep -= 1;
+            }
+
+            if (SIGUIENTE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -539,9 +548,10 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
+                stopSweep = 4;
             }
 
-            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+            if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -564,13 +574,15 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
-                
+                stopSweep = 4;
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
 
                 if(GAME_STATUS.menuActual == MENU_LEVELS){
-                    GAME_STATUS.nivelActual = select;
+                    GAME_STATUS.nivelActual = select + 1;
+                    GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
+                    GAME_STATUS.menuAnterior = -1;
                     menu -> exitStatus = 0;
                 }
                 else{
@@ -925,7 +937,7 @@ void * moveMothershipThread(void* argMoveMothership){
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
-                if( (timerTick % 500 && mothership->lives == 0)){
+        if( (timerTick % 500 && mothership->lives == 0)){
             mothership->type = timerTick%2;
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;

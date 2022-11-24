@@ -362,6 +362,16 @@ int indexAllLevels(char * platform, char * levelsDir, char * levelPrefix, direct
     return 0; 
 }
 
+int levelArrayLen(level_t levelArray[]){ //Calcula la longitud del array de niveles
+    int contador;
+    for(contador = 0; (levelArray[contador]).lastLevelTrue == 0 && contador<MAX_LEVEL ; contador ++);
+    if(contador == MAX_LEVEL){
+        printf("Error in levelLoader.c, levelArrayLen function : levelArray ender not found");
+        return -1; 
+    }
+    return contador;
+}
+
 int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut){
     //nameOut is an optional output, set to NULL if not needed
     int contadorChar = prefixLenghtToIgnore; //El contador de char se incrementa hasta pasar la plataforma y el prefijo
