@@ -99,11 +99,11 @@ void audioHandlerRaspi(int audioId){
 //regulador de volumen. Recibe el sentido en el que se modifica el volumen. 1 para subir, -1 para bajar
 void regVolumeRaspi(int sentido){
     if (sentido==1 && volumenAudio!=SDL_MIX_MAXVOLUME){
-        volumen+=VOLUME_JUMP;
+        volumenAudio+=VOLUME_JUMP;
         playSound(SON_SELECT_MENU, volumenAudio);
     }
     else if (sentido==-1 && volumenAudio!=0){
-        volumen-=VOLUME_JUMP;
+        volumenAudio-=VOLUME_JUMP;
         playSound(SON_SELECT_MENU, volumenAudio);
     }
     else {
