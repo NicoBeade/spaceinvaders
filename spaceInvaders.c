@@ -244,7 +244,7 @@ int main(void){
         printf("Error in spaceInvaders.c, level number 0 not found\n");
         return -1;
     }
-
+    GAME_STATUS.nivelActual = 1;
     //
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -269,7 +269,13 @@ int main(void){
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
                 char stringWithScore[20];
+                #ifdef RASPI
                 sprintf(stringWithScore,"%d    ",score);
+                #endif
+
+                #ifdef ALLEGRO
+                sprintf(stringWithScore,"%d",score);
+                #endif
 
                 saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3};
 
@@ -581,8 +587,9 @@ static void* menuHandlerThread(void * data){
 
                 if(GAME_STATUS.menuActual == MENU_LEVELS){
                     GAME_STATUS.nivelActual = select + 1;
-                    GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
+                    GAME_STATUS.menuActual = START_LEVEL_MENU;
                     GAME_STATUS.menuAnterior = -1;
+                    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
                     menu -> exitStatus = 0;
                 }
                 else{
@@ -669,7 +676,7 @@ static void* saveScoreHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
-        allegroList = allegroScore(allegroList, "3589", letras);
+        allegroList = allegroScore(allegroList, menu -> puntaje , letras);
         toText = allegroList->textoList;
         screenObjects = allegroList->spriteList;
     #endif
@@ -937,8 +944,9 @@ void * moveMothershipThread(void* argMoveMothership){
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
-        if( (timerTick % 500 && mothership->lives == 0)){
-            mothership->type = timerTick%2;
+        
+        if( (timerTick % 500 && mothership->lives == 0)){ //el 500 debe ser un numero random asi aparece cada 
+            mothership->type = timerTick%2; //se genera aleatoriamente a la derecha o a la izquierda de la pantalla
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;
             //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
@@ -1026,13 +1034,15 @@ void * colliderThread(void * argCollider){
     
     char gameData = 0;
 
+    int scoreInstantaneo = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
+
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
 
-            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual);
+            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, &scoreInstantaneo);
 
             switch (gameData){//Detecta si se debe terminar el nivel o no.
                 case LOST_LEVEL:
@@ -1045,9 +1055,6 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
-
-                    objectType_t * userAsset = getObjType((*(data->usrList))->type);//Obtiene el puntaje del usuario.
-                    *(data->score) = userAsset->score;//Lo almacena en una variable para poder guardarlo si se desea.
                     break;
 
                 default:
