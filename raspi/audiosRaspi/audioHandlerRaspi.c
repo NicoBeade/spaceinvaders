@@ -1,5 +1,4 @@
-#include "audiosRaspi.h"
-#include "audio.h"
+
 #include <stdio.h>
 #include "audioHandlerRaspi.h"
 
