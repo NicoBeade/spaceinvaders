@@ -310,9 +310,9 @@ int main(void){
                 }
                 */
 
-                velAliens = levelSettings->velAliens;
-                velMothership = levelSettings->velMothership;
-                velBalas = levelSettings->velBalas;
+                velAliens = levelSettings.velAliens;
+                velMothership = levelSettings.velMothership;
+                velBalas = levelSettings.velBalas;
 
                 GAME_STATUS.inGame = 1;
 
