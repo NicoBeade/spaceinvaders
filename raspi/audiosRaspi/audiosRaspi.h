@@ -1,3 +1,6 @@
+#ifndef AUDIOSRASPI
+#define AUDIOSRASPI
+
 /*Como compilar:
 
 gcc -Wall testAudio#.c ../libAudioSDL2.o -I/usr/local/include -L/usr/local/lib -lSDL2 -lpthread -o test#.out 
@@ -9,7 +12,7 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #include <SDL2/SDL.h>
 
 
-#define VOLUME_JUMP 16
+
 #define PATH "audiosRaspi/audioFilesRaspi/"
 
 //Paths a las musicas del juego
@@ -54,3 +57,4 @@ enum SONIDOS {COLISION_ALIEN_TOCADO,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,C
               SAVED_SCORE,
               };
 
+#endif
