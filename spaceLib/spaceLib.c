@@ -146,6 +146,48 @@ static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos 
 
  * 
  ******************************************************************************************************************************************/
+char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
+    if(*alienList == NULL){
+        printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
+    }
+    object_t * auxiliar;
+    int vx = 0; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
+    int vy = 0;
+    *direccion = detectarDireccion(*direccion, levelSettings, *alienList);  //Modifica la variable de direccion en funcion al estado actual de la direccion
+
+    switch (*direccion){//Primero detecta en que sentido debemos mover las naves.
+        case IZQUIERDA:
+            vx = - (levelSettings -> desplazamientoX);
+            vy = 0;
+            break;
+        case DERECHA:
+            vx = levelSettings -> desplazamientoX;
+            vy = 0;
+            break;
+        case ABAJO:
+            vx = 0;
+            vy = levelSettings -> desplazamientoY;
+            break;
+        default:
+            break;
+    }
+    auxiliar = *alienList;
+    while (auxiliar != NULL){//Mueve los aliens uno por uno
+
+        auxiliar->pos.x += vx;//Modifica su posicion en x e y
+        auxiliar->pos.y += vy;
+        auxiliar->animationStatus++;
+        auxiliar = auxiliar -> next;
+    }
+
+    if(vy == 1){//Si los aliens llegaron al borde, indica que hay que incrementar la velocidad de los aliens.
+        return FASTER_ALIENS;
+    }
+    else{
+        return 0;
+    }
+}
+
 static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens){
 /* Esta funcion se encarga de modificar la variable direccion. Es llamada solo por la funcion moveAlien.
     Recibe como parametro la variable direccion y detecta si alguno de los aliens se encuentra en un borde del mapa y en base a eso modificar
