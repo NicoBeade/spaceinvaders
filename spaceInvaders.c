@@ -25,13 +25,14 @@
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
 #include "menuUtilities.h"
-#include "raspi/audiosRaspi/audio.h"
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
 #include "raspi/displayRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
+#include "raspi/audiosRaspi/audio.h"
+#include "raspi/audiosRaspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
