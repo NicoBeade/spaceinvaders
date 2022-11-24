@@ -79,7 +79,7 @@ void* inputRPIThread(void* argInputRPI);  //Se encarga de leer el input durante 
  ******************************************************************************************************************************************/
 
 extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
-extern int velInput;    /*Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta 
+extern const int velInput;    /*Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta 
                                                                 cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.*/
 
 extern gameStatus_t GAME_STATUS;
