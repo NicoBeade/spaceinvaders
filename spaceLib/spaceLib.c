@@ -247,7 +247,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         if (alien->pos.x - levelSettings -> desplazamientoX <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
-        else if (alien->pos.x + levelSettings -> desplazamientoX >= levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho){ //deteccion borde derecho
+        else if (alien->pos.x + levelSettings -> desplazamientoX > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho + 1){ //deteccion borde derecho
             borde = DERECHA;
         }
         if (alien->pos.y >= levelSettings->yMax - levelSettings->margenY){ //deteccion de suelo

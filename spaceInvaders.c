@@ -258,7 +258,7 @@ int main(void){
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
-                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score:", score);
+                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score> ", score);
                 }
                 #endif
                 
