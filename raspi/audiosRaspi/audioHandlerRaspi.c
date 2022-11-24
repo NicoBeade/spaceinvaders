@@ -21,7 +21,7 @@ void audioHandlerRaspi(int audioId){
 	            endAudio();
                 return;
             }
-            playMusic(MUS_MENU, volume);
+            playMusic(MUS_MENU, volumenAudio);
             break;
         case MUSICA_JUEGO:
             endAudio(); //Se interrumpe el audio anterior abruptamente
