@@ -129,7 +129,7 @@ const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 #ifdef ALLEGRO
-const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
+const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
@@ -439,6 +439,8 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
+    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
@@ -516,7 +518,11 @@ static void* menuHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             
-            if (SIGUIENTE){//Si se presiona para ir a la siguiente opcion
+            if(stopSweep){
+                stopSweep -= 1;
+            }
+
+            if (SIGUIENTE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -539,9 +545,10 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
+                stopSweep = 4;
             }
 
-            if (ANTERIOR){//Si se presiona para ir a la opcion anterior
+            if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
@@ -564,7 +571,7 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
-                
+                stopSweep = 4;
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
