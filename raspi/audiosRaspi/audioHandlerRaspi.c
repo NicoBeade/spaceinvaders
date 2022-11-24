@@ -11,7 +11,7 @@
 static int volumenAudio=80;
 
 //handler del sonido a reproducirse
-void audioHandlerRaspi(int soundId){
+void audioHandlerRaspi(int audioId){
     switch(audioId){
         //musica del juego
         case MUSICA_MENU:
