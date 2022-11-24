@@ -17,6 +17,7 @@
  #define SPACELIB_H
 
 #include <stdint.h>
+#include "audiosRaspi.h"
 
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
@@ -116,6 +117,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
     level_setting_t* levelSettings;
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
+    audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
 } game_t;
 
 typedef struct{
@@ -135,6 +137,7 @@ typedef struct{
     char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
 }objectType_t;
 
+typedef void (*audioCallback_t) (int);  //Puntero a la funcion que ejecuta audio
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -184,7 +187,7 @@ void printLista(object_t * lista, char * id);
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
 object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting);
-object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting);
+object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting, audioCallback_t audioCallback);
 
 
 //*****************USUARIO

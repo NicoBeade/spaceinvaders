@@ -10,29 +10,29 @@
 
 static int volumenAudio=80;
 
-//handler de la musica a reproducirse
-void musicHandlerRaspi(int musicId){
-    endAudio(); //Se interrumpe el audio anterior abruptamente
-    if ( initAudio() == NO_INIT) { //Se inicia el sistema de audio nuevamente, con sus respectivas guardas
-        fprintf(stderr, "Audio not initilized.\n");
-	    endAudio();
-        return;
-    }
-    switch(musicId){
-        case MUSICA_MENU: //musica del menu
+//handler del sonido a reproducirse
+void audioHandlerRaspi(int soundId){
+    switch(audioId){
+        //musica del juego
+        case MUSICA_MENU:
+            endAudio(); //Se interrumpe el audio anterior abruptamente
+            if ( initAudio() == NO_INIT) { //Se inicia el sistema de audio nuevamente, con sus respectivas guardas
+                fprintf(stderr, "Audio not initilized.\n");
+	            endAudio();
+                return;
+            }
             playMusic(MUS_MENU, volume);
             break;
-        case MUSICA_JUEGO: //musica del juego
+        case MUSICA_JUEGO:
+            endAudio(); //Se interrumpe el audio anterior abruptamente
+            if ( initAudio() == NO_INIT) { //Se inicia el sistema de audio nuevamente, con sus respectivas guardas
+                fprintf(stderr, "Audio not initilized.\n");
+	            endAudio();
+                return;
+            }
             playMusic(MUS_JUEGO, volumenAudio);
             break;
-    }
-    return;
-}
 
-
-//handler del sonido a reproducirse
-void soundHandlerRaspi(int soundId){
-    switch(soundId){
         //sonidos de colisiones
         case COLISION_ALIEN_TOCADO:
             playSound(SON_COLISION_ALIEN_TOCADO, volumenAudio);

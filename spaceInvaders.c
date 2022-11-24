@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
 #include "menuUtilities.h"
+#include "raspi/audiosRaspi/audio.h"
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
@@ -49,11 +50,13 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
+    audioCallback_t audioCallback;
 }argMoveAlien_t;
 
 typedef struct{
     level_setting_t * levelSettings;
     object_t ** mothership;
+    audioCallback_t audioCallback;
 }argMoveMothership_t;
 
 typedef struct{
@@ -61,6 +64,7 @@ typedef struct{
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
     object_t ** alienList;
+    audioCallback_t audioCallback;
 }argMoveBala_t;
 
 typedef struct{
@@ -73,6 +77,7 @@ typedef struct{
     int * score;//Almacena el score del usuario.
     int * scoreInstantaneo;//Muestra el score a medida que se va actualizando sin necesidad de ganar el nivel.
     int nivelActual;//Indica el nivel que se esta jugando.
+    audioCallback_t audioCallback;
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -109,7 +114,7 @@ sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
 sem_t SEM_DRIVER;
 
-game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL}; //Estructura del level handler.
+game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del level handler.
 
 #ifdef ALLEGRO
 texto_t * toText = NULL;
@@ -222,14 +227,26 @@ int main(void){
 
     pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
 
+    audioCallback_t audioCallback;
+    audioCallback_t volumeCallback;
 
     #ifdef RASPI
     char platform[4] = "rpi";
+    /* Init Simple-SDL2-Audio */
+    if (initAudio() == NO_INIT){
+        fprintf(stderr, "Audio not initilized.\n");
+	    endAudio();
+	    return -1;
+    }
+    audioCallback = audioHandler;
+    volumeCallback = regVolumeRaspi;
     #endif
 
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
+
+    menuGame.audioCallback = audioCallback;
 
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
@@ -911,7 +928,7 @@ static void* levelHandlerThread(void * data){
             }
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
-                *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings);
+                *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings, menu -> audioCallback);
                 
                 stopShoot = 20;
             }
@@ -1027,7 +1044,7 @@ void * moveBalaThread(void * argMoveBala){
 
             if(*(data -> alienList) != NULL){
 
-                (*(data -> balasEnemigas)) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings);
+                (*(data -> balasEnemigas)) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings, data -> audioCallback);
             }
             else{
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");

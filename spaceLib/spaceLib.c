@@ -298,7 +298,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     return newList;
 }
 
-object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting){
+object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting, audioCallback_t audioCallback){
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
@@ -326,7 +326,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
-            
+            audioCallback(BALA_USER);
             balasDisponibles--;
         }
         nave = nave -> next;
