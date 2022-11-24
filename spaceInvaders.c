@@ -125,13 +125,11 @@ unsigned int timerTick = 1000000;
 //------------------------    Variables de velocidad de ejecucion de threads     ------------------------
 #ifdef RASPI
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
-const int velBalas = 10;        //Velocidad a la que se mueven las balas
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 #ifdef ALLEGRO
 const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
-const int velBalas = 10;         //Velocidad a la que se mueven las balas
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
