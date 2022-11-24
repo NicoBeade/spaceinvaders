@@ -258,7 +258,7 @@ int main(void){
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
-                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score> ", score);
+                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score > ", scoreInstantaneo);
                 }
                 #endif
                 
@@ -634,6 +634,8 @@ static void* saveScoreHandlerThread(void * data){
 	saveScore_t * menu = (saveScore_t *) data;
 
     int select = 0;//Esta variable se utiliza para indicar la letra seleccionada dentro del menu. 
+
+    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
     
     char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
@@ -699,7 +701,11 @@ static void* saveScoreHandlerThread(void * data){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
             
-            if (SIGUIENTESCORE){//Si se presiona para ir a la siguiente opcion
+            if(stopSweep){
+                stopSweep -= 1;
+            }
+
+            if (SIGUIENTESCORE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
@@ -725,10 +731,10 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                
+                stopSweep = 4;                
             }
 
-            if (ANTERIORSCORE){//Si se presiona para ir a la opcion anterior
+            if (ANTERIORSCORE && !stopSweep){//Si se presiona para ir a la opcion anterior
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra    
                 pthread_join(titileoT, NULL);            
@@ -754,10 +760,10 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.  
                 #endif
 
-                
+                stopSweep = 4;
             }
 
-            if(ARRIBA_INPUT){//Si se presiona para cambiar de letra hacia arriba
+            if(ARRIBA_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia arriba
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra    
                 pthread_join(titileoT, NULL);            
@@ -795,9 +801,11 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
+
+                stopSweep = 4;
             }
 
-            if(ABAJO_INPUT){//Si se presiona para cambiar de letra hacia abajo
+            if(ABAJO_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia abajo
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra    
                 pthread_join(titileoT, NULL);            
@@ -849,6 +857,7 @@ static void* saveScoreHandlerThread(void * data){
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
 
+                stopSweep = 4;
             }
         }
     }
