@@ -269,7 +269,13 @@ int main(void){
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
                 char stringWithScore[20];
+                #ifdef RASPI
                 sprintf(stringWithScore,"%d    ",score);
+                #endif
+
+                #ifdef ALLEGRO
+                sprintf(stringWithScore,"%d",score);
+                #endif
 
                 saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3};
 
@@ -670,7 +676,7 @@ static void* saveScoreHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
-        allegroList = allegroScore(allegroList, "3589", letras);
+        allegroList = allegroScore(allegroList, menu -> puntaje , letras);
         toText = allegroList->textoList;
         screenObjects = allegroList->spriteList;
     #endif
