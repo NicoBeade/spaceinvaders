@@ -670,8 +670,7 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                     objectType_t * objType = getObjType(usuario.type);        //Se recupera el tipo de usuario
                     (* listaUsr) = addObj((* listaUsr), usuario.pos, usuario.type, objType->initLives);    //Se agrega a la lista
                 }
-
-                /* AGREGAR ESTO PARA LA MOTHERSHIP , object_t ** listMothership
+                /*
                 else if(strcmp(decodedFile[fila].parameter, "MOTHERSHIP") == 0){  //Si es la nave nodria
                     fila++;     //Se incrementa la fila
                     object_t mothership;                     //Buffer de la nave nodriza a leer
@@ -886,7 +885,6 @@ int main(){
         printf("\n\n...Nivel 0 cargado correctamente...\n\n");
     }
     levelStatus = loadLevel(nivel,levelArray, &levelSettings, &(plataforma[0]), &alienList, &UsrList, &barrerasList);
-    printf("JORGIT\n");
     if(levelStatus == -1){
         printf("Error no se encontro el nivel %d\n", nivel);
         return -1;
@@ -894,7 +892,7 @@ int main(){
     else{
         printf("\n\n...Nivel %d cargado correctamente...\n\n", nivel);
     }
-    char matrix[800][800]={};
+    char matrix[80][80]={};
     int maxX, maxY;
     int divisor = 1;
     if(strcmp(plataforma,"rpi") == 0){
