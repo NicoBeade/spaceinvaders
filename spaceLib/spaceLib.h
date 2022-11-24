@@ -58,11 +58,11 @@ typedef struct{
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
+
     //int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
     //int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
-    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int velBalas;                   //Velocidad Balas por tick
+    ////int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
     //int altoUsr;                //-altoUsr: Alto de la nave del usuario
     //int anchoAlien;             //-anchoNave: Ancho de las naves enemigas
     //int altoAlien;              //-altoNave: Alto de las naves enemigas
@@ -70,8 +70,8 @@ typedef struct{
     //int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
     int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
     int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
-    int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
+    //// int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
+    ////int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
 
     //Datos para la jugabilidad
     //int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
@@ -87,6 +87,8 @@ typedef struct{
     int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
     int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
     int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick.
+    int velAliens;  //Velocidad Aliens por tick
+    int velMothership;  //Velocidad nave nodriza por tick
 }level_setting_t;
 
 typedef struct{//Contiene el estado del juego.
@@ -174,7 +176,6 @@ enum GAME_VALUE { WON_LEVEL = 1, LOST_LEVEL, FASTER_ALIENS };//Se utilizan para 
 
 //*****************ALIENS
 object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
-object_t * initAliens(object_t * listAliens, level_setting_t * levelSetting, char * str, ...); //Inicializa la lista completa de aliens usando addObj.                                                     
 char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 void printLista(object_t * lista, char * id);

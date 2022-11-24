@@ -15,7 +15,7 @@
  **********************************************************************************************************************************************************/
 
 #include <stdio.h>
-#include <stdint.h>
+#include <stdint.h>.0231d
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
@@ -138,8 +138,9 @@ const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el dis
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInput = 1;
 
-int velAliens = 100;
-int velMothership = 70;
+int velAliens;
+int velMothership;
+int velBalas;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -309,8 +310,9 @@ int main(void){
                 }
                 */
 
-                //velAliens = 
-                //velMothership = 
+                velAliens = levelSettings->velAliens;
+                velMothership = levelSettings->velMothership;
+                velBalas = levelSettings->velBalas;
 
                 GAME_STATUS.inGame = 1;
 
@@ -579,7 +581,7 @@ static void* menuHandlerThread(void * data){
             }
             
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
-                menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.          
+                menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             
         }
@@ -900,7 +902,7 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 
-    int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
+    static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
 
     char fasterAliens = 0;
     while(GAME_STATUS.inGame){
@@ -912,7 +914,7 @@ void * moveAlienThread(void* argMoveAlien){
             fasterAliens = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
 
             if(fasterAliens == FASTER_ALIENS){//Si los aliens llegan al borde,
-                velAliens -= 5; //Incrementa la velocidad de los aliens.
+                velAliens -= 2; //Incrementa la velocidad de los aliens.
             }
             sem_post(&SEM_GAME);
 

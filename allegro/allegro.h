@@ -44,6 +44,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
 
 	keys_t * keys;
 	option_t selectOption[21];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    option_t backMenuAnterior;//Puntero a la funcion que vuelve un menu hacia atras.
     char textOpciones[21][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
     char spritesDir[40][50];
     int cantOpciones;//Cantidad de opciones del menu.
