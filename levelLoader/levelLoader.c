@@ -447,8 +447,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
     int velBalas;               //-velBalas: Ancho de la nave del usuario
     int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
     int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
@@ -464,8 +462,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     char yMax_found = 0;
     char saltoX_found = 0;
     char saltoY_found = 0;
-    char distInicialX_found = 0;
-    char distInicialY_found = 0;
     char velBalas_found = 0;
     char margenX_found = 0;
     char margenY_found = 0;
@@ -501,14 +497,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             saltoY = atoi(decodedFile[paramNo].value);
             saltoY_found++;
         }
-        else if(distInicialX_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialX") == 0){
-            distInicialX = atoi(decodedFile[paramNo].value);
-            distInicialX_found++;
-        }
-        else if(distInicialY_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialY") == 0){
-            distInicialY = atoi(decodedFile[paramNo].value);
-            distInicialY_found++;
-        }
         else if(velBalas_found == 0 && strcmp(decodedFile[paramNo].parameter, "velBalas") == 0){
             velBalas = atoi(decodedFile[paramNo].value);
             velBalas_found++;
@@ -543,11 +531,11 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
         }
     }
     //Si checkAllFields esta activado y no se encontraron todos los campos tira error
-    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
+    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + distInicialX_found + distInicialY_found + velBalas_found + margenX_found + margenY_found + velAliens_found + velMothership_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
+    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + velBalas_found + margenX_found + margenY_found + velAliens_found + velMothership_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
     //Para los campos que se encontraron se actualiza el level setting
     if(velBalas_found){
         levelSettings->velBalas = velBalas;
@@ -566,12 +554,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     }
     if(velMothership_found){
         levelSettings->velMothership = velMothership;
-    }
-    if(distInicialX_found){
-        levelSettings->distInicialX = distInicialX;
-    }
-    if(distInicialY_found){
-        levelSettings->distInicialY = distInicialY;
     }
     if(margenX_found){
         levelSettings->margenX = margenX;
