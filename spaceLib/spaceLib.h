@@ -35,6 +35,8 @@
  * 
  ******************************************************************************************************************************************/
 
+typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
+
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
     int y;
@@ -136,8 +138,6 @@ typedef struct{
     char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
     char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
 }objectType_t;
-
-typedef void (*audioCallback_t) (int);  //Puntero a la funcion que ejecuta audio
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
