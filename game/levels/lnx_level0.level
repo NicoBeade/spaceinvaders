@@ -2,9 +2,9 @@ anchoUsr            60
 desplazamientoUsr   20
 desplazamientoX     20
 desplazamientoY     20
-velAliens			10
-velBalas			10
-velMothership		10
+velAliens			100
+velBalas			5
+velMothership		70
 margenX             1
 margenY             1
 saltoX              4

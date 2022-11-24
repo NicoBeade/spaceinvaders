@@ -820,7 +820,6 @@ static void* saveScoreHandlerThread(void * data){
                 menu -> exitStatus = 0;
 
             }
-            
         }
     }
     #ifdef RASPI
