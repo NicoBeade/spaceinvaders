@@ -26,7 +26,7 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
                       {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispSaveScore, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectNothing, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volume    ", "Quit Game    "}, 
                       {&halfDispResume, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
@@ -117,7 +117,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         sprintf(puntajeMenu, "%d.%s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
         strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
     }
-    
+        
 }
 
 
@@ -220,6 +220,7 @@ int backMenuAnterior(void){
     GAME_STATUS.pantallaActual = MENU;
     GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
     GAME_STATUS.menuAnterior = -1;
+    printf("se cambiaron los datos\n");
     return 0;
 }
 
