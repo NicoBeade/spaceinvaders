@@ -470,8 +470,8 @@ texto_t * levelAllegro(texto_t * toText, char * score, char * vidas ){
 
     texto_t * temp = toText;
 
-    temp = addText(temp, vidas, mediumF, X_MAX - 100, Y_MAX - 50);
-    temp = addText(temp, "Lives :", mediumF, X_MAX - 250, Y_MAX - 50);
+    temp = addText(temp, vidas, mediumF, X_MAX - 50, Y_MAX - 50);
+    temp = addText(temp, "Lives :", mediumF, X_MAX - 200, Y_MAX - 50);
     temp = addText(temp, score, mediumF, 20, Y_MAX - 50);
 
     return temp;

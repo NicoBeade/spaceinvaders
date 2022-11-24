@@ -389,7 +389,7 @@ int showSprites(sprite_t * inicial){
          * 
          * ***********************************************************/
 
-void addAudio(int id){
+void addAudioAllegro(int id){
     
     int i = 0;
 
