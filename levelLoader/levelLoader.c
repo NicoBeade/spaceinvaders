@@ -447,30 +447,26 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    int distInicialX;           //-distInicialX: coordenada en X de la nave del centro de la primera fila
-    int distInicialY;           //-distInicialY: coordenada en Y de la nave del centro de la primera fila
-    int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
+    int velBalas;               //-velBalas: Ancho de la nave del usuario
     int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
     int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
-    int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
+    int velAliens;         //-velAliens: Velocidad de los aliens por tick.
+    int velMothership;         //-velMothership: Velocidad de la mothership por tick.
     int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
     int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
     int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
-
+    
     char xMin_found = 0;
     char xMax_found = 0;
     char yMin_found = 0;
     char yMax_found = 0;
     char saltoX_found = 0;
     char saltoY_found = 0;
-    char distInicialX_found = 0;
-    char distInicialY_found = 0;
-    char anchoUsr_found = 0;
+    char velBalas_found = 0;
     char margenX_found = 0;
     char margenY_found = 0;
-    char disInicialUsrX_found = 0;
-    char disInicialUsrY_found = 0;
+    char velAliens_found = 0;
+    char velMothership_found = 0;
     char desplazamientoX_found = 0;
     char desplazamientoY_found = 0;
     char desplazamientoUsr_found = 0;
@@ -501,17 +497,9 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             saltoY = atoi(decodedFile[paramNo].value);
             saltoY_found++;
         }
-        else if(distInicialX_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialX") == 0){
-            distInicialX = atoi(decodedFile[paramNo].value);
-            distInicialX_found++;
-        }
-        else if(distInicialY_found == 0 && strcmp(decodedFile[paramNo].parameter, "distInicialY") == 0){
-            distInicialY = atoi(decodedFile[paramNo].value);
-            distInicialY_found++;
-        }
-        else if(anchoUsr_found == 0 && strcmp(decodedFile[paramNo].parameter, "anchoUsr") == 0){
-            anchoUsr = atoi(decodedFile[paramNo].value);
-            anchoUsr_found++;
+        else if(velBalas_found == 0 && strcmp(decodedFile[paramNo].parameter, "velBalas") == 0){
+            velBalas = atoi(decodedFile[paramNo].value);
+            velBalas_found++;
         }
         else if(margenX_found == 0 && strcmp(decodedFile[paramNo].parameter, "margenX") == 0){
             margenX = atoi(decodedFile[paramNo].value);
@@ -521,13 +509,13 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             margenY = atoi(decodedFile[paramNo].value);
             margenY_found++;
         }
-        else if(disInicialUsrX_found == 0 && strcmp(decodedFile[paramNo].parameter, "disInicialUsrX") == 0){
-            disInicialUsrX = atoi(decodedFile[paramNo].value);
-            disInicialUsrX_found++;
+        else if(velAliens_found == 0 && strcmp(decodedFile[paramNo].parameter, "velAliens") == 0){
+            velAliens = atoi(decodedFile[paramNo].value);
+            velAliens_found++;
         }
-        else if(disInicialUsrY_found == 0 && strcmp(decodedFile[paramNo].parameter, "disInicialUsrY") == 0){
-            disInicialUsrY = atoi(decodedFile[paramNo].value);
-            disInicialUsrY_found++;
+        else if(velMothership_found == 0 && strcmp(decodedFile[paramNo].parameter, "velMothership") == 0){
+            velMothership = atoi(decodedFile[paramNo].value);
+            velMothership_found++;
         }
         else if(desplazamientoX_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoX") == 0){
             desplazamientoX = atoi(decodedFile[paramNo].value);
@@ -543,14 +531,14 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
         }
     }
     //Si checkAllFields esta activado y no se encontraron todos los campos tira error
-    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || distInicialX_found != 1 || distInicialY_found != 1 || anchoUsr_found != 1 || margenX_found != 1 || margenY_found != 1 || disInicialUsrX_found != 1 || disInicialUsrY_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
+    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
-    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + distInicialX_found + distInicialY_found + anchoUsr_found + margenX_found + margenY_found + disInicialUsrX_found + disInicialUsrY_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
+    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + velBalas_found + margenX_found + margenY_found + velAliens_found + velMothership_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
     //Para los campos que se encontraron se actualiza el level setting
-    if(anchoUsr_found){
-        levelSettings->anchoUsr = anchoUsr;
+    if(velBalas_found){
+        levelSettings->velBalas = velBalas;
     }
     if(desplazamientoUsr_found){
         levelSettings->desplazamientoUsr = desplazamientoUsr;
@@ -561,17 +549,11 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     if(desplazamientoY_found){
         levelSettings->desplazamientoY = desplazamientoY;
     }
-    if(disInicialUsrX_found){
-        levelSettings->disInicialUsrX = disInicialUsrX;
+    if(velAliens_found){
+        levelSettings->velAliens = velAliens;
     }
-    if(disInicialUsrY_found){
-        levelSettings->disInicialUsrY = disInicialUsrY;
-    }
-    if(distInicialX_found){
-        levelSettings->distInicialX = distInicialX;
-    }
-    if(distInicialY_found){
-        levelSettings->distInicialY = distInicialY;
+    if(velMothership_found){
+        levelSettings->velMothership = velMothership;
     }
     if(margenX_found){
         levelSettings->margenX = margenX;
@@ -792,12 +774,12 @@ int main (){
 
     loadLevel(1, &levelSettings, "rpi",&listaAliens,NULL,NULL);
     readLevel("../game/levels/rpi_level0.level", &levelSettings);
-    printf("%d\n", levelSettings.anchoUsr); 
+    printf("%d\n", levelSettings.velBalas); 
     printf("%d\n", levelSettings.desplazamientoUsr);
     printf("%d\n", levelSettings.desplazamientoX);
     printf("%d\n", levelSettings.desplazamientoY);
-    printf("%d\n", levelSettings.disInicialUsrX);
-    printf("%d\n", levelSettings.disInicialUsrY);
+    printf("%d\n", levelSettings.velAliens);
+    printf("%d\n", levelSettings.velMothership);
     printf("%d\n", levelSettings.distInicialX);
     printf("%d\n", levelSettings.distInicialY);
     printf("%d\n", levelSettings.margenX);

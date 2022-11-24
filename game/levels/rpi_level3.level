@@ -1,30 +1,32 @@
 ALIEN
-    type  1
+    type  9
     posX  2
     posY  1
 END
 
 ALIEN
-    type  1
+    type  13
     posX  6
     posY  1
 END
 
 ALIEN
-    type  1
+    type  9
     posX  11
     posY  1
 END
 
 
+
+
 ALIEN
-    type  13
+    type  1
     posX  2
     posY  4
 END
 
 ALIEN
-    type  13
+    type  1
     posX  6
     posY  4
 END
@@ -67,19 +69,6 @@ END
         posX 3
         posY 11
     END
-	BARRERA
-        type 50
-        posX 4
-        posY 12
-    END
-    BARRERA
-        type 50
-        posX 4
-        posY 11
-    END
-
-
-
 
 
 ; Barrera 2
@@ -101,15 +90,5 @@ END
     BARRERA
         type 50
         posX 13
-        posY 11
-    END
-	BARRERA
-        type 50
-        posX 11
-        posY 12
-    END
-    BARRERA
-        type 50
-        posX 11
         posY 11
     END

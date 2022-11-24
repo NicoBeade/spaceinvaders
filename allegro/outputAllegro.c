@@ -163,6 +163,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.UsrList) );
                 showObjects( *((*data).punteros.barrerasList) );
                 showObjects( *((*data).punteros.mothershipList) );
+
+                showTexts(*data->text);
                 //Objectos varios
                 
 

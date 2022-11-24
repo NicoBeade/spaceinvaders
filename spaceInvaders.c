@@ -15,7 +15,7 @@
  **********************************************************************************************************************************************************/
 
 #include <stdio.h>
-#include <stdint.h>
+#include <stdint.h>.0231d
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
@@ -125,13 +125,11 @@ unsigned int timerTick = 1000000;
 //------------------------    Variables de velocidad de ejecucion de threads     ------------------------
 #ifdef RASPI
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
-const int velBalas = 10;        //Velocidad a la que se mueven las balas
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 #ifdef ALLEGRO
 const int velMenu = 10;         //Velocidad a la que se lee el input durante un menu
-const int velBalas = 5;         //Velocidad a la que se mueven las balas
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
@@ -140,6 +138,7 @@ const int velInput = 1;
 
 int velAliens;
 int velMothership;
+int velBalas;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -308,6 +307,10 @@ int main(void){
                     return -1;
                 }
                 */
+
+                velAliens = levelSettings.velAliens;
+                velMothership = levelSettings.velMothership;
+                velBalas = levelSettings.velBalas;
 
                 GAME_STATUS.inGame = 1;
 
@@ -576,7 +579,7 @@ static void* menuHandlerThread(void * data){
             }
             
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
-                menu -> exitStatus = (menu->selectOption[menu -> cantOpciones])();//Se llama al callback que indica que accion realizar al volver hacia atras.          
+                menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             
         }
