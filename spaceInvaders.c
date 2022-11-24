@@ -239,7 +239,7 @@ int main(void){
 	    endAudio();
 	    return -1;
     }
-    audioCallback = audioHandler;
+    audioCallback = audioHandlerRaspi;
     volumeCallback = regVolumeRaspi;
     #endif
 
