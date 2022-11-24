@@ -8,6 +8,8 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #include "audio.h"
 #include <SDL2/SDL.h>
 
+
+#define VOLUME_JUMP 16
 #define PATH "audiosRaspi/audioFilesRaspi/"
 
 //Paths a las musicas del juego
