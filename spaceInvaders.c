@@ -33,6 +33,7 @@
 #include "raspi/drivers/joydrv.h"
 #include "raspi/audiosRaspi/audio.h"
 #include "raspi/audiosRaspi/audioHandlerRaspi.h"
+#include <SDL2/SDL.h>
 #endif
 
 #ifdef ALLEGRO
