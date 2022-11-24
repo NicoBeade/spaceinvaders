@@ -1,8 +1,8 @@
 #*******************************************************************************************************************************************
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
-mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o menuUtilitiesRaspi.o sprites.o utilidades.h spaceInvaders.c
-	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o score.o menuUtilities.o sprites.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
+mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o menuUtilitiesRaspi.o sprites.o audioHandlerRaspi.o utilidades.h spaceInvaders.c
+	gcc joydrv.o disdrv.o displayRaspi.o inputRaspi.o levelLoader.o spaceLib.o score.o menuUtilities.o sprites.o audioHandlerRaspi.o spaceInvaders.c -pthread -Wall -o spaceInvaders -g -D RASPI
 
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h spaceLib/spaceLib.h
@@ -17,6 +17,8 @@ sprites.o: raspi/sprites.h raspi/sprites.c
 menuUtilitiesRaspi.o: menuUtilities.h spaceLib/spaceLib.h spaceLib/score/score.h raspi/displayRaspi.h raspi/sprites.h menuUtilities.c
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D RASPI
 
+audioHandlerRaspi.o: raspi/audiosRaspi/audioHandlerRaspi.h raspi/audiosRaspi/audioHandlerRaspi.c raspi/audiosRaspi/audiosRaspi.h
+	gcc -c -g audioHandlerRaspi.c -Wall -o audioHandlerRaspi.o
 cleanRaspi:
 	rm spaceLib.o levelLoader.o displayRaspi.o inputRaspi.o spaceInvaders.o
 
