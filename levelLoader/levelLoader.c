@@ -601,7 +601,7 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
     else if(!strncmp(valueReaded,"+=",2)){
         state = RELATIVE_ADD;       //Es adicion
     }
-    else if(!strncmp(valueReaded,"-",2)){
+    else if(!strcmp(valueReaded,"-")){
         state = RELATIVE_OPP;       //Es el opuesto
     }
     else if(!strncmp(valueReaded,"/=",2)){
@@ -611,21 +611,25 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
         printf("Warning in levelLoader.c, getAbsValue function : found a relative modificator  \"%s\"  with relativeMode off, Value = 0 vas set\n");
         return 0;
     }
-    number = atoi(valueReaded+2);
+    
     switch(state){
-        case RELATIVE_MUL:
+        case RELATIVE_MUL:  //Si es una multiplicacion relativa, se lee el numero esquivando el *= y se guarda el valor como el valor previo por el numero
+            number = atoi(valueReaded+2);
             value = previousValue*number;
             break;
         case RELATIVE_ADD:
+            number = atoi(valueReaded+2);
             value = previousValue+number;
             break;
-        case RELATIVE_OPP:
-            value = -previousValue;
-            break;
         case RELATIVE_DIV:
+            number = atoi(valueReaded+2);
             value = previousValue/number;
             break;
-        case ABSOLUTE:
+        case RELATIVE_OPP:  //Si es el opuesto se devuelve el valor previo cambiado de signo
+            value = -previousValue; 
+            break;
+        case ABSOLUTE:      //Si es el v
+            number = atoi(valueReaded);
             value = number;
     }
     return value;

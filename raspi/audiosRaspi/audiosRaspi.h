@@ -29,7 +29,7 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #define SON_COLISION_BARRERA_MUERTA (PATH "barrera_muerta.wav")
 
 //Path al sonido de movimiento de los aliens
-#define SON_MOVIMIENTO_ALIENS "audiosRaspi/audioFilesRaspi/movimiento_aliens.wav"
+#define SON_MOVIMIENTO_ALIENS (PATH "movimiento_aliens.wav")
 
 //Path al sonido de la aparicion de la mothership
 #define SON_MOTHERSHIP_APARECE (PATH "mothership_aparece.wav")
