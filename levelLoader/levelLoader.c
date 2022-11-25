@@ -593,7 +593,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
 /*
 int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
     enum states {NONE, ABSOLUTE,RELATIVE_MUL, RELATIVE_ADD, RELATIVE_SUB, RELATIVE_DIV};   
-    int state = NONE;
+    int state = ABSOLUTE;
     if(!strncmp(valueReaded,"*=",2)){   //Se fija si los primeros dos caracteres de valueReaded es un modificador relativo de tipo multiplicacion
         state = RELATIVE_MUL;
     }
@@ -606,7 +606,11 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
     else if(!strncmp(valueReaded,"/=",2)){
         state = RELATIVE_DIV;
     }
-    if(relativeMode == 0 && (state == RELATIVE_MULL || state == RELATIVE_ADD || state == RELATIVE_SUB || state == RELATIV))
+    if(relativeMode == 0 && (state == RELATIVE_MULL || state == RELATIVE_ADD || state == RELATIVE_SUB || state == RELATIVE_DIV)){   //Si el modo relativo no estaba activado y recibe valores en modo relativo tira error
+        printf("Warning in levelLoader.c, getAbsValue function : found a relative modificator  \"%s\"  with relativeMode off, Value = 0 vas set\n");
+        return 0;
+    }
+
 }
 */
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
