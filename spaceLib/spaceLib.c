@@ -300,6 +300,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 }
 
 char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
+    printf("Entrando a shootBala\n");
     int disparo = 0;                                            //VAriable para detectar si se disparo o no
     int balasActuales = countList(*listaBalas);                  //Se cuenta la cantidad de balas activas
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
@@ -334,16 +335,17 @@ char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * 
         nave = nave -> next;
     }
     *listaBalas = bala;
-
+    printf("SAliendo de shootBala\n");
     if(naveType -> id == 40 && disparo != 0){//Si se disparo una bala de usuario
         return SL_BALA_ALIEN;
     }
     else if (naveType -> id == 40 && disparo != 0){//Si se disparo una bala de alien
         return  SL_BALA_USER;
     }
-    else if (disparo == 0){//SI no se disparo
+    else if (disparo == 0){//Si no se disparo
         return 0;
     }
+    return -1;
 }
 
 /*******************************************************************************************************************************************
