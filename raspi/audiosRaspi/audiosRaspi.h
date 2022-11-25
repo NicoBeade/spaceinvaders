@@ -13,7 +13,7 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 
 
 
-#define PATH "audiosRaspi/audioFilesRaspi/"
+#define PATH "raspi/audiosRaspi/audioFilesRaspi/"
 
 //Paths a las musicas del juego
 #define MUS_MENU (PATH "musica_menu.wav")

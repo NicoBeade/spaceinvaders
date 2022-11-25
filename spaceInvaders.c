@@ -1126,6 +1126,18 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
                     break;
+                
+                case SL_COLISION_ALIEN_MUERTO:
+
+                    break;
+                
+                case SL_COLISION_ALIEN_TOCADO:
+
+                    break;
+
+                case SL_COLISION_USER_TOCADO:
+
+                    break;
 
                 default:
                     break;
