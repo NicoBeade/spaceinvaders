@@ -596,18 +596,18 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
     int state = ABSOLUTE;
     int value, number;
     if(!strncmp(valueReaded,"*=",2)){   //Se fija si los primeros dos caracteres de valueReaded es un modificador relativo de tipo multiplicacion
-        state = RELATIVE_MUL;
+        state = RELATIVE_MUL;       //Es multiplicacion
     }
     else if(!strncmp(valueReaded,"+=",2)){
-        state = RELATIVE_ADD;
+        state = RELATIVE_ADD;       //Es adicion
     }
-    else if(!strncmp(valueReaded,"",2)){
-        state = RELATIVE_SUB;
+    else if(!strncmp(valueReaded,"-",2)){
+        state = RELATIVE_OPP;       //Es el opuesto
     }
     else if(!strncmp(valueReaded,"/=",2)){
-        state = RELATIVE_DIV;
+        state = RELATIVE_DIV;       //Es division
     }
-    if(relativeMode == 0 && (state == RELATIVE_MULL || state == RELATIVE_ADD || state == RELATIVE_SUB || state == RELATIVE_DIV)){   //Si el modo relativo no estaba activado y recibe valores en modo relativo tira error
+    if(relativeMode == 0 && (state == RELATIVE_MUL || state == RELATIVE_ADD || state == RELATIVE_OPP || state == RELATIVE_DIV)){   //Si el modo relativo no estaba activado y recibe valores en modo relativo tira error
         printf("Warning in levelLoader.c, getAbsValue function : found a relative modificator  \"%s\"  with relativeMode off, Value = 0 vas set\n");
         return 0;
     }
@@ -615,13 +615,20 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
     switch(state){
         case RELATIVE_MUL:
             value = previousValue*number;
+            break;
         case RELATIVE_ADD:
             value = previousValue+number;
+            break;
         case RELATIVE_OPP:
-            value = previousValue-number;
+            value = -previousValue;
+            break;
         case RELATIVE_DIV:
-            value = previousValue*number;
+            value = previousValue/number;
+            break;
+        case ABSOLUTE:
+            value = number;
     }
+    return value;
 }
 */
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){

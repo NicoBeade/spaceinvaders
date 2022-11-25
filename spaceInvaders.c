@@ -354,10 +354,10 @@ int main(void){
                 mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
-                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList};
-                argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList};
-                argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList };
-                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, &scoreInstantaneo, GAME_STATUS.nivelActual };
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, audioCallback};
+                argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
+                argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList, audioCallback };
+                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, &scoreInstantaneo, GAME_STATUS.nivelActual, audioCallback };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
@@ -596,7 +596,7 @@ static void* menuHandlerThread(void * data){
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
-                }
+                }https://prod.liveshare.vsengsaas.visualstudio.com/join?3BA88BDE847ED835B1269AF568BF0786EA83
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 #endif
