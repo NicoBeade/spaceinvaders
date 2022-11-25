@@ -12,7 +12,6 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #include <SDL2/SDL.h>
 
 
-
 #define PATH "raspi/audiosRaspi/audioFilesRaspi/"
 
 //Paths a las musicas del juego

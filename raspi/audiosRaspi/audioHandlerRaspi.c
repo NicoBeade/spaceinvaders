@@ -58,7 +58,6 @@ void audioHandlerRaspi(int audioId){
             pointerAudio = audioArray[i];
         }
     }
-    printf("Puntero al audio %p", pointerAudio);
     if (pointerAudio==NULL){
         fprintf(stderr,"Sound file not found, audioId received: %d \n",audioId);
         return;
