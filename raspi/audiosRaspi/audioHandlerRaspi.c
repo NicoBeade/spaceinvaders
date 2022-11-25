@@ -4,22 +4,49 @@
 
 
 #define VOLUME_JUMP 16
-
+#define MAX_AUDIOS 25
 
 
 static int volumenAudio=80;
 
+
+//array que contiene ordenados en el orden del enum de audios, los sonidos y audios del juego 
+static char* audioArray [MAX_AUDIOS] = {
+    MUS_MENU,MUS_JUEGO,
+    SON_COLISION_ALIEN_TOCADO,SON_COLISION_ALIEN_MUERTO,SON_COLISION_USER_TOCADO,SON_COLISION_USER_MUERTO,SON_COLISION_MOTHERSHIP_MUERTA,SON_COLISION_BARRERA_TOCADA,SON_COLISION_BARRERA_MUERTA,
+    SON_MOTHERSHIP_APARECE,
+    SON_MOVIMIENTO_ALIENS,
+    SON_BALA_USER,SON_BALA_ALIEN,
+    SON_SELECT_MENU,SON_SWAP_MENU,SON_ERROR_MENU,SON_SWEEP_LETRA,
+    SON_SAVED_SCORE,
+};
+
 //handler del sonido a reproducirse
 void audioHandlerRaspi(int audioId){
-    switch(audioId){
+
+    //Si es una musica
+    if (audioId == MUSICA_MENU || audioId == MUSICA_JUEGO){
+        endAudio();
+        if ( initAudio() == NO_INIT) { //Se inicia el sistema de audio nuevamente, con sus respectivas guardas
+            fprintf(stderr, "Audio not initilized.\n");
+	        endAudio();
+            return;
+            }
+        playMusic(audioArray[audioId],volumenAudio);
+    }
+
+    //Si es un sonido
+    else{
+        playSound(audioArray(audioId),volumenAudio);
+    }
+    return;
+    
+    
+/*    switch(audioId){
         //musica del juego
         case MUSICA_MENU:
             endAudio(); //Se interrumpe el audio anterior abruptamente
-            if ( initAudio() == NO_INIT) { //Se inicia el sistema de audio nuevamente, con sus respectivas guardas
-                fprintf(stderr, "Audio not initilized.\n");
-	            endAudio();
-                return;
-            }
+            
             playMusic(MUS_MENU, volumenAudio);
             break;
         case MUSICA_JUEGO:
@@ -93,7 +120,7 @@ void audioHandlerRaspi(int audioId){
 
     return;
 }
-
+*/
 
 //regulador de volumen. Recibe el sentido en el que se modifica el volumen. 1 para subir, -1 para bajar
 void regVolumeRaspi(int sentido){
@@ -110,3 +137,4 @@ void regVolumeRaspi(int sentido){
     }
     return;
 }
+
