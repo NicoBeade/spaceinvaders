@@ -1105,58 +1105,57 @@ void * moveBalaThread(void * argMoveBala){
  ******************************************************************************************************************************************/
 
 void * colliderThread(void * argCollider){
-    //Este thread se utiliza para detectar si hubo colisiones.
+//Este thread se utiliza para detectar si hubo colisiones.
 
-    argCollider_t * data = (argCollider_t*)argCollider;
-    
-    char gameData = 0;
+argCollider_t * data = (argCollider_t*)argCollider;
+char gameData = 0;
 
-    *(data->scoreInstantaneo) = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
+*(data->scoreInstantaneo) = *(data->score); //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
 
-    while(GAME_STATUS.inGame){
-        
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
-            sem_wait(&SEM_GAME);
+while(GAME_STATUS.inGame){
+usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
+sem_wait(&SEM_GAME);
 
-            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, data->scoreInstantaneo);
+gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
 
-            switch (gameData){//Detecta si se debe terminar el nivel o no.
-                case LOST_LEVEL:
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                    menuGame.exitStatus = 0;
-                    //Audio lost level
-                    break;
-                
-                case WON_LEVEL:
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                    menuGame.exitStatus = 0;
-                    //Audio won level
-                    break;
-                
-                case SL_COLISION_ALIEN_MUERTO:
-                    //Audio alien muerto
-                    break;
-                
-                case SL_COLISION_ALIEN_TOCADO:
-                    //Audio alien tocado
-                    break;
+switch (gameData){//Detecta si se debe terminar el nivel o no.
+case LOST_LEVEL:
+GAME_STATUS.pantallaActual = MENU;
+GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+menuGame.exitStatus = 0;
+//Audio lost level
+break;
+case WON_LEVEL:
+GAME_STATUS.pantallaActual = MENU;
+GAME_STATUS.menuActual = MENU_WON_LEVEL;
+menuGame.exitStatus = 0;
+//Audio won level
+*(data->score) = *(data->scoreInstantaneo);
+break;
+case SL_COLISION_ALIEN_MUERTO:
+//Audio alien muerto
+objectType_t * alienRipedAsset = getObjType((*(data -> alienList))->type);//Incrementa el puntaje
+*(data->scoreInstantaneo) += (alienRipedAsset->score) * GAME_STATUS.nivelActual;
+break;
+case SL_COLISION_ALIEN_TOCADO:
+//Audio alien tocado
+break;
 
-                case SL_COLISION_USER_TOCADO:
+case SL_COLISION_USER_TOCADO:
 
-                    break;
+break;
 
-                default:
-                    break;
-            }
-
-            sem_post(&SEM_GAME);
-        }
-    }
-    printf("Killed collider\n");
-    pthread_exit(0);
+default:
+break;
 }
+
+sem_post(&SEM_GAME);
+}
+}
+printf("Killed collider\n");
+pthread_exit(0);
+}
+
  /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
