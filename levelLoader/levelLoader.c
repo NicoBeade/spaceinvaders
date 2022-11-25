@@ -590,13 +590,13 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     }
     return 0;
 }
-
-int getAbsValue(int relativeMode, char * valueReaded, int previousValue){
-    enum states {RELATIVE_MUL, RELATIVE_ADD, RELATIVE_SUB, RELATIVE_DIV};
-    int state = ABSOLUTE;
-    strncmp(valueReaded,"*=",2);
+/*
+int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
+    enum states {NONE, ABSOLUTE,RELATIVE_MUL, RELATIVE_ADD, RELATIVE_SUB, RELATIVE_DIV};   
+    int state = NONE;
+    if(!strncmp(valueReaded,"*=",2))
 }
-
+*/
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     int level0True =  levelNo? 0 : 1;
