@@ -48,17 +48,10 @@ static audio_t* audioArray [MAX_AUDIOS] = {
 //handler del sonido a reproducirse
 void audioHandlerRaspi(int audioId){
     printf("Reproduciendo audio con id %d \n",audioId);
-    static int inicializado = 0;
-    static Audio* audioPrueba;
-    if (inicializado ==0){
-        inicializado++;
-        audioPrueba = createAudio("raspi/audiosRaspi/audioFilesRaspi/bala_alien.wav",0,SDL_MIX_MAXVOLUME);
-    }
-   
-    //Primero se ubica el audio en la look up table sabiendo el audioId
-    audio_t* pointerAudio = NULL;
-    int i;
 
+    //Primero se ubica el audio en la look up table sabiendo el audioId
+
+    int i;
     for (i=0; i<MAX_AUDIOS && pointerAudio == NULL; i++){
         if (audioArray[i]->id == audioId){
             pointerAudio = audioArray[i];
@@ -80,9 +73,6 @@ void audioHandlerRaspi(int audioId){
             return;
             }
         playMusic(pointerAudio->audio,volumenAudio);
-    }
-    else if (audioId == MOVIMIENTO_ALIENS){
-        playSoundFromMemory(audioPrueba,SDL_MIX_MAXVOLUME);
     }
     //Si es un sonido
     else{
