@@ -1118,20 +1118,22 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_LOST_LEVEL;
                     menuGame.exitStatus = 0;
+                    //Audio lost level
                     break;
                 
                 case WON_LEVEL:
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
+                    //Audio won level
                     break;
                 
                 case SL_COLISION_ALIEN_MUERTO:
-
+                    //Audio alien muerto
                     break;
                 
                 case SL_COLISION_ALIEN_TOCADO:
-
+                    //Audio alien tocado
                     break;
 
                 case SL_COLISION_USER_TOCADO:
