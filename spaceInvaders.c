@@ -928,7 +928,7 @@ static void* levelHandlerThread(void * data){
             }
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
-                *(menu -> balasUsr) = shootBala(*(menu -> naveUsr), *(menu -> balasUsr), menu -> levelSettings, menu -> audioCallback);
+                char eventoBalaCAMBIAR = shootBala(*(menu -> naveUsr), menu -> balasUsr, menu -> levelSettings);
                 
                 stopShoot = 20;
             }
