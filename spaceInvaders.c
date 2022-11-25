@@ -977,7 +977,7 @@ void * moveAlienThread(void* argMoveAlien){
             sem_wait(&SEM_GAME);
 
             fasterAliens = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
-
+            
             if(fasterAliens == FASTER_ALIENS){//Si los aliens llegan al borde,
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
             }
