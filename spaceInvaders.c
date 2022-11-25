@@ -52,13 +52,13 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
-    //audioCallback_t audioCallback;
+    audioCallback_t audioCallback;
 }argMoveAlien_t;
 
 typedef struct{
     level_setting_t * levelSettings;
     object_t ** mothership;
-    //audioCallback_t audioCallback;
+    audioCallback_t audioCallback;
 }argMoveMothership_t;
 
 typedef struct{
@@ -66,7 +66,7 @@ typedef struct{
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
     object_t ** alienList;
-    //audioCallback_t audioCallback;
+    audioCallback_t audioCallback;
 }argMoveBala_t;
 
 typedef struct{
@@ -79,7 +79,7 @@ typedef struct{
     int * score;//Almacena el score del usuario.
     int * scoreInstantaneo;//Muestra el score a medida que se va actualizando sin necesidad de ganar el nivel.
     int nivelActual;//Indica el nivel que se esta jugando.
-    //audioCallback_t audioCallback;
+    audioCallback_t audioCallback;
 }argCollider_t;
 
 /*******************************************************************************************************************************************

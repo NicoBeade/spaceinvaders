@@ -7,7 +7,7 @@ shootProb 3
 maxBullets 7
 balaID 8
 sprite1 game/spritesAllegro/alien1.png
-sprite2 game/spritesAllegro/alien1.png
+sprite2 game/spritesAllegro/alien2.png
 sprite3 game/spritesAllegro/alien1.png
 score 5
 deathSound 0

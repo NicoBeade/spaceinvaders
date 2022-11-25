@@ -35,7 +35,7 @@
  * 
  ******************************************************************************************************************************************/
 
-//typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
+typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
 
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
@@ -119,7 +119,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
     level_setting_t* levelSettings;
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
-    //audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
+    audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
 } game_t;
 
 typedef struct{
@@ -163,8 +163,13 @@ enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_G
 //*************MENUES
 enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, START_LEVEL_MENU};//Determinan un valor para cada menu
 
-//*************ESTADO DE PARTIDA
-enum GAME_VALUE { WON_LEVEL = 1, LOST_LEVEL, FASTER_ALIENS };//Se utilizan para determinar cuando se gana o pierde una partida.
+//*************EVENTOS DE SPACELIB
+enum EVENTOS_SPACELIB {  FASTER_ALIENS,WON_LEVEL,LOST_LEVEL,
+                        SL_COLISION_ALIEN_TOCADO,SL_COLISION_ALIEN_MUERTO,SL_COLISION_USER_TOCADO,SL_COLISION_USER_MUERTO,SL_COLISION_MOTHERSHIP_MUERTA,SL_COLISION_BARRERA_TOCADA,SL_COLISION_BARRERA_MUERTA,
+                        SL_MOTHERSHIP_APARECE,
+                        SL_MOVIMIENTO_ALIENS,
+                        SL_BALA_USER,SL_BALA_ALIEN,
+              };
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

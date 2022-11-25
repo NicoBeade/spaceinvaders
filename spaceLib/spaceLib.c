@@ -180,10 +180,13 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
         auxiliar = auxiliar -> next;
     }
 
-    if(vy == 1){//Si los aliens llegaron al borde, indica que hay que incrementar la velocidad de los aliens.
+    
+    if(vy == levelSettings -> desplazamientoY){//Si los aliens llegaron al borde, indica que hay que incrementar la velocidad de los aliens.
+        printf("%d\n", vy);
         return FASTER_ALIENS;
     }
     else{
+        printf("return 0 %d\n", vy);
         return 0;
     }
 }
@@ -326,7 +329,7 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
-            audioCallback(BALA_USER);
+            //audioCallback(BALA_USER);
             balasDisponibles--;
         }
         nave = nave -> next;
@@ -377,6 +380,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
+    char returnEvent = 0;
+
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
@@ -403,6 +408,10 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
                     listBarreras = *barrerasList;
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_MUERTA : returnEvent;
+                }
+                else{//Si no se mato a la barrera
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_TOCADA : returnEvent;
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
@@ -424,6 +433,9 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
                 return LOST_LEVEL;
+            }
+            else{//Si el usuario no debe morir
+                returnEvent = (returnEvent == 0) ? SL_COLISION_USER_TOCADO: returnEvent;
             }
             listBalasEnemigas->lives -= 1;
             if(listBalasEnemigas-> lives == 0){//Si la bala debe morir

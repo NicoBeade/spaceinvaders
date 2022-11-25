@@ -114,8 +114,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     ALLEGRO_SAMPLE_ID * musicaActual = NULL;
 
     //Inicializacion de musica
-    musica[MUSICA_MENU - AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
-    musica[MUSICA_JUEGO - AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
+    musica[MUSICA_MENU- AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
+    musica[MUSICA_JUEGO - AUDIOMAX] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/musica_juego.wav");
 
     //Inicializacion de Sonidos
     audios[COLISION_ALIEN_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_tocado.wav");
@@ -248,8 +248,13 @@ int showEntity(object_t * entity){
     //Se busca la direccion del sprite
     objectType_t * asset = getObjType(entity->type);
     
-    char * sprite = asset->sprite1;
-
+    char * sprite;
+    if(entity->animationStatus %2){
+        sprite = asset->sprite1;
+    }
+    else{
+        sprite = asset->sprite2;
+    }
     if (sprite == NULL){
         return -1;
     }

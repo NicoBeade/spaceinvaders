@@ -97,8 +97,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
 #define TAMLETRAX 24
 #define TAMLETRAY 36
 
-#define X_MAX 960              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
-#define Y_MAX 700              //Alto maximo de la pantalla
+#define X_MAX 900              //Ancho maximo de la pantalla. Vamos a tomar la primer posicion como 0.
+#define Y_MAX 760              //Alto maximo de la pantalla
 
 #define BGCOLOR 0,0,0       //Color del background (negro)
 
