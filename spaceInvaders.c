@@ -31,9 +31,7 @@
 #include "raspi/displayRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
-//#include "raspi/audiosRaspi/audio.h"
-//#include "raspi/audiosRaspi/audioHandlerRaspi.h"
-//#include <SDL2/SDL.h>
+#include "raspi/audiosRaspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
@@ -229,26 +227,26 @@ int main(void){
 
     pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
 
-    //audioCallback_t audioCallback;
-    //audioCallback_t volumeCallback;
+    audioCallback_t audioCallback;
+    audioCallback_t volumeCallback;
     
     #ifdef RASPI
     char platform[4] = "rpi";
-    /* Init Simple-SDL2-Audio 
+    //Inicializacion del audio de raspi
     if (initAudio() == NO_INIT){
         fprintf(stderr, "Audio not initilized.\n");
 	    endAudio();
 	    return -1;
     }
     audioCallback = audioHandlerRaspi;
-    volumeCallback = regVolumeRaspi;*/
+    volumeCallback = regVolumeRaspi;
     #endif
 
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
 
-    //menuGame.audioCallback = audioCallback;
+    menuGame.audioCallback = audioCallback;
 
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
@@ -982,10 +980,10 @@ void * moveAlienThread(void* argMoveAlien){
             {
             case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
-                //Sonido de mover aliens
+                ((argMoveAlien_t*)argMoveAlien)->audioCallback(MOVIMIENTO_ALIENS);
                 break;
             case SL_MOVIMIENTO_ALIENS:
-                //Sonido de mover aliens
+                ((argMoveAlien_t*)argMoveAlien)->audioCallback(MOVIMIENTO_ALIENS);
                 break;
             default:
                 break;
