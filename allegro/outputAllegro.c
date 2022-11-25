@@ -122,7 +122,22 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     audios[COLISION_ALIEN_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_muerto.wav");
     audios[COLISION_USER_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_tocado.wav");
     audios[COLISION_USER_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_muerto.wav");
-    audios[BALA_USER] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/bala_user.wav");
+    audios[BALA_USER] = al_load_sample("game/audio/shoot.wav");
+    audios[COLISION_MOTHERSHIP_MUERTA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/mothershipp_muerta.wav");
+    audios[COLISION_BARRERA_TOCADA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/barrera_tocada.wav");
+    audios[COLISION_BARRERA_MUERTA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/barrera_muerta.wav");
+    audios[MOTHERSHIP_APARECE] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/mothership_aparece.wav");
+    audios[MOVIMIENTO_ALIENS] = al_load_sample("game/audio/fastinvader1.wav");
+    audios[BALA_ALIEN] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/bala_alien.wav");
+    audios[SELECT_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/select_menu.wav");
+    audios[SWAP_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/swap_menu.wav");
+    audios[ERROR_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/error_menu.wav");
+    audios[SWEEP_LETRA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/sweep_letra.wav");
+    audios[SAVED_SCORE] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/saved_score.wav");
+
+    if(audios[BALA_ALIEN]== NULL){
+        printf("no se cargo bala alien\n");
+    }
     
     al_play_sample(musica[MUSICA_MENU - AUDIOMAX], 0.8, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
 
@@ -394,7 +409,7 @@ int showSprites(sprite_t * inicial){
          * 
          * ***********************************************************/
 
-void addAudioAllegro(int id){
+void playAudioAllegro(int id){
     
     int i = 0;
 

@@ -130,7 +130,7 @@ sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy);
 
 sprite_t * emptySprite(sprite_t * firstSprite);
 
-void addAudioAllegro(int id);
+void playAudioAllegro(int id);
 
 texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
 void refreshDatos( char * toScore, char * toVidas, int score, int vidas);

@@ -244,6 +244,8 @@ int main(void){
 
     #ifdef ALLEGRO
     char platform[4] = "lnx";
+
+    audioCallback = playAudioAllegro;
     #endif
 
     menuGame.audioCallback = audioCallback;
@@ -930,6 +932,11 @@ static void* levelHandlerThread(void * data){
                 
                 char eventoBalaCAMBIAR = shootBala(*(menu -> naveUsr), menu -> balasUsr, menu -> levelSettings);
                 
+                if(eventoBalaCAMBIAR == SL_BALA_USER){
+
+                    (menu->audioCallback)(BALA_USER);
+                }
+
                 stopShoot = 20;
             }
         }
@@ -984,6 +991,7 @@ void * moveAlienThread(void* argMoveAlien){
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
+
                 break;
             default:
                 break;
@@ -1063,10 +1071,10 @@ void * moveBalaThread(void * argMoveBala){
             
             switch (evento){
             case SL_BALA_ALIEN:
-                /* Disparo del alien */
+                (data->audioCallback)(BALA_ALIEN);
                 break;
             case SL_BALA_USER:
-                /* Disparo del user */
+                (data->audioCallback)(BALA_USER);
                 break;
             default:
                 break;
