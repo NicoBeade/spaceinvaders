@@ -47,7 +47,7 @@ static audio_t* audioArray [MAX_AUDIOS] = {
 
 //handler del sonido a reproducirse
 void audioHandlerRaspi(int audioId){
-    
+    printf("Reproduciendo audio con id %d \n",audioId);
     //Primero se ubica el audio en la look up table sabiendo el audioId
     audio_t* pointerAudio = NULL;
     int i;
