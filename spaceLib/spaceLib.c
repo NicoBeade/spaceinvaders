@@ -335,7 +335,7 @@ char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * 
         nave = nave -> next;
     }
     *listaBalas = bala;
-    if(naveType -> balaID == 40 && disparo != 0){//Si se disparo una bala de usuario
+    if(naveType -> id == 40 && disparo != 0){//Si se disparo una bala de usuario
         return SL_BALA_USER;
     }
     else if (naveType -> id != 40 && disparo != 0){//Si se disparo una bala de alien

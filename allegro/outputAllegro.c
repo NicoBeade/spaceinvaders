@@ -109,37 +109,19 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     al_init_acodec_addon();
     al_reserve_samples(MUSICAMAX - 1);
 
-    ALLEGRO_SAMPLE * audios[AUDIOMAX];
-    ALLEGRO_SAMPLE * musica[MUSICAMAX - AUDIOMAX];
+    audio_t audios[AUDIOMAX];
+    audio_t musica[MUSICAMAX - AUDIOMAX];
     ALLEGRO_SAMPLE_ID * musicaActual = NULL;
 
     //Inicializacion de musica
-    musica[MUSICA_MENU- AUDIOMAX] = al_load_sample("game/audio/spaceinvadersMainTheme.wav");
-    musica[MUSICA_JUEGO - AUDIOMAX] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/musica_juego.wav");
+    INITMUSICA
 
     //Inicializacion de Sonidos
-    audios[COLISION_ALIEN_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_tocado.wav");
-    audios[COLISION_ALIEN_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/alien_muerto.wav");
-    audios[COLISION_USER_TOCADO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_tocado.wav");
-    audios[COLISION_USER_MUERTO] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/user_muerto.wav");
-    audios[BALA_USER] = al_load_sample("game/audio/shoot.wav");
-    audios[COLISION_MOTHERSHIP_MUERTA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/mothershipp_muerta.wav");
-    audios[COLISION_BARRERA_TOCADA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/barrera_tocada.wav");
-    audios[COLISION_BARRERA_MUERTA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/barrera_muerta.wav");
-    audios[MOTHERSHIP_APARECE] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/mothership_aparece.wav");
-    audios[MOVIMIENTO_ALIENS] = al_load_sample("game/audio/fastinvader1.wav");
-    audios[BALA_ALIEN] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/bala_alien.wav");
-    audios[SELECT_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/select_menu.wav");
-    audios[SWAP_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/swap_menu.wav");
-    audios[ERROR_MENU] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/error_menu.wav");
-    audios[SWEEP_LETRA] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/sweep_letra.wav");
-    audios[SAVED_SCORE] = al_load_sample("raspi/audiosRaspi/audioFilesRaspi/saved_score.wav");
+    INITAUDIO
 
-    if(audios[BALA_ALIEN]== NULL){
-        printf("no se cargo bala alien\n");
-    }
-    
-    al_play_sample(musica[MUSICA_MENU - AUDIOMAX], 0.8, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+    al_play_sample(audios[COLISION_ALIEN_MUERTO].sample, audios[COLISION_ALIEN_MUERTO].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+
+    al_play_sample(musica[MUSICA_MENU - AUDIOMAX].sample, musica[MUSICA_MENU - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
 
     //-------------------------------------------------
 
@@ -221,12 +203,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
         for(i=0; i<20; i++){
             if(idQeue[i] != 0){
                 if(idQeue[i] < AUDIOMAX){
-                    al_play_sample(audios[idQeue[i]], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                    al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                 }
                 else if(idQeue[i] < MUSICAMAX){
                     al_stop_sample(musicaActual);
                     
-                    al_play_sample(musica[idQeue[i] - AUDIOMAX], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
                 }
             }
             idQeue[i]=0;

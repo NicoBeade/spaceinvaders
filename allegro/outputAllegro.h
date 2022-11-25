@@ -22,6 +22,7 @@
 #include <allegro5/allegro_image.h>
 #include "../utilidades.h"
 #include "allegro.h"
+#include "audio.h"
 
 /*******************************************************************************************************************************************
  * 
@@ -53,6 +54,14 @@ typedef struct
     bool * displayFlag;
 
 }output_data_t;
+
+typedef struct{
+
+    
+    ALLEGRO_SAMPLE * sample;
+    float volume;
+
+}audio_t;
     
 enum {smallF, mediumF, largeF, bigF, FONTMAX};
 
