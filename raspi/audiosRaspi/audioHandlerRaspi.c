@@ -52,7 +52,7 @@ void audioHandlerRaspi(int audioId){
     static Audio* audioPrueba;
     if (inicializado ==0){
         inicializado++;
-        audioPrueba = createAudio("raspi/audiosRaspi/audioFilesRaspi/movimiento_aliens.wav",0,SDL_MIX_MAXVOLUME);
+        audioPrueba = createAudio("raspi/audiosRaspi/audioFilesRaspi/bala_alien.wav",0,SDL_MIX_MAXVOLUME);
     }
    
     //Primero se ubica el audio en la look up table sabiendo el audioId
