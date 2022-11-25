@@ -977,8 +977,7 @@ void * moveAlienThread(void* argMoveAlien){
             evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
             printf("Little chorch\n");
             printf("Puntero al callback %p\n",(((argMoveAlien_t*)argMoveAlien)->audioCallback));
-            switch (evento)
-            {
+            switch (evento){
             case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
