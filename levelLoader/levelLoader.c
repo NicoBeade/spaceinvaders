@@ -594,7 +594,19 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
 int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
     enum states {NONE, ABSOLUTE,RELATIVE_MUL, RELATIVE_ADD, RELATIVE_SUB, RELATIVE_DIV};   
     int state = NONE;
-    if(!strncmp(valueReaded,"*=",2))
+    if(!strncmp(valueReaded,"*=",2)){   //Se fija si los primeros dos caracteres de valueReaded es un modificador relativo de tipo multiplicacion
+        state = RELATIVE_MUL;
+    }
+    else if(!strncmp(valueReaded,"+=",2)){
+        state = RELATIVE_ADD;
+    }
+    else if(!strncmp(valueReaded,"-=",2)){
+        state = RELATIVE_SUB;
+    }
+    else if(!strncmp(valueReaded,"/=",2)){
+        state = RELATIVE_DIV;
+    }
+    if(relativeMode == 0 && (state == RELATIVE_MULL || state == RELATIVE_ADD || state == RELATIVE_SUB || state == RELATIV))
 }
 */
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
