@@ -975,7 +975,8 @@ void * moveAlienThread(void* argMoveAlien){
             sem_wait(&SEM_GAME);
 
             evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
-            printf("Puntero al callback %p",(((argMoveAlien_t*)argMoveAlien)->audioCallback));
+            printf("Little chorch\n");
+            printf("Puntero al callback %p\n",(((argMoveAlien_t*)argMoveAlien)->audioCallback));
             switch (evento)
             {
             case FASTER_ALIENS:
