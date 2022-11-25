@@ -182,12 +182,10 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 
     
     if(vy == levelSettings -> desplazamientoY){//Si los aliens llegaron al borde, indica que hay que incrementar la velocidad de los aliens.
-        printf("%d\n", vy);
         return FASTER_ALIENS;
     }
     else{
-        printf("return 0 %d\n", vy);
-        return 0;
+        return SL_MOVIMIENTO_ALIENS;
     }
 }
 
@@ -301,10 +299,11 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     return newList;
 }
 
-object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting_t * levelSetting, audioCallback_t audioCallback){
+char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
+    int disparo = 0;                                            //VAriable para detectar si se disparo o no
     int balasActuales = countList(listaBalas);                  //Se cuenta la cantidad de balas activas
     object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
-    object_t * bala = listaBalas;                               //Se crea un puntero a la lista de balas
+    object_t * bala = *listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
@@ -329,12 +328,22 @@ object_t * shootBala(object_t * listaNaves, object_t * listaBalas, level_setting
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
             posicionBala.y = nave->pos.y; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
-            //audioCallback(BALA_USER);
             balasDisponibles--;
+            disparo++;
         }
         nave = nave -> next;
     }
-    return bala;
+    *listaBalas = bala;
+
+    if(naveType -> id == 40 && disparo != 0){//Si se disparo una bala de usuario
+        return SL_BALA_ALIEN;
+    }
+    else if (naveType -> id == 40 && disparo != 0){//Si se disparo una bala de alien
+        return  SL_BALA_USER;
+    }
+    else if (disparo == 0){//SI no se disparo
+        return 0;
+    }
 }
 
 /*******************************************************************************************************************************************

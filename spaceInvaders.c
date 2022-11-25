@@ -969,17 +969,26 @@ void * moveAlienThread(void* argMoveAlien){
 
     static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
 
-    char fasterAliens = 0;
+    char evento;
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
 
-            fasterAliens = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
+            evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
             
-            if(fasterAliens == FASTER_ALIENS){//Si los aliens llegan al borde,
+            switch (evento)
+            {
+            case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
+                //Sonido de mover aliens
+                break;
+            case SL_MOVIMIENTO_ALIENS:
+                //Sonido de mover aliens
+                break;
+            default:
+                break;
             }
             sem_post(&SEM_GAME);
 
@@ -1032,6 +1041,8 @@ void * moveBalaThread(void * argMoveBala){
     //Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t * data = (argMoveBala_t*)argMoveBala;
 
+    char evento;
+
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
@@ -1046,12 +1057,23 @@ void * moveBalaThread(void * argMoveBala){
 
             if(*(data -> alienList) != NULL){
 
-                (*(data -> balasEnemigas)) = shootBala(*(data -> alienList), *(data -> balasEnemigas), data -> levelSettings, data -> audioCallback);
+                evento = shootBala(*(data -> alienList), (data -> balasEnemigas), data -> levelSettings);
             }
             else{
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");
             }
             
+            switch (evento){
+            case SL_BALA_ALIEN:
+                /* Disparo del alien */
+                break;
+            case SL_BALA_USER:
+                /* Disparo del user */
+                break;
+            default:
+                break;
+            }
+
             if(*(data -> balasUsr) != NULL){
 
                 (*(data -> balasUsr)) = moveBala(data -> balasUsr, data -> levelSettings);
