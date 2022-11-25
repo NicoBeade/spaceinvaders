@@ -484,10 +484,15 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     listAliens = *alienList;
                     printf("\n\nSCORE: %d\n\n", *scoreInstantaneo);
 
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_MUERTO : returnEvent;
+
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
                         *scoreReal = *scoreInstantaneo;
                         return WON_LEVEL;
                     }
+                }
+                else{//SI el alien no de morir
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_TOCADO : returnEvent;
                 }
 
                 listBalasUsr->lives -= 1;
