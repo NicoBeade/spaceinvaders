@@ -31,9 +31,9 @@
 #include "raspi/displayRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
-#include "raspi/audiosRaspi/audio.h"
-#include "raspi/audiosRaspi/audioHandlerRaspi.h"
-#include <SDL2/SDL.h>
+//#include "raspi/audiosRaspi/audio.h"
+//#include "raspi/audiosRaspi/audioHandlerRaspi.h"
+//#include <SDL2/SDL.h>
 #endif
 
 #ifdef ALLEGRO
@@ -52,13 +52,13 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
-    audioCallback_t audioCallback;
+    //audioCallback_t audioCallback;
 }argMoveAlien_t;
 
 typedef struct{
     level_setting_t * levelSettings;
     object_t ** mothership;
-    audioCallback_t audioCallback;
+    //audioCallback_t audioCallback;
 }argMoveMothership_t;
 
 typedef struct{
@@ -66,7 +66,7 @@ typedef struct{
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
     object_t ** alienList;
-    audioCallback_t audioCallback;
+    //audioCallback_t audioCallback;
 }argMoveBala_t;
 
 typedef struct{
@@ -79,7 +79,7 @@ typedef struct{
     int * score;//Almacena el score del usuario.
     int * scoreInstantaneo;//Muestra el score a medida que se va actualizando sin necesidad de ganar el nivel.
     int nivelActual;//Indica el nivel que se esta jugando.
-    audioCallback_t audioCallback;
+    //audioCallback_t audioCallback;
 }argCollider_t;
 
 /*******************************************************************************************************************************************
@@ -229,26 +229,26 @@ int main(void){
 
     pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
 
-    audioCallback_t audioCallback;
-    audioCallback_t volumeCallback;
-
+    //audioCallback_t audioCallback;
+    //audioCallback_t volumeCallback;
+    
     #ifdef RASPI
     char platform[4] = "rpi";
-    /* Init Simple-SDL2-Audio */
+    /* Init Simple-SDL2-Audio 
     if (initAudio() == NO_INIT){
         fprintf(stderr, "Audio not initilized.\n");
 	    endAudio();
 	    return -1;
     }
     audioCallback = audioHandlerRaspi;
-    volumeCallback = regVolumeRaspi;
+    volumeCallback = regVolumeRaspi;*/
     #endif
 
     #ifdef ALLEGRO
     char platform[4] = "lnx";
     #endif
 
-    menuGame.audioCallback = audioCallback;
+    //menuGame.audioCallback = audioCallback;
 
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);

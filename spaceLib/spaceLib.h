@@ -17,7 +17,7 @@
  #define SPACELIB_H
 
 #include <stdint.h>
-#include "../raspi/audiosRaspi/audiosRaspi.h"
+//#include "../raspi/audiosRaspi/audiosRaspi.h"
 
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
@@ -35,7 +35,7 @@
  * 
  ******************************************************************************************************************************************/
 
-typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
+//typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
 
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
@@ -119,7 +119,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar el
     level_setting_t* levelSettings;
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
-    audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
+    //audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
 } game_t;
 
 typedef struct{
