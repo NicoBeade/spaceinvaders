@@ -57,6 +57,8 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     int cantOpciones;//Cantidad de opciones del menu.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+
+    void (*audioCallback)(int);
     
 }menu_t;
 

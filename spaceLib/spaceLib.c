@@ -335,10 +335,10 @@ char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * 
         nave = nave -> next;
     }
     *listaBalas = bala;
-    if(naveType -> balaID == 21 && disparo != 0){//Si se disparo una bala de usuario
+    if(naveType -> balaID == 40 && disparo != 0){//Si se disparo una bala de usuario
         return SL_BALA_USER;
     }
-    else if (naveType -> balaID == 8 && disparo != 0){//Si se disparo una bala de alien
+    else if (naveType -> id != 40 && disparo != 0){//Si se disparo una bala de alien
         return  SL_BALA_ALIEN;
     }
     else if (disparo == 0){//Si no se disparo
@@ -385,14 +385,14 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr){
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, int nivelActual, int* scoreReal, int* scoreInstantaneo){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
     char returnEvent = 0;
 
-    //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados
+    //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
         printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
@@ -475,9 +475,18 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 collition = 0;
                 listAliens->lives -= 1;
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
+
+                    objectType_t * alienRipedAsset = getObjType(listAliens->type);//Incrementa el puntaje
+                    *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
+
+                    *alienList = destroyObj(*alienList, listAliens);//Elimina a ese alien de la lista
+                    listAliens = *alienList;
+                    printf("\n\nSCORE: %d\n\n", *scoreInstantaneo);
+
                     returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_MUERTO : returnEvent;
 
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
+                        *scoreReal = *scoreInstantaneo;
                         return WON_LEVEL;
                     }
                 }

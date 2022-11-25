@@ -54,12 +54,4 @@ ALIEN
     posY  200
 END
 
-
-
-USUARIO
-    type 40
-    posX 520
-    posY 650
-END
-
 velBalas			9

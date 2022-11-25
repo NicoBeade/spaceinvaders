@@ -285,6 +285,8 @@ int main(void){
                 
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
+                MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback;
+
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
                 pthread_join(menuHandlerT, NULL);
@@ -305,7 +307,7 @@ int main(void){
                 sprintf(stringWithScore,"%d",score);
                 #endif
 
-                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3};
+                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3, &audioCallback};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -583,6 +585,8 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
+
+                (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
 
@@ -609,6 +613,8 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
+
+                (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
 
@@ -624,6 +630,8 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
+
+                (menu->audioCallback)(SELECT_MENU);
             }
             
             if(ATRAS && GAME_STATUS.menuAnterior != -1 && GAME_STATUS.menuActual != MENU_INICIO){//Si se quiere volver al menu anterior
@@ -750,6 +758,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
+                (*menu->audioCallback)(SWEEP_LETRA);
                 stopSweep = 4;                
             }
 
@@ -778,6 +787,8 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.  
                 #endif
+
+                (*menu->audioCallback)(SWEEP_LETRA); 
 
                 stopSweep = 4;
             }
@@ -821,6 +832,8 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
+                (*menu->audioCallback)(SWEEP_LETRA);
+
                 stopSweep = 4;
             }
 
@@ -862,6 +875,9 @@ static void* saveScoreHandlerThread(void * data){
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
+
+                (*menu->audioCallback)(SWEEP_LETRA);
+                
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
@@ -876,6 +892,8 @@ static void* saveScoreHandlerThread(void * data){
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
 
+                (*menu->audioCallback)(SAVE_SCORE);
+                
                 stopSweep = 4;
             }
         }
@@ -1105,56 +1123,63 @@ void * moveBalaThread(void * argMoveBala){
  ******************************************************************************************************************************************/
 
 void * colliderThread(void * argCollider){
-//Este thread se utiliza para detectar si hubo colisiones.
+    //Este thread se utiliza para detectar si hubo colisiones.
 
-argCollider_t * data = (argCollider_t*)argCollider;
-char gameData = 0;
+    argCollider_t * data = (argCollider_t*)argCollider;
+    
+    char gameData = 0;
 
-*(data->scoreInstantaneo) = *(data->score); //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
+    *(data->scoreInstantaneo) = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
 
-while(GAME_STATUS.inGame){
-usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
-sem_wait(&SEM_GAME);
+    while(GAME_STATUS.inGame){
+        
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
+            sem_wait(&SEM_GAME);
 
-gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr);
+            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, data->scoreInstantaneo);
 
-switch (gameData){//Detecta si se debe terminar el nivel o no.
-case LOST_LEVEL:
-GAME_STATUS.pantallaActual = MENU;
-GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-menuGame.exitStatus = 0;
-//Audio lost level
-break;
-case WON_LEVEL:
-GAME_STATUS.pantallaActual = MENU;
-GAME_STATUS.menuActual = MENU_WON_LEVEL;
-menuGame.exitStatus = 0;
-//Audio won level
-*(data->score) = *(data->scoreInstantaneo);
-break;
-case SL_COLISION_ALIEN_MUERTO:
-//Audio alien muerto
-objectType_t * alienRipedAsset = getObjType((*(data -> alienList))->type);//Incrementa el puntaje
-*(data->scoreInstantaneo) += (alienRipedAsset->score) * GAME_STATUS.nivelActual;
-break;
-case SL_COLISION_ALIEN_TOCADO:
-//Audio alien tocado
-break;
+            switch (gameData){//Detecta si se debe terminar el nivel o no.
+                case LOST_LEVEL:
+                    GAME_STATUS.pantallaActual = MENU;
+                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                    menuGame.exitStatus = 0;
+                    
+                    (data->audioCallback)(COLISION_USER_MUERTO);
+                    break;
+                
+                case WON_LEVEL:
+                    GAME_STATUS.pantallaActual = MENU;
+                    GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                    menuGame.exitStatus = 0;
+                    
+                    (data->audioCallback)(SAVED_SCORE);
+                    break;
+                
+                case SL_COLISION_ALIEN_MUERTO:
+                    
+                    (data->audioCallback)(COLISION_ALIEN_MUERTO);
+                    break;
+                
+                case SL_COLISION_ALIEN_TOCADO:
 
-case SL_COLISION_USER_TOCADO:
+                    (data->audioCallback)(COLISION_ALIEN_TOCADO);
+                    break;
 
-break;
+                case SL_COLISION_USER_TOCADO:
 
-default:
-break;
-}
+                    (data->audioCallback)(COLISION_USER_TOCADO);
+                    break;
 
-sem_post(&SEM_GAME);
-}
-}
-printf("Killed collider\n");
-pthread_exit(0);
+                default:
+                    break;
+            }
+
+            sem_post(&SEM_GAME);
+        }
+    }
+    printf("Killed collider\n");
+    pthread_exit(0);
 }
 
  /*******************************************************************************************************************************************
