@@ -6,7 +6,7 @@
 #define VOLUME_JUMP 16
 #define MAX_AUDIOS 25
 
-typedef static struct {
+typedef struct {
     int id;
     char* audio;
 }audio_t;
