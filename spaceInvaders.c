@@ -596,7 +596,7 @@ static void* menuHandlerThread(void * data){
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
-                }https://prod.liveshare.vsengsaas.visualstudio.com/join?3BA88BDE847ED835B1269AF568BF0786EA83
+                }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 (menu -> changeOption)(&argChangeOption);
                 #endif
