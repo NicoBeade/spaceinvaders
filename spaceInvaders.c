@@ -980,10 +980,10 @@ void * moveAlienThread(void* argMoveAlien){
             {
             case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
-                ((argMoveAlien_t*)argMoveAlien)->audioCallback(MOVIMIENTO_ALIENS);
+                (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
                 break;
             case SL_MOVIMIENTO_ALIENS:
-                ((argMoveAlien_t*)argMoveAlien)->audioCallback(MOVIMIENTO_ALIENS);
+                (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
                 break;
             default:
                 break;
