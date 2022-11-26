@@ -363,6 +363,8 @@ int main(void){
 
                 GAME_STATUS.inGame = 1;
 
+                printf("usrLives: %d\n", GAME_STATUS.usrLives);
+
                 UsrList->lives = GAME_STATUS.usrLives;
 
                 //HARDCODED
@@ -963,8 +965,6 @@ static void* levelHandlerThread(void * data){
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
                 char eventoBalaCAMBIAR = shootBala(menu -> naveUsr, menu -> balasUsr, menu -> levelSettings);
-
-                printf("Puntero a balas en level handler: %p", *(menu->balasUsr));
                 
                 if(eventoBalaCAMBIAR == SL_BALA_USER){
 
@@ -1144,6 +1144,7 @@ void * colliderThread(void * argCollider){
     argCollider_t * data = (argCollider_t*)argCollider;
     
     char gameData = 0;
+    char lost = 1;
 
     *(data->scoreInstantaneo) = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
 
@@ -1163,15 +1164,16 @@ void * colliderThread(void * argCollider){
 
                     *(data->score) = 0;//Se borra el score
                     objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                    GAME_STATUS.usrLives = assetUsuario->initLives;
+                    GAME_STATUS.usrLives = MAX_USR_LIVES;
                     (data->audioCallback)(COLISION_USER_MUERTO);
+                    lost = 0;
                     break;
                 
                 case WON_LEVEL://Si se gano el nivel
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
-                    
+                    (*(data->usrList))->lives += 1;
                     (data->audioCallback)(SAVED_SCORE);
                     break;
                 
@@ -1197,7 +1199,10 @@ void * colliderThread(void * argCollider){
             sem_post(&SEM_GAME);
         }
     }
-    GAME_STATUS.usrLives = (*(data->usrList))->lives;
+    if(lost){
+        printf("Boooo\n");
+        GAME_STATUS.usrLives = (*(data->usrList))->lives;
+    }
     printf("Killed collider\n");
     pthread_exit(0);
 }
