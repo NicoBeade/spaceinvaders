@@ -6,7 +6,12 @@
 #include <stdlib.h>
 #include <dirent.h>
 
+
+int getAbsValue(int relativeMode, char * valueReaded, int previousValue);
+
+
 #define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
+
 
 enum paramType {ENTERO, ARCHIVO, BINARIO};      //Identifica el tipo de valor que tiene un parametro
 enum estados {START, PARAM, VALUE, SPACE};      //Identifica el estado del lector de archivos
@@ -307,6 +312,7 @@ int loadAllAssets(char * platform, directory_t * directoryStore){    //Carga tod
         printf("Error in levelLoader.c, loadAllAssets function : platform cannot be a null pointer\n");
         return -1;
     }
+
     loadDirectory(ASSETSDIR, directoryStore);       //Carga los archivos del directorio de assets
     int archivoCounter;     //Contador de numero de archivos
     for(archivoCounter = 0; *((*directoryStore)[archivoCounter]) != 0 && archivoCounter < MAX_FILES_IN_FOLDER; archivoCounter++){   //Por cada archivo
@@ -446,6 +452,78 @@ int loadDirectory(char * carpeta, directory_t * directoryStore){
     return 0;
 }
 
+
+int readAssetModifiers(int paramNo, int AssetID){   //Recibe el nombre del archivo y cambia los campos del asset que se indican en el archivo
+    int fila;    //Index de la fila
+    objectType_t * assetModified = getObjType(AssetID); //Se busca el asset que se quiere modificar
+    if (assetModified == NULL){
+        printf("Error in levelLoader.c, readAssetModifiers function Asset not found\n");
+        return -1;
+    }
+    if(strlen(decodedFile[paramNo].parameter) == 0){
+        printf("Error in levelLoader.c, readAssetModifiers function : paramNo %d not valid\n",paramNo);
+        return -1;
+    }
+    for(fila = paramNo; (strcmp(decodedFile[fila].parameter, "END") != 0) && (decodedFile[fila].parameter[0] != 0); fila++){    //Por cada fila del archivo a partir de la del parametro
+        if(strcmp(decodedFile[fila].parameter, "velocidad") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es velocidad, la modifica
+            assetModified->velocidad = getAbsValue(1,decodedFile[fila].value, assetModified->velocidad);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "ancho") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es ancho, la modifica
+            assetModified->ancho = getAbsValue(1,decodedFile[fila].value, assetModified->ancho);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "alto") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es alto, la modifica
+            assetModified->alto = getAbsValue(1,decodedFile[fila].value, assetModified->alto);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "initLives") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es initLives, la modifica
+            assetModified->initLives = getAbsValue(1,decodedFile[fila].value, assetModified->initLives);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "shootProb") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es shootProb, la modifica
+            assetModified->shootProb = getAbsValue(1,decodedFile[fila].value, assetModified->shootProb);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "maxBullets") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es maxBullets, la modifica
+            assetModified->maxBullets = getAbsValue(1,decodedFile[fila].value, assetModified->maxBullets);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "balaID") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es maxBullets, la modifica
+            assetModified->balaID = getAbsValue(1,decodedFile[fila].value, assetModified->balaID);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "score") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es maxBullets, la modifica
+            assetModified->score = getAbsValue(1,decodedFile[fila].value, assetModified->score);
+        }
+        else if(strcmp(decodedFile[fila].parameter, "sprite1") == 0 && strlen(decodedFile[fila].value) > 0){
+            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
+                strcpy(assetModified->sprite1,decodedFile[fila].value);//Se copia el path
+            }
+            else{
+                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 1 %s\n", (decodedFile[fila].value));
+                return -1;   
+            } 
+        }
+        else if(strcmp(decodedFile[fila].parameter, "sprite2") == 0 && strlen(decodedFile[fila].value) > 0){
+            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
+                strcpy(assetModified->sprite2,decodedFile[fila].value);//Se copia el path
+            }
+            else{
+                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 2 %s\n", (decodedFile[fila].value));
+                return -1;   
+            }
+        }
+        else if(strcmp(decodedFile[fila].parameter, "sprite3") == 0 && strlen(decodedFile[fila].value) > 0){
+            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
+                strcpy(assetModified->sprite3,decodedFile[fila].value);//Se copia el path
+            }
+            else{
+                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 3 %s\n", (decodedFile[fila].value));
+                return -1;   
+            }
+        }
+    }
+    if(decodedFile[fila].parameter[0] == 0 && strcmp(decodedFile[fila].parameter, "END") != 0){
+        printf("Error in levelLoader.c, readAssetModifiers function : END line not founded\n");
+        return -1;
+    }
+    return fila;
+}
+
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings){ // Carga los levelsettings de un archivo de nivel, si checkAllFields esta en 1 revisa todos los campos, sino solo los que se encuentren
     if(readFile(file) != 0){ //Si no se pudo leer correctamente
         return -1;      //Devuelve error
@@ -455,16 +533,16 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     int xMax;                   //-xMin: coordenada minima en x alcanzable.
     int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
-    int saltoX;                 //-saltoX: distancia entre naves en x
-    int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    int velBalas;               //-velBalas: Ancho de la nave del usuario
-    int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    int velAliens;         //-velAliens: Velocidad de los aliens por tick.
-    int velMothership;         //-velMothership: Velocidad de la mothership por tick.
-    int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
-    int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
-    int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
+    //int saltoX;                 //-saltoX: distancia entre naves en x
+    //int saltoY;                 //-saltoy: distancia entre naves en y (linea)
+    //int velBalas;               //-velBalas: Ancho de la nave del usuario
+    //int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    //int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
+    //int velAliens;         //-velAliens: Velocidad de los aliens por tick.
+    //int velMothership;         //-velMothership: Velocidad de la mothership por tick.
+    //int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
+    //int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
+    //int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
     
     char xMin_found = 0;
     char xMax_found = 0;
@@ -499,44 +577,44 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             yMax = atoi(decodedFile[paramNo].value);
             yMax_found++;
         }
-        else if(saltoX_found == 0 && strcmp(decodedFile[paramNo].parameter, "saltoX") == 0){
-            saltoX = atoi(decodedFile[paramNo].value);
+        else if((saltoX_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "saltoX") == 0){
+            levelSettings->saltoX = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->saltoX);
             saltoX_found++;
         }
-        else if(saltoY_found == 0 && strcmp(decodedFile[paramNo].parameter, "saltoY") == 0){
-            saltoY = atoi(decodedFile[paramNo].value);
+        else if((saltoY_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "saltoY") == 0){
+            levelSettings->saltoY = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->saltoY);
             saltoY_found++;
         }
-        else if(velBalas_found == 0 && strcmp(decodedFile[paramNo].parameter, "velBalas") == 0){
-            velBalas = atoi(decodedFile[paramNo].value);
+        else if((velBalas_found == 0 || !checkAllFields)&& strcmp(decodedFile[paramNo].parameter, "velBalas") == 0){
+            levelSettings->velBalas = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->velBalas);
             velBalas_found++;
         }
-        else if(margenX_found == 0 && strcmp(decodedFile[paramNo].parameter, "margenX") == 0){
-            margenX = atoi(decodedFile[paramNo].value);
+        else if((margenX_found == 0 || !checkAllFields)&& strcmp(decodedFile[paramNo].parameter, "margenX") == 0){
+            levelSettings->margenX = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->margenX);
             margenX_found++;
         }
-        else if(margenY_found == 0 && strcmp(decodedFile[paramNo].parameter, "margenY") == 0){
-            margenY = atoi(decodedFile[paramNo].value);
+        else if((margenY_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "margenY") == 0){
+            levelSettings->margenY = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->margenY);
             margenY_found++;
         }
-        else if(velAliens_found == 0 && strcmp(decodedFile[paramNo].parameter, "velAliens") == 0){
-            velAliens = atoi(decodedFile[paramNo].value);
+        else if((velAliens_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "velAliens") == 0){
+            levelSettings->velAliens = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->velAliens);
             velAliens_found++;
         }
-        else if(velMothership_found == 0 && strcmp(decodedFile[paramNo].parameter, "velMothership") == 0){
-            velMothership = atoi(decodedFile[paramNo].value);
+        else if((velMothership_found == 0 || !checkAllFields)&& strcmp(decodedFile[paramNo].parameter, "velMothership") == 0){
+            levelSettings->velMothership = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->velMothership);
             velMothership_found++;
         }
-        else if(desplazamientoX_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoX") == 0){
-            desplazamientoX = atoi(decodedFile[paramNo].value);
+        else if((desplazamientoX_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "desplazamientoX") == 0){
+            levelSettings->desplazamientoX = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->desplazamientoX);
             desplazamientoX_found++;
         }
-        else if(desplazamientoY_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoY") == 0){
-            desplazamientoY = atoi(decodedFile[paramNo].value);
+        else if((desplazamientoY_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "desplazamientoY") == 0){
+            levelSettings->desplazamientoY = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->desplazamientoY);
             desplazamientoY_found++;
         }
-        else if(desplazamientoUsr_found == 0 && strcmp(decodedFile[paramNo].parameter, "desplazamientoUsr") == 0){
-            desplazamientoUsr = atoi(decodedFile[paramNo].value);
+        else if((desplazamientoUsr_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "desplazamientoUsr") == 0){
+            levelSettings->desplazamientoUsr = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->desplazamientoUsr);
             desplazamientoUsr_found++;
         }
     }
@@ -544,38 +622,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
-    }
-    printf("JORGELIN %d\n", xMin_found + xMax_found +yMin_found + yMax_found +saltoX_found + saltoY_found + velBalas_found + margenX_found + margenY_found + velAliens_found + velMothership_found +desplazamientoX_found +desplazamientoY_found + desplazamientoUsr_found );
-    //Para los campos que se encontraron se actualiza el level setting
-    if(velBalas_found){
-        levelSettings->velBalas = velBalas;
-    }
-    if(desplazamientoUsr_found){
-        levelSettings->desplazamientoUsr = desplazamientoUsr;
-    }
-    if(desplazamientoX_found){
-        levelSettings->desplazamientoX = desplazamientoX;
-    }
-    if(desplazamientoY_found){
-        levelSettings->desplazamientoY = desplazamientoY;
-    }
-    if(velAliens_found){
-        levelSettings->velAliens = velAliens;
-    }
-    if(velMothership_found){
-        levelSettings->velMothership = velMothership;
-    }
-    if(margenX_found){
-        levelSettings->margenX = margenX;
-    }
-    if(margenY_found){
-        levelSettings->margenY = margenY;
-    }
-    if(saltoX_found){
-        levelSettings->saltoX = saltoX;
-    }
-    if(saltoY_found){
-        levelSettings->saltoY = saltoY;
     }
     //Si se cambian las constantes del display en un nivel que no es el 0, osea durante el juego, tira error
     if(checkAllFields == 0 && (xMax_found || xMin_found || yMax_found || yMin_found)){
@@ -590,7 +636,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     }
     return 0;
 }
-/*
+
 int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
     enum states {ABSOLUTE,RELATIVE_MUL, RELATIVE_ADD, RELATIVE_OPP, RELATIVE_DIV};   
     int state = ABSOLUTE;
@@ -608,7 +654,7 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
         state = RELATIVE_DIV;       //Es division
     }
     if(relativeMode == 0 && (state == RELATIVE_MUL || state == RELATIVE_ADD || state == RELATIVE_OPP || state == RELATIVE_DIV)){   //Si el modo relativo no estaba activado y recibe valores en modo relativo tira error
-        printf("Warning in levelLoader.c, getAbsValue function : found a relative modificator  \"%s\"  with relativeMode off, Value = 0 vas set\n");
+        printf("Warning in levelLoader.c, getAbsValue function : found a relative modificator  \"%s\"  with relativeMode off, Value = 0 vas set\n", valueReaded);
         return 0;
     }
     
@@ -634,7 +680,7 @@ int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Fu
     }
     return value;
 }
-*/
+
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras){
     char levelFile[MAX_DIR_LENGTH+MAX_FILE_NAME];
     int level0True =  levelNo? 0 : 1;
@@ -726,6 +772,18 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                     (* listMothership) = addObj((* listMothership), mothership.pos, mothership.type, objType->initLives);    //Se agrega a la lista
                 }
                 */
+                else if(strcmp(decodedFile[fila].parameter, "ASSET_MODIFY") == 0){  //Si se quiere modificar un asset
+                    int assetID = atoi(decodedFile[fila].value);
+                    if(assetID == 0){
+                        printf("Error in levelLoader.c, loadLevel function : Asset identificator not valid in file %s\n", levelFile);
+                        return -1;
+                    }
+                    fila = readAssetModifiers(fila+1, assetID); //Se leen los modificadores del asset
+                    if(fila == -1){
+                        printf("Error in levelLoader.c, loadLevel function : Couldn't modify Asset %d in file %s\n", assetID, levelFile);
+                        return -1;
+                    }
+                }
                 fila++;
             }
         }
@@ -738,7 +796,7 @@ int readObj(int paramNo, object_t * objOut){
     int posX_found = 0;
     int posY_found = 0;
     int fila;
-    if(decodedFile[paramNo].parameter == NULL){
+    if(strlen(decodedFile[paramNo].parameter) == 0){
         printf("Error in levelLoader.c, readObj function : paramNo %d not valid\n",paramNo);
         return -1;
     }
@@ -1004,7 +1062,9 @@ int main(){
             }
             printf("\n");
         }
-                    
+    imprimirARRAY();
+    printf("\n\n");
+    imprimirLevelSetting(&levelSettings);
 }
 #endif
 
@@ -1019,3 +1079,4 @@ void imprimirNIVELES(level_t levelArray[]){ //Funcion que imprime los datos de c
         printf("Error in levelLoader.c, imprimirNIVELES function : terminator of levels: lastLevelTrue not found");
     }
 }
+

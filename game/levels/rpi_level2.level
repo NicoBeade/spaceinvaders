@@ -1,3 +1,7 @@
+ASSET_MODIFY 1
+    shootProb += 
+    shootProb *= 2
+END
 ALIEN
     type  1
     posX  2
@@ -113,3 +117,4 @@ END
         posX 11
         posY 11
     END
+
