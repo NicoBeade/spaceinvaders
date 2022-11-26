@@ -948,7 +948,9 @@ static void* levelHandlerThread(void * data){
             }
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
-                char eventoBalaCAMBIAR = shootBala(*(menu -> naveUsr), menu -> balasUsr, menu -> levelSettings);
+                char eventoBalaCAMBIAR = shootBala(menu -> naveUsr, menu -> balasUsr, menu -> levelSettings);
+
+                printf("Puntero a balas en level handler: %p", *(menu->balasUsr));
                 
                 if(eventoBalaCAMBIAR == SL_BALA_USER){
 
@@ -1081,7 +1083,7 @@ void * moveBalaThread(void * argMoveBala){
 
             if(*(data -> alienList) != NULL){
 
-                evento = shootBala(*(data -> alienList), (data -> balasEnemigas), data -> levelSettings);
+                evento = shootBala(data -> alienList, (data -> balasEnemigas), data -> levelSettings);
             }
             else{
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");

@@ -299,11 +299,11 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     return newList;
 }
 
-char shootBala(object_t * listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
+char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
     
     int disparo = 0;                                            //VAriable para detectar si se disparo o no
     int balasActuales = countList(*listaBalas);                  //Se cuenta la cantidad de balas activas
-    object_t * nave = listaNaves;                               //Se crea un puntero a la lista de naves
+    object_t * nave = *listaNaves;                               //Se crea un puntero a la lista de naves
     object_t * bala = *listaBalas;                               //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
@@ -511,7 +511,18 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         if(*alienList != NULL){
             listAliens = *alienList;
         }
+        if(collition){//Si no hubo colision
+            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+        }
+
+        collition = 1;
         
+    }
+    listBalasUsr = *balasUsr;
+    listBalasEnemigas = *balasEnemigas;
+    collition = 1;
+    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
+        printf("Puntero a balas en collider: %p\n", listBalasUsr);
         while(listBalasEnemigas != NULL  &&  collition){//Chequea todas las balas de los aliens
             
             if(collision(listBalasUsr->pos, listBalasUsr->type, listBalasEnemigas->pos, listBalasEnemigas->type)){//Si golpeo a una bala de alien
@@ -549,7 +560,6 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }
     return returnEvent;
 }
-
 
 int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType){
 //Esta funcion se encarga de detectar si hubo una colision teniendo en cuenta la hitbox de los objetos.
