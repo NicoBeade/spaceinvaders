@@ -1,3 +1,7 @@
+ASSET_MODIFY 100
+    shootProb 30
+END
+
 ALIEN
     type  13
     posX  150
@@ -11,12 +15,6 @@ ALIEN
     posX  750
     posY  200
 END
-
-
-
-
-
-
 
 
 

@@ -666,7 +666,7 @@ int delObjType(int id){
 objectType_t * getObjType(int id){
     int index;      //Se crea un contador
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != id; index++);      //Se recorre el arreglo hasta encontrar el object type indicado
-    if(index == MAX_CANT_OBJTIPOS){             //Si no se encontro 
+    if(index == MAX_CANT_OBJTIPOS || id == NONEOBJTYPEID){             //Si no se encontro 
         printf("Err in gameLib, getObjType function: objectType with %d id not found\n", id);     //Se devuelve un error
         return NULL;
     }
@@ -695,6 +695,23 @@ void printLista(object_t * aux, char * id){
     else{
         printf("Lista ID: %s VACIA \n", id);
     }
+}
+
+void imprimirLevelSetting(level_setting_t * levelSettings){
+    printf("Vel Balas: %d\n", levelSettings->velBalas); 
+    printf("Desplazamiento Usr: %d\n", levelSettings->desplazamientoUsr);
+    printf("Desplazamiento X: %d\n", levelSettings->desplazamientoX);
+    printf("Desplazamiento Y: %d\n", levelSettings->desplazamientoY);
+    printf("Vel Aliens: %d\n", levelSettings->velAliens);
+    printf("Vel Mothership: %d\n", levelSettings->velMothership);
+    printf("margenX: %d\n", levelSettings->margenX);
+    printf("margenY: %d\n", levelSettings->margenY);
+    printf("saltoX: %d\n", levelSettings->saltoX);
+    printf("saltoY: %d\n", levelSettings->saltoY);
+    printf("xMax: %d\n", levelSettings->xMax);
+    printf("xMin: %d\n", levelSettings->xMin);
+    printf("yMax: %d\n", levelSettings->yMax);
+    printf("yMin: %d\n", levelSettings->yMin);
 }
 
 /*******************************************************************************************************************************************

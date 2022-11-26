@@ -211,6 +211,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
 int delObjType(int id);			
 object_t* removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
+void imprimirLevelSetting(level_setting_t * levelSettings);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
