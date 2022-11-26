@@ -397,22 +397,39 @@ void* displayRPIThread (void* argDisplayRPI){
 void* textAnimMenu(void* argTextAnimMenu){
 //Este thread es el que se encarga de realizar el barrido de texto durante la ejecucion de un menu.
     
+    argTextAnimMenu_t * data = (argTextAnimMenu_t*)argTextAnimMenu;
+
     int i, j, offset;
     int firstBarr = 4;
     pthread_t drawingSwipeT;
 
-    int firstLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? 3 : 0;
-    int lastLetter = ( (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion) == DERECHA ) ? -1 : 4;
+    int firstLetter = ( (data -> direccion) == DERECHA ) ? 3 : 0;
+    int lastLetter = ( (data -> direccion) == DERECHA ) ? -1 : 4;
     
     //Primero imprimimos las primeras 4 letras y el dibujo.
-    argSwipeDrawing_t argSwipeDrawing = { ((argTextAnimMenu_t*)argTextAnimMenu) -> higherDispMenu, ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion, ((argTextAnimMenu_t*)argTextAnimMenu) -> drawing };
+    if(data->higherDispMenu == NULL){
+        printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in textAnimMenu\n");
+        pthread_exit(0);
+    }
+    if(data->lowerDispMenu == NULL){
+        printf("Error in displayRaspi.c, lowerDispMenu cannot be NULL in textAnimMenu\n");
+        pthread_exit(0);
+    }
+    if(data->drawing == NULL){
+        printf("Error in displayRaspi.c, drawing cannot be NULL in textAnimMenu\n");
+        pthread_exit(0);
+    }
+    argSwipeDrawing_t argSwipeDrawing = { data->higherDispMenu, data->direccion, data->drawing };
 
     pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
 
-    for(i = firstLetter ; i != lastLetter ; i -= (((argTextAnimMenu_t*)argTextAnimMenu) -> direccion)){
+    for(i = firstLetter ; i != lastLetter ; i -= (data -> direccion)){
 
-        offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[i]);
-        swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), ((argTextAnimMenu_t*)argTextAnimMenu) -> direccion);
+        offset = offsetAlfabeto((data -> msg)[i]);
+        if(offset == -1){
+            pthread_exit(0);
+        }
+        swipeCharacter(data -> lowerDispMenu, *(alfabeto[offset]), data -> direccion);
     }
     
     pthread_join(drawingSwipeT, NULL);
@@ -425,15 +442,17 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        for(j = firstBarr ; (((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
+        for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
-            offset = offsetAlfabeto((((argTextAnimMenu_t*)argTextAnimMenu) -> msg)[j]);
-            
-            swipeCharacter(((argTextAnimMenu_t*)argTextAnimMenu) -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
+            offset = offsetAlfabeto((data -> msg)[j]);
+            if(offset == -1){
+                pthread_exit(0);
+            }
+            swipeCharacter(data -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
         }
         firstBarr = 0;//Reinicia el proceso.
     }
-    while(*(((argTextAnimMenu_t*)argTextAnimMenu) -> changeAnimation));
+    while(*(data -> changeAnimation));
 
     velDispAnimation = VEL_DISP_ANIMATION;
     pthread_exit(0);
@@ -464,6 +483,10 @@ static int offsetAlfabeto(char caracter){
     }
     else if(caracter == '>'){//Si es un espacio.
         offset = OFFSETCHARESP + 6;
+    }
+    else{
+        printf("Error in displayRaspi.c, invalid character %c in fuction offsetAlfabeto\n", caracter);
+        offset = -1;
     }
     return offset;
 }
@@ -547,25 +570,39 @@ static void* swipeDrawing(void* data){
 void changeOption(void* argChangeOption){
 //Esta funcion es la encargada de cambiar el texto que se muestra en pantalla en un menu.
     
+    argChangeOption_t * data = (argChangeOption_t*)argChangeOption;
+
     static argTextAnimMenu_t argTextAnimMenu;
 
     velDispAnimation = 1;
 
-    *(((argChangeOption_t*)argChangeOption) -> animStatus) = 0;
+    *(data -> animStatus) = 0;
 
-    pthread_join(*(((argChangeOption_t*)argChangeOption) -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
+    pthread_join(*(data -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
-    *(((argChangeOption_t*)argChangeOption) -> animStatus) = 1;
+    *(data -> animStatus) = 1;
 
-    argTextAnimMenu.msg = ((argChangeOption_t*)argChangeOption) -> nuevoTexto;
-    argTextAnimMenu.lowerDispMenu = ((argChangeOption_t*)argChangeOption) -> lowerDispMenu;
-    argTextAnimMenu.higherDispMenu = ((argChangeOption_t*)argChangeOption) -> higherDispMenu;
-    argTextAnimMenu.drawing = ((argChangeOption_t*)argChangeOption) -> drawing;
-    argTextAnimMenu.direccion = ((argChangeOption_t*)argChangeOption) -> direccion;
-    argTextAnimMenu.changeAnimation = ((argChangeOption_t*)argChangeOption) -> animStatus;
+    argTextAnimMenu.msg = data -> nuevoTexto;
+    argTextAnimMenu.lowerDispMenu = data -> lowerDispMenu;
+    argTextAnimMenu.higherDispMenu = data -> higherDispMenu;
+    argTextAnimMenu.drawing = data -> drawing;
+    argTextAnimMenu.direccion = data -> direccion;
+    argTextAnimMenu.changeAnimation = data -> animStatus;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
+    if(data->higherDispMenu == NULL){
+        printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
+    }
+    if(data->lowerDispMenu == NULL){
+        printf("Error in displayRaspi.c, lowerDispMenu cannot be NULL in function changeOption\n");
+    }
+    if(data->drawing == NULL){
+        printf("Error in displayRaspi.c, drawing cannot be NULL in function changeOption\n");
+    }
+    if(data->nuevoTexto == NULL){
+        printf("Error in displayRaspi.c, nuevoTexto cannot be NULL in function changeOption\n");
+    }
 
-    pthread_create(((argChangeOption_t*)argChangeOption) -> threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
+    pthread_create(data -> threadMenu, NULL, textAnimMenu, &argTextAnimMenu);
 
 }
 
