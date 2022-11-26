@@ -20,7 +20,6 @@
 #include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "utilidades.h"
 #include "spaceLib/spaceLib.h"
 #include <unistd.h>
 #include "levelLoader/levelLoader.h"
@@ -74,6 +73,7 @@ typedef struct{
     object_t ** barriersList;
 	object_t ** balasEnemigas;
 	object_t ** balasUsr;
+    object_t ** motherShip;
     int * score;//Almacena el score del usuario.
     int * scoreInstantaneo;//Muestra el score a medida que se va actualizando sin necesidad de ganar el nivel.
     int nivelActual;//Indica el nivel que se esta jugando.
@@ -375,7 +375,7 @@ int main(void){
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList, audioCallback };
-                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &score, &scoreInstantaneo, GAME_STATUS.nivelActual, audioCallback };
+                argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &mothershipList, &score, &scoreInstantaneo, GAME_STATUS.nivelActual, audioCallback };
                 pthread_create(&moveAlienT, NULL, moveAlienThread, &argMoveAlien);
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
@@ -1039,7 +1039,10 @@ void * moveAlienThread(void* argMoveAlien){
 }
 
 void * moveMothershipThread(void* argMoveMothership){
-    while(GAME_STATUS.inGame){
+
+    argMoveMothership_t * data = (argMoveMothership_t*)argMoveMothership;
+
+    while(GAME_STATUS.inGame && *(data->mothership) != NULL){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
         
@@ -1053,19 +1056,21 @@ void * moveMothershipThread(void* argMoveMothership){
         if( ((timerTick % velMothership) == 0) && mothership->lives != 0){
 
             sem_wait(&SEM_GAME);
-            //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
-            //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
-            //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
-            if(mothership->type == 1){
-                mothership->pos.x += (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
-                if(mothership->pos.x == 16){
-                    mothership->lives = 0;
+            if(*(data->mothership) != NULL){
+                //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
+                //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
+                //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
+                if(mothership->type == 1){
+                    mothership->pos.x += (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
+                    if(mothership->pos.x == 16){
+                        mothership->lives = 0;
+                    }
                 }
-            }
-            else if(mothership->type == 0){
-                mothership->pos.x -= (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
-                  if(mothership->pos.x == -3){
-                    mothership->lives = 0;
+                else if(mothership->type == 0){
+                    mothership->pos.x -= (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
+                    if(mothership->pos.x == -3){
+                        mothership->lives = 0;
+                    }
                 }
             }
             sem_post(&SEM_GAME);
@@ -1154,7 +1159,7 @@ void * colliderThread(void * argCollider){
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
 
-            gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, data->scoreInstantaneo);
+            gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
             switch (gameData){//Detecta el evento
                 case LOST_LEVEL://Si se perdio el nivel

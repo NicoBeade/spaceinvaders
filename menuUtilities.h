@@ -64,6 +64,8 @@ int selectNothing(void);
 
 extern keys_t KEYS;
 
+extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues.
+
 #ifdef RASPI
 extern halfDisp_t halfDispTrophy;
 extern halfDisp_t halfDispAlienSpaceInvaders;
@@ -72,8 +74,6 @@ extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
 extern halfDisp_t halfDispAAA;
 #endif
-
-#define VEL_SHOOT_USR 15
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

@@ -385,7 +385,7 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, int nivelActual, int* scoreReal, int* scoreInstantaneo){
+char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
 
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
@@ -396,6 +396,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
         printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
+        return 0;
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
@@ -405,11 +406,12 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listBarreras = *barrerasList;
     object_t * listBalasEnemigas = *balasEnemigas;
     object_t * listBalasUsr = *balasUsr;
+    object_t * listMotherShip = *motherShip;
     object_t * balaADestruir;
 
-    while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//Primero chequea si las balas enemigas golpearon algo.
+    while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Primero chequea si las balas enemigas golpearon algo.
 
-        while(listBarreras != NULL  &&  collition && listBalasEnemigas != NULL && *balasEnemigas != NULL ){//Chequea si se golpeo una barrera
+        while(listBarreras != NULL  &&  collition && *balasEnemigas != NULL ){//Chequea si se golpeo una barrera
             if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
 
                 collition = 0;
@@ -437,7 +439,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             }
         }
 
-        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition){//Chequea si se golpeo al usuario
+        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listUsr->lives != 0){//Chequea si se golpeo al usuario
 
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
@@ -466,7 +468,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }
 
     collition = 1;
-    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
+    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Chequea si las balas del usuario golpearon a un alien.
 
         while(listAliens != NULL  &&  collition){//Chequea todos los aliens
             
@@ -475,18 +477,21 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 collition = 0;
                 listAliens->lives -= 1;
                 if(listAliens->lives == 0){//Si se mato a ese alien hay que eliminarlo de la lista
-
-                    objectType_t * alienRipedAsset = getObjType(listAliens->type);//Incrementa el puntaje
-                    *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
+                    
+                    if(scoreInstantaneo != NULL && scoreReal != NULL){
+                        objectType_t * alienRipedAsset = getObjType(listAliens->type);//Incrementa el puntaje
+                        *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
+                    }
 
                     *alienList = destroyObj(*alienList, listAliens);//Elimina a ese alien de la lista
                     listAliens = *alienList;
-                    printf("\n\nSCORE: %d\n\n", *scoreInstantaneo);
 
                     returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_MUERTO : returnEvent;
 
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
-                        *scoreReal = *scoreInstantaneo;
+                        if(scoreInstantaneo != NULL && scoreReal != NULL){    
+                            *scoreReal = *scoreInstantaneo;
+                        }
                         return WON_LEVEL;
                     }
                 }
@@ -518,11 +523,12 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         collition = 1;
         
     }
+
     listBalasUsr = *balasUsr;
     listBalasEnemigas = *balasEnemigas;
     collition = 1;
-    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//Chequea si las balas del usuario golpearon algo.
-        printf("Puntero a balas en collider: %p\n", listBalasUsr);
+    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Chequea si las balas del usuario golpearon a una bala enemiga.
+
         while(listBalasEnemigas != NULL  &&  collition){//Chequea todas las balas de los aliens
             
             if(collision(listBalasUsr->pos, listBalasUsr->type, listBalasEnemigas->pos, listBalasEnemigas->type)){//Si golpeo a una bala de alien
@@ -544,7 +550,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
                 }
             }
-            else{//Si no golpeo a ese alien chequea el siguiente
+            else{//Si no golpeo a esa bala chequea la siguiente
                 listBalasEnemigas = listBalasEnemigas->next;
             }
         }
@@ -558,6 +564,46 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
         collition = 1;
     }
+    /*
+    listBalasUsr = *balasUsr;
+    collition = 1;
+    while(listBalasUsr != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Chequea si las balas del usuario golpearon a la nave nodriza.
+
+        while(listMotherShip != NULL  &&  collition){//Chequea la/s nave/s nodrizas.
+            
+            if(collision(listBalasUsr->pos, listBalasUsr->type, listMotherShip->pos, listMotherShip->type)){//Si golpeo a una nave nodriza
+
+                collition = 0;
+                listMotherShip->lives -= 1;
+                if(listMotherShip->lives == 0){//Si se mato a la mothership hay que eliminarla de la lista
+                    *motherShip = destroyObj(*motherShip, listMotherShip);
+                    listMotherShip = *motherShip;
+                }
+
+                listBalasUsr->lives -= 1;
+                if(listBalasUsr->lives == 0){//Si la bala debe morir
+                    object_t * balaADestruir = listBalasUsr;
+                    listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+                    *balasUsr = destroyObj(*balasUsr, balaADestruir);
+                }
+                else{//Si la bala no debe morir
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+                }
+            }
+            else{//Si no golpeo a ese alien chequea el siguiente
+                listMotherShip = listMotherShip->next;
+            }
+        }
+        if(*motherShip != NULL){
+            listMotherShip = *motherShip;
+        }
+
+        if(collition){//Si no hubo colision
+            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+        }
+
+        collition = 1;
+    }*/
     return returnEvent;
 }
 
@@ -566,6 +612,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
     objectType_t * objType = getObjType(objectType);
     if(objType == NULL){
+        printf("Err in spaceLib.c cannot find objType %d in collision.\n", objectType);
         return -1;
     }
     int objectAncho = objType->ancho;//Obtiene la hitbox del objeto
@@ -573,6 +620,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
     objectType_t * balType = getObjType(balaType);
     if(balType == NULL){
+        printf("Err in spaceLib.c cannot find objType %d in collision.\n", objectType);
         return -1;
     }
     int balaAncho = balType->ancho;//Obtiene la hitbox de la bala

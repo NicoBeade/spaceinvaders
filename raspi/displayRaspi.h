@@ -72,6 +72,8 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     int direccion;//Direccion de la animacion.
 }argChangeOption_t;
 
+typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.
+
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
 	keys_t * keys;
@@ -107,11 +109,6 @@ typedef struct {
  * 
  ******************************************************************************************************************************************/
 
-//*************CANTIDAD DE OPCIONES
-#define CANT_OPCIONES_PAUSA 3   //Determina la cantidad total de opciones en el menu de pausa
-
-enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
-
 #define VEL_DISP_ANIMATION 3000
 
 #define OFFSETLETRA 0
@@ -122,6 +119,12 @@ enum OPTIONSPAUSA {RESUME, VOLUMEN, HOME, RESTART, SCORE};
 #define VEL_TITILEO 200
 
 #define MAX_SPRITES 200
+
+#define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
+#define DERECHA 1
+#define ABAJO 2
+
+#define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -139,9 +142,6 @@ extern unsigned int timerTick;   //Variables utilizadas para saber cuando se deb
 
 extern keys_t KEYS;
 extern gameStatus_t GAME_STATUS;
-
-extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
-extern level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 extern sem_t SEM_GAME;
 extern sem_t SEM_MENU; 
@@ -161,20 +161,12 @@ extern int velDispAnimation;
                                                                                 |_|                                                            
  * 
  ******************************************************************************************************************************************/
-//*****************FUNCIONES GENERICAS DEL DISPLAY
-void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
-void cleanSprite(dcoord_t);
-void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
-void printLetter(caracteres_t letter, dcoord_t coordenada); //imprime letra en display en la coordenada correspondiente
-void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
-void printHalfDisp(halfDisp_t halfDispSprite, char mitad); //Imprime una mitad del display.
 
 //*****************THREAD DISPLAY IN GAME
 void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
 
 //*****************THREAD DISPLAY DURANTE MENUES
 void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion de barrido de los textos durante la ejecucion de un menu.
-void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del display.
 void changeOption(void* argChangeOption); //Cambia el texto mostrado en pantalla.
 
 //*****************SCORE
