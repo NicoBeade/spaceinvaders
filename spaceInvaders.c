@@ -106,7 +106,9 @@ static void* levelHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .pantallaAnterior = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .exitStatus = 1};
+#define MAX_USR_LIVES 5
+
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .pantallaAnterior = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .usrLives = MAX_USR_LIVES, .exitStatus = 1};
 
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
@@ -360,6 +362,8 @@ int main(void){
                 velBalas = levelSettings.velBalas;
 
                 GAME_STATUS.inGame = 1;
+
+                UsrList->lives = GAME_STATUS.usrLives;
 
                 //HARDCODED
                 vector_t Booo = {0,0};
@@ -1151,16 +1155,19 @@ void * colliderThread(void * argCollider){
 
             gameData = collider(data -> levelSettings, data -> alienList, data -> usrList, data -> barriersList, data -> balasEnemigas, data -> balasUsr, data -> nivelActual, data->score, data->scoreInstantaneo);
 
-            switch (gameData){//Detecta si se debe terminar el nivel o no.
-                case LOST_LEVEL:
+            switch (gameData){//Detecta el evento
+                case LOST_LEVEL://Si se perdio el nivel
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_LOST_LEVEL;
                     menuGame.exitStatus = 0;
-                    
+
+                    *(data->score) = 0;//Se borra el score
+                    objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                    GAME_STATUS.usrLives = assetUsuario->initLives;
                     (data->audioCallback)(COLISION_USER_MUERTO);
                     break;
                 
-                case WON_LEVEL:
+                case WON_LEVEL://Si se gano el nivel
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
@@ -1168,17 +1175,17 @@ void * colliderThread(void * argCollider){
                     (data->audioCallback)(SAVED_SCORE);
                     break;
                 
-                case SL_COLISION_ALIEN_MUERTO:
+                case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
                     
                     (data->audioCallback)(COLISION_ALIEN_MUERTO);
                     break;
                 
-                case SL_COLISION_ALIEN_TOCADO:
+                case SL_COLISION_ALIEN_TOCADO://SI se golpeo a un alien
 
                     (data->audioCallback)(COLISION_ALIEN_TOCADO);
                     break;
 
-                case SL_COLISION_USER_TOCADO:
+                case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
 
                     (data->audioCallback)(COLISION_USER_TOCADO);
                     break;
@@ -1190,6 +1197,7 @@ void * colliderThread(void * argCollider){
             sem_post(&SEM_GAME);
         }
     }
+    GAME_STATUS.usrLives = (*(data->usrList))->lives;
     printf("Killed collider\n");
     pthread_exit(0);
 }

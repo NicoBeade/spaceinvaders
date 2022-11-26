@@ -54,7 +54,6 @@ typedef struct OBJECT{//Cada alien, barrera, bala y la nave del usuario es un st
 //-----------------------------------------------------------------LEVEL SETTINGS---------------------------------------------------------------------------------
 // Este struct contiene toda la informacion necesaria para crear un nivel.
 typedef struct{
-    //Informaciones de tamaño (definido por el front end)
     int xMin;                   //-xMax: coordenada maxima en x alcanzable.
     int xMax;                   //-xMin: coordenada minima en x alcanzable.
     int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
@@ -62,37 +61,20 @@ typedef struct{
     int saltoX;                 //-saltoX: distancia entre naves en x
     int saltoY;                 //-saltoy: distancia entre naves en y (linea)
 
-    //int barreraInicialX;        //-barreraInicialX: coordenada en X de la primera barrera
-    //int barreraInicialY;        //-barreraInicialY: coordenada en Y de la primera barrera
-    int velBalas;                   //Velocidad Balas por tick
-    ////int anchoUsr;               //-anchoUsr: Ancho de la nave del usuario
-    //int altoUsr;                //-altoUsr: Alto de la nave del usuario
-    //int anchoAlien;             //-anchoNave: Ancho de las naves enemigas
-    //int altoAlien;              //-altoNave: Alto de las naves enemigas
-    //int anchoMiniBarrera;       //-anchoMiniBarrera: Ancho de las minibarreras
-    //int altoMiniBarrera;        //-altoMiniBarrera: Alto de las minibarreras
     int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
     int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    //// int disInicialUsrX;         //-distInicialUsrX: distancia inicial del usuario al iniciar un nivel en la coordenada X.
-    ////int disInicialUsrY;         //-distInicialUsrY: distancia inicial del usuario al iniciar un nivel en la coordenada Y.
 
-    //Datos para la jugabilidad
-    //int maxUsrBullets;          //-maxUsrBullets: cantidad maxima de balas de la nave del usuario concurrentes
-    //int maxEnemyBullets;        //-maxEnemyBullets: cantidad maxima de balas enemigas concurrentes
-    //int shootProbDani;          //-shootProbDani: probabilidad de disparo de naves Daniel en cada tick en procentaje
-    //int shootProbPablo;         //-shootProbPablo: probabilidad de disparo de naves Pablo en cada tick en procentaje
-    //int shootProbNico;          //-shootProbNico: probabilidad de disparo de naves Nicolas en cada tick en procentaje
-    //int initUsrLives;           //-initUsrLives: Vidas del usuario en ese nivel
-    //int initDanielLives;        //-initUsrLives: Vidas de la nave enemiga Daniel en ese nivel
-    //int initPabloLives;         //-initUsrLives: Vidas de la nave enemiga Pablo en ese nivel
-    //int initNicolasLives;       //-initUsrLives: Vidas de la nave enemiga Nicolas en ese nivel
-    //int miniBarreraLives;       //-miniBarreraLives: Vidas de cada minibarrera
     int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
     int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
-    int desplazamientoUsr;        //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick.
-    int velAliens;  //Velocidad Aliens por tick
-    int velMothership;  //Velocidad nave nodriza por tick
+    int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick.
+    int velAliens;              //Velocidad Aliens por tick
+    int velMothership;          //Velocidad nave nodriza por tick
+    int velBalas;               //Velocidad Balas por tick
+    /*
+    int usrLives;               //Vidas del usuario
+    */
 }level_setting_t;
+
 
 typedef struct{//Contiene el estado del juego.
 
@@ -102,6 +84,7 @@ typedef struct{//Contiene el estado del juego.
     unsigned char menuActual;//Indica el menu que esta corriendo.
     unsigned char menuAnterior;//Almacena temporalmente el menu anterior.
     unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
+    unsigned char usrLives;//VIdas del usuario.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
 }gameStatus_t;
 

@@ -533,16 +533,6 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     int xMax;                   //-xMin: coordenada minima en x alcanzable.
     int yMin;                   //-YMax: coordenada maxima en Y alcanzable.
     int yMax;                   //-YMin: coordenada minima en Y alcanzable.
-    //int saltoX;                 //-saltoX: distancia entre naves en x
-    //int saltoY;                 //-saltoy: distancia entre naves en y (linea)
-    //int velBalas;               //-velBalas: Ancho de la nave del usuario
-    //int margenX;                //-margenX: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    //int margenY;                //-margenY: margen que queda libre en la pantalla (los aliens no pueden pasar de este margen)
-    //int velAliens;         //-velAliens: Velocidad de los aliens por tick.
-    //int velMothership;         //-velMothership: Velocidad de la mothership por tick.
-    //int desplazamientoX;        //Cantidad de unidades que se mueven los aliens en X por tick
-    //int desplazamientoY;        //Cantidad de unidades que se mueven los aliens en Y por tick
-    //int desplazamientoUsr;      //-desplazamientoUsr: cantidad de unidades que se mueve el usuario por tick
     
     char xMin_found = 0;
     char xMax_found = 0;
@@ -558,6 +548,9 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     char desplazamientoX_found = 0;
     char desplazamientoY_found = 0;
     char desplazamientoUsr_found = 0;
+    /*
+    char usrLives_found = 0;
+    */
 
 
     for(paramNo = 0; decodedFile[paramNo].parameter[0] != 0; paramNo++){ //Para todos los parametros en el array
@@ -617,9 +610,15 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             levelSettings->desplazamientoUsr = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->desplazamientoUsr);
             desplazamientoUsr_found++;
         }
+        /*
+        else if((usrLives_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "usrLives") == 0){
+            levelSettings->usrLives = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->usrLives);
+            usrLives_found++;
+        }
+        */
     }
     //Si checkAllFields esta activado y no se encontraron todos los campos tira error
-    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1)){   //Si no se encontraron todos los campos devuelve error
+    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1 )){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }
