@@ -106,7 +106,7 @@ static void* levelHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .exitStatus = 1};
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .pantallaAnterior = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .exitStatus = 1};
 
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
@@ -273,7 +273,11 @@ int main(void){
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
-            case MENU://Entra a este caso cuando el programa se encuentra en cualquier menu.
+            case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
+
+                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
+                    //Reproducir musica de MENU.
+                }
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
@@ -295,7 +299,11 @@ int main(void){
 
                 break;
             
-            case SAVE_SCORE://Entra a este caso cuando el usuario desea cargar su score.
+            case SAVE_SCORE://-----------------------------     SAVE_SCORE: Entra a este caso cuando el usuario desea cargar su score.      ----------------------------------------
+
+                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
+                    //Reproducir musica de MENU.
+                }
 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
@@ -317,13 +325,13 @@ int main(void){
 
                 break;
             
-            case START_LEVEL://Entra a este caso cuando se crea un nivel.
-                printf("ENTRO A START_LEVEL \n");
+            case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
+
+                //Reproducir musica de juego.
+                
                 sem_wait(&SEM_MENU);
 
                 int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
-
-                printf("LEVEL SETTING YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings.yMax, levelSettings.yMin, levelSettings.xMax, levelSettings.xMin);
 
                 if(levelStatus == -1){
                     printf("Error in spaceInvaders.c, Couldnt start level\n");
@@ -385,8 +393,10 @@ int main(void){
 
                 break;
 
-            case IN_GAME://Entra a este caso cuadno se reanuda un nivel.
-                printf("ENTRO A IN_GAME \n");
+            case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
+                
+                //Reproducir musica de juego
+
                 sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
 
@@ -395,8 +405,8 @@ int main(void){
                 sem_post(&SEM_MENU);
                 break;
 
-            case DESTROY_LEVEL://Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.
-                printf("ENTRO A DESTROY_LEVEL \n");
+            case DESTROY_LEVEL://---------------------      DESTROY_LEVEL: Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.   -----------
+
                 GAME_STATUS.inGame = 0;
 
                 usleep(50 * U_SEC2M_SEC);
@@ -425,7 +435,7 @@ int main(void){
                 }
                 break;
 
-            case QUIT_GAME://Entra a este caso cuadno se quiere salir del juego.
+            case QUIT_GAME://-------------------------      QUIT_GAME: Entra a este caso cuadno se quiere salir del juego.      ------------------------------------------------------
                 GAME_STATUS.inGame = 0;
 
                 usleep(50 * U_SEC2M_SEC);

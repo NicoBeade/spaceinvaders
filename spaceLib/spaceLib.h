@@ -97,6 +97,7 @@ typedef struct{
 typedef struct{//Contiene el estado del juego.
 
     unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
+    unsigned char pantallaAnterior;//Indica el estado anterior del juego.
     unsigned char nivelActual;//Indica el nivel que esta en juego.
     unsigned char menuActual;//Indica el menu que esta corriendo.
     unsigned char menuAnterior;//Almacena temporalmente el menu anterior.
