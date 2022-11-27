@@ -15,7 +15,6 @@
  #ifndef INPUT_RASPI_H
  #define INPUT_RASPI_H
 
-#include "../utilidades.h"
 #include "../spaceLib/spaceLib.h"
 #include <semaphore.h>
 /*******************************************************************************************************************************************
@@ -64,6 +63,8 @@ void* inputRPIThread(void* argInputRPI);  //Se encarga de leer el input durante 
 
 #define VEL_USR 5   //Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
                     //cada 10mS. Para ejecutar que la nave se pueda mover cada 1s, velUsuario debe valer 100. Por defecto se mueve cada medio segundo.
+
+#define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
