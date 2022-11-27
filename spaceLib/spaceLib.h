@@ -82,7 +82,7 @@ typedef struct{//Contiene el estado del juego.
     unsigned char pantallaAnterior;//Indica el estado anterior del juego.
     unsigned char nivelActual;//Indica el nivel que esta en juego.
     unsigned char menuActual;//Indica el menu que esta corriendo.
-    unsigned char menuAnterior;//Almacena temporalmente el menu anterior.
+    char menuAnterior;//Almacena temporalmente el menu anterior.
     unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
     unsigned char usrLives;//VIdas del usuario.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.

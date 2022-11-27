@@ -74,6 +74,8 @@ extern halfDisp_t halfDispResume;
 extern halfDisp_t halfDispRestart;
 extern halfDisp_t halfDispAAA;
 #endif
+
+#define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

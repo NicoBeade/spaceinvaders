@@ -255,7 +255,6 @@ int main(void){
     level_t levelArray[MAX_LEVEL];
     indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
     
-    printf("Cantidad de niveles %d   %s", levelArrayLen(levelArray) -1, levelArray[1].levelName);
     menuLevels.cantOpciones = levelArrayLen(levelArray) -1;
     
     //Se carga el nivel 0
@@ -362,8 +361,6 @@ int main(void){
                 velBalas = levelSettings.velBalas;
 
                 GAME_STATUS.inGame = 1;
-
-                printf("usrLives: %d\n", GAME_STATUS.usrLives);
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
@@ -550,6 +547,7 @@ static void* menuHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
+        printf("Seg fault en leaderboard allegro 1\n");
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
         if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
             allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
@@ -560,22 +558,33 @@ static void* menuHandlerThread(void * data){
             toText = allegroList->textoList;
             screenObjects = allegroList->spriteList;
         }
+        printf("Seg fault en leaderboard allegro 2\n");
     #endif
     //***************************************************************************************************************************
 
     if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
 
         fillLeaderboardMenu(menu);
+        printf("Seg fault en leaderboard allegro 3\n");
     }
 
-    usleep(200 * U_SEC2M_SEC);
-
+    //usleep(200 * U_SEC2M_SEC);
+    printf("exitStatus: %d\n", menu -> exitStatus);
     while(menu -> exitStatus){
+        printf("Seg fault en leaderboard allegro 4\n");
         usleep(10 * U_SEC2M_SEC);
+        printf("Seg fault en leaderboard allegro 5\n");
         if( (timerTick % velMenu) == 0 ){
-            
+            printf("Seg fault en leaderboard allegro 6\n");
             if(stopSweep){
+                printf("Seg fault en leaderboard allegro 7\n");
                 stopSweep -= 1;
+                printf("Seg fault en leaderboard allegro 8\n");
+            }
+
+            if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
+                printf("Booo\n");
+                printf("Booo\n");
             }
 
             if (SIGUIENTE && !stopSweep){//Si se presiona para ir a la siguiente opcion
@@ -605,6 +614,7 @@ static void* menuHandlerThread(void * data){
                 (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
+            printf("Seg fault en leaderboard allegro 4\n");
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
                 #ifdef ALLEGRO
@@ -633,6 +643,7 @@ static void* menuHandlerThread(void * data){
                 (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
+            printf("Seg fault en leaderboard allegro 5\n");
 
             if (PRESS_INPUT){//Si se selecciona la opcion
 
@@ -649,11 +660,12 @@ static void* menuHandlerThread(void * data){
 
                 (menu->audioCallback)(SELECT_MENU);
             }
-            
-            if(ATRAS && GAME_STATUS.menuAnterior != -1 && GAME_STATUS.menuActual != MENU_INICIO){//Si se quiere volver al menu anterior
+            printf("Seg fault en leaderboard allegro 6\n");
+
+            if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
-            
+            printf("Seg fault en leaderboard allegro 7\n");
         }
     }
     #ifdef RASPI

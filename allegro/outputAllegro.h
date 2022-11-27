@@ -21,7 +21,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
-#include "../utilidades.h"
 #include "allegro.h"
 #include "audio.h"
 
@@ -112,7 +111,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn);
 
 #define BGCOLOR 0,0,0       //Color del background (negro)
 
-
+#define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

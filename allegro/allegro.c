@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
-#include "../utilidades.h"
 #include "outputAllegro.h"
 #include "inputAllegro.h"
 #include "allegro.h"
@@ -440,18 +439,24 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
     
     int i;
     TextObj_t salida = {NULL,NULL};
+    printf("Seg fault en leaderboard allegro en allegroLeaderboard 1\n");
     float firstLen = strlen(data->textOpciones[0]);
+    printf("Seg fault en leaderboard allegro en allegroLeaderboard 2\n");
 
     float secondLen = strlen(data->textOpciones[1]);
+    printf("Seg fault en leaderboard allegro en allegroLeaderboard 3\n");
 
     salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX -(firstLen/2.0)*40 , FIRSTY);
     salida.textoList=addText(salida.textoList, data->textOpciones[1], largeF, FIRSTX -(secondLen/2.0)*25 , FIRSTY + 120);
+    printf("Seg fault en leaderboard allegro en allegroLeaderboard 4\n");
 
     for(i=2; i < data->cantOpciones; i++){
         if(i%2 == 0){
             salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, LEFTCOLUMNX , COLUMNY + 60*i/2);
+            printf("Seg fault en leaderboard allegro en allegroLeaderboard 5\n");
         }else{
             salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, RIGHTCOLUMNX , COLUMNY + 60* (i-1)/2);
+            printf("Seg fault en leaderboard allegro en allegroLeaderboard 5\n");
         }
     }
 

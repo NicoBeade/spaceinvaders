@@ -1,7 +1,3 @@
-ASSET_MODIFY 100
-    shootProb 30
-END
-
 ALIEN
     type  13
     posX  150
