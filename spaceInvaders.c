@@ -227,7 +227,7 @@ int main(void){
     pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
 
     audioCallback_t audioCallback;
-    audioCallback_t volumeCallback;
+    volumeCallback_t volumeCallback;
     
     #ifdef RASPI
     char platform[4] = "rpi";

@@ -17,7 +17,7 @@
  #define SPACELIB_H
 
 #include <stdint.h>
-//#include "../raspi/audiosRaspi/audiosRaspi.h"
+
 
 //*************DIRECCIONES
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
@@ -36,6 +36,7 @@
  ******************************************************************************************************************************************/
 
 typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
+typedef int (*volumeCallback_t)(int);  //Puntero a la funcion que regula el volumen del audio
 
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
