@@ -71,9 +71,9 @@ typedef struct{
     int velAliens;              //Velocidad Aliens por tick
     int velMothership;          //Velocidad nave nodriza por tick
     int velBalas;               //Velocidad Balas por tick
-    /*
-    int usrLives;               //Vidas del usuario
-    */
+    int mothershipYpos;
+    int mothershipAsset;
+    int maxMShipXLevel;
 }level_setting_t;
 
 
@@ -173,6 +173,9 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLiv
 char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
 void printLista(object_t * lista, char * id);
+
+
+mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings)
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
