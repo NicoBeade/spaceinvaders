@@ -36,4 +36,8 @@
 #define SON_SAVED_SCORE (PATH "saved_score.wav")
 #define SON_SWEEP_LETRA (PATH "sweep_letra.wav")
 
+//Paths a los sonidos de resultado de las partidas
+#define SON_PARTIDA_GANADA (PATH "partida_ganada.wav")
+#define SON_PARTIDA_PERDIDA (PATH "partida_perdida.wav")
+
 #endif

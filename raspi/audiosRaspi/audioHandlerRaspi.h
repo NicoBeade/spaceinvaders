@@ -16,6 +16,7 @@ enum AUDIO {  MUSICA_MENU,MUSICA_JUEGO,
               BALA_USER,BALA_ALIEN,
               SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA,
               SAVED_SCORE,
+              PARTIDA_GANADA,PARTIDA_PERDIDA
               };
 
 void audioHandlerRaspi(int audioId); //handler de musica y sonidos para raspi

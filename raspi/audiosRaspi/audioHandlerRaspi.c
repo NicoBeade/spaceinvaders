@@ -35,6 +35,8 @@ audio_t sonidoSwapMenu = {SWAP_MENU, SON_SWAP_MENU};
 audio_t sonidoErrorMenu = {ERROR_MENU, SON_ERROR_MENU};
 audio_t sonidoSweepLetra = {SWEEP_LETRA, SON_SWEEP_LETRA};
 audio_t sonidoSavedScore = {SAVED_SCORE, SON_SAVED_SCORE};
+audio_t sonidoPartidaGanada = {PARTIDA_GANADA,SON_PARTIDA_GANADA};
+audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA};
 
 
 //Variable de volumen modificable con wrappper

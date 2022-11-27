@@ -1170,7 +1170,7 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
                     (*(data->usrList))->lives += 1;
-                    (data->audioCallback)(SAVED_SCORE);
+                    (data->audioCallback)(PARTIDA_GANADA);
                     break;
                 
                 case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
