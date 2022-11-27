@@ -2,7 +2,7 @@ id 34
 vel 0    
 ancho 108
 alto 77
-initLives 40
+initLives 2
 shootProb 0
 maxBullets 0
 balaID 0
