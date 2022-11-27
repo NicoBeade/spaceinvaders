@@ -26,7 +26,7 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
                       {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispSaveScore, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectNothing, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volume    ", "Quit Game    "}, 
                       {&halfDispResume, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
