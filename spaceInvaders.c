@@ -20,21 +20,18 @@
 #include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "spaceLib/spaceLib.h"
 #include <unistd.h>
-#include "levelLoader/levelLoader.h"
 #include "menuUtilities.h"
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
-#include "raspi/displayRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
 #include "raspi/audiosRaspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
-#include "allegro/allegro.h"
+
 #endif
 
 /*******************************************************************************************************************************************
@@ -125,7 +122,7 @@ TextObj_t listasAllegro = {NULL, NULL};
 TextObj_t * allegroList = &listasAllegro;
 #endif
 
-menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard, &menuLevels};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
+menu_t* MENUES[] = {&menuInicio, &menuPausa, &menuWonLevel, &menuLostLevel, &menuLeaderboard, &menuLevels, &menuVolume};//Arreglo que contiene punteros a todos los menues. No tiene por que estar definido aca, solo lo cree para hacer algo de codigo.
 level_setting_t* LEVELS[10];//Arrego que contiene punteros a la config de todos los niveles.
 
 char stringWithScore[20];
@@ -282,7 +279,7 @@ int main(void){
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
-                    sprintf(menuPausa.textOpciones[0],"%s%d    ","Resume   Score > ", scoreInstantaneo);
+                    sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Resume   Score > ", scoreInstantaneo,"   Lives > ", UsrList->lives);
                 }
                 #endif
                 
@@ -541,13 +538,12 @@ static void* menuHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
 
     #ifdef ALLEGRO
-        printf("Seg fault en leaderboard allegro 1\n");
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
         if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
             allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
@@ -558,33 +554,22 @@ static void* menuHandlerThread(void * data){
             toText = allegroList->textoList;
             screenObjects = allegroList->spriteList;
         }
-        printf("Seg fault en leaderboard allegro 2\n");
     #endif
     //***************************************************************************************************************************
 
     if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
 
         fillLeaderboardMenu(menu);
-        printf("Seg fault en leaderboard allegro 3\n");
     }
 
-    //usleep(200 * U_SEC2M_SEC);
-    printf("exitStatus: %d\n", menu -> exitStatus);
+    usleep(200 * U_SEC2M_SEC);
     while(menu -> exitStatus){
-        printf("Seg fault en leaderboard allegro 4\n");
-        usleep(10 * U_SEC2M_SEC);
-        printf("Seg fault en leaderboard allegro 5\n");
-        if( (timerTick % velMenu) == 0 ){
-            printf("Seg fault en leaderboard allegro 6\n");
-            if(stopSweep){
-                printf("Seg fault en leaderboard allegro 7\n");
-                stopSweep -= 1;
-                printf("Seg fault en leaderboard allegro 8\n");
-            }
 
-            if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
-                printf("Booo\n");
-                printf("Booo\n");
+        usleep(10 * U_SEC2M_SEC);
+        if( (timerTick % velMenu) == 0 ){
+
+            if(stopSweep){
+                stopSweep -= 1;
             }
 
             if (SIGUIENTE && !stopSweep){//Si se presiona para ir a la siguiente opcion
@@ -600,7 +585,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
                 (menu -> changeOption)(&argChangeOption);
                 #endif
 
@@ -614,7 +599,6 @@ static void* menuHandlerThread(void * data){
                 (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
-            printf("Seg fault en leaderboard allegro 4\n");
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
                 #ifdef ALLEGRO
@@ -629,7 +613,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
                 (menu -> changeOption)(&argChangeOption);
                 #endif
 
@@ -643,7 +627,6 @@ static void* menuHandlerThread(void * data){
                 (menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
-            printf("Seg fault en leaderboard allegro 5\n");
 
             if (PRESS_INPUT){//Si se selecciona la opcion
 
@@ -660,12 +643,10 @@ static void* menuHandlerThread(void * data){
 
                 (menu->audioCallback)(SELECT_MENU);
             }
-            printf("Seg fault en leaderboard allegro 6\n");
 
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
-            printf("Seg fault en leaderboard allegro 7\n");
         }
     }
     #ifdef RASPI
@@ -732,7 +713,7 @@ static void* saveScoreHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus};
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 
@@ -1028,8 +1009,6 @@ void * moveAlienThread(void* argMoveAlien){
             sem_wait(&SEM_GAME);
 
             evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
-            printf("Little chorch\n");
-            printf("Puntero al callback %p\n",(((argMoveAlien_t*)argMoveAlien)->audioCallback));
             switch (evento){
             case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
@@ -1046,7 +1025,7 @@ void * moveAlienThread(void* argMoveAlien){
 
         }   
     }
-    printf("Killed moveAliens\n");
+
     pthread_exit(0);
 }
 
@@ -1088,7 +1067,7 @@ void * moveMothershipThread(void* argMoveMothership){
             sem_post(&SEM_GAME);
         }
     }
-    printf("Killed moveMothership\n");
+
     pthread_exit(0);
 }
 
@@ -1138,7 +1117,7 @@ void * moveBalaThread(void * argMoveBala){
             sem_post(&SEM_GAME);
         } 
     }
-    printf("Killed moveBala\n");
+
     pthread_exit(0);
 }
 /*******************************************************************************************************************************************
@@ -1217,10 +1196,9 @@ void * colliderThread(void * argCollider){
         }
     }
     if(lost){
-        printf("Boooo\n");
         GAME_STATUS.usrLives = (*(data->usrList))->lives;
     }
-    printf("Killed collider\n");
+
     pthread_exit(0);
 }
 

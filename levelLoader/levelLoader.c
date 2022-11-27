@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "levelLoader.h"
-#include "../spaceLib/spaceLib.h"
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>

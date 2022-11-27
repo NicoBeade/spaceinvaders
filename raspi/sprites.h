@@ -86,6 +86,14 @@ extern halfDisp_t halfDispQuitGame;
 extern halfDisp_t halfDispHome;
 extern halfDisp_t halfDispLostGame;
 extern halfDisp_t halfDispNextLevel;
+extern halfDisp_t halfDispVolume0;
+extern halfDisp_t halfDispVolume1;
+extern halfDisp_t halfDispVolume2;
+extern halfDisp_t halfDispVolume3;
+extern halfDisp_t halfDispVolume4;
+extern halfDisp_t halfDispVolume5;
+extern halfDisp_t halfDispVolume6;
+extern halfDisp_t halfDispVolume7;
 
 extern caracteres_t alienChar1;
 extern caracteres_t alienChar2;

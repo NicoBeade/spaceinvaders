@@ -13,6 +13,7 @@
 #define MENU_UTILITIES_H
 
 #include "spaceLib/spaceLib.h"
+#include "levelLoader/levelLoader.h"
 #include "spaceLib/score/score.h"
 #include <stdio.h>
 #include <semaphore.h>
@@ -43,6 +44,7 @@ int selectVolume(void);
 int selectQuitGame(void);
 int selectResume(void);
 int selectRestartLevel(void);
+int selectNextLevel(void);
 int selectMainMenu(void);
 int selectLeaderboard(void);
 int selectSaveScore(void);
@@ -104,6 +106,7 @@ extern menu_t menuWonLevel;
 extern menu_t menuLostLevel; 
 extern menu_t menuLeaderboard; 
 extern menu_t menuLevels;
+extern menu_t menuVolume;
 
 //extern char stringWithScore[20];
 
