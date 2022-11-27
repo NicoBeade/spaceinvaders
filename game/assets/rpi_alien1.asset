@@ -12,3 +12,4 @@ sprite3 4
 score 5
 deathSound NULL
 shootSound NULL
+aliado 0

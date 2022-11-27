@@ -26,6 +26,9 @@
 #include <stdarg.h>
 #include "spaceLib.h"
 #include <string.h>
+
+#define ABS(x) (((x) > 0)? (x) : (-x))
+
 #ifdef FIX_UNDEF_EXTERNS
 gameStatus_t GAME_STATUS;
 game_t menuGame;
@@ -261,6 +264,34 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
     return borde;
 }
 
+int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
+    static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
+    int type = levelSettings->mothershipAsset;
+    objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
+    int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
+    int initLives = mothershipAsset->initLives;
+    printf("MOTHERSHIP PROB %d\n", probOfBirth);
+    if(rand()%100 < probOfBirth && *mothershipListPointer == NULL){     //Se lanzan los dados si no hay nave nodriza
+        printf("AtrodenMothership\n");
+        mothershipsBorn++;                              //Crece una nave nodriza
+        vector_t posMothership;                         //Aux posicion de la nave nodriza
+        posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
+        int direccionIztoDer = 1;  //Variable auxiliar que decide si va para la izquierda o para la derecha
+        if(rand()%2){   //50%de probabilidades de ir para un lado o el otro
+            direccionIztoDer = 0;
+        }
+        posMothership.x = direccionIztoDer? levelSettings->xMin - mothershipAsset->ancho : levelSettings->xMax + mothershipAsset->ancho;  //Si es par impar empieza iz/der
+        //Cambia la velocidad de la mothership dependiendo si va a izquierda o a derecha
+        if(direccionIztoDer){   //Si va de izquierda a derecha la velocidad es positiva
+            mothershipAsset->velocidad = ABS(mothershipAsset->velocidad);   //izq to der
+        }
+        else{
+            mothershipAsset->velocidad = -ABS(mothershipAsset->velocidad);  //der to izq
+        }
+        (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
+    }
+}
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
@@ -303,10 +334,10 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 
 char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
     
-    int disparo = 0;                                            //VAriable para detectar si se disparo o no
-    int balasActuales = countList(*listaBalas);                  //Se cuenta la cantidad de balas activas
-    object_t * nave = *listaNaves;                               //Se crea un puntero a la lista de naves
-    object_t * bala = *listaBalas;                               //Se crea un puntero a la lista de balas
+    int disparo = 0;                                            //Variable para detectar si se disparo o no
+    int balasActuales = countList(*listaBalas);                 //Se cuenta la cantidad de balas activas
+    object_t * nave = *listaNaves;                              //Se crea un puntero a la lista de naves
+    object_t * bala = *listaBalas;                              //Se crea un puntero a la lista de balas
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
@@ -337,10 +368,10 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         nave = nave -> next;
     }
     *listaBalas = bala;
-    if(naveType -> id == 40 && disparo != 0){//Si se disparo una bala de usuario
+    if((naveType -> aliado) && disparo != 0){//Si se disparo una bala de usuario
         return SL_BALA_USER;
     }
-    else if (naveType -> id != 40 && disparo != 0){//Si se disparo una bala de alien
+    else if (!(naveType -> aliado) && disparo != 0){//Si se disparo una bala de alien
         return  SL_BALA_ALIEN;
     }
     else if (disparo == 0){//Si no se disparo
@@ -411,29 +442,26 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listMotherShip = *motherShip;
     object_t * balaADestruir;
 
-    while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Primero chequea si las balas enemigas golpearon algo.
-
-        while(listBarreras != NULL  &&  collition && *balasEnemigas != NULL ){//Chequea si se golpeo una barrera
-                printf("barreracheck\n");
+    while(listBalasEnemigas != NULL  && listUsr->lives != 0){//---------------------------------------------        Primero chequea si las balas enemigas golpearon algo.
+        listBarreras = *barrerasList;   //Lista auxiliar
+        while(listBarreras != NULL && listBalasEnemigas != NULL ){//Chequea si se golpeo una barrera
             if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
-                printf("colision con  barrera\n");
                 collition = 0;
                 listBarreras->lives -= 1;
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
 
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
-                    listBarreras = *barrerasList;
+                    listBarreras = listBarreras->next;
                     returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_MUERTA : returnEvent;
                 }
                 else{//Si no se mato a la barrera
+                    listBarreras = listBarreras->next;
                     returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_TOCADA : returnEvent;
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
 
                     balaADestruir = listBalasEnemigas;
-                    listBalasEnemigas = listBalasEnemigas->next;//Apunta a la siguiente bala
-
                     *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
                 }
             }
@@ -441,9 +469,12 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 listBarreras = listBarreras->next;
             }
         }
-
+        listBalasEnemigas = listBalasEnemigas->next;
+    }
+    collition = 1;
+    listBalasEnemigas = *balasEnemigas;
+    while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){
         if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listUsr->lives != 0){//Chequea si se golpeo al usuario
-            printf("colision con  usr\n");
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
@@ -524,7 +555,6 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
 
         collition = 1;
-        
     }
 
     listBalasUsr = *balasUsr;
@@ -542,7 +572,6 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     *balasEnemigas = destroyObj(*balasEnemigas, listBalasEnemigas);
                     listBalasEnemigas = *balasEnemigas;
                 }
-
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir
                     object_t * balaADestruir = listBalasUsr;
@@ -568,13 +597,9 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         collition = 1;
     }
 
-
-
-    /*
     listBalasUsr = *balasUsr;
     collition = 1;
     while(listBalasUsr != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Chequea si las balas del usuario golpearon a la nave nodriza.
-
         while(listMotherShip != NULL  &&  collition){//Chequea la/s nave/s nodrizas.
             
             if(collision(listBalasUsr->pos, listBalasUsr->type, listMotherShip->pos, listMotherShip->type)){//Si golpeo a una nave nodriza
@@ -582,10 +607,13 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 collition = 0;
                 listMotherShip->lives -= 1;
                 if(listMotherShip->lives == 0){//Si se mato a la mothership hay que eliminarla de la lista
+                    if(scoreInstantaneo != NULL && scoreReal != NULL){
+                        objectType_t * alienRipedAsset = getObjType(listMotherShip->type);//Incrementa el puntaje
+                        *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
+                    }
                     *motherShip = destroyObj(*motherShip, listMotherShip);
                     listMotherShip = *motherShip;
                 }
-
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir
                     object_t * balaADestruir = listBalasUsr;
@@ -609,24 +637,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
 
         collition = 1;
-    }*/
-    return returnEvent;
-}
-
-
-int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
-    static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
-    int type = levelSettings->mothershipAsset;
-    objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
-    int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
-    int initLives = mothershipAsset->initLives;
-    if(rand() < probOfBirth){                           //Se lanzan los dados
-        mothershipsBorn++;                              //Crece una nave nodriza
-        vector_t posMothership;                         //Aux posicion de la nave nodriza
-        posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
-        posMothership.x = (rand()%2)? levelSettings->xMin - mothershipAsset->ancho : levelSettings->xMax + mothershipAsset->ancho;  //Si es par impar empieza iz/der
-        (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
     }
+    return returnEvent;
 }
 
 
@@ -657,7 +669,6 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
     int maxXObj = minXObj + objectAncho - 1;
     int minYObj = objectPos.y;
     int maxYObj = minYObj + objectAlto - 1;
-    printf("collision type %d, minxObj %d  maxXobj %d  minyobj %d  maxyobj %d   minXBala %d   maxXbala %d   minybnala %d maxYBala %d\n", objectType, minXObj, maxXObj, minYObj, maxYObj, minXBala, maxXBala,minYBala, maxYBala);
     int interseccionX = maxXBala >= minXObj && minXBala <= maxXObj;//Detecta si se intersectan
     int interseccionY = maxYBala >= minYObj && minYBala <= maxYObj;
 
@@ -678,7 +689,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};    //Se inicializa un array de objectTypes 
 
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * deathSound, char * shootSound, int score){
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * deathSound, char * shootSound, int score, int aliado){
     if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
         printf("Err in gameLib, addObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
@@ -703,6 +714,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).maxBullets=maxBullets;
         (objtypes[index]).balaID=balaID;
         (objtypes[index]).score=score;
+        (objtypes[index]).aliado=aliado;
         memcpy((objtypes[index]).sprite1, sprite1, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite2, sprite2, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite3, sprite3, MAX_SPRITE_FILE_LENGTH);
@@ -748,7 +760,7 @@ objectType_t * getObjType(int id){
 void imprimirARRAY(void){
     int index;
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++){      //Se recorre el arreglo hasta encontrar el object type indicado
-        printf("TIPO N: %d\n\tID: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
+        printf("TIPO N: %d\n\tID: %d\n\tAliado?: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id,(objtypes[index]).aliado, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
     }
 }
 
@@ -782,6 +794,9 @@ void imprimirLevelSetting(level_setting_t * levelSettings){
     printf("xMin: %d\n", levelSettings->xMin);
     printf("yMax: %d\n", levelSettings->yMax);
     printf("yMin: %d\n", levelSettings->yMin);
+    printf("mothershipYpos: %d\n", levelSettings->mothershipYpos);
+    printf("mothershipAsset: %d\n", levelSettings->mothershipAsset);
+    printf("maxMShipXLevel: %d\n", levelSettings->maxMShipXLevel);
 }
 
 /*******************************************************************************************************************************************

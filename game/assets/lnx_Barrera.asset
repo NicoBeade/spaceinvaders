@@ -12,3 +12,4 @@ sprite3 game/spritesAllegro/barrera.png
 score 0
 deathSound NULL
 shootSound NULL
+aliado 1

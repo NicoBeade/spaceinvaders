@@ -347,11 +347,6 @@ int main(void){
                     printf("Error in spaceInvaders.c, Couldnt start level, UsrList null\n");
                     return -1;
                 }
-               /* if(barrerasList == NULL){
-                    printf("Error in spaceInvaders.c, Couldnt start level, barrerasList null\n");
-                    return -1;
-                }
-                */
 
                 velAliens = levelSettings.velAliens;
                 velMothership = levelSettings.velMothership;
@@ -360,10 +355,6 @@ int main(void){
                 GAME_STATUS.inGame = 1;
 
                 UsrList->lives = GAME_STATUS.usrLives;
-
-                //HARDCODED
-                vector_t Booo = {0,0};
-                mothershipList = addObj(mothershipList, Booo, 0, 0);
 
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, audioCallback};
@@ -1033,10 +1024,10 @@ void * moveMothershipThread(void* argMoveMothership){
 
     argMoveMothership_t * data = (argMoveMothership_t*)argMoveMothership;
 
-    while(GAME_STATUS.inGame && *(data->mothership) != NULL){
+    while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        object_t * mothership = *(((argMoveMothership_t*)argMoveMothership) -> mothership);
-        
+        object_t * mothership = *(data -> mothership);
+        /*
         if( (timerTick % 500 && mothership->lives == 0)){ //el 500 debe ser un numero random asi aparece cada 
             mothership->type = timerTick%2; //se genera aleatoriamente a la derecha o a la izquierda de la pantalla
             mothership->lives = 1;
@@ -1044,27 +1035,22 @@ void * moveMothershipThread(void* argMoveMothership){
             (data->audioCallback)(MOTHERSHIP_APARECE);
             //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
         }
+        */       
 
-        if( ((timerTick % velMothership) == 0) && mothership->lives != 0){
-
+        if( ((timerTick % ((data -> levelSettings) -> velMothership) == 0))){
             sem_wait(&SEM_GAME);
             if(*(data->mothership) != NULL){
                 //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
                 //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
-                if(mothership->type == 1){
-                    mothership->pos.x += (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
-                    if(mothership->pos.x == 16){
-                        mothership->lives = 0;
-                    }
-                }
-                else if(mothership->type == 0){
-                    mothership->pos.x -= (((argMoveAlien_t*)argMoveMothership) -> levelSettings) -> desplazamientoX;
-                    if(mothership->pos.x == -3){
-                        mothership->lives = 0;
-                    }
+                objectType_t * motherAsset = getObjType((*(data->mothership))->type);
+                printf("segfault1\n");
+                mothership->pos.x += motherAsset->velocidad;
+                if((mothership->pos.x > ((data -> levelSettings) -> xMax + motherAsset->ancho)) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
+                    mothership->lives = 0; // Si se va out of bounds mata a la nave
                 }
             }
+            mothershipCreator(data->mothership, data -> levelSettings);
             sem_post(&SEM_GAME);
         }
     }
@@ -1171,7 +1157,7 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
                     (*(data->usrList))->lives += 1;
-                    (data->audioCallback)(PARTIDA_GANADA);
+                    //(data->audioCallback)(PARTIDA_GANADA);
                     break;
                 
                 case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien

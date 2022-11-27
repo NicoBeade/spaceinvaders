@@ -47,45 +47,45 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
 }argDisplayRPI_t;
 
 typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
-    char* msg;//Mensaje a mostrar
-    halfDisp_t* lowerDispMenu;//Contenido de la parte inferior del display.
-    halfDisp_t* higherDispMenu;//Contenido de la parte superior del display.
-    halfDisp_t* drawing;//Dibujo a mostrar en la opcion seleccionada.
-    int direccion;//Direccion en la que se debe mostrar el primer barrido.
-    int* changeAnimation;//Indica cuando salir del thread.
-    unsigned char* menuActual;//Indica que menu se esta ejecutando.
+    char* msg;                      //Mensaje a mostrar
+    halfDisp_t* lowerDispMenu;      //Contenido de la parte inferior del display.
+    halfDisp_t* higherDispMenu;     //Contenido de la parte superior del display.
+    halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
+    int direccion;                  //Direccion en la que se debe mostrar el primer barrido.
+    int* changeAnimation;           //Indica cuando salir del thread.
+    unsigned char* menuActual;      //Indica que menu se esta ejecutando.
 }argTextAnimMenu_t;
 
 typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
-    halfDisp_t* higerDispMenu;//parte superior del display.
+    halfDisp_t* higerDispMenu;      //parte superior del display.
     int direccion;
-    halfDisp_t* drawing;//Dibujo a mostrar.
+    halfDisp_t* drawing;            //Dibujo a mostrar.
 }argSwipeDrawing_t;
 
 typedef struct{//Argumentos que recibe la funcion changeOption.
-    pthread_t* threadMenu;//Puntero al thread
-    int* animStatus;//Indicador de si se debe cambiar de texto
-    halfDisp_t* lowerDispMenu;//Puntero a la parte inferior del display durante la ejecucion del menu.
-    halfDisp_t* higherDispMenu;//Contenido de la parte superior del display.
-    halfDisp_t* drawing;//Dibujo a mostrar en la opcion seleccionada.
-    char* nuevoTexto;//Nuevo texto a mostrar en pantalla.
-    int direccion;//Direccion de la animacion.
-    unsigned char* menuActual;//Indica que menu se esta ejecutando.
+    pthread_t* threadMenu;          //Puntero al thread
+    int* animStatus;                //Indicador de si se debe cambiar de texto
+    halfDisp_t* lowerDispMenu;      //Puntero a la parte inferior del display durante la ejecucion del menu.
+    halfDisp_t* higherDispMenu;     //Contenido de la parte superior del display.
+    halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
+    char* nuevoTexto;               //Nuevo texto a mostrar en pantalla.
+    int direccion;                  //Direccion de la animacion.
+    unsigned char* menuActual;      //Indica que menu se esta ejecutando.
 }argChangeOption_t;
 
-typedef int (*option_t)(void);//Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.
+typedef int (*option_t)(void);      //Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.
 
 typedef struct {//Este struct contiene la informacion necesaria para ejecutar un menu.
 
 	keys_t * keys;
-	option_t selectOption[20];//Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
-    option_t backMenuAnterior;//Puntero a la funcion que vuelve un menu hacia atras.
-    char textOpciones[20][50];//Arreglo de punteros a los strings que contienen el texto de cada opcion.
+	option_t selectOption[20];      //Struct que contiene punteros a funciones que indican que hacer cuando se selecciona una opcion.
+    option_t backMenuAnterior;      //Puntero a la funcion que vuelve un menu hacia atras.
+    char textOpciones[20][50];      //Arreglo de punteros a los strings que contienen el texto de cada opcion.
     halfDisp_t* drawingOpciones[20];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
-    int cantOpciones;//Cantidad de opciones del menu.
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+    int cantOpciones;               //Cantidad de opciones del menu.
+    int exitStatus;                 //Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
-    void (*audioCallback)(int);//Callback a la funcion que ejecuta los sonidos.
+    void (*audioCallback)(int);     //Callback a la funcion que ejecuta los sonidos.
 } menu_t;
 
 typedef struct {

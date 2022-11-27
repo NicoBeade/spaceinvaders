@@ -197,6 +197,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     int maxBullets;
     int balaID;
     int score;
+    int aliado;
     char * sprite1;
     char * sprite2;
     char * sprite3;
@@ -212,6 +213,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     char maxBullets_found = 0;
     char balaID_found = 0;
     char score_found = 0;
+    char aliado_found = 0;
     char sprite1_found = 0;
     char sprite2_found = 0;
     char sprite3_found = 0;
@@ -255,6 +257,10 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
             score = atoi(decodedFile[paramNo].value);
             score_found++;
         }
+        else if(aliado_found == 0 && strcmp(decodedFile[paramNo].parameter, "aliado") == 0){
+            aliado = atoi(decodedFile[paramNo].value);
+            aliado_found++;
+        }
         else if(sprite1_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite1") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){   //Si la direccion del sprite guardado en el archivo es muy larga entonces salta error
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
@@ -297,12 +303,12 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
         }
     }
     //Si todos los campos se encontraron entonces añade el asset a la lista de object types
-    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || score_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 || shootSound_found != 1 || deathSound_found != 1){   //Si no se encontraron todos los campos devuelve error
+    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || score_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 || shootSound_found != 1 || deathSound_found != 1 || aliado_found != 1){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         printf("deathSound_found %d shootSound_found %d  score_found %d \n", deathSound_found, shootSound_found,score_found);
         return -1;
     }
-    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3, shootSound,deathSound,score); //Añade el tipo de objeto
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3, shootSound,deathSound,score, aliado); //Añade el tipo de objeto
     return 0;
 }
 
@@ -488,6 +494,9 @@ int readAssetModifiers(int paramNo, int AssetID){   //Recibe el nombre del archi
         else if(strcmp(decodedFile[fila].parameter, "score") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es maxBullets, la modifica
             assetModified->score = getAbsValue(1,decodedFile[fila].value, assetModified->score);
         }
+        else if(strcmp(decodedFile[fila].parameter, "aliado") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es maxBullets, la modifica
+            assetModified->aliado = atoi(decodedFile[fila].value);
+        }
         else if(strcmp(decodedFile[fila].parameter, "sprite1") == 0 && strlen(decodedFile[fila].value) > 0){
             if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
                 strcpy(assetModified->sprite1,decodedFile[fila].value);//Se copia el path
@@ -547,6 +556,9 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     char desplazamientoX_found = 0;
     char desplazamientoY_found = 0;
     char desplazamientoUsr_found = 0;
+    char mothershipYpos_found = 0;         //Posicion en Y donde se mueve la mothership (horizontal)
+    char mothershipAsset_found = 0;        //Asset correspondiente a la mothership
+    char maxMShipXLevel_found = 0;         //Maxima cantidad de motherships por nivel
     /*
     char usrLives_found = 0;
     */
@@ -609,6 +621,19 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
             levelSettings->desplazamientoUsr = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->desplazamientoUsr);
             desplazamientoUsr_found++;
         }
+        
+        else if((maxMShipXLevel_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "maxMShipXLevel") == 0){
+            levelSettings->maxMShipXLevel = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->maxMShipXLevel);
+            maxMShipXLevel_found++;
+        }
+        else if((mothershipAsset_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "mothershipAsset") == 0){
+            levelSettings->mothershipAsset = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->mothershipAsset);
+            mothershipAsset_found++;
+        }
+        else if((mothershipYpos_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "mothershipYpos") == 0){
+            levelSettings->mothershipYpos = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->mothershipYpos);
+            mothershipYpos_found++;
+        }
         /*
         else if((usrLives_found == 0 || !checkAllFields) && strcmp(decodedFile[paramNo].parameter, "usrLives") == 0){
             levelSettings->usrLives = getAbsValue(!checkAllFields, decodedFile[paramNo].value, levelSettings->usrLives);
@@ -617,7 +642,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
         */
     }
     //Si checkAllFields esta activado y no se encontraron todos los campos tira error
-    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1 )){   //Si no se encontraron todos los campos devuelve error
+    if(checkAllFields && (xMin_found != 1 || xMax_found != 1 || yMin_found != 1 || yMax_found != 1 || saltoX_found != 1 || saltoY_found != 1 || velBalas_found != 1 || margenX_found != 1 || margenY_found != 1 || velAliens_found != 1 || velMothership_found != 1 || desplazamientoX_found != 1 || desplazamientoY_found != 1 || desplazamientoUsr_found != 1 || maxMShipXLevel_found != 1 || mothershipAsset_found != 1 || mothershipYpos_found != 1)){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, readLevelSettings function : \"%s\" has missing parameters\n", file);
         return -1;
     }

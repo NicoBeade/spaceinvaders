@@ -12,3 +12,4 @@ sprite3 game/spritesAllegro/nave.png
 score 0
 deathSound 0
 shootSound 0
+aliado 1

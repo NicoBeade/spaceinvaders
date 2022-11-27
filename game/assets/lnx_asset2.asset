@@ -12,3 +12,4 @@ sprite3 game/spritesAllegro/alien2.png
 score 5
 deathSound 0
 shootSound 0
+aliado 0
