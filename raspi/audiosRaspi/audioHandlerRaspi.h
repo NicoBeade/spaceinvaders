@@ -19,6 +19,6 @@ enum AUDIO {  MUSICA_MENU,MUSICA_JUEGO,
               };
 
 void audioHandlerRaspi(int audioId); //handler de musica y sonidos para raspi
-void regVolumeRaspi(int sentido); //handler de volumen para raspi
+int regVolumeRaspi(int sentido); //handler de volumen para raspi
 
 #endif
