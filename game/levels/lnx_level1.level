@@ -60,4 +60,10 @@ USUARIO
     posY 560
 END
 
+BARRERA
+    type  34
+    posX  500
+    posY  500
+END
+
 velBalas			5

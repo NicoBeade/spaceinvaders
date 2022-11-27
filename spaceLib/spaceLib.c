@@ -412,8 +412,9 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){//---------------------------------------------        Primero chequea si las balas enemigas golpearon algo.
 
         while(listBarreras != NULL  &&  collition && *balasEnemigas != NULL ){//Chequea si se golpeo una barrera
+                printf("barreracheck\n");
             if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
-
+                printf("colision con  barrera\n");
                 collition = 0;
                 listBarreras->lives -= 1;
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
@@ -440,7 +441,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
 
         if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listUsr->lives != 0){//Chequea si se golpeo al usuario
-
+            printf("colision con  usr\n");
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
@@ -617,7 +618,6 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
     }
     int objectAncho = objType->ancho;//Obtiene la hitbox del objeto
     int objectAlto = objType->alto;
-
     objectType_t * balType = getObjType(balaType);
     if(balType == NULL){
         printf("Err in spaceLib.c cannot find objType %d in collision.\n", objectType);
@@ -635,7 +635,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
     int maxXObj = minXObj + objectAncho - 1;
     int minYObj = objectPos.y;
     int maxYObj = minYObj + objectAlto - 1;
-
+    printf("collision type %d, minxObj %d  maxXobj %d  minyobj %d  maxyobj %d   minXBala %d   maxXbala %d   minybnala %d maxYBala %d\n", objectType, minXObj, maxXObj, minYObj, maxYObj, minXBala, maxXBala,minYBala, maxYBala);
     int interseccionX = maxXBala >= minXObj && minXBala <= maxXObj;//Detecta si se intersectan
     int interseccionY = maxYBala >= minYObj && minYBala <= maxYObj;
 
