@@ -901,7 +901,7 @@ static void* saveScoreHandlerThread(void * data){
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
 
-                (*menu->audioCallback)(SAVE_SCORE);
+                (*menu->audioCallback)(SAVED_SCORE);
                 
                 stopSweep = 4;
             }
