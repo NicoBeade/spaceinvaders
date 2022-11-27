@@ -442,15 +442,17 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
+        if(*(data->changeAnimation) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
+            for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
-            offset = offsetAlfabeto((data -> msg)[j]);
-            if(offset == -1){
-                pthread_exit(0);
+                offset = offsetAlfabeto((data -> msg)[j]);
+                if(offset == -1){
+                    pthread_exit(0);
+                }
+                swipeCharacter(data -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
             }
-            swipeCharacter(data -> lowerDispMenu, *(alfabeto[offset]), IZQUIERDA);       
+            firstBarr = 0;//Reinicia el proceso.
         }
-        firstBarr = 0;//Reinicia el proceso.
     }
     while(*(data -> changeAnimation));
 
@@ -574,6 +576,9 @@ void changeOption(void* argChangeOption){
 
     static argTextAnimMenu_t argTextAnimMenu;
 
+    char menuActual = *(data->menuActual);
+    *(data->menuActual) = 0;
+
     velDispAnimation = 1;
 
     *(data -> animStatus) = 0;
@@ -581,6 +586,8 @@ void changeOption(void* argChangeOption){
     pthread_join(*(data -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
     *(data -> animStatus) = 1;
+
+    *(data->menuActual) = menuActual;
 
     argTextAnimMenu.msg = data -> nuevoTexto;
     argTextAnimMenu.lowerDispMenu = data -> lowerDispMenu;

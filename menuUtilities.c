@@ -36,7 +36,7 @@ menu_t menuLostLevel = { &KEYS , {selectNothing, selectRestartLevel, selectMainM
                       {&halfDispLostGame, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
                       6 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
 
-menu_t menuWonLevel = { &KEYS , {selectNothing, selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior, 
+menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior, 
                       {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       7 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
@@ -49,7 +49,12 @@ menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing,
 menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, backMenuAnterior, 
                       {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
-                      10 , 1 , changeOption };//Estructura del menu de seleccionar nivel.
+                      8 , 1 , changeOption };//Estructura del menu de seleccionar nivel.
+
+menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
+                      {" 00 ", " 01 ", " 02 ", " 03 ", " 04 ", " 05 ", " 06 ", " 07 "}, 
+                      {&halfDispVolume0, &halfDispVolume1, &halfDispVolume2, &halfDispVolume3, &halfDispVolume4, &halfDispVolume5, &halfDispVolume6, &halfDispVolume7}, 
+                      8 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
 #endif
 
 
@@ -69,7 +74,7 @@ menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevel
                       {NULL},  
                       5, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectRestartLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
+menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
                       {NULL}, 
                       6, 1, changeOption };//Estructura del menu de pausa.
@@ -83,6 +88,11 @@ menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                       {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "},
                       {NULL}, 
                       5 , 1 , changeOption };//Estructura del menu de pausa.
+
+menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
+                      {" 00 ", " 01 ", " 02 ", " 03 ", " 04 ", " 05 ", " 06 ", " 07 "}, 
+                      {NULL}, 
+                      8 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
 #endif
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -132,6 +142,7 @@ int selectPlayInicio(void){
 }
 
 int selectLevels(void){
+    printf("Select Levels\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -142,8 +153,14 @@ int selectLevels(void){
 }
 
 int selectVolume(void){
+    printf("Select Volume\n");
+    #ifdef RASPI
+    velDispAnimation = 1;
+    #endif
+    GAME_STATUS.pantallaActual = MENU;
     GAME_STATUS.menuAnterior = GAME_STATUS.menuActual;
-    return 1;
+    GAME_STATUS.menuActual = MENU_VOLUME;
+    return 0;
 }
 
 int selectQuitGame(void){
@@ -177,6 +194,34 @@ int selectRestartLevel(void){
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = START_LEVEL_MENU;
     GAME_STATUS.menuAnterior = -1;
+    return 0;
+}
+
+int selectNextLevel(void){
+    printf("Select Restart Level\n");
+    #ifdef RASPI
+    velDispAnimation = 1;
+    #endif
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
+    GAME_STATUS.menuAnterior = -1;
+    GAME_STATUS.nivelActual += 1;
+    #ifdef RASPI
+    char platform[4] = "rpi";
+    #endif
+
+    #ifdef ALLEGRO
+    char platform[4] = "lnx";
+    #endif
+
+    directory_t carpetaNiveles = {};
+    level_t levelArray[MAX_LEVEL];
+    indexAllLevels(platform,LEVELSDIR, LEVELPREFIX, &carpetaNiveles, levelArray);
+    
+    if(GAME_STATUS.nivelActual >= levelArrayLen(levelArray)){//Si se llego al ultimo nivel.
+        GAME_STATUS.nivelActual -= 1;
+        printf("Se alcanzo el ultimo nivel\n");
+    }
     return 0;
 }
 
