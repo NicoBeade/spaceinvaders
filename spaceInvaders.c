@@ -20,21 +20,18 @@
 #include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include "spaceLib/spaceLib.h"
 #include <unistd.h>
-#include "levelLoader/levelLoader.h"
 #include "menuUtilities.h"
 
 #ifdef RASPI
 #include "raspi/inputRaspi.h"
-#include "raspi/displayRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
 #include "raspi/audiosRaspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
-#include "allegro/allegro.h"
+
 #endif
 
 /*******************************************************************************************************************************************
