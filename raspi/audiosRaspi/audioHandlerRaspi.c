@@ -50,7 +50,7 @@ void audioHandlerRaspi(int audioId){
     printf("Reproduciendo audio con id %d \n",audioId);
 
     //Primero se ubica el audio en la look up table sabiendo el audioId
-
+    audio_t* pointerAudio = NULL;
     int i;
     for (i=0; i<MAX_AUDIOS && pointerAudio == NULL; i++){
         if (audioArray[i]->id == audioId){
