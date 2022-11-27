@@ -713,7 +713,7 @@ static void* saveScoreHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 
