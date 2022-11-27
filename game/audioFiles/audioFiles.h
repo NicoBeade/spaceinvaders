@@ -1,18 +1,9 @@
-#ifndef AUDIOSRASPI
-#define AUDIOSRASPI
+#ifndef AUDIO_FILES
+#define AUDIO_FILES
 
-/*Como compilar:
+//Paths a los archivos de audio del juego (sonidos y musica)
 
-gcc -Wall testAudio#.c ../libAudioSDL2.o -I/usr/local/include -L/usr/local/lib -lSDL2 -lpthread -o test#.out 
-
-Donde deben reemplazar el “#” por el número de ejemplo de audio que estén compilando. 
-Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
-
-#include "audio.h"
-#include <SDL2/SDL.h>
-
-
-#define PATH "raspi/audiosRaspi/audioFilesRaspi/"
+#define PATH "game/audioFiles/"
 
 //Paths a las musicas del juego
 #define MUS_MENU (PATH "musica_menu.wav")
@@ -44,15 +35,5 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #define SON_ERROR_MENU (PATH "error_menu.wav")
 #define SON_SAVED_SCORE (PATH "saved_score.wav")
 #define SON_SWEEP_LETRA (PATH "sweep_letra.wav")
-
-//Enums de los sonidos y musicas del juego 
-enum AUDIO {  MUSICA_MENU,MUSICA_JUEGO,
-              COLISION_ALIEN_TOCADO,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,COLISION_CHOQUE_BALAS,
-              MOTHERSHIP_APARECE,
-              MOVIMIENTO_ALIENS,
-              BALA_USER,BALA_ALIEN,
-              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA,
-              SAVED_SCORE,
-              };
 
 #endif
