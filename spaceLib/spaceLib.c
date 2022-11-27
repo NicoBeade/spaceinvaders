@@ -173,9 +173,11 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
     }
     auxiliar = *alienList;
     while (auxiliar != NULL){//Mueve los aliens uno por uno
-
-        auxiliar->pos.x += vx;//Modifica su posicion en x e y
-        auxiliar->pos.y += vy;
+        objectType_t * alienAsset = getObjType(auxiliar->type); //Obtiene el objectype de cada alien
+        if(alienAsset->velocidad != 0){  //Si tiene velocidad lo mueve, sino no
+            auxiliar->pos.x += vx;//Modifica su posicion en x e y
+            auxiliar->pos.y += vy;
+        }
         auxiliar->animationStatus++;
         auxiliar = auxiliar -> next;
     }
@@ -566,21 +568,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         collition = 1;
     }
 
-    mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
-        static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
-        int type = levelSettings->mothershipAsset;
-        objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
-        int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
-        int initLives = mothershipAsset->initLives;
-        if(rand() < probOfBirth){                           //Se lanzan los dados
-            mothershipsBorn++;                              //Crece una nave nodriza
-            vector_t posMothership;                         //Aux posicion de la nave nodriza
-            posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
-            posMothership.x = (rand()%2)? levelSettings->xMin - mothershipAsset->ancho : levelSettings->xMax + mothershipAsset->ancho;  //Si es par impar empieza iz/der
-            //object_t * firstObj, vector_t setPos, int setTypeId, int setLives)
-            (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
-        }
-    }
+
 
     /*
     listBalasUsr = *balasUsr;
@@ -624,6 +612,23 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     }*/
     return returnEvent;
 }
+
+
+int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
+    static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
+    int type = levelSettings->mothershipAsset;
+    objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
+    int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
+    int initLives = mothershipAsset->initLives;
+    if(rand() < probOfBirth){                           //Se lanzan los dados
+        mothershipsBorn++;                              //Crece una nave nodriza
+        vector_t posMothership;                         //Aux posicion de la nave nodriza
+        posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
+        posMothership.x = (rand()%2)? levelSettings->xMin - mothershipAsset->ancho : levelSettings->xMax + mothershipAsset->ancho;  //Si es par impar empieza iz/der
+        (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
+    }
+}
+
 
 int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType){
 //Esta funcion se encarga de detectar si hubo una colision teniendo en cuenta la hitbox de los objetos.
