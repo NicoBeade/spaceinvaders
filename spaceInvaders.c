@@ -1041,6 +1041,7 @@ void * moveMothershipThread(void* argMoveMothership){
             mothership->type = timerTick%2; //se genera aleatoriamente a la derecha o a la izquierda de la pantalla
             mothership->lives = 1;
             mothership->pos.x = (mothership->type)?-3:16;
+            (data->audioCallback)(MOTHERSHIP_APARECE);
             //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
         }
 
