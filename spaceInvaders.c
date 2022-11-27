@@ -976,9 +976,9 @@ static void* levelHandlerThread(void * data){
             }
             if (ARRIBA_INPUT && !stopShoot){//Dispara una bala
                 
-                char eventoBalaCAMBIAR = shootBala(menu -> naveUsr, menu -> balasUsr, menu -> levelSettings);
+                char eventoBala = shootBala(menu -> naveUsr, menu -> balasUsr, menu -> levelSettings);
                 
-                if(eventoBalaCAMBIAR == SL_BALA_USER){
+                if(eventoBala == SL_BALA_USER){
 
                     (menu->audioCallback)(BALA_USER);
                 }
