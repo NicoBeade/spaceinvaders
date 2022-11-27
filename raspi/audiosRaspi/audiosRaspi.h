@@ -26,6 +26,7 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 #define SON_COLISION_MOTHERSHIP_MUERTA (PATH "mothership_muerta.wav")
 #define SON_COLISION_BARRERA_TOCADA (PATH "barrera_tocada.wav")
 #define SON_COLISION_BARRERA_MUERTA (PATH "barrera_muerta.wav")
+#define SON_COLISION_CHOQUE_BALAS (PATH "choque_balas.wav")
 
 //Path al sonido de movimiento de los aliens
 #define SON_MOVIMIENTO_ALIENS (PATH "movimiento_aliens.wav")
@@ -46,7 +47,7 @@ Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).*/
 
 //Enums de los sonidos y musicas del juego 
 enum AUDIO {  MUSICA_MENU,MUSICA_JUEGO,
-              COLISION_ALIEN_TOCADO,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,
+              COLISION_ALIEN_TOCADO,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,COLISION_CHOQUE_BALAS,
               MOTHERSHIP_APARECE,
               MOVIMIENTO_ALIENS,
               BALA_USER,BALA_ALIEN,

@@ -23,6 +23,7 @@ audio_t sonidoColisionUserMuerto = {COLISION_USER_MUERTO,SON_COLISION_USER_MUERT
 audio_t sonidoColisionMothershipMuerta = {COLISION_MOTHERSHIP_MUERTA,SON_COLISION_MOTHERSHIP_MUERTA};
 audio_t sonidoColisionBarreraTocada = {COLISION_BARRERA_TOCADA,SON_COLISION_BARRERA_TOCADA};
 audio_t sonidoColisionBarreraMuerta = {COLISION_BARRERA_MUERTA,SON_COLISION_BARRERA_MUERTA};
+audio_t sonidoColisionChoqueBalas = {COLISION_CHOQUE_BALAS, SON_COLISION_CHOQUE_BALAS};
 audio_t sonidoMothershipAparece = {MOTHERSHIP_APARECE, SON_MOTHERSHIP_APARECE};
 audio_t sonidoMovimientoAliens = {MOVIMIENTO_ALIENS, SON_MOVIMIENTO_ALIENS};
 audio_t sonidoBalaUser = {BALA_USER, SON_BALA_USER};
@@ -33,12 +34,13 @@ audio_t sonidoErrorMenu = {ERROR_MENU, SON_ERROR_MENU};
 audio_t sonidoSweepLetra = {SWEEP_LETRA, SON_SWEEP_LETRA};
 audio_t sonidoSavedScore = {SAVED_SCORE, SON_SAVED_SCORE};
 
+
 //Variable de volumen modificable con wrappper
 static int volumenAudio=80;
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
 static audio_t* audioArray [MAX_AUDIOS] = {
-    &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,
+    &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
     &sonidoBalaUser,&sonidoBalaAlien,
