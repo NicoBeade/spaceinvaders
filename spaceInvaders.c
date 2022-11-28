@@ -508,6 +508,7 @@ static void* menuHandlerThread(void * data){
             };
             halfDispNameScore = &nameDispMenu;
             (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
+            printf("Puntero a half disp name score: %p\n",halfDispNameScore);
         }
 
         pthread_t displayMenuT;
