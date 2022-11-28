@@ -493,21 +493,8 @@ static void* menuHandlerThread(void * data){
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
 
-        halfDisp_t* halfDispNameScore;
-
         if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-            halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-            };
-            halfDispNameScore = &nameDispMenu;
-            (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
+            (menu -> drawingOpciones)[select] = getLeaderBoardName((menu -> drawingOpciones)[select], select);
         }
 
         pthread_t displayMenuT;
@@ -586,7 +573,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-                    (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
+                    (menu -> drawingOpciones)[select] = getLeaderBoardName((menu -> drawingOpciones)[select], select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
@@ -623,7 +610,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-                    (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
+                    (menu -> drawingOpciones)[select] = getLeaderBoardName((menu -> drawingOpciones)[select], select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
