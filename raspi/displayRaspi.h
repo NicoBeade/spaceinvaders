@@ -70,6 +70,7 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
     char* nuevoTexto;               //Nuevo texto a mostrar en pantalla.
     int direccion;                  //Direccion de la animacion.
+    unsigned char menuActual;      //Indica que menu se esta ejecutando.
 }argChangeOption_t;
 
 typedef int (*option_t)(void);      //Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.

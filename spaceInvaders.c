@@ -588,7 +588,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
@@ -625,7 +625,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
