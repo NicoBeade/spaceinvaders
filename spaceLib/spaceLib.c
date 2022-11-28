@@ -438,11 +438,14 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
  * 
  ******************************************************************************************************************************************/
 
-void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int direccion){
+int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int direccion){
 /* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
     la posicion de la nave del usuario.
     
-*/  
+*/  if(levelSettings == NULL){
+        printf("Err in gameLib, moveNaveUsuario function: levelSettings cannot be NULL\n");
+        return -1;
+    }
     if((*naveUsuario) == NULL){
         printf("Err in gameLib, moveNaveUsuario function: naveUsuario cannot be NULL pointer\n");
         return -1;
@@ -476,7 +479,10 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
  ******************************************************************************************************************************************/
 char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
-
+    if(levelSettings == NULL){
+        printf("Err in gameLib, collider function: levelSettings cannot be NULL\n");
+        return -1;
+    }
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
     char returnEvent = 0;
