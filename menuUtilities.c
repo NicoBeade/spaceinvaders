@@ -43,7 +43,7 @@ menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLe
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
-                      {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
+                      {&halfDispVolume0, &halfDispVolume0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, 
                       10 , 1 , changeOption };//Estructura del menu del leaderboard.
 
 menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, backMenuAnterior, 
