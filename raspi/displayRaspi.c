@@ -687,7 +687,7 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
     for(i = 0 ; i < 16 ; i++){
 
         for(j = 0 ; j < 8 ; j++){
-            printf("%s",nombre[i][j]?"██":"  ");
+            printf("%s",(*nombre)[i][j]?"██":"  ");
         }
         printf("\n");
     }
