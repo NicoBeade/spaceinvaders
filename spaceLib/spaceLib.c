@@ -156,6 +156,7 @@ char moveAlien(level_setting_t *  levelSettings, object_t ** alienList, int* dir
     }
     if(levelSettings == NULL){
         printf("Err in gameLib, moveAlien function: levelSettings cannot be NULL in function 'moveAlien'\n");
+        return -1;
     }
     object_t * auxiliar;
     int vx = 0; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
@@ -206,7 +207,12 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     Los estados son las direcciones y ya estan definidos en un enum previo.
 */
     if(levelSettings == NULL){
-        printf("Err in gameLib, moveAlien function: levelSettings cannot be NULL in function 'moveAlien'\n");
+        printf("Err in gameLib, detectarDireccion function: levelSettings cannot be NULL in function 'detectarDireccion'\n");
+        return -1;
+    }
+    if(listAliens == NULL){
+        printf("Err in gameLib, detectarDireccion function: listAliens cannot be NULL in function 'detectarDireccion'\n");
+        return -1;
     }
     switch(direccion){
         
@@ -254,6 +260,10 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
         printf("Err in gameLib, tocaBorde function: alien cannot be a null pointer\n");
         return DERECHA+ABAJO+IZQUIERDA;
     }
+    if(levelSettings == NULL){
+        printf("Err in gameLib, tocaBorde function: levelSettings cannot be a null pointer\n");
+        return DERECHA+ABAJO+IZQUIERDA;
+    }
     int borde = 0;
     while ((alien != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         objectType_t * tipoAlien = getObjType(alien->type);
@@ -272,9 +282,17 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
 }
 
 int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
+    if(levelSettings == NULL){
+        printf("Err in gameLib, mothershipCreator function: levelSettings cannot be NULL\n");
+        return -1;
+    }
     static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
     int type = levelSettings->mothershipAsset;
     objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
+    if(mothershipAsset == NULL){
+        printf("Err in gameLib, mothershipCreator function: mothershipAsset not found with type %d\n", type);
+        return -1;
+    }
     int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
     int initLives = mothershipAsset->initLives;
     printf("MOTHERSHIP PROB %d\n", probOfBirth);
@@ -296,6 +314,10 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
             mothershipAsset->velocidad = -ABS(mothershipAsset->velocidad);  //der to izq
         }
         (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
+        if((*mothershipListPointer) == NULL){
+        printf("Err in gameLib, mothershipCreator function: could't add mothership\n", type);
+        return -1;
+    }
     }
 }
 

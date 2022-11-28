@@ -8,8 +8,13 @@ saltoX              4
 saltoY              4
 velAliens			200
 velBalas			20
-velMothership		10
 xMax                15
 xMin                0
 yMax                15
 yMin                0
+
+
+mothershipYpos      1
+mothershipAsset     30
+maxMShipXLevel      3
+velMothership		10
