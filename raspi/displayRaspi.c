@@ -419,7 +419,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         pthread_exit(0);
     }
 
-    if(*(data->menuActual) == MENU_VOLUME){
+    if((data->menuActual) == MENU_VOLUME){
         int i;
         caracteres_t* caracter;
         dcoord_t pos = { 0, 8 };
@@ -602,7 +602,6 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.drawing = data -> drawing;
     argTextAnimMenu.direccion = data -> direccion;
     argTextAnimMenu.changeAnimation = data -> animStatus;
-    argTextAnimMenu.menuActual = data -> menuActual;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
     if(data->higherDispMenu == NULL){
         printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
