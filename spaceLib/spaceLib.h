@@ -177,7 +177,7 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 void printLista(object_t * lista, char * id);
 
 
-mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings);
+int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings);
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);

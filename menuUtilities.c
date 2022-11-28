@@ -66,32 +66,32 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
 
 menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Volume ", "Quit Game "},
-                      {NULL}, 
+                      {}, 
                       6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
-                      {NULL},  
+                      {},  
                       5, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
                       {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
-                      {NULL}, 
+                      {{0}}, 
                       6, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior,
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},
-                      {NULL},  
+                      {{0}},  
                       10 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, backMenuAnterior, 
                       {"Nivel 1    ", "Nivel 2    ", "Nivel 3    ", "Nivel 4    ", "Nivel 5    ", "Nivel 6    ", "Nivel 7    ", "Nivel 8    ", "Nivel 9    ", "Nivel 10    ", "Nivel 11    ", "Nivel 12    ", "Nivel 13    ", "Nivel 14    ", "Nivel 15    ", "Nivel 16    ", "Nivel 17    ", "Nivel 18    ", "Nivel 19    ", "Nivel 20    "},
-                      {NULL}, 
+                      {{0}}, 
                       5 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
                       {" 00 ", " 01 ", " 02 ", " 03 ", " 04 ", " 05 ", " 06 ", " 07 "}, 
-                      {NULL}, 
+                      {{0}}, 
                       8 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
 #endif
 /*******************************************************************************************************************************************

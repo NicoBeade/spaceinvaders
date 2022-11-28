@@ -32,6 +32,8 @@ extern sem_t SEM_GAME;
 extern sem_t SEM_MENU;
 
 static ALLEGRO_FONT * fuentes[FONTMAX] = {NULL};
+static float generalVolume;
+
 /***********************************************************************************************************************************************************
  * 
  *                                                                      PROTOTIPOS DE FUNCIONES LOCALES
@@ -203,12 +205,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
         for(i=0; i<20; i++){
             if(idQeue[i] != 0){
                 if(idQeue[i] < AUDIOMAX){
-                    al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+                    al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                 }
                 else if(idQeue[i] < MUSICAMAX){
                     al_stop_sample(musicaActual);
                     
-                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
                 }
             }
             idQeue[i]=0;
@@ -401,6 +403,24 @@ void playAudioAllegro(int id){
     }
 
     idQeue[i] = id;
+
+}
+
+int regAudioAllegro(int reg){
+
+    if( reg == SUBIR_AUDIO && generalVolume < 1){
+        generalVolume += 0.1;
+    }
+    if( reg == BAJAR_AUDIO && generalVolume > 0){
+        generalVolume -= 0.1;
+    }
+
+    if( reg == CHECK_AUDIO){
+        return generalVolume;
+    }
+    else{
+        return 0;
+    }
 
 }
 

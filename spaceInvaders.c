@@ -245,6 +245,7 @@ int main(void){
     char platform[4] = "lnx";
 
     audioCallback = playAudioAllegro;
+    volumeCallback = regAudioAllegro;
     #endif
 
     menuGame.audioCallback = audioCallback;
@@ -291,9 +292,8 @@ int main(void){
 
                 MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback; 
 
-                #ifdef RASPI
-                    MENUES[GAME_STATUS.menuActual] -> volumeCallback = volumeCallback;
-                #endif
+                MENUES[GAME_STATUS.menuActual] -> volumeCallback = volumeCallback;
+
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -598,16 +598,19 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
+                (menu -> changeOption)(&argChangeOption);
                 #endif
 
                 #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+                /*if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
                     changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                     stopSweep = 4;
-                }
+                }*/
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+                (menu -> changeOption)(&argChangeOption);
                 #endif
 
-                (menu -> changeOption)(&argChangeOption);
+                
                 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
