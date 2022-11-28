@@ -266,6 +266,8 @@ int main(void){
         return -1;
     }
     GAME_STATUS.nivelActual = 1;
+
+    audioCallback(MUSICA_MENU);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -330,6 +332,8 @@ int main(void){
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
                 audioCallback(MUSICA_JUEGO);
+
+                GAME_STATUS.pantallaAnterior == START_LEVEL;
                 
                 sem_wait(&SEM_MENU);
 
@@ -391,6 +395,7 @@ int main(void){
             case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
                 
                 audioCallback(MUSICA_JUEGO);
+                GAME_STATUS.pantallaAnterior == IN_GAME;
 
                 sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
