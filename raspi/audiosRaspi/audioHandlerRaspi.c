@@ -48,7 +48,8 @@ static const audio_t* audioArray [MAX_AUDIOS] = {
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
     &sonidoBalaUser,&sonidoBalaAlien,
-    &sonidoSelectMenu,&sonidoSwapMenu,&sonidoErrorMenu,&sonidoSweepLetra,&sonidoSavedScore
+    &sonidoSelectMenu,&sonidoSwapMenu,&sonidoErrorMenu,&sonidoSweepLetra,&sonidoSavedScore,
+    &sonidoPartidaGanada,&sonidoPartidaPerdida
 };
 
 //handler del sonido a reproducirse
