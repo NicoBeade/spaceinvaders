@@ -102,7 +102,7 @@ int regVolumeRaspi(int sentido){
     else if (sentido==CHECK_AUDIO){
     }
     else {
-        playSound(SON_ERROR_MENU, SDL_MIX_MAXVOLUME/2);
+        playSound(SON_ERROR_MENU, SDL_MIX_MAXVOLUME);
     }
     printf("Volumen Audio quedo cargado en: %d\n",volumenAudio);
     return volumenAudio/VOLUME_JUMP;
