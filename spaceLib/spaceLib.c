@@ -441,7 +441,17 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
 void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int direccion){
 /* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
     la posicion de la nave del usuario.
-*/  objectType_t * assetUsr = getObjType((*naveUsuario)->type);
+    
+*/  
+    if((*naveUsuario) == NULL){
+        printf("Err in gameLib, moveNaveUsuario function: naveUsuario cannot be NULL pointer\n");
+        return -1;
+    }
+    objectType_t * assetUsr = getObjType((*naveUsuario)->type);
+    if (assetUsr == NULL){
+        printf("Err in gameLib, moveNaveUsuario function: naveUsuario not found with type %d\n", (*naveUsuario)->type);
+        return -1;
+    }
     int velocidad = ABS(assetUsr->velocidad);
     if( direccion == DERECHA && ((*naveUsuario) -> pos.x <= levelSettings->xMax - assetUsr->ancho) ){//Si se tiene que mover para la derecha y no llego al limite
         (*naveUsuario) -> pos.x += velocidad;//Desplaza la nave

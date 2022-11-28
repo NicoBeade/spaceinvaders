@@ -442,7 +442,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        sem_wait(&SEM_MENU);
+        //sem_wait(&SEM_MENU);
         if(*(data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
             for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
@@ -454,7 +454,7 @@ void* textAnimMenu(void* argTextAnimMenu){
             }
             firstBarr = 0;//Reinicia el proceso.
         }
-        sem_post(&SEM_MENU);
+        //sem_post(&SEM_MENU);
     }
     while(*(data -> changeAnimation));
 
@@ -579,13 +579,13 @@ void changeOption(void* argChangeOption){
     static argTextAnimMenu_t argTextAnimMenu;
 
     unsigned char menuActual = *(data->menuActual);
-    sem_wait(&SEM_MENU);
+    //sem_wait(&SEM_MENU);
     *(data->menuActual) = 0;
 
     velDispAnimation = 1;
 
     *(data -> animStatus) = 0;
-    sem_post(&SEM_MENU);
+    // sem_post(&SEM_MENU);
 
     pthread_join(*(data -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
@@ -599,6 +599,7 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.drawing = data -> drawing;
     argTextAnimMenu.direccion = data -> direccion;
     argTextAnimMenu.changeAnimation = data -> animStatus;
+    argTextAnimMenu.menuActual = data -> menuActual;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
     if(data->higherDispMenu == NULL){
         printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
