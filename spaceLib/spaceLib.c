@@ -149,9 +149,13 @@ static unsigned int countList(object_t * lista){  //Cuenta la cantidad de nodos 
 
  * 
  ******************************************************************************************************************************************/
-char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion){
+char moveAlien(level_setting_t *  levelSettings, object_t ** alienList, int* direccion){
     if(*alienList == NULL){
         printf("Err in gameLib, moveAlien function: AlienList cannot be NULL in function 'moveAlien'\n");
+        return -1;
+    }
+    if(levelSettings == NULL){
+        printf("Err in gameLib, moveAlien function: levelSettings cannot be NULL in function 'moveAlien'\n");
     }
     object_t * auxiliar;
     int vx = 0; //Variables temporales utilizadas para incrementar o decrementar las componentes x e y del vector coordenadas.
@@ -201,6 +205,9 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
     Se va a implementar una maquina de estados que en base al estado actual de la direccion y del borde tocado, deduce la direccion resultante.
     Los estados son las direcciones y ya estan definidos en un enum previo.
 */
+    if(levelSettings == NULL){
+        printf("Err in gameLib, moveAlien function: levelSettings cannot be NULL in function 'moveAlien'\n");
+    }
     switch(direccion){
         
         case DERECHA: //Si se viene moviendo para la derecha
