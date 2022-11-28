@@ -576,7 +576,7 @@ void changeOption(void* argChangeOption){
 
     static argTextAnimMenu_t argTextAnimMenu;
 
-    char menuActual = *(data->menuActual);
+    unsigned char menuActual = *(data->menuActual);
     *(data->menuActual) = 0;
 
     velDispAnimation = 1;
