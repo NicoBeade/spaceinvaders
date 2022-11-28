@@ -442,6 +442,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
+        sem_wait(&SEM_MENU);
         if(*(data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
             for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 

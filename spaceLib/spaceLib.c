@@ -315,9 +315,9 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
         }
         (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
         if((*mothershipListPointer) == NULL){
-        printf("Err in gameLib, mothershipCreator function: could't add mothership\n", type);
+            printf("Err in gameLib, mothershipCreator function: could't add mothership\n", type);
         return -1;
-    }
+        }
     }
 }
 
@@ -366,7 +366,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 }
 
 char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
-    if(levelSettings == NULL){
+    if(levelSetting == NULL){
         printf("Err in gameLib, shootBala function: levelSettings cannot be NULL\n");
         return -1;
     }
@@ -377,6 +377,10 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
+    if(naveType == NULL){
+        printf("Err in gameLib, mothershipCreator function: naveType not found with type %d\n", nave->type);
+        return -1;
+    }
     int balasDisponibles;                                       //Balas disponibles para disparar
     if(nave == NULL){
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");
