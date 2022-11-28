@@ -600,7 +600,7 @@ static void* menuHandlerThread(void * data){
                 }
                 #endif
 
-                (menu->audioCallback)(SWAP_MENU);
+                //(menu->audioCallback)(SWAP_MENU);
                 stopSweep = 4;
             }
 
