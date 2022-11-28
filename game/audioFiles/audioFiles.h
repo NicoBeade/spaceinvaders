@@ -31,7 +31,7 @@
 
 //Paths a los sonidos de acciones dentro del menu
 #define SON_SELECT_MENU (PATH "select_menu.wav")
-#define SON_SWAP_MENU (PATH "user_tocado.wav")
+#define SON_SWAP_MENU (PATH "swap_menu.wav")
 #define SON_ERROR_MENU (PATH "error_menu.wav")
 #define SON_SAVED_SCORE (PATH "saved_score.wav")
 #define SON_SWEEP_LETRA (PATH "sweep_letra.wav")

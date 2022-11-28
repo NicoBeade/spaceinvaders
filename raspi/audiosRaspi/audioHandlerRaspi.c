@@ -7,43 +7,43 @@
 #define VOLUME_JUMP 16
 #define MAX_AUDIOS 25
 
-
+//tipo de dato para la lookup table de los audios para reproducir desde un enum
 typedef struct {
     int id;
     char* audio;
 }audio_t;
 
 //Structs de musicas
-audio_t musicaMenu = {MUSICA_MENU,MUS_MENU};
-audio_t musicaJuego = {MUSICA_JUEGO,MUS_JUEGO};
+static const audio_t musicaMenu = {MUSICA_MENU,MUS_MENU};
+static const audio_t musicaJuego = {MUSICA_JUEGO,MUS_JUEGO};
 
 //Structs de sonidos
-audio_t sonidoColisionAlienTocado = {COLISION_ALIEN_TOCADO,SON_COLISION_ALIEN_TOCADO};
-audio_t sonidoColisionAlienMuerto = {COLISION_ALIEN_MUERTO,SON_COLISION_ALIEN_MUERTO};
-audio_t sonidoColisionUserTocado = {COLISION_USER_TOCADO,SON_COLISION_USER_TOCADO};
-audio_t sonidoColisionUserMuerto = {COLISION_USER_MUERTO,SON_COLISION_USER_MUERTO};
-audio_t sonidoColisionMothershipMuerta = {COLISION_MOTHERSHIP_MUERTA,SON_COLISION_MOTHERSHIP_MUERTA};
-audio_t sonidoColisionBarreraTocada = {COLISION_BARRERA_TOCADA,SON_COLISION_BARRERA_TOCADA};
-audio_t sonidoColisionBarreraMuerta = {COLISION_BARRERA_MUERTA,SON_COLISION_BARRERA_MUERTA};
-audio_t sonidoColisionChoqueBalas = {COLISION_CHOQUE_BALAS, SON_COLISION_CHOQUE_BALAS};
-audio_t sonidoMothershipAparece = {MOTHERSHIP_APARECE, SON_MOTHERSHIP_APARECE};
-audio_t sonidoMovimientoAliens = {MOVIMIENTO_ALIENS, SON_MOVIMIENTO_ALIENS};
-audio_t sonidoBalaUser = {BALA_USER, SON_BALA_USER};
-audio_t sonidoBalaAlien = {BALA_ALIEN, SON_BALA_ALIEN};
-audio_t sonidoSelectMenu = {SELECT_MENU,SON_SELECT_MENU};
-audio_t sonidoSwapMenu = {SWAP_MENU, SON_SWAP_MENU};
-audio_t sonidoErrorMenu = {ERROR_MENU, SON_ERROR_MENU};
-audio_t sonidoSweepLetra = {SWEEP_LETRA, SON_SWEEP_LETRA};
-audio_t sonidoSavedScore = {SAVED_SCORE, SON_SAVED_SCORE};
-audio_t sonidoPartidaGanada = {PARTIDA_GANADA,SON_PARTIDA_GANADA};
-audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA};
+static const audio_t sonidoColisionAlienTocado = {COLISION_ALIEN_TOCADO,SON_COLISION_ALIEN_TOCADO};
+static const audio_t sonidoColisionAlienMuerto = {COLISION_ALIEN_MUERTO,SON_COLISION_ALIEN_MUERTO};
+static const audio_t sonidoColisionUserTocado = {COLISION_USER_TOCADO,SON_COLISION_USER_TOCADO};
+static const audio_t sonidoColisionUserMuerto = {COLISION_USER_MUERTO,SON_COLISION_USER_MUERTO};
+static const audio_t sonidoColisionMothershipMuerta = {COLISION_MOTHERSHIP_MUERTA,SON_COLISION_MOTHERSHIP_MUERTA};
+static const audio_t sonidoColisionBarreraTocada = {COLISION_BARRERA_TOCADA,SON_COLISION_BARRERA_TOCADA};
+static const audio_t sonidoColisionBarreraMuerta = {COLISION_BARRERA_MUERTA,SON_COLISION_BARRERA_MUERTA};
+static const audio_t sonidoColisionChoqueBalas = {COLISION_CHOQUE_BALAS, SON_COLISION_CHOQUE_BALAS};
+static const audio_t sonidoMothershipAparece = {MOTHERSHIP_APARECE, SON_MOTHERSHIP_APARECE};
+static const audio_t sonidoMovimientoAliens = {MOVIMIENTO_ALIENS, SON_MOVIMIENTO_ALIENS};
+static const audio_t sonidoBalaUser = {BALA_USER, SON_BALA_USER};
+static const audio_t sonidoBalaAlien = {BALA_ALIEN, SON_BALA_ALIEN};
+static const audio_t sonidoSelectMenu = {SELECT_MENU,SON_SELECT_MENU};
+static const audio_t sonidoSwapMenu = {SWAP_MENU, SON_SWAP_MENU};
+static const audio_t sonidoErrorMenu = {ERROR_MENU, SON_ERROR_MENU};
+static const audio_t sonidoSweepLetra = {SWEEP_LETRA, SON_SWEEP_LETRA};
+static const audio_t sonidoSavedScore = {SAVED_SCORE, SON_SAVED_SCORE};
+static const audio_t sonidoPartidaGanada = {PARTIDA_GANADA,SON_PARTIDA_GANADA};
+static const audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA};
 
 
 //Variable de volumen modificable con wrappper
 static int volumenAudio=80;
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
-static audio_t* audioArray [MAX_AUDIOS] = {
+static const audio_t* audioArray [MAX_AUDIOS] = {
     &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionAlienMuerto,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
