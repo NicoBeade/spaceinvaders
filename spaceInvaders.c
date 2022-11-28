@@ -274,7 +274,7 @@ int main(void){
             case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
 
                 if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    //Reproducir musica de MENU.
+                    audioCallback(MUSICA_MENU);
                 }
 
                 #ifdef RASPI
@@ -304,7 +304,7 @@ int main(void){
             case SAVE_SCORE://-----------------------------     SAVE_SCORE: Entra a este caso cuando el usuario desea cargar su score.      ----------------------------------------
 
                 if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    //Reproducir musica de MENU.
+                    audioCallback(MUSICA_MENU);
                 }
 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
@@ -329,7 +329,7 @@ int main(void){
             
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
-                //Reproducir musica de juego.
+                audioCallback(MUSICA_JUEGO);
                 
                 sem_wait(&SEM_MENU);
 
@@ -390,7 +390,7 @@ int main(void){
 
             case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
                 
-                //Reproducir musica de juego
+                audioCallback(MUSICA_JUEGO);
 
                 sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
@@ -509,7 +509,6 @@ static void* menuHandlerThread(void * data){
         if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
             halfDispNameScore = &nameDispMenu;
             (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
-            printf("Puntero a half disp name score: %p\n",halfDispNameScore);
         }
 
         pthread_t displayMenuT;
@@ -590,14 +589,6 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
-                printf("En spaceInvaders.c \n");
-                for(int i = 0 ; i < 8 ; i++){
-
-                    for(int j = 0 ; j < 16 ; j++){
-                        printf("%d",(*((menu -> drawingOpciones)[select]))[i][j]);
-                    }
-                    printf("\n");
-                }  
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);

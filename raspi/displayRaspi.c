@@ -604,14 +604,6 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.changeAnimation = data -> animStatus;
     argTextAnimMenu.menuActual = data -> menuActual;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
-    printf("En change option \n");
-    for(int i = 0 ; i < 8 ; i++){
-
-        for(int j = 0 ; j < 16 ; j++){
-            printf("%c  ",(*(data -> higherDispMenu))[i][j]);
-        }
-        printf("\n");
-    }  
 
     if(data->higherDispMenu == NULL){
         printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
@@ -666,15 +658,6 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
     }
 
     nameDispMenu = strToHalfDisplay(nameDispMenu, name); //Convierte el string a algo que se puede mostrar en el display.
-    printf("En getLeaderboard Name \n");
-    for(int i = 0 ; i < 8 ; i++){
-
-        for(int j = 0 ; j < 16 ; j++){
-            printf("%d",(*(nameDispMenu))[i][j]);
-        }
-        printf("\n");
-    }  
-    printf("\n-------------------------------------\n");
     return nameDispMenu;
 }
 
