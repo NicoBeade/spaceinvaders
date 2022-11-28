@@ -608,7 +608,7 @@ void changeOption(void* argChangeOption){
     for(int i = 0 ; i < 8 ; i++){
 
         for(int j = 0 ; j < 16 ; j++){
-            printf("%d  ",(*(data -> higherDispMenu))[i][j]);
+            printf("%c  ",(*(data -> higherDispMenu))[i][j]);
         }
         printf("\n");
     }  
