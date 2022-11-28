@@ -491,12 +491,12 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
         printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
-        return 0;
+        return -1;
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
         printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
-        return 0;
+        return -1;
     }
     object_t * listBarreras = *barrerasList;
     object_t * listBalasEnemigas = *balasEnemigas;
@@ -536,7 +536,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     collition = 1;
     listBalasEnemigas = *balasEnemigas;
     while(listBalasEnemigas != NULL  &&  listUsr->lives != 0){
-        if(listBalasEnemigas != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listUsr->lives != 0){//Chequea si se golpeo al usuario
+        if(listBalasEnemigas != NULL && listUsr != NULL && collision(listBalasEnemigas->pos, listBalasEnemigas->type, listUsr->pos, listUsr->type) && collition && listUsr->lives != 0){//Chequea si se golpeo al usuario
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
@@ -576,6 +576,10 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     
                     if(scoreInstantaneo != NULL && scoreReal != NULL){
                         objectType_t * alienRipedAsset = getObjType(listAliens->type);//Incrementa el puntaje
+                        if(alienRipedAsset == NULL){
+                            printf("Err in spaceLib.c alienRipedAsset cannot be NULL in collider, with type %d.\n", listAliens->type);
+                            return -1;
+                        }
                         *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
                     }
 

@@ -44,7 +44,7 @@ static int volumenAudio=80;
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
 static audio_t* audioArray [MAX_AUDIOS] = {
-    &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
+    &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionAlienMuerto,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
     &sonidoBalaUser,&sonidoBalaAlien,
@@ -59,7 +59,7 @@ void audioHandlerRaspi(int audioId){
     audio_t* pointerAudio = NULL;
     int i;
     for (i=0; i<MAX_AUDIOS && pointerAudio == NULL; i++){
-        if (audioArray[i]->id == audioId){
+        if (audioArray[i]!=NULL && audioArray[i]->id == audioId){
             pointerAudio = audioArray[i];
         }
     }
