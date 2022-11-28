@@ -43,7 +43,7 @@ static const audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA
 static int volumenAudio=80;
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
-static audio_t* audioArray [MAX_AUDIOS] = {
+static const audio_t* audioArray [MAX_AUDIOS] = {
     &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionAlienMuerto,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
@@ -61,7 +61,7 @@ void audioHandlerRaspi(int audioId){
     int i;
     for (i=0; i<MAX_AUDIOS && pointerAudio == NULL; i++){
         if (audioArray[i]!=NULL && audioArray[i]->id == audioId){
-            pointerAudio = audioArray[i];
+            pointerAudio = (audio_t*) audioArray[i];
         }
     }
     printf("El valor del contador para el audio: %d\n",i);
