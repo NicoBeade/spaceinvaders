@@ -535,7 +535,7 @@ static void* menuHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
@@ -588,7 +588,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
@@ -625,7 +625,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
@@ -733,7 +733,7 @@ static void* saveScoreHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 

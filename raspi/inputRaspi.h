@@ -59,6 +59,7 @@ void* inputRPIThread(void* argInputRPI);  //Se encarga de leer el input durante 
 
 //*************LIMITES DEL JOYSTICK
 #define JOY_ACTIVE_NEG -50      //Coordenada en X a partir de la cual se detecta que se activo el joystick.
+#define JOY_ACTIVE_NEG_Y -100      //Coordenada en X a partir de la cual se detecta que se activo el joystick.
 #define JOY_ACTIVE_POS  50
 
 #define VEL_USR 5   //Determina que tan rapido podra mover la nave del usuario. La conversion es: si velUsuario = 1, entonces la nave se podra mover 
