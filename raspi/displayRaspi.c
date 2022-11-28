@@ -418,10 +418,15 @@ void* textAnimMenu(void* argTextAnimMenu){
         printf("Error in displayRaspi.c, drawing cannot be NULL in textAnimMenu\n");
         pthread_exit(0);
     }
+
+    if(*(data->menuActual) == MENU_VOLUME){
+        printHalfDisp(*(data->drawing), 'S');
+    }
+    else{
     argSwipeDrawing_t argSwipeDrawing = { data->higherDispMenu, data->direccion, data->drawing };
-
     pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
-
+    }
+    
     for(i = firstLetter ; i != lastLetter ; i -= (data -> direccion)){
 
         offset = offsetAlfabeto((data -> msg)[i]);

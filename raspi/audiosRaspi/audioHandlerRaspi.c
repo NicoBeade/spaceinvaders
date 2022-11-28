@@ -63,6 +63,7 @@ void audioHandlerRaspi(int audioId){
             pointerAudio = audioArray[i];
         }
     }
+    printf("El valor del contador para el audio: %d\n",i);
     if (pointerAudio==NULL){
         fprintf(stderr,"Sound file not found, audioId received: %d \n",audioId);
         return;

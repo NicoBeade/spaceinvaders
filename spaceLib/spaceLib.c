@@ -606,7 +606,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     *balasUsr = destroyObj(*balasUsr, balaADestruir);
                 }
                 else{//Si la bala no debe morir
-                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala         !!!!!ESTO ESTA RARO¡¡¡¡¡
                 }
             }
             else{//Si no golpeo a ese alien chequea el siguiente
@@ -657,7 +657,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
         }
 
         if(collition){//Si no hubo colision
-            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
+            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala        !!!!!ESTO TAMBIEN ESTA RARO
         }
 
         collition = 1;
@@ -675,6 +675,10 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 if(listMotherShip->lives == 0){//Si se mato a la mothership hay que eliminarla de la lista
                     if(scoreInstantaneo != NULL && scoreReal != NULL){
                         objectType_t * alienRipedAsset = getObjType(listMotherShip->type);//Incrementa el puntaje
+                        if(alienRipedAsset == NULL){
+                            printf("Err in spaceLib.c alienRipedAsset cannot be NULL in collider, with type %d.\n", listMotherShip->type);
+                            return -1;
+                        }
                         *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
                     }
                     *motherShip = destroyObj(*motherShip, listMotherShip);
