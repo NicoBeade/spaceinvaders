@@ -1,6 +1,0 @@
-Como compilar:
-
-gcc -Wall testAudio#.c ../libAudioSDL2.o -I/usr/local/include -L/usr/local/lib -lSDL2 -lpthread -o test#.out 
-
-Donde deben reemplazar el “#” por el número de ejemplo de audio que estén compilando. 
-Si su ejemplo no utiliza threads, no es necesario linkear (-lpthread).

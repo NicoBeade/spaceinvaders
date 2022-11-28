@@ -45,9 +45,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-allegro.o
+
+# .o que surgen de la compilacion
 allegro.o
 inputAllegro.o
 levelLoader.o
 menuUtilities.o
 outputAllegro.o
+score.o 
+spaceLib.o 
+
