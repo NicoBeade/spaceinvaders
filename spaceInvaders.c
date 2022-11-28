@@ -665,7 +665,7 @@ static void* menuHandlerThread(void * data){
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             else if(ATRAS && GAME_STATUS.menuAnterior == -1){
-                audioCallback(ERROR_MENU);
+                (menu->audioCallback)(ERROR_MENU);
             }
         }
     }
