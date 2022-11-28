@@ -608,7 +608,7 @@ void changeOption(void* argChangeOption){
     for(int i = 0 ; i < 8 ; i++){
 
         for(int j = 0 ; j < 16 ; j++){
-            printf("%s",(*(data -> higherDispMenu))[i][j]==1?"██":"  ");
+            printf("%d",(*(data -> higherDispMenu))[i][j]);
         }
         printf("\n");
     }  
@@ -666,7 +666,13 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
     }
 
     nameDispMenu = strToHalfDisplay(nameDispMenu, name); //Convierte el string a algo que se puede mostrar en el display.
+    for(int i = 0 ; i < 8 ; i++){
 
+        for(int j = 0 ; j < 16 ; j++){
+            printf("%d",(*(nameDispMenu))[i][j]);
+        }
+        printf("\n");
+    }  
     return nameDispMenu;
 }
 
