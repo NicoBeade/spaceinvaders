@@ -616,7 +616,7 @@ static void* menuHandlerThread(void * data){
                 if(select < 0 && GAME_STATUS.menuActual != MENU_VOLUME){//Si llegamos a la ultima opcion pasamos a la primera
                     select = (menu -> cantOpciones) - 1;
                 }
-                else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
+                else if(select < 0 && GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                     select += 1;
                 }
@@ -626,7 +626,6 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
-                (menu -> changeOption)(&argChangeOption);
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
@@ -635,10 +634,11 @@ static void* menuHandlerThread(void * data){
                 #ifdef ALLEGRO
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
                     changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    (menu -> changeOption)(&argChangeOption);
                     stopSweep = 4;
                 }
                 #endif
+
+                (menu -> changeOption)(&argChangeOption);
 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
@@ -657,7 +657,7 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-                if(menu -> exitStatus != 0){
+                if(menu -> exitStatus == 0){
                     (menu->audioCallback)(SELECT_MENU);
                 }
             }
