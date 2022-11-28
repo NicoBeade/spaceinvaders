@@ -339,7 +339,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
     object_t * newList = *ListBalasEnemy;
     int yMax = levelSetting -> yMax;
     int yMin = levelSetting -> yMin;
-    if(levelSettings == NULL){
+    if(levelSetting == NULL){
         printf("Err in gameLib, moveBala function: levelSettings cannot be NULL\n");
         return NULL;
     }
@@ -367,7 +367,7 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
 
 char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting){
     if(levelSetting == NULL){
-        printf("Err in gameLib, shootBala function: levelSettings cannot be NULL\n");
+        printf("Err in gameLib, shootBala function: levelSetting cannot be NULL\n");
         return -1;
     }
     int disparo = 0;                                            //Variable para detectar si se disparo o no
