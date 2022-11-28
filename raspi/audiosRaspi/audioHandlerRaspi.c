@@ -43,7 +43,7 @@ static const audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA
 static int volumenAudio=80;
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
-static const audio_t* audioArray [MAX_AUDIOS] = {
+static audio_t* audioArray [MAX_AUDIOS] = {
     &musicaMenu, &musicaJuego,&sonidoColisionAlienTocado,&sonidoColisionAlienMuerto,&sonidoColisionUserTocado,&sonidoColisionUserMuerto,&sonidoColisionMothershipMuerta,&sonidoColisionBarreraTocada,&sonidoColisionBarreraMuerta,&sonidoColisionChoqueBalas,
     &sonidoMothershipAparece,
     &sonidoMovimientoAliens,
