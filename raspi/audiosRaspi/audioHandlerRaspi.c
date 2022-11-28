@@ -54,7 +54,6 @@ static const audio_t* audioArray [MAX_AUDIOS] = {
 
 //handler del sonido a reproducirse
 void audioHandlerRaspi(int audioId){
-    printf("Reproduciendo audio con id %d \n",audioId);
 
     //Primero se ubica el audio en la look up table sabiendo el audioId
     audio_t* pointerAudio = NULL;
@@ -71,7 +70,8 @@ void audioHandlerRaspi(int audioId){
     }
 
     //Ahora se reproduce el sonido o musica hallado
-    printf("Reproduciendo audio con path %s \n", pointerAudio->audio);
+
+
     //Si es una musica
     if (audioId == MUSICA_MENU || audioId == MUSICA_JUEGO){
         endAudio(); //termina la musica anterior abruptamente

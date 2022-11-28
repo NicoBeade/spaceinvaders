@@ -657,12 +657,15 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-
-                (menu->audioCallback)(SELECT_MENU);
+                if(menu -> exitStatus != 0){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
             }
-            printf("GAME_STATUS.menuAnterior: %d\n", GAME_STATUS.menuAnterior);
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
+            }
+            else if(ATRAS && GAME_STATUS.menuAnterior == -1){
+                audioCallback(ERROR_MENU);
             }
         }
     }
