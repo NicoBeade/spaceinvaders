@@ -599,8 +599,11 @@ static void* menuHandlerThread(void * data){
                     (menu -> changeOption)(&argChangeOption);
                 }
                 #endif
-
-                //(menu->audioCallback)(SWAP_MENU);
+                
+                if(GAME_STATUS.menuActual != MENU_VOLUME){
+                    (menu->audioCallback)(SWAP_MENU);                
+                }
+    
                 stopSweep = 4;
             }
 
