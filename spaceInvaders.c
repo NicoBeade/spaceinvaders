@@ -589,7 +589,6 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
-                (menu -> changeOption)(&argChangeOption);
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
@@ -598,10 +597,11 @@ static void* menuHandlerThread(void * data){
                 #ifdef ALLEGRO
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
                     changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    (menu -> changeOption)(&argChangeOption);
                     stopSweep = 4;
                 }
                 #endif
+
+                (menu -> changeOption)(&argChangeOption);
                 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
