@@ -588,7 +588,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
-                printf("En change option \n");
+                printf("En spaceInvaders.c \n");
                 for(int i = 0 ; i < 8 ; i++){
 
                     for(int j = 0 ; j < 16 ; j++){
