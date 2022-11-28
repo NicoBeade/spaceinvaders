@@ -140,7 +140,7 @@ const int velMenu = 5;         //Velocidad a la que se lee el input durante un m
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 #endif
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
-const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
+const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInput = 1;
 
 int velAliens;

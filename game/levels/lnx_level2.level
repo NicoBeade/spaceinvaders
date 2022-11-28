@@ -22,5 +22,4 @@ END
 
 ASSET_MODIFY    7 ;modifico la mothership
     shootProb 2
-    score *=2
 END

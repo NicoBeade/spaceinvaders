@@ -360,7 +360,8 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
-            posicionBala.y = nave->pos.y; 
+            int yOffset = (naveType -> aliado)? - (balaType -> alto) : (naveType -> alto);
+            posicionBala.y = nave->pos.y + yOffset; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             balasDisponibles--;
             disparo++;
@@ -397,11 +398,12 @@ void moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, in
 /* Esta funcion se llama como callback por los threads que manejan el input tanto en allegro como en la raspberry. Se encarga de actualizar
     la posicion de la nave del usuario.
 */  objectType_t * assetUsr = getObjType((*naveUsuario)->type);
+    int velocidad = ABS(assetUsr->velocidad);
     if( direccion == DERECHA && ((*naveUsuario) -> pos.x <= levelSettings->xMax - assetUsr->ancho) ){//Si se tiene que mover para la derecha y no llego al limite
-        (*naveUsuario) -> pos.x += levelSettings->desplazamientoUsr;//Desplaza la nave
+        (*naveUsuario) -> pos.x += velocidad;//Desplaza la nave
     }
     else if( direccion == IZQUIERDA && ((*naveUsuario) -> pos.x != levelSettings->xMin) ){//Si se tiene que mover para la izquierda y no llego al limite
-        (*naveUsuario) -> pos.x -= levelSettings->desplazamientoUsr;//Desplaza la nave
+        (*naveUsuario) -> pos.x -= velocidad;//Desplaza la nave
     }
 }
 
