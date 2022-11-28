@@ -495,22 +495,6 @@ static void* menuHandlerThread(void * data){
 
         halfDisp_t* halfDispNameScore;
 
-        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-            halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-            };
-            halfDispNameScore = &nameDispMenu;
-            (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
-            printf("Puntero a half disp name score: %p\n",halfDispNameScore);
-        }
-
         pthread_t displayMenuT;
         halfDisp_t higherDispMenu = {//Parte superior del display
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -533,6 +517,22 @@ static void* menuHandlerThread(void * data){
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
         };
+
+        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
+            halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+            };
+            halfDispNameScore = &nameDispMenu;
+            (menu -> drawingOpciones)[select] = getLeaderBoardName(&higherDispMenu, select);
+            printf("Puntero a half disp name score: %p\n",halfDispNameScore);
+        }
 
         int animStatus = 1;
 
