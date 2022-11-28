@@ -588,9 +588,9 @@ void changeOption(void* argChangeOption){
 
     static argTextAnimMenu_t argTextAnimMenu;
 
-    unsigned char menuActual = *(data->menuActual);
+    //unsigned char menuActual = *(data->menuActual);
     //sem_wait(&SEM_MENU);
-    *(data->menuActual) = 0;
+    //*(data->menuActual) = 0;
 
     velDispAnimation = 1;
 
@@ -601,7 +601,7 @@ void changeOption(void* argChangeOption){
 
     *(data -> animStatus) = 1;
 
-    *(data->menuActual) = menuActual;
+    //*(data->menuActual) = menuActual;
 
     argTextAnimMenu.msg = data -> nuevoTexto;
     argTextAnimMenu.lowerDispMenu = data -> lowerDispMenu;
