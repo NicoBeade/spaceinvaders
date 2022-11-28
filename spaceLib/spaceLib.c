@@ -286,7 +286,6 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
         printf("Err in gameLib, mothershipCreator function: levelSettings cannot be NULL\n");
         return -1;
     }
-    static int mothershipsBorn = 0;     //Cantidad de veces que aparecio una nave nodriza
     int type = levelSettings->mothershipAsset;
     objectType_t * mothershipAsset = getObjType(type);    //Se obtiene el asset de la mothership
     if(mothershipAsset == NULL){
@@ -295,10 +294,8 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
     }
     int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
     int initLives = mothershipAsset->initLives;
-    printf("MOTHERSHIP PROB %d\n", probOfBirth);
     if(rand()%100 < probOfBirth && *mothershipListPointer == NULL){     //Se lanzan los dados si no hay nave nodriza
-        printf("AtrodenMothership\n");
-        mothershipsBorn++;                              //Crece una nave nodriza
+        (levelSettings->maxMShipXLevel)--;  //Se decrementa el contador de motherships disponibles por nivel
         vector_t posMothership;                         //Aux posicion de la nave nodriza
         posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
         int direccionIztoDer = 1;  //Variable auxiliar que decide si va para la izquierda o para la derecha

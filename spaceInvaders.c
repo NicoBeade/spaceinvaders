@@ -578,7 +578,7 @@ static void* menuHandlerThread(void * data){
                     select = 0;
                 }
                 else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->audioCallback)(SUBIR_AUDIO);
+                    (menu->volumeCallback)(SUBIR_AUDIO);
                     select -= 1;
                 }
 
@@ -589,7 +589,7 @@ static void* menuHandlerThread(void * data){
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
                 (menu -> changeOption)(&argChangeOption);
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->audioCallback)(SUBIR_AUDIO);
+                    (menu->volumeCallback)(SUBIR_AUDIO);
                 }
                 #endif
 
@@ -1072,7 +1072,9 @@ void * moveMothershipThread(void* argMoveMothership){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
                 }
             }
-            mothershipCreator(data->mothership, data -> levelSettings);
+            if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
+                mothershipCreator(data->mothership, data -> levelSettings); //Ejecuta la funcion que las intenta crear
+            }
             sem_post(&SEM_GAME);
         }
     }
