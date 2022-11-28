@@ -484,7 +484,7 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
-    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+    unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
     if(GAME_STATUS.menuActual == MENU_VOLUME){
@@ -660,7 +660,7 @@ static void* menuHandlerThread(void * data){
 
                 (menu->audioCallback)(SELECT_MENU);
             }
-
+            printf("GAME_STATUS.menuAnterior: %d\n", GAME_STATUS.menuAnterior);
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
