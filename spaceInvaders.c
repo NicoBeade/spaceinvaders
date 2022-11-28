@@ -289,6 +289,10 @@ int main(void){
 
                 MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback;
 
+                #ifdef RASPI
+                    MENUES[GAME_STATUS.menuActual] -> volumeCallback = regVolumeRaspi;
+                #endif
+
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
                 pthread_join(menuHandlerT, NULL);
@@ -483,7 +487,9 @@ static void* menuHandlerThread(void * data){
     unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
-
+    if(GAME_STATUS.menuActual == MENU_VOLUME){
+        select=(menu->volumeCallback)(CHECK_AUDIO);            
+    }
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
 
@@ -568,8 +574,12 @@ static void* menuHandlerThread(void * data){
                 preSelect = select;
                 #endif
                 select += 1;
-                if(select == (menu -> cantOpciones)){//Si llegamos a la ultima opcion pasamos a la primera
+                if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual != MENU_VOLUME){//Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
+                }
+                else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SUBIR_AUDIO);
+                    select -= 1;
                 }
 
                 #ifdef RASPI
@@ -578,6 +588,9 @@ static void* menuHandlerThread(void * data){
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
                 (menu -> changeOption)(&argChangeOption);
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SUBIR_AUDIO);
+                }
                 #endif
 
                 #ifdef ALLEGRO
@@ -596,8 +609,12 @@ static void* menuHandlerThread(void * data){
                 preSelect = select;
                 #endif
                 select -= 1;
-                if(select < 0){//Si llegamos a la primer opcion pasamos a al ultima
+                if(select < 0 && GAME_STATUS.menuActual != MENU_VOLUME){//Si llegamos a la ultima opcion pasamos a la primera
                     select = (menu -> cantOpciones) - 1;
+                }
+                else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                    select += 1;
                 }
 
                 #ifdef RASPI
@@ -606,6 +623,9 @@ static void* menuHandlerThread(void * data){
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
                 (menu -> changeOption)(&argChangeOption);
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                }
                 #endif
 
                 #ifdef ALLEGRO
@@ -615,7 +635,9 @@ static void* menuHandlerThread(void * data){
                 }
                 #endif
 
-                (menu->audioCallback)(SWAP_MENU);
+                if(GAME_STATUS.menuActual != MENU_VOLUME){
+                    (menu->audioCallback)(SWAP_MENU);                
+                }
                 stopSweep = 4;
             }
 
