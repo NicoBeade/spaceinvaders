@@ -604,6 +604,15 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.changeAnimation = data -> animStatus;
     argTextAnimMenu.menuActual = data -> menuActual;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
+
+    for(int i = 0 ; i < 8 ; i++){
+
+        for(int j = 0 ; j < 16 ; j++){
+            printf("%s",(*(data -> higherDispMenu))[i][j]==1?"██":"  ");
+        }
+        printf("\n");
+    }  
+
     if(data->higherDispMenu == NULL){
         printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
     }
