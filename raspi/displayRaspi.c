@@ -420,16 +420,16 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     if(*(data->menuActual) == MENU_VOLUME){
+        int i;
         caracteres_t* caracter;
-        dcoord_t pos = { 4, 8 };
+        dcoord_t pos = { 0, 8 };
         printHalfDisp(*(data->drawing), 'S');
-        offset = offsetAlfabeto((data -> msg)[1]);
-        caracter = alfabeto[offset];
-        printLetter(*caracter, pos);
-        offset = offsetAlfabeto((data -> msg)[2]);
-        caracter = alfabeto[offset];
-        pos.x += 4;
-        printLetter(*caracter, pos);
+        for(i = 0 ; i < 4 ; i++){
+            offset = offsetAlfabeto((data -> msg)[i]);
+            caracter = alfabeto[offset];
+            printLetter(*caracter, pos);
+            pos.x += 4;
+        }
     }
     else{
         argSwipeDrawing_t argSwipeDrawing = { data->higherDispMenu, data->direccion, data->drawing };

@@ -564,10 +564,12 @@ static void* menuHandlerThread(void * data){
 
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-
+            
+            #ifdef ALLEGRO
             if(stopSweep){
                 stopSweep -= 1;
             }
+            #endif
 
             if (SIGUIENTE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef ALLEGRO
@@ -597,14 +599,13 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
                     changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                     (menu -> changeOption)(&argChangeOption);
+                    stopSweep = 4;
                 }
                 #endif
                 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
-    
-                stopSweep = 4;
             }
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -635,13 +636,13 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
                     changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                     (menu -> changeOption)(&argChangeOption);
+                    stopSweep = 4;
                 }
                 #endif
 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
-                stopSweep = 4;
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
