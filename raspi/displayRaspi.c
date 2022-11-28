@@ -655,7 +655,6 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
         name[caracter]=leaderboard[select][letra];
         caracter++;
     }
-    printf("%s\n",name);
 
     nameDispMenu = strToHalfDisplay(nameDispMenu, name); //Convierte el string a algo que se puede mostrar en el display.
 
@@ -682,8 +681,15 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
                 (*nombre)[j][k] = (*caracter)[j][k-l]; //Copia el caracter en el halfDisplay
             }
         }
-
         l += 4;
+    }
+
+    for(i = 0 ; i < 16 ; i++){
+
+        for(j = 0 ; j < 8 ; j++){
+            printf("%s",nombre[i][j]?"██":"  ");
+        }
+        printf("\n");
     }
 
     return nombre;
