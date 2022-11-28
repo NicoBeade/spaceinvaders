@@ -588,6 +588,14 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
+                printf("En change option \n");
+                for(int i = 0 ; i < 8 ; i++){
+
+                    for(int j = 0 ; j < 16 ; j++){
+                        printf("%d",(*((menu -> drawingOpciones)[select]))[i][j]);
+                    }
+                    printf("\n");
+                }  
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
