@@ -51,10 +51,10 @@ menu_t menuLevels = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N
                       {&halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders, &halfDispAlienSpaceInvaders}, 
                       8 , 1 , changeOption };//Estructura del menu de seleccionar nivel.
 
-menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
-                      {" 00 ", " 01 ", " 02 ", " 03 ", " 04 ", " 05 ", " 06 ", " 07 "}, 
-                      {&halfDispVolume0, &halfDispVolume1, &halfDispVolume2, &halfDispVolume3, &halfDispVolume4, &halfDispVolume5, &halfDispVolume6, &halfDispVolume7}, 
-                      8 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
+menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
+                      {" 00 ", " 01 ", " 02 ", " 03 ", " 04 ", " 05 ", " 06 ", " 07 ", " 08 "}, 
+                      {&halfDispVolume0, &halfDispVolume1, &halfDispVolume2, &halfDispVolume3, &halfDispVolume4, &halfDispVolume5, &halfDispVolume6, &halfDispVolume7, &halfDispVolume8}, 
+                      9 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
 #endif
 
 

@@ -420,20 +420,28 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     if(*(data->menuActual) == MENU_VOLUME){
+        caracteres_t* caracter;
+        dcoord_t pos = { 4, 8 };
         printHalfDisp(*(data->drawing), 'S');
+        offset = offsetAlfabeto((data -> msg)[1]);
+        caracter = alfabeto[offset];
+        printLetter(*caracter, pos);
+        offset = offsetAlfabeto((data -> msg)[2]);
+        caracter = alfabeto[offset];
+        pos.x += 4;
+        printLetter(*caracter, pos);
     }
     else{
-    argSwipeDrawing_t argSwipeDrawing = { data->higherDispMenu, data->direccion, data->drawing };
-    pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
-    }
-    
-    for(i = firstLetter ; i != lastLetter ; i -= (data -> direccion)){
+        argSwipeDrawing_t argSwipeDrawing = { data->higherDispMenu, data->direccion, data->drawing };
+        pthread_create(&drawingSwipeT, NULL, swipeDrawing, &argSwipeDrawing);//Agrega el dibujo.
+        for(i = firstLetter ; i != lastLetter ; i -= (data -> direccion)){
 
         offset = offsetAlfabeto((data -> msg)[i]);
         if(offset == -1){
             pthread_exit(0);
         }
         swipeCharacter(data -> lowerDispMenu, *(alfabeto[offset]), data -> direccion);
+    }
     }
     
     pthread_join(drawingSwipeT, NULL);
@@ -446,7 +454,6 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        //sem_wait(&SEM_MENU);
         if(*(data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
             for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
@@ -458,7 +465,6 @@ void* textAnimMenu(void* argTextAnimMenu){
             }
             firstBarr = 0;//Reinicia el proceso.
         }
-        //sem_post(&SEM_MENU);
     }
     while(*(data -> changeAnimation));
 

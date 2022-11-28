@@ -94,6 +94,7 @@ extern halfDisp_t halfDispVolume4;
 extern halfDisp_t halfDispVolume5;
 extern halfDisp_t halfDispVolume6;
 extern halfDisp_t halfDispVolume7;
+extern halfDisp_t halfDispVolume8;
 
 extern caracteres_t alienChar1;
 extern caracteres_t alienChar2;

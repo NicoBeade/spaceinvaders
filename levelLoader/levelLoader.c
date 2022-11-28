@@ -7,7 +7,7 @@
 
 
 int getAbsValue(int relativeMode, char * valueReaded, int previousValue);
-
+int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings);
 
 #define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
 
@@ -745,9 +745,6 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
             if(levelNo == 0){       
                 return -1;                      //Si no se pudo leer termina la ejecucion
             }
-            else{
-                return -2;                  //Si no se encontro mas niveles termina
-            }
         }
         else{                   //Si se pudo leer el archivo comienza a leer los npcs
             int fila = 0;        //Se crea una variable fila
@@ -760,8 +757,14 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                         return -1;
                     }                    
                     objectType_t * objType = getObjType(alien.type);        //Se recupera el tipo de alien
+                    if(objType == NULL){
+                        printf("Error in levelLoader.c, loadLevel function : Alien Asset (with type %d) not found in line %d of file %s\n",alien.type, fila, levelFile);
+                        return -1;
+                    }
                     (* listaAliens) = addObj((* listaAliens), alien.pos, alien.type, objType->initLives);    //Se agrega a la lista
-                    printf("george\n");
+                    if(checkOutOfBounds(alien.pos,objType->ancho,objType->alto,levelSettings)){
+                        printf("Warning in levelLoader.c, loadLevel function : Alien Asset (with type %d) is out of bounds (x = %d | y = %d)\n",alien.pos.x, aliens.pos.y);
+                    }
                 }
                 else if(strcmp(decodedFile[fila].parameter, "BARRERA") == 0){  //Si es una barrera
                     fila++;     //Se incrementa la fila
@@ -771,7 +774,14 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                         return -1;
                     }    
                     objectType_t * objType = getObjType(barrera.type);        //Se recupera el tipo de barrera
+                    if(objType == NULL){
+                        printf("Error in levelLoader.c, loadLevel function : Barrera Asset (with type %d) not found in line %d of file %s\n",barrera.type, fila, levelFile);
+                        return -1;
+                    }
                     (* listaBarreras) = addObj((* listaBarreras), barrera.pos, barrera.type, objType->initLives);    //Se agrega a la lista
+                    if(checkOutOfBounds(barrera.pos,objType->ancho,objType->alto,levelSettings)){
+                        printf("Warning in levelLoader.c, loadLevel function : Barrera Asset (with type %d) is out of bounds (x = %d | y = %d)\n",barrera.pos.x, aliens.pos.y);
+                    }
                 }
                 else if(strcmp(decodedFile[fila].parameter, "USUARIO") == 0){  //Si es el usuario
                     fila++;     //Se incrementa la fila
@@ -781,7 +791,14 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                         return -1;
                     }    
                     objectType_t * objType = getObjType(usuario.type);        //Se recupera el tipo de usuario
+                    if(objType == NULL){
+                        printf("Error in levelLoader.c, loadLevel function : Usuario Asset (with type %d) not found in line %d of file %s\n",usuario.type, fila, levelFile);
+                        return -1;
+                    }
                     (* listaUsr) = addObj((* listaUsr), usuario.pos, usuario.type, objType->initLives);    //Se agrega a la lista
+                    if(checkOutOfBounds(barrera.pos,objType->ancho,objType->alto,levelSettings)){
+                        printf("Error in levelLoader.c, loadLevel function : Usuario Asset (with type %d) is out of bounds (x = %d | y = %d)\n",usuario.pos.x, aliens.pos.y);
+                    }
                 }
                 /*
                 else if(strcmp(decodedFile[fila].parameter, "MOTHERSHIP") == 0){  //Si es la nave nodria
@@ -812,6 +829,11 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
         }
     }
     return 0;
+}
+
+
+int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings){       //Devuelve 1 si el objeto esta out of bounds
+    return( posicion.x < levelSettings->xMin || posicion.x + ancho > levelSettings->xMax || posicion.y + alto > levelSettings->yMax || posicion.y < levelSettings->yMin );
 }
 
 int readObj(int paramNo, object_t * objOut){
