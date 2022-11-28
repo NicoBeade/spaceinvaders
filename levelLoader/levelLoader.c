@@ -780,7 +780,7 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                     }
                     (* listaBarreras) = addObj((* listaBarreras), barrera.pos, barrera.type, objType->initLives);    //Se agrega a la lista
                     if(checkOutOfBounds(barrera.pos,objType->ancho,objType->alto,levelSettings)){
-                        printf("Warning in levelLoader.c, loadLevel function : Barrera Asset (with type %d) is out of bounds (x = %d | y = %d)\n",barrera.pos.x, aliens.pos.y);
+                        printf("Warning in levelLoader.c, loadLevel function : Barrera Asset (with type %d) is out of bounds (x = %d | y = %d)\n",barrera.pos.x, barrera.pos.y);
                     }
                 }
                 else if(strcmp(decodedFile[fila].parameter, "USUARIO") == 0){  //Si es el usuario
@@ -797,7 +797,7 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                     }
                     (* listaUsr) = addObj((* listaUsr), usuario.pos, usuario.type, objType->initLives);    //Se agrega a la lista
                     if(checkOutOfBounds(usuario.pos,objType->ancho,objType->alto,levelSettings)){
-                        printf("Error in levelLoader.c, loadLevel function : Usuario Asset (with type %d) is out of bounds (x = %d | y = %d)\n",usuario.pos.x, aliens.pos.y);
+                        printf("Error in levelLoader.c, loadLevel function : Usuario Asset (with type %d) is out of bounds (x = %d | y = %d)\n",usuario.pos.x, usuario.pos.y);
                     }
                 }
                 /*
