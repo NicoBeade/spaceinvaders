@@ -266,7 +266,7 @@ int main(void){
         return -1;
     }
     GAME_STATUS.nivelActual = 1;
-    //
+    
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
@@ -287,10 +287,10 @@ int main(void){
                 
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
 
-                MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback;
+                MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback; 
 
                 #ifdef RASPI
-                    MENUES[GAME_STATUS.menuActual] -> volumeCallback = regVolumeRaspi;
+                    MENUES[GAME_STATUS.menuActual] -> volumeCallback = volumeCallback;
                 #endif
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
