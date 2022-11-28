@@ -40,7 +40,7 @@ static const audio_t sonidoPartidaPerdida = {PARTIDA_PERDIDA,SON_PARTIDA_PERDIDA
 
 
 //Variable de volumen modificable con wrappper
-static int volumenAudio=80;
+static int volumenAudio=SDL_MIX_MAXVOLUME; //Arranca el volumen al mango
 
 //array que contiene los structs de audios (id y path) para los sonidos y audios del juego 
 static const audio_t* audioArray [MAX_AUDIOS] = {
