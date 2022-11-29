@@ -1219,8 +1219,8 @@ void * colliderThread(void * argCollider){
                         *(data->score) = 0;//Se borra el score
                         objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
                         GAME_STATUS.usrLives = assetUsuario->initLives;
+                        SDL_Delay(500);
                         (data->audioCallback)(COLISION_USER_MUERTO);
-                        sleep(1);
                         lost = 0;
                         break;
                     case WON_LEVEL://Si se gano el nivel
@@ -1229,6 +1229,7 @@ void * colliderThread(void * argCollider){
                         menuGame.exitStatus = 0;
                         (*(data->usrList))->lives += 1;
                         printf("Partida Ganada, imprimiendo audio de partida ganada\n");
+                        SDL_Delay(500);
                         (data->audioCallback)(SELECT_MENU);
                         break;
                     case SL_COLISION_BALAS://Si hubo colision entre las balas
