@@ -1069,7 +1069,7 @@ void * moveAlienThread(void* argMoveAlien){
                     velAliens = 1;
                 }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
-                usleep(VEL_INCR_ALIENS);
+                usleep(VEL_INCR_ALIENS * U_SEC2M_SEC);
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
@@ -1092,7 +1092,7 @@ void * moveMothershipThread(void* argMoveMothership){
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(data -> mothership);   
-
+        printf("mothership %p     maxMshipXLevel %d\n", mothership, (data -> levelSettings) -> maxMShipXLevel);
         if( ((timerTick % ((data -> levelSettings) -> velMothership) == 0))){
             sem_wait(&SEM_GAME);
             if(*(data->mothership) != NULL){
