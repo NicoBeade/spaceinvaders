@@ -319,6 +319,7 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
         return -1;
         }
     }
+    return 0;
 }
 
 /*******************************************************************************************************************************************
@@ -411,7 +412,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - (balaType -> ancho)/2 ;
-            int yOffset = (naveType -> aliado)? - (balaType -> alto) : (naveType -> alto);
+            int yOffset = (naveType -> aliado)? 1 - (balaType -> alto) : (naveType -> alto);
             posicionBala.y = nave->pos.y + yOffset; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
             balasDisponibles--;
