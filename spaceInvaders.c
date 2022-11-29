@@ -272,7 +272,7 @@ int main(void){
     }
     GAME_STATUS.nivelActual = 1;
 
-    
+    audioCallback(MUSICA_JUEGO);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -309,10 +309,6 @@ int main(void){
             
             case SAVE_SCORE://-----------------------------     SAVE_SCORE: Entra a este caso cuando el usuario desea cargar su score.      ----------------------------------------
 
-                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    audioCallback(MUSICA_MENU);
-                }
-
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
                 #ifdef RASPI
@@ -334,8 +330,6 @@ int main(void){
                 break;
             
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
-
-                audioCallback(MUSICA_JUEGO);
 
                 GAME_STATUS.pantallaAnterior = START_LEVEL;
                 
@@ -398,7 +392,6 @@ int main(void){
 
             case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
                 
-                audioCallback(MUSICA_JUEGO);
                 GAME_STATUS.pantallaAnterior = IN_GAME;
 
                 sem_wait(&SEM_MENU);
@@ -1219,7 +1212,6 @@ void * colliderThread(void * argCollider){
                         *(data->score) = 0;//Se borra el score
                         objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
                         GAME_STATUS.usrLives = assetUsuario->initLives;
-                        SDL_Delay(500);
                         (data->audioCallback)(COLISION_USER_MUERTO);
                         lost = 0;
                         GAME_STATUS.inGame = 0;
@@ -1230,7 +1222,6 @@ void * colliderThread(void * argCollider){
                         menuGame.exitStatus = 0;
                         (*(data->usrList))->lives += 1;
                         printf("Partida Ganada, imprimiendo audio de partida ganada\n");
-                        SDL_Delay(50);
                         (data->audioCallback)(SELECT_MENU);
                         printf("BOBOBOBOO\n");
                         GAME_STATUS.inGame = 0;
