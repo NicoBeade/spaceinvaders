@@ -137,12 +137,14 @@ int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del d
 const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
+#define VEL_INCR_ALIENS 2
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+#define VEL_INCR_ALIENS 5
 #define STOP_SHOOT 20
 #endif
 const int velInput = 1;
@@ -1062,8 +1064,12 @@ void * moveAlienThread(void* argMoveAlien){
             evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
             switch (evento){
             case FASTER_ALIENS:
-                velAliens -= 2; //Incrementa la velocidad de los aliens.
+                velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
+                if(velAliens <= 0){
+                    velAliens = 1;
+                }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
+                usleep()
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
@@ -1210,7 +1216,7 @@ void * colliderThread(void * argCollider){
                         GAME_STATUS.menuActual = MENU_WON_LEVEL;
                         menuGame.exitStatus = 0;
                         (*(data->usrList))->lives += 1;
-                        (data->audioCallback)(SELECT_MENU);
+                        (data->audioCallback)(PARTIDA_GANADA);
                         GAME_STATUS.inGame = 0;
                         break;
                     case SL_COLISION_BALAS://Si hubo colision entre las balas
