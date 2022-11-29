@@ -297,7 +297,7 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
     }
     int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
     int initLives = mothershipAsset->initLives;
-    pi
+    printf("mothershipcreator mothershiplistpointer %p\n", (*mothershipListPointer));
     if(rand()%100 < probOfBirth && (*mothershipListPointer) == NULL){     //Se lanzan los dados si no hay nave nodriza
         (levelSettings->maxMShipXLevel)--;  //Se decrementa el contador de motherships disponibles por nivel
         vector_t posMothership;                         //Aux posicion de la nave nodriza
