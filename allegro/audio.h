@@ -20,7 +20,7 @@
     audios[COLISION_BARRERA_MUERTA].volume = 1.0;\
     audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/mothership_aparece.wav");\
     audios[MOTHERSHIP_APARECE].volume = 1.0;\
-    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audio/fastinvader1.wav"), 1,0;\
+    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audio/fastinvader1.wav");\
     audios[MOVIMIENTO_ALIENS].volume = 1.0;\
     audios[BALA_ALIEN].sample = al_load_sample("game/audioFiles/bala_alien.wav");\
     audios[BALA_ALIEN].volume = 1.0;\

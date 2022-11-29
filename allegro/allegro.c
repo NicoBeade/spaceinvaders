@@ -317,41 +317,43 @@ void changeOption(void * dataIn){
     int i = 0;
     int esc = 0; //Esta variable se encarga de saber si hay que subir o bajar las opciones
 
-    if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
+    if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+        if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
 
-        esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo
+            esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo
 
-    }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
+        }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
 
-        esc = (data->menu)->cantOpciones - 1; //Si estoy en la ultima opcion tengo que bajar todo
+            esc = (data->menu)->cantOpciones - 1; //Si estoy en la ultima opcion tengo que bajar todo
 
-    }else if(data->nextOp > data->actualOp){ //En las otras situaciones muevo todo un lugar para arriba o abajo
+        }else if(data->nextOp > data->actualOp){ //En las otras situaciones muevo todo un lugar para arriba o abajo
 
-        esc = -1; 
+            esc = -1; 
 
-    }else{
+        }else{
 
-        esc = 1;
+            esc = 1;
 
-    }
-    
-    for(i = 0; i < (data->menu)->cantOpciones; i++ ){
-        //Recorro la lista
-        puntero->posy += esc * ESPACIADOMENU; //Muevo todo segun la variable esc
-
-        if(i == data->actualOp){
-            puntero->posx-= SELECTOR; //La opcion actual la muevo hacia la izquierda
-            puntero->fuente = mediumF; //Reduzco el tamaño de letras
         }
-        if(i == data->nextOp){
-            puntero->posx += SELECTOR; //La nueva opcion la muevo hacia la derecha
-            puntero->fuente = largeF; //Incremento el tamaño de letras
-        }
-        puntero = puntero->next;
-    }
+        
+        for(i = 0; i < (data->menu)->cantOpciones; i++ ){
+            //Recorro la lista
+            puntero->posy += esc * ESPACIADOMENU; //Muevo todo segun la variable esc
 
-    if(((data->menu)->spritesDir)[0] != NULL){
-        sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
+            if(i == data->actualOp){
+                puntero->posx-= SELECTOR; //La opcion actual la muevo hacia la izquierda
+                puntero->fuente = mediumF; //Reduzco el tamaño de letras
+            }
+            if(i == data->nextOp){
+                puntero->posx += SELECTOR; //La nueva opcion la muevo hacia la derecha
+                puntero->fuente = largeF; //Incremento el tamaño de letras
+            }
+            puntero = puntero->next;
+        }
+
+        if(((data->menu)->spritesDir)[0] != NULL){
+            sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
+        }
     }
 }
 
@@ -491,15 +493,15 @@ int expo(int num, int exp){
     return num;
 }
 
-int ceil(float num){
+int techo(float num){
 
     int i;
-
     for(i=0; i<10; i++){
         if(num < i+1 && num >= i){
             return i;
         }
     }
+    return 0;
 }
 
 void refreshDatos( char * toScore, char * toVidas, int score, int vidas){
@@ -512,7 +514,7 @@ void refreshDatos( char * toScore, char * toVidas, int score, int vidas){
 
         temp = (float)((score % (expo(10, i)*10)) - (score % expo(10, i)));
 
-        toScore[5 - i] = '0' + ceil(temp / expo(10, i));
+        toScore[5 - i] = '0' + techo(temp / expo(10, i));
         
     }
 

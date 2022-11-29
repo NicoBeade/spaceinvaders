@@ -121,9 +121,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     //Inicializacion de Sonidos
     INITAUDIO
 
-    al_play_sample(audios[COLISION_ALIEN_MUERTO].sample, audios[COLISION_ALIEN_MUERTO].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-
-    al_play_sample(musica[MUSICA_MENU - AUDIOMAX].sample, musica[MUSICA_MENU - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
 
     //-------------------------------------------------
 

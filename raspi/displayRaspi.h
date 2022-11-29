@@ -84,7 +84,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     halfDisp_t* drawingOpciones[20];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
     int cantOpciones;               //Cantidad de opciones del menu.
     int exitStatus;                 //Esta variable se utiliza para saber cuando hay que salir del thread.
-    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*changeOption)(void* argChangeOption_t);//Callback a la funcion que cambia la opcion seleccionada.
     void (*audioCallback)(int);     //Callback a la funcion que ejecuta los sonidos.
     int (*volumeCallback)(int);     //Callback a la funcion que regula el volumen.
 } menu_t;

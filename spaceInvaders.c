@@ -333,7 +333,7 @@ int main(void){
 
                 audioCallback(MUSICA_JUEGO);
 
-                GAME_STATUS.pantallaAnterior == START_LEVEL;
+                GAME_STATUS.pantallaAnterior = START_LEVEL;
                 
                 sem_wait(&SEM_MENU);
 
@@ -395,7 +395,7 @@ int main(void){
             case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
                 
                 audioCallback(MUSICA_JUEGO);
-                GAME_STATUS.pantallaAnterior == IN_GAME;
+                GAME_STATUS.pantallaAnterior = IN_GAME;
 
                 sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
@@ -602,15 +602,12 @@ static void* menuHandlerThread(void * data){
                 #endif
 
                 #ifdef ALLEGRO
-                /*if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    stopSweep = 4;
-                }*/
+
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                (menu -> changeOption)(&argChangeOption);
+
                 #endif
 
-                
+                (menu -> changeOption)(&argChangeOption);
                 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
@@ -641,10 +638,9 @@ static void* menuHandlerThread(void * data){
                 #endif
 
                 #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    stopSweep = 4;
-                }
+                
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+
                 #endif
 
                 (menu -> changeOption)(&argChangeOption);
