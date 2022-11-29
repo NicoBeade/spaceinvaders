@@ -8,11 +8,12 @@
  *                          Structs
  * 
 *******************************************************************/
-enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,
+enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,
+              COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA, COLISION_CHOQUE_BALAS,
               MOTHERSHIP_APARECE,
               MOVIMIENTO_ALIENS,
               BALA_USER,BALA_ALIEN,
-              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA,
+              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA, PARTIDA_GANADA,
               SAVED_SCORE, AUDIOMAX};                               //id de los sonidos
 
 enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};      //id de la musica
@@ -127,8 +128,11 @@ void changeLetra(char letras[15][2], int letraActual, int dir);
 //texto_t * changeCol(texto_t * toshow, int nextOp);
 sprite_t * changeCol(sprite_t * toshow, int nextOp);
 
-//allegroScore: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
+//allegroLiderboard: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
 TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
+
+TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual);
+sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual);
 
 //añade un texto_t a una lista
 texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy);

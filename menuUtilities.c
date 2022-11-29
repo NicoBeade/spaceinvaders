@@ -89,7 +89,7 @@ menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
                       {{0}}, 
                       5 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
+menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
                       {"00 ", "01 ", "02 ", "03 ", "04 ", "05 ", "06 ", "07 ", "08 ", "09 ", "10 "}, 
                       {{0}}, 
                       11 , 1 , changeOption };//Estructura del menu de seleccionar volumen.

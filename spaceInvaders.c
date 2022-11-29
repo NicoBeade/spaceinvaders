@@ -551,17 +551,22 @@ static void* menuHandlerThread(void * data){
 
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
-        
+        float volumenActual = 0;
         sem_wait(&SEM_MENU);
-        if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-            allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
-            toText = allegroList->textoList;
-            screenObjects = allegroList->spriteList;
-        }else{
+
+        if(GAME_STATUS.menuActual == MENU_VOLUME){
+            volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+            allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
+
+        }else if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
             allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
-            toText = allegroList->textoList;
-            screenObjects = allegroList->spriteList;
+
+        }else{
+            allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
+
         }
+        toText = allegroList->textoList;
+        screenObjects = allegroList->spriteList;
         sem_post(&SEM_MENU);
     #endif
     //***************************************************************************************************************************
@@ -591,7 +596,6 @@ static void* menuHandlerThread(void * data){
                     select = 0;
                 }
                 else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(SUBIR_AUDIO);
                     select -= 1;
                 }
 
@@ -600,19 +604,21 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
-                
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
-                }
-                
+                }              
                 #endif
 
                 #ifdef ALLEGRO
+                
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
                 stopSweep = 4;
                 
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(BAJAR_AUDIO);
+                    (menu->volumeCallback)(SUBIR_AUDIO);
+                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
+
                 }
                 #endif
 
@@ -638,7 +644,6 @@ static void* menuHandlerThread(void * data){
                     select = (menu -> cantOpciones) - 1;
                 }
                 else if(select < 0 && GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(BAJAR_AUDIO);
                     select += 1;
                 }
 
@@ -647,7 +652,6 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
-                
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
@@ -658,7 +662,9 @@ static void* menuHandlerThread(void * data){
                 stopSweep = 4;
                 
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(SUBIR_AUDIO);
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                 }
                 #endif                
 
