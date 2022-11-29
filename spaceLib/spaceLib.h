@@ -25,6 +25,7 @@
 #define ABAJO 2
 #define MAX_SPRITE_FILE_LENGTH 100
 #define MAX_SOUND_FILE_LENGTH 100
+#define MOTHERSHIP_CREATED 1
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              

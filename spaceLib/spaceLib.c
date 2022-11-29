@@ -285,6 +285,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
 }
 
 int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings){
+    int mothershipCreada = 0;
     if(levelSettings == NULL){
         printf("Err in gameLib, mothershipCreator function: levelSettings cannot be NULL\n");
         return -1;
@@ -317,10 +318,11 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
         (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
         if((*mothershipListPointer) == NULL){
             printf("Err in gameLib, mothershipCreator function: could't add mothership type %d\n", type);
-        return -1;
+            return -1;
         }
+        mothershipCreada = MOTHERSHIP_CREATED;   //Para devolver un 1
     }
-    return 0;
+    return mothershipCreada;
 }
 
 /*******************************************************************************************************************************************
@@ -708,6 +710,10 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     }
                     *motherShip = destroyObj(*motherShip, listMotherShip);
                     listMotherShip = *motherShip;
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_MOTHERSHIP_MUERTA : returnEvent;
+                }
+                else{//Si la nave nodriza no muere
+                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_TOCADO : returnEvent;
                 }
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir

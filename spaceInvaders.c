@@ -1083,19 +1083,10 @@ void * moveAlienThread(void* argMoveAlien){
 void * moveMothershipThread(void* argMoveMothership){
 
     argMoveMothership_t * data = (argMoveMothership_t*)argMoveMothership;
-
+    static 
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        object_t * mothership = *(data -> mothership);
-        /*
-        if( (timerTick % 500 && mothership->lives == 0)){ //el 500 debe ser un numero random asi aparece cada 
-            mothership->type = timerTick%2; //se genera aleatoriamente a la derecha o a la izquierda de la pantalla
-            mothership->lives = 1;
-            mothership->pos.x = (mothership->type)?-3:16;
-            (data->audioCallback)(MOTHERSHIP_APARECE);
-            //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
-        }
-        */       
+        object_t * mothership = *(data -> mothership);   
 
         if( ((timerTick % ((data -> levelSettings) -> velMothership) == 0))){
             sem_wait(&SEM_GAME);
@@ -1110,9 +1101,10 @@ void * moveMothershipThread(void* argMoveMothership){
                     (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
             }
-            printf("maxMShipXLeve: %d NAVE VIVA? %s\n", (data -> levelSettings) -> maxMShipXLevel, (*(data->mothership))? "Si" : "No");
             if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
-                mothershipCreator(data->mothership, data -> levelSettings); //Ejecuta la funcion que las intenta crear
+                if(mothershipCreator(data->mothership, data -> levelSettings) == MOTHERSHIP_CREATED){//Ejecuta la funcion que las intenta crear
+                    (data->audioCallback)(MOTHERSHIP_APARECE);
+                } 
             }
             sem_post(&SEM_GAME);
         }
@@ -1219,13 +1211,20 @@ void * colliderThread(void * argCollider){
                         GAME_STATUS.menuActual = MENU_WON_LEVEL;
                         menuGame.exitStatus = 0;
                         (*(data->usrList))->lives += 1;
-                        printf("Partida Ganada, imprimiendo audio de partida ganada\n");
                         (data->audioCallback)(SELECT_MENU);
-                        printf("BOBOBOBOO\n");
                         GAME_STATUS.inGame = 0;
                         break;
                     case SL_COLISION_BALAS://Si hubo colision entre las balas
                         (data->audioCallback)(COLISION_CHOQUE_BALAS);
+                        break;
+                    case SL_COLISION_BARRERA_TOCADA://Si toco una barrera
+                        (data->audioCallback)(COLISION_BARRERA_TOCADA);
+                        break;
+                    case SL_COLISION_BARRERA_MUERTA://Si mato una barrera
+                        (data->audioCallback)(COLISION_BARRERA_MUERTA);
+                        break;
+                    case SL_COLISION_MOTHERSHIP_MUERTA://Si se mato la mothership
+                        (data->audioCallback)(COLISION_MOTHERSHIP_MUERTA);
                         break;
                     case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
                         (data->audioCallback)(COLISION_ALIEN_MUERTO);
