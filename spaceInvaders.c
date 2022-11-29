@@ -1222,6 +1222,7 @@ void * colliderThread(void * argCollider){
                         SDL_Delay(500);
                         (data->audioCallback)(COLISION_USER_MUERTO);
                         lost = 0;
+                        GAME_STATUS.inGame = 0;
                         break;
                     case WON_LEVEL://Si se gano el nivel
                         GAME_STATUS.pantallaActual = MENU;
@@ -1229,8 +1230,10 @@ void * colliderThread(void * argCollider){
                         menuGame.exitStatus = 0;
                         (*(data->usrList))->lives += 1;
                         printf("Partida Ganada, imprimiendo audio de partida ganada\n");
-                        SDL_Delay(500);
+                        SDL_Delay(50);
                         (data->audioCallback)(SELECT_MENU);
+                        printf("BOBOBOBOO\n");
+                        GAME_STATUS.inGame = 0;
                         break;
                     case SL_COLISION_BALAS://Si hubo colision entre las balas
                         (data->audioCallback)(COLISION_CHOQUE_BALAS);
