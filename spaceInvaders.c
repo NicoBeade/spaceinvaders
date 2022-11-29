@@ -1208,44 +1208,46 @@ void * colliderThread(void * argCollider){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
+            if(*(data->alienList) != NULL && *(data->alienList) != NULL){   //Si hay aliens y usuario 
+                gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
-            gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
-
-            switch (gameData){//Detecta el evento
-                case LOST_LEVEL://Si se perdio el nivel
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                    menuGame.exitStatus = 0;
-                    *(data->score) = 0;//Se borra el score
-                    objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                    GAME_STATUS.usrLives = assetUsuario->initLives;
-                    (data->audioCallback)(COLISION_USER_MUERTO);
-                    lost = 0;
-                    break;
-                case WON_LEVEL://Si se gano el nivel
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                    menuGame.exitStatus = 0;
-                    (*(data->usrList))->lives += 1;
-                    printf("Partida Ganada, imprimiendo audio de partida ganada\n");
-                    (data->audioCallback)(SELECT_MENU);
-                    break;
-                case SL_COLISION_BALAS://Si hubo colision entre las balas
-                    (data->audioCallback)(COLISION_CHOQUE_BALAS);
-                    break;
-                case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
-                    (data->audioCallback)(COLISION_ALIEN_MUERTO);
-                    break;
-                case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
-                    (data->audioCallback)(COLISION_ALIEN_TOCADO);
-                    break;
-                case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
-                    (data->audioCallback)(COLISION_USER_TOCADO);
-                    break;
-                default:
-                    break;
+                switch (gameData){//Detecta el evento
+                    case LOST_LEVEL://Si se perdio el nivel
+                        GAME_STATUS.pantallaActual = MENU;
+                        GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                        menuGame.exitStatus = 0;
+                        *(data->score) = 0;//Se borra el score
+                        objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                        GAME_STATUS.usrLives = assetUsuario->initLives;
+                        (data->audioCallback)(COLISION_USER_MUERTO);
+                        sleep(1);
+                        lost = 0;
+                        break;
+                    case WON_LEVEL://Si se gano el nivel
+                        GAME_STATUS.pantallaActual = MENU;
+                        GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                        menuGame.exitStatus = 0;
+                        (*(data->usrList))->lives += 1;
+                        printf("Partida Ganada, imprimiendo audio de partida ganada\n");
+                        (data->audioCallback)(SELECT_MENU);
+                        break;
+                    case SL_COLISION_BALAS://Si hubo colision entre las balas
+                        (data->audioCallback)(COLISION_CHOQUE_BALAS);
+                        break;
+                    case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
+                        (data->audioCallback)(COLISION_ALIEN_MUERTO);
+                        break;
+                    case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
+                        (data->audioCallback)(COLISION_ALIEN_TOCADO);
+                        break;
+                    case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
+                        (data->audioCallback)(COLISION_USER_TOCADO);
+                        break;
+                    default:
+                        break;
+                }
+                sem_post(&SEM_GAME);
             }
-            sem_post(&SEM_GAME);
         }
     }
     if(lost){
