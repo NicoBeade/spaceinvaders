@@ -27,7 +27,7 @@
 #include "raspi/inputRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
-#include "raspi/audiosRaspi/audioHandlerRaspi.h"
+#include "raspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
