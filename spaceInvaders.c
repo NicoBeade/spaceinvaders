@@ -1106,7 +1106,6 @@ void * moveMothershipThread(void* argMoveMothership){
                 //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
                 objectType_t * motherAsset = getObjType((*(data->mothership))->type);
-                printf("segfault1\n");
                 mothership->pos.x += motherAsset->velocidad;
                 if((mothership->pos.x > ((data -> levelSettings) -> xMax + motherAsset->ancho)) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
