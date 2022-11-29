@@ -1083,7 +1083,6 @@ void * moveAlienThread(void* argMoveAlien){
 void * moveMothershipThread(void* argMoveMothership){
 
     argMoveMothership_t * data = (argMoveMothership_t*)argMoveMothership;
-    static 
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         object_t * mothership = *(data -> mothership);   
