@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
+#include "allegro.h"
 #include "outputAllegro.h"
 #include "inputAllegro.h"
-#include "allegro.h"
 
 /************************************************************************************************
  * 

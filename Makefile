@@ -37,7 +37,7 @@ mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o s
 allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
 
-outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h spaceLib/spaceLib.h
+outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h spaceLib/spaceLib.h allegro/audio.h
 	gcc -c -g allegro/outputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h

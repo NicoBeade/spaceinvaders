@@ -1,7 +1,7 @@
  #ifndef ALLEGRO_H
  #define ALLEGRO_H
 
- #include "../spaceLib/spaceLib.h"
+#include "../spaceLib/spaceLib.h"
 
 /******************************************************************
  * 
@@ -13,7 +13,7 @@ enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCA
               MOTHERSHIP_APARECE,
               MOVIMIENTO_ALIENS,
               BALA_USER,BALA_ALIEN,
-              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA, PARTIDA_GANADA,
+              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA, PARTIDA_GANADA, PARTIDA_PERDIDA,
               SAVED_SCORE, AUDIOMAX};                               //id de los sonidos
 
 enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};      //id de la musica
