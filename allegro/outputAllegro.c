@@ -412,20 +412,39 @@ void playAudioAllegro(int id){
 
 int regAudioAllegro(int reg){
 
-    if( reg == SUBIR_AUDIO && generalVolume < 1){
+    if( reg == SUBIR_AUDIO && generalVolume > 0.0){
+        generalVolume -= 0.1;
+    }else if( reg == BAJAR_AUDIO && generalVolume < 1.0){
         generalVolume += 0.1;
     }
-    if( reg == BAJAR_AUDIO && generalVolume > 0){
-        generalVolume -= 0.1;
-    }
-
+    
     if( reg == CHECK_AUDIO){
-        return generalVolume;
-    }
-    else{
-        return 0;
+        if(generalVolume < 0.95 && generalVolume > 0.85){
+            return 9;
+        }else if(generalVolume < 0.85 && generalVolume > 0.75){
+            return 8;
+        }else if(generalVolume < 0.75 && generalVolume > 0.65){
+            return 7;
+        }else if(generalVolume < 0.65 && generalVolume > 0.55){
+            return 6;
+        }else if(generalVolume < 0.55 && generalVolume > 0.45){
+            return 5;
+        }else if(generalVolume < 0.45 && generalVolume > 0.35){
+            return 4;
+        }else if(generalVolume < 0.35 && generalVolume > 0.25){
+            return 3;
+        }else if(generalVolume < 0.25 && generalVolume > 0.15){
+            return 2;
+        }else if(generalVolume < 0.15 && generalVolume > 0.05){
+            return 1;
+        }else if(generalVolume < 0.05){
+            return 0;
+        }else {
+            return 10;
+        }
     }
 
+    return 0;
 }
 
 /**********************************************************************************************************************************************************/

@@ -29,7 +29,7 @@ extern unsigned int timerTick;
 
 #define FPS 2
 
-void * keyboardt(ALLEGRO_THREAD * thr, void * dataIn){
+void * keyboardt (ALLEGRO_THREAD * thr, void * dataIn){
 
     keyboard_data_t * data = (keyboard_data_t *) dataIn;
 
