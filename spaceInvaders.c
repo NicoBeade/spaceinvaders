@@ -134,16 +134,17 @@ unsigned int timerTick = 1000000;
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
-const int velInputGameShoot = 30;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameShoot = 10;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameMoove = 8;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
+const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 #define STOP_SHOOT 20
 #endif
-const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInput = 1;
 
 int velAliens;
@@ -1113,11 +1114,12 @@ void * moveMothershipThread(void* argMoveMothership){
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
                 objectType_t * motherAsset = getObjType((*(data->mothership))->type);
                 mothership->pos.x += motherAsset->velocidad;
-                if((mothership->pos.x > ((data -> levelSettings) -> xMax + motherAsset->ancho)) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
+                if((mothership->pos.x > ((data -> levelSettings) -> xMax ) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
                     (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
             }
+            printf("maxMShipXLeve: %d NAVE VIVA? %s\n", maxMShipXLevel, (*(data->mothership))? "Si" : "No");
             if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
                 mothershipCreator(data->mothership, data -> levelSettings); //Ejecuta la funcion que las intenta crear
             }
@@ -1214,14 +1216,12 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_LOST_LEVEL;
                     menuGame.exitStatus = 0;
-
                     *(data->score) = 0;//Se borra el score
                     objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
                     GAME_STATUS.usrLives = assetUsuario->initLives;
                     (data->audioCallback)(COLISION_USER_MUERTO);
                     lost = 0;
                     break;
-                
                 case WON_LEVEL://Si se gano el nivel
                     GAME_STATUS.pantallaActual = MENU;
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
@@ -1229,31 +1229,21 @@ void * colliderThread(void * argCollider){
                     (*(data->usrList))->lives += 1;
                     (data->audioCallback)(PARTIDA_GANADA);
                     break;
-
                 case SL_COLISION_BALAS://Si hubo colision entre las balas
-
                     (data->audioCallback)(COLISION_CHOQUE_BALAS);
                     break;
-                
                 case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
-                    
                     (data->audioCallback)(COLISION_ALIEN_MUERTO);
                     break;
-                
                 case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
-
                     (data->audioCallback)(COLISION_ALIEN_TOCADO);
                     break;
-
                 case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
-
                     (data->audioCallback)(COLISION_USER_TOCADO);
                     break;
-
                 default:
                     break;
             }
-
             sem_post(&SEM_GAME);
         }
     }
