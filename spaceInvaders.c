@@ -1114,7 +1114,7 @@ void * moveMothershipThread(void* argMoveMothership){
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
                 objectType_t * motherAsset = getObjType((*(data->mothership))->type);
                 mothership->pos.x += motherAsset->velocidad;
-                if((mothership->pos.x > ((data -> levelSettings) -> xMax ) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
+                if(((mothership->pos).x > ((data -> levelSettings) -> xMax )) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
                     (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
