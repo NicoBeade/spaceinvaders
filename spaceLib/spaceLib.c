@@ -300,7 +300,6 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
     int initLives = mothershipAsset->initLives;
     printf("mothershipcreator mothershiplistpointer %p\n", (*mothershipListPointer));
     if(rand()%100 < probOfBirth && (*mothershipListPointer) == NULL){     //Se lanzan los dados si no hay nave nodriza
-        (levelSettings->maxMShipXLevel)--;  //Se decrementa el contador de motherships disponibles por nivel
         vector_t posMothership;                         //Aux posicion de la nave nodriza
         posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
         int direccionIztoDer = 1;  //Variable auxiliar que decide si va para la izquierda o para la derecha
@@ -321,6 +320,8 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
             return -1;
         }
         mothershipCreada = MOTHERSHIP_CREATED;   //Para devolver un 1
+        (levelSettings->maxMShipXLevel)--;  //Se decrementa el contador de motherships disponibles por nivel
+
     }
     return mothershipCreada;
 }
