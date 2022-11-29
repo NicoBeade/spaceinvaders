@@ -288,6 +288,9 @@ int main(void){
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
                     sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Resume   Score > ", scoreInstantaneo,"   Lives > ", UsrList->lives);
                 }
+                else if(GAME_STATUS.menuActual == MENU_WON_LEVEL){
+                    sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", scoreReal,"   Lives > ", UsrList->lives);
+                }
                 #endif
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
@@ -698,13 +701,13 @@ static void* menuHandlerThread(void * data){
                 }
             }
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(MUSICA_JUEGO);
+                }
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             else if(ATRAS && GAME_STATUS.menuAnterior == -1){
                 (menu->audioCallback)(ERROR_MENU);
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->audioCallback)(MUSICA_JUEGO);
-                }
             }
         }
     }
@@ -798,10 +801,11 @@ static void* saveScoreHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            
+            #ifdef ALLEGRO
             if(stopSweep){
                 stopSweep -= 1;
             }
+            #endif
 
             if (SIGUIENTESCORE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef RASPI
@@ -821,6 +825,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                     screenObjects = changeCol(screenObjects, select);
+                    stopSweep = 4; 
                 #endif
                 
                 #ifdef RASPI
@@ -829,8 +834,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                (menu->audioCallback)(SWEEP_LETRA);
-                stopSweep = 4;                
+                (menu->audioCallback)(SWEEP_LETRA);               
             }
 
             if (ANTERIORSCORE && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -851,6 +855,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                     screenObjects = changeCol(screenObjects, select);
+                    stopSweep = 4;
                 #endif
 
                 #ifdef RASPI
@@ -860,8 +865,6 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 (menu->audioCallback)(SWEEP_LETRA); 
-
-                stopSweep = 4;
             }
 
             if(ARRIBA_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia arriba
@@ -879,6 +882,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 changeLetra(letras, select, 1);
+                stopSweep = 4;
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
@@ -904,8 +908,6 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 (*menu->audioCallback)(SWEEP_LETRA);
-
-                stopSweep = 4;
             }
 
             if(ABAJO_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia abajo
@@ -923,6 +925,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 changeLetra(letras, select, -1);
+                stopSweep = 4;
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
@@ -948,7 +951,6 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 (menu->audioCallback)(SWEEP_LETRA);
-                
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
