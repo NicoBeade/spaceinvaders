@@ -25,17 +25,6 @@ ALIEN
     posY  4
 END
 
-ALIEN
-    type  1
-    posX  6
-    posY  4
-END
-
-ALIEN
-    type  13
-    posX  11
-    posY  4
-END
 
 
 

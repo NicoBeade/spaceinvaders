@@ -3,7 +3,7 @@ vel 1
 ancho 3
 alto 2
 initLives 1
-shootProb 3
+shootProb 4
 maxBullets 7
 balaID 20
 sprite1 1

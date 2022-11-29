@@ -134,7 +134,7 @@ unsigned int timerTick = 1000000;
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
-const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameShoot = 10;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
