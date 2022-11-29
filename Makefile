@@ -46,7 +46,7 @@ outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h spaceLib/spaceL
 inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h
 	gcc -c -g allegro/inputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
-menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c
+menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D ALLEGRO
 
 
