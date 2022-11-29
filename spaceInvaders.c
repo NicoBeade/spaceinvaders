@@ -134,8 +134,8 @@ unsigned int timerTick = 1000000;
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
-const int velInputGameShoot = 10;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
-const int velInputGameMoove = 8;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
+const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
 #endif
 #ifdef ALLEGRO
@@ -1227,6 +1227,7 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
                     (*(data->usrList))->lives += 1;
+                    printf("Partida Ganada, imprimiendo audio de partida ganada\n");
                     (data->audioCallback)(PARTIDA_GANADA);
                     break;
                 case SL_COLISION_BALAS://Si hubo colision entre las balas
