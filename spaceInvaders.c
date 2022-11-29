@@ -1228,7 +1228,7 @@ void * colliderThread(void * argCollider){
                     menuGame.exitStatus = 0;
                     (*(data->usrList))->lives += 1;
                     printf("Partida Ganada, imprimiendo audio de partida ganada\n");
-                    (data->audioCallback)(PARTIDA_GANADA);
+                    (data->audioCallback)(SELECT_MENU);
                     break;
                 case SL_COLISION_BALAS://Si hubo colision entre las balas
                     (data->audioCallback)(COLISION_CHOQUE_BALAS);
