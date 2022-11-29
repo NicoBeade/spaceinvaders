@@ -2,7 +2,7 @@
 #													MAKEFILE RASPBERRY
 #*******************************************************************************************************************************************
 mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o menuUtilitiesRaspi.o sprites.o audioHandlerRaspi.o spaceInvaders.c
-	gcc joydrv.o disdrv.o displayRaspi.o raspi/drivers/libAudioSDL2.o inputRaspi.o levelLoader.o spaceLib.o score.o menuUtilities.o sprites.o audioHandlerRaspi.o spaceInvaders.c -lpthread -I/usr/local/include -L/usr/local/lib -lSDL2 -Wall -o spaceInvaders -g -D RASPI
+	gcc raspi/drivers/joydrv.o raspi/drivers/disdrv.o displayRaspi.o raspi/drivers/libAudioSDL2.o inputRaspi.o levelLoader.o spaceLib.o score.o menuUtilities.o sprites.o audioHandlerRaspi.o spaceInvaders.c -lpthread -I/usr/local/include -L/usr/local/lib -lSDL2 -Wall -o spaceInvaders -g -D RASPI
 
 
 inputRaspi.o: raspi/inputRaspi.c raspi/inputRaspi.h spaceLib/spaceLib.h
@@ -14,14 +14,11 @@ displayRaspi.o: raspi/displayRaspi.c raspi/displayRaspi.h spaceLib/spaceLib.h sp
 sprites.o: raspi/sprites.h raspi/sprites.c
 	gcc -c -g raspi/sprites.c -Wall -o sprites.o
 
-menuUtilitiesRaspi.o: menuUtilities.h spaceLib/spaceLib.h spaceLib/score/score.h raspi/displayRaspi.h raspi/sprites.h menuUtilities.c
+menuUtilitiesRaspi.o: menuUtilities.h spaceLib/spaceLib.h levelLoader/levelLoader.h spaceLib/score/score.h raspi/displayRaspi.h raspi/sprites.h menuUtilities.c
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D RASPI
 
-audioHandlerRaspi.o: raspi/audiosRaspi/audioHandlerRaspi.h raspi/audiosRaspi/audioHandlerRaspi.c game/audioFiles/audioFiles.h
-	gcc -c -g raspi/audiosRaspi/audioHandlerRaspi.c -Wall -o audioHandlerRaspi.o
-
-cleanRaspi:
-	rm spaceLib.o levelLoader.o displayRaspi.o inputRaspi.o spaceInvaders.o
+audioHandlerRaspi.o: raspi/audioHandlerRaspi.h raspi/audioHandlerRaspi.c game/audioFiles/audioFiles.h
+	gcc -c -g raspi/audioHandlerRaspi.c -Wall -o audioHandlerRaspi.o
 
 #*******************************************************************************************************************************************
 #*******************************************************************************************************************************************
@@ -46,11 +43,13 @@ outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h spaceLib/spaceL
 inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h
 	gcc -c -g allegro/inputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
-menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h
+menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h levelLoader/levelLoader.h spaceLib/score/score.h
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D ALLEGRO
 
 
-
+#*******************************************************************************************************************************************
+#													TARGETS GENERALES DE BACK END
+#*******************************************************************************************************************************************
 spaceLib.o:	spaceLib/spaceLib.c spaceLib/spaceLib.h
 	gcc -Wall -c -g spaceLib/spaceLib.c -o spaceLib.o
 
@@ -59,3 +58,7 @@ levelLoader.o: levelLoader/levelLoader.c spaceLib.o levelLoader/levelLoader.h
 
 score.o: spaceLib/score/score.c spaceLib/score/score.h
 	gcc -c -g spaceLib/score/score.c -Wall -o score.o
+
+
+clean:
+	rm *.o
