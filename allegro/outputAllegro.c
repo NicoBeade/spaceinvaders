@@ -245,12 +245,20 @@ int showEntity(object_t * entity){
     objectType_t * asset = getObjType(entity->type);
     
     char * sprite;
-    if(entity->animationStatus %2){
-        sprite = asset->sprite1;
-    }
-    else{
+    
+    if(entity->animationStatus == 2){
         sprite = asset->sprite2;
     }
+    else if(entity->animationStatus == 3){
+        sprite = asset->sprite3;
+    }
+    else if(entity->animationStatus == 4){
+        sprite = asset->sprite4;
+    }
+    else{
+        sprite = asset->sprite1;
+    }
+
     if (sprite == NULL){
         return -1;
     }
@@ -258,7 +266,6 @@ int showEntity(object_t * entity){
         image = al_load_bitmap(sprite);    //Se carga en el bitmap
     }
     
-
     //Si no se pudo cargar salta error
     if (!image) {
         return -1;

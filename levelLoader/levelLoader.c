@@ -201,6 +201,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     char * sprite1;
     char * sprite2;
     char * sprite3;
+    char * sprite4;
     char * shootSound;
     char * deathSound;
     //Se crean variables auxiliares que indican si se encontro cada campo
@@ -217,6 +218,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     char sprite1_found = 0;
     char sprite2_found = 0;
     char sprite3_found = 0;
+    char sprite4_found = 0;
     char shootSound_found = 0;
     char deathSound_found = 0;
 
@@ -271,7 +273,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
         }
         else if(sprite2_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite2") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
-                printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                printf("Error in levelLoader.c, loadAsset function : sprite2 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
             sprite2 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
@@ -279,11 +281,19 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
         }
         else if(sprite3_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite3") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
-                printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                printf("Error in levelLoader.c, loadAsset function : sprite3 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
             sprite3 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
             sprite3_found++;
+        }
+        else if(sprite4_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite4") == 0){
+            if(strlen(decodedFile[paramNo].value) >= MAX_SPRITE_FILE_LENGTH){
+                printf("Error in levelLoader.c, loadAsset function : sprite4 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
+                return -1;
+            }
+            sprite4 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
+            sprite4_found++;
         }
         else if(shootSound_found == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
             if(strlen(decodedFile[paramNo].value) >= MAX_SOUND_FILE_LENGTH){
@@ -303,12 +313,12 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
         }
     }
     //Si todos los campos se encontraron entonces añade el asset a la lista de object types
-    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || score_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 || shootSound_found != 1 || deathSound_found != 1 || aliado_found != 1){   //Si no se encontraron todos los campos devuelve error
+    if(balaID_found != 1 || maxBullets_found != 1 || shootProb_found != 1 || initLives_found != 1 || alto_found != 1 || ancho_found != 1 || vel_found != 1 || id_found != 1 || score_found != 1 || sprite1_found != 1 || sprite2_found != 1 || sprite3_found != 1 || sprite4_found != 1 ||shootSound_found != 1 || deathSound_found != 1 || aliado_found != 1){   //Si no se encontraron todos los campos devuelve error
         printf("Error in levelLoader.c, loadAsset function : \"%s\" has missing parameters\n", file);
         printf("deathSound_found %d shootSound_found %d  score_found %d \n", deathSound_found, shootSound_found,score_found);
         return -1;
     }
-    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3, shootSound,deathSound,score, aliado); //Añade el tipo de objeto
+    addObjType(id, vel, ancho, alto, initLives, shootProb, maxBullets, balaID,sprite1, sprite2, sprite3, sprite4, shootSound,deathSound,score, aliado); //Añade el tipo de objeto
     return 0;
 }
 
@@ -521,6 +531,15 @@ int readAssetModifiers(int paramNo, int AssetID){   //Recibe el nombre del archi
             }
             else{
                 printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 3 %s\n", (decodedFile[fila].value));
+                return -1;   
+            }
+        }
+        else if(strcmp(decodedFile[fila].parameter, "sprite4") == 0 && strlen(decodedFile[fila].value) > 0){
+            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
+                strcpy(assetModified->sprite4,decodedFile[fila].value);//Se copia el path
+            }
+            else{
+                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 4 %s\n", (decodedFile[fila].value));
                 return -1;   
             }
         }

@@ -1,3 +1,5 @@
+;------------------ALIENS FILA 1-------------------
+
 ALIEN
     type  1
     posX  150
@@ -40,29 +42,93 @@ ALIEN
     posY  100
 END
 
-
+;------------------ALIENS FILA 2-------------------
 
 ALIEN
-    type  1
-    posX  400
+    type  28
+    posX  150
     posY  200
 END
 
 ALIEN
-    type  1
-    posX  500
+    type  28
+    posX  250
     posY  200
 END
+
+ALIEN
+    type  28
+    posX  350
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  450
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  550
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  650
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  750
+    posY  200
+END
+
+;------------------USUARIO-------------------
 
 USUARIO
     type 40
     posX 100
-    posY 560
+    posY 650
+END
+
+;------------------BARRERAS------------------
+
+BARRERA
+    type  35
+    posX  700
+    posY  500
 END
 
 BARRERA
     type  34
+    posX  754
+    posY  500
+END
+
+BARRERA
+    type  35
     posX  500
+    posY  500
+END
+
+BARRERA
+    type  34
+    posX  554
+    posY  500
+END
+
+BARRERA
+    type  35
+    posX  300
+    posY  500
+END
+
+BARRERA
+    type  34
+    posX  354
     posY  500
 END
 

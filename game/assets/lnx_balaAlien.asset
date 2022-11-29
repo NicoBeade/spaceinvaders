@@ -1,0 +1,16 @@
+id 8
+vel 5    
+ancho 5
+alto 26
+initLives 2
+shootProb 6
+maxBullets 7
+balaID 0
+sprite1 game/spritesAllegro/balaAlien.png
+sprite2 game/spritesAllegro/balaAlien.png
+sprite3 NULL
+sprite4 NULL
+score 5
+deathSound 0
+shootSound 0
+aliado 1

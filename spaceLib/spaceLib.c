@@ -87,9 +87,8 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 	newObj -> pos = setPos;//Asigna los valores indicados en los distitntos campos del alien.
 	newObj -> type = setType;
 	newObj -> lives = setLives;
-    newObj -> animationStatus = 0;
+    newObj -> animationStatus = 1;
     newObj -> next = NULL;
-
 	return firstObj;//Devuelve un puntero al primer elemento.
 }
 
@@ -186,7 +185,11 @@ char moveAlien(level_setting_t *  levelSettings, object_t ** alienList, int* dir
             auxiliar->pos.x += vx;//Modifica su posicion en x e y
             auxiliar->pos.y += vy;
         }
-        auxiliar->animationStatus++;
+        if(auxiliar->animationStatus == 1){ //Se cambia el animation status
+            auxiliar->animationStatus = 2; 
+        }else{
+            auxiliar->animationStatus = 1;
+        }
         auxiliar = auxiliar -> next;
     }
 
@@ -312,7 +315,7 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
         }
         (*mothershipListPointer) = addObj((*mothershipListPointer), posMothership, type, initLives);
         if((*mothershipListPointer) == NULL){
-            printf("Err in gameLib, mothershipCreator function: could't add mothership\n", type);
+            printf("Err in gameLib, mothershipCreator function: could't add mothership type %d\n", type);
         return -1;
         }
     }
@@ -345,6 +348,12 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
             if(Bala -> pos.y < yMax && Bala -> pos.y > yMin){    //Si la bala se encuentra en el interior del display
                 objectType_t * balaType = getObjType(Bala -> type);
                 (Bala -> pos.y) += (balaType -> velocidad);
+                if(Bala->animationStatus == 1){ //Le cambia el animation status
+                    Bala->animationStatus = 2;
+                }
+                else{
+                    Bala->animationStatus = 1;
+                } 
                 Bala = Bala -> next;
             }
             else{                               //Si la bala se encuentra fuera (o en la frontera)
@@ -352,7 +361,8 @@ object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting){
                 Bala = Bala -> next;
                 newList = destroyObj(*ListBalasEnemy, balaADestruir);     //Se destruye la bala
                 *ListBalasEnemy = newList;
-            }                                                                                          
+            }     
+                                                                                            
             
         }
     }
@@ -400,7 +410,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         int vidaBala = balaType -> initLives;
         if((rand()%100) < probabilidad){
             vector_t posicionBala;
-            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - 1;
+            posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - (balaType -> ancho)/2 ;
             int yOffset = (naveType -> aliado)? - (balaType -> alto) : (naveType -> alto);
             posicionBala.y = nave->pos.y + yOffset; 
             bala = addObj(bala, posicionBala, balaTypeID, vidaBala);
@@ -501,20 +511,35 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
     object_t * listMotherShip = *motherShip;
     object_t * balaADestruir;
 
+    int typeBarrera, typeBala;
+    vector_t posBarrera, posBala;
     while(listBalasEnemigas != NULL  && listUsr->lives != 0){//---------------------------------------------        Primero chequea si las balas enemigas golpearon algo.
         listBarreras = *barrerasList;   //Lista auxiliar
+        typeBala = listBalasEnemigas->type;
+        posBala = listBalasEnemigas->pos;
+        
         while(listBarreras != NULL && listBalasEnemigas != NULL ){//Chequea si se golpeo una barrera
-            if(collision(listBalasEnemigas->pos, listBalasEnemigas->type, listBarreras->pos, listBarreras->type)){//Si golpeo a una barrera
+            typeBarrera = listBarreras->type;
+            posBarrera = listBarreras->pos;
+            
+            if(collision(posBala,typeBala,posBarrera,typeBarrera)){//Si golpeo a una barrera
                 collition = 0;
-                listBarreras->lives -= 1;
+                listBarreras->lives -= 1;   //Le resta una vida
+                objectType_t * barreraObjType = getObjType(typeBarrera);   //Se recupera el object type
+                if(barreraObjType == NULL){
+                    printf("Err in spaceLib.c: collider function, object type of barrier not found with type %d.\n", typeBarrera);
+                    return -1;
+                }
+                listBarreras->animationStatus = barreraObjType->initLives - listBarreras->lives + 1;
+                if(listBarreras->animationStatus >= 4){
+                    listBarreras->animationStatus = 4;
+                }
+                
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
-
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
-                    listBarreras = listBarreras->next;
                     returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_MUERTA : returnEvent;
                 }
                 else{//Si no se mato a la barrera
-                    listBarreras = listBarreras->next;
                     returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_TOCADA : returnEvent;
                 }
                 listBalasEnemigas->lives -= 1;
@@ -522,11 +547,11 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
                     balaADestruir = listBalasEnemigas;
                     *balasEnemigas = destroyObj(*balasEnemigas, balaADestruir);
+
                 }
             }
-            else{//Si no golpeo a esa barrera chequea el siguiente
-                listBarreras = listBarreras->next;
-            }
+            listBarreras = listBarreras->next;
+            
         }
         listBalasEnemigas = listBalasEnemigas->next;
     }
@@ -756,7 +781,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};    //Se inicializa un array de objectTypes 
 
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * deathSound, char * shootSound, int score, int aliado){
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * sprite4, char * deathSound, char * shootSound, int score, int aliado){
     if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
         printf("Err in gameLib, addObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
@@ -785,6 +810,7 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         memcpy((objtypes[index]).sprite1, sprite1, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite2, sprite2, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).sprite3, sprite3, MAX_SPRITE_FILE_LENGTH);
+        memcpy((objtypes[index]).sprite4, sprite4, MAX_SPRITE_FILE_LENGTH);
         memcpy((objtypes[index]).shootSound, shootSound, MAX_SOUND_FILE_LENGTH);
         memcpy((objtypes[index]).deathSound, deathSound, MAX_SOUND_FILE_LENGTH);
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
@@ -827,7 +853,7 @@ objectType_t * getObjType(int id){
 void imprimirARRAY(void){
     int index;
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++){      //Se recorre el arreglo hasta encontrar el object type indicado
-        printf("TIPO N: %d\n\tID: %d\n\tAliado?: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id,(objtypes[index]).aliado, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
+        printf("TIPO N: %d\n\tID: %d\n\tAliado?: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n\tSPRITE4: %s\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id,(objtypes[index]).aliado, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).sprite4,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
     }
 }
 

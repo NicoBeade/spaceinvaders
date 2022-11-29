@@ -8,7 +8,8 @@ maxBullets 0
 balaID 0
 sprite1 game/spritesAllegro/naveNodriza.png
 sprite2 game/spritesAllegro/naveNodriza.png
-sprite3 game/spritesAllegro/naveNodriza.png
+sprite3 NULL
+sprite4 NULL
 score 30
 deathSound 0
 shootSound 0

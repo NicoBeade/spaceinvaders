@@ -1,0 +1,16 @@
+id 35
+vel 0    
+ancho 54
+alto 76
+initLives 4
+shootProb 0
+maxBullets 0
+balaID 0
+sprite1 game/spritesAllegro/barreraI1.png
+sprite2 game/spritesAllegro/barreraI2.png
+sprite3 game/spritesAllegro/barreraI3.png
+sprite4 game/spritesAllegro/barreraI4.png
+score 0
+deathSound NULL
+shootSound NULL
+aliado 1
