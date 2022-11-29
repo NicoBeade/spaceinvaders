@@ -657,6 +657,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
                 collition = 0;
                 listBalasEnemigas->lives -= 1;
+                returnEvent = (returnEvent == 0) ? SL_COLISION_BALAS : returnEvent;
                 if(listBalasEnemigas->lives == 0){//Si se mato a esa bala hay que eliminarla de la lista
                     *balasEnemigas = destroyObj(*balasEnemigas, listBalasEnemigas);
                     listBalasEnemigas = *balasEnemigas;

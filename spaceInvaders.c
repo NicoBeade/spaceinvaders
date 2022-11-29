@@ -135,11 +135,13 @@ const int velMenu = 20;         //Velocidad a la que se lee el input durante un 
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 const int velInputGameShoot = 10;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+#define STOP_SHOOT 10
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+#define STOP_SHOOT 20
 #endif
 const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 const int velInput = 1;
@@ -1015,7 +1017,7 @@ static void* levelHandlerThread(void * data){
                     (menu->audioCallback)(BALA_USER);
                 }
 
-                stopShoot = 20;
+                stopShoot = STOP_SHOOT;
             }
         }
         if( ((timerTick % velInputGameMoove) == 0) && menu -> exitStatus ){
@@ -1219,7 +1221,12 @@ void * colliderThread(void * argCollider){
                     GAME_STATUS.menuActual = MENU_WON_LEVEL;
                     menuGame.exitStatus = 0;
                     (*(data->usrList))->lives += 1;
-                    //(data->audioCallback)(PARTIDA_GANADA);
+                    (data->audioCallback)(PARTIDA_GANADA);
+                    break;
+
+                case SL_COLISION_BALAS://Si hubo colision entre las balas
+
+                    (data->audioCallback)(COLISION_CHOQUE_BALAS);
                     break;
                 
                 case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
@@ -1227,7 +1234,7 @@ void * colliderThread(void * argCollider){
                     (data->audioCallback)(COLISION_ALIEN_MUERTO);
                     break;
                 
-                case SL_COLISION_ALIEN_TOCADO://SI se golpeo a un alien
+                case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
 
                     (data->audioCallback)(COLISION_ALIEN_TOCADO);
                     break;
@@ -1247,6 +1254,7 @@ void * colliderThread(void * argCollider){
     if(lost){
         GAME_STATUS.usrLives = (*(data->usrList))->lives;
     }
+    GAME_STATUS.inGame = 0;
 
     pthread_exit(0);
 }
