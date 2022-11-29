@@ -1119,7 +1119,7 @@ void * moveMothershipThread(void* argMoveMothership){
                     (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
             }
-            printf("maxMShipXLeve: %d NAVE VIVA? %s\n", maxMShipXLevel, (*(data->mothership))? "Si" : "No");
+            printf("maxMShipXLeve: %d NAVE VIVA? %s\n", (data -> levelSettings) -> maxMShipXLevel, (*(data->mothership))? "Si" : "No");
             if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
                 mothershipCreator(data->mothership, data -> levelSettings); //Ejecuta la funcion que las intenta crear
             }
