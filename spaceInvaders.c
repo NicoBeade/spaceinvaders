@@ -134,7 +134,7 @@ unsigned int timerTick = 1000000;
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
-const int velInputGameShoot = 10;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameShoot = 30;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 #define STOP_SHOOT 10
 #endif
 #ifdef ALLEGRO
@@ -429,6 +429,9 @@ int main(void){
                 if(balasUsr != NULL){
                     balasUsr = removeList(balasUsr);
                 }
+                if(mothershipList != NULL){
+                    mothershipList = removeList(mothershipList);
+                }
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
                     GAME_STATUS.pantallaActual = START_LEVEL; //Si hay que iniciar nuevamente el juego
@@ -457,6 +460,9 @@ int main(void){
                 }
                 if(balasUsr != NULL){
                     balasUsr = removeList(balasUsr);
+                }
+                if(mothershipList != NULL){
+                    mothershipList = removeList(mothershipList);
                 }
 
                 GAME_STATUS.exitStatus = 0;
@@ -1109,6 +1115,7 @@ void * moveMothershipThread(void* argMoveMothership){
                 mothership->pos.x += motherAsset->velocidad;
                 if((mothership->pos.x > ((data -> levelSettings) -> xMax + motherAsset->ancho)) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
+                    (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
             }
             if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
