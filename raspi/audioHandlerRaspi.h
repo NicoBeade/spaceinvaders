@@ -2,7 +2,7 @@
 #define AUDIOHANDLERRASPI
 
 
-#include "audio.h"
+#include "/drivers/audio.h"
 #include <SDL2/SDL.h>
 
 //Enums de las posibles acciones para el regulador de audio
