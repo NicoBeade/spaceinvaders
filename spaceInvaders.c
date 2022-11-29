@@ -696,6 +696,9 @@ static void* menuHandlerThread(void * data){
             }
             else if(ATRAS && GAME_STATUS.menuAnterior == -1){
                 (menu->audioCallback)(ERROR_MENU);
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    
+                }
             }
         }
     }
@@ -1069,7 +1072,7 @@ void * moveAlienThread(void* argMoveAlien){
                     velAliens = 1;
                 }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
-                usleep((VEL_INCR_ALIENS + 2) * U_SEC2M_SEC);
+                usleep((velAliens) * U_SEC2M_SEC);
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
