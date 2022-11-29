@@ -1069,7 +1069,7 @@ void * moveAlienThread(void* argMoveAlien){
                     velAliens = 1;
                 }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
-                usleep()
+                usleep(VEL_INCR_ALIENS);
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
