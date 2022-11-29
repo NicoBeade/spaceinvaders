@@ -137,7 +137,7 @@ int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del d
 const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
-#define VEL_INCR_ALIENS 2
+#define VEL_INCR_ALIENS 10
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
@@ -1069,7 +1069,7 @@ void * moveAlienThread(void* argMoveAlien){
                     velAliens = 1;
                 }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
-                usleep((VEL_INCR_ALIENS + 1) * U_SEC2M_SEC);
+                usleep((VEL_INCR_ALIENS + 2) * U_SEC2M_SEC);
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
@@ -1100,8 +1100,8 @@ void * moveMothershipThread(void* argMoveMothership){
                 //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
                 objectType_t * motherAsset = getObjType((*(data->mothership))->type);
-                mothership->pos.x += motherAsset->velocidad;
-                if(((mothership->pos).x > ((data -> levelSettings) -> xMax )) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
+                mothership->pos.x += 
+                if(((((mothership->pos).x > ((data -> levelSettings) -> xMax ))) && (motherAsset->velocidad)>= 0 )|| ((mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho)) && (motherAsset->velocidad)< 0)){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
                     (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
