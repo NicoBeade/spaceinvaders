@@ -697,7 +697,7 @@ static void* menuHandlerThread(void * data){
             else if(ATRAS && GAME_STATUS.menuAnterior == -1){
                 (menu->audioCallback)(ERROR_MENU);
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    
+                    (menu->audioCallback)(MUSICA_JUEGO);
                 }
             }
         }
