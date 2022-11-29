@@ -8,19 +8,6 @@ static int detectThreeLetter(char*); //AUX. detecta si el nombre ingresado tiene
 void printLeaderboard(leaderboard_t); //AUX. imprime el arreglo parseado de scores
 
 
-/*int main (void){
-    leaderboard_t leaderboard ; //array de punteros a string
-    int score = 198;
-    char* name = "fac";
-
-    parseScore(leaderboard);
-    addScore(leaderboard, score, name);
-    //printLeaderboard(leaderboard);
-    saveScore(leaderboard);
-
-    return 0;
-}*/
-
 void parseScore(leaderboard_t leaderboard){ 
     //parsea el archivo del score almacenandolo en un array de strings 
     //necesita que antes de invocarla de haya creado una char leaderboard [LEADERBOARD][ROWSIZE]
@@ -68,14 +55,14 @@ int addScore(leaderboard_t leaderboard, int score, char* name){ //anyade un punt
 
     if(detectThreeLetter(name)){ //detecta si el nombre tiene 3 letras. Si no, no guarda el score
         printf("Error en addScore. Nombre de mas de 3 letras\n");
-        return 1;                   
+        return ERROR_LEADERBOARD;                   
     }
 
     posInTop=locateInLeaderboard(leaderboard, score); //guarda la posicion en la que se debe anyadir el puntaje nuevo
 
 
-    if(posInTop==-1){ //si la posicion es -1 significa que no entro en el top del leaderboard
-        return 1;
+    if(posInTop==POS_LEADERBOARD_NOT_FOUND){ //devuelve no se encontro pos si no hay pos en el leaderboard
+        return POS_LEADERBOARD_NOT_FOUND;
     }
 
     int i;
@@ -86,7 +73,7 @@ int addScore(leaderboard_t leaderboard, int score, char* name){ //anyade un punt
         strcpy(scoreToAdd,aux);
     }
     
-    return 0; //devuelve 0 si se agrego sin problemas el nuevo puntaje
+    return POS_LEADERBOARD_FOUND; //devuelve OK si se agrego sin problemas el nuevo puntaje
 }
 
 static int locateInLeaderboard(leaderboard_t leaderboard, int score){
@@ -101,16 +88,16 @@ static int locateInLeaderboard(leaderboard_t leaderboard, int score){
         scoreInLeaderboard = atoi(stringAux);
 
         if(scoreInLeaderboard<score){              //compara el score con el score del leaderboard
-            located = 1;                           //si el score a agregar es mayor al comparado entonces se localizo la posicion
+            located ++;       //si el score a agregar es mayor al comparado entonces se localizo la posicion
         }                              
     }
 
     if(located == 0){
         printf("No se encontro posicion en el top\n");
-        return -1;
+        return POS_LEADERBOARD_NOT_FOUND;
     } 
 
-    return posInTop-1;
+    return posInTop;
 }
 
 static int detectThreeLetter(char* name){        

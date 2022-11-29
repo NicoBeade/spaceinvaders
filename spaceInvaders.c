@@ -718,7 +718,7 @@ static void* menuHandlerThread(void * data){
 
 
 static void* saveScoreHandlerThread(void * data){
-//Este thread es el encargado de manejar los menues.
+//Este thread es el encargado de manejar el guardado del score.
 
 	saveScore_t * menu = (saveScore_t *) data;
 
@@ -823,7 +823,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA);
+                (menu->audioCallback)(SWEEP_LETRA);
                 stopSweep = 4;                
             }
 
@@ -853,7 +853,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.  
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA); 
+                (menu->audioCallback)(SWEEP_LETRA); 
 
                 stopSweep = 4;
             }
@@ -941,23 +941,34 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA);
+                (menu->audioCallback)(SWEEP_LETRA);
                 
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
+                int successAddScore;
                 leaderboard_t leaderboard;
                 parseScore(leaderboard);//Obtiene el valor actual del leaderboard
-                addScore(leaderboard, menu -> puntajeNumerico, letraActual);//Modifica el leaderboard con el valor a guardar
+                successAddScore = addScore(leaderboard, menu -> puntajeNumerico, letraActual);
+                //Modifica el leaderboard con el valor a guardar
                 //Si el score no entra en el leaderboard entonces no modifica el leaderboard
                 saveScore(leaderboard);
+
+                switch(successAddScore){
+                    case POS_LEADERBOARD_FOUND:
+                        (menu->audioCallback)(SAVED_SCORE);
+                        break;
+                    case POS_LEADERBOARD_NOT_FOUND:
+                    case ERROR_LEADERBOARD:
+                    default:
+                        (menu->audioCallback)(ERROR_MENU);
+                        break;
+                }
 
                 GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_INICIO;
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
-
-                (*menu->audioCallback)(SAVED_SCORE);
                 
                 stopSweep = 4;
             }
