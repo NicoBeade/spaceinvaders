@@ -268,7 +268,7 @@ int main(void){
     }
     GAME_STATUS.nivelActual = 1;
 
-    audioCallback(MUSICA_MENU);
+    
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -548,6 +548,8 @@ static void* menuHandlerThread(void * data){
 
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
+        
+        sem_wait(&SEM_MENU);
         if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
             allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
             toText = allegroList->textoList;
@@ -557,11 +559,11 @@ static void* menuHandlerThread(void * data){
             toText = allegroList->textoList;
             screenObjects = allegroList->spriteList;
         }
+        sem_post(&SEM_MENU);
     #endif
     //***************************************************************************************************************************
 
     if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
-
         fillLeaderboardMenu(menu);
     }
 
@@ -595,16 +597,20 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
+                
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
-                (menu -> changeOption)(&argChangeOption);
+                
                 #endif
 
                 #ifdef ALLEGRO
-
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-
+                stopSweep = 4;
+                
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                }
                 #endif
 
                 (menu -> changeOption)(&argChangeOption);
@@ -612,6 +618,12 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
+
+                #ifdef ALLEGRO
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
+                #endif
             }
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -632,22 +644,32 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
+                
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
                 #endif
 
                 #ifdef ALLEGRO
-                
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-
-                #endif
+                stopSweep = 4;
+                
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(SUBIR_AUDIO);
+                }
+                #endif                
 
                 (menu -> changeOption)(&argChangeOption);
 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
+
+                #ifdef ALLEGRO
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
+                #endif
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
@@ -750,8 +772,11 @@ static void* saveScoreHandlerThread(void * data){
 
     #ifdef ALLEGRO
         allegroList = allegroScore(allegroList, menu -> puntaje , letras);
+
+        sem_wait(&SEM_MENU);
         toText = allegroList->textoList;
         screenObjects = allegroList->spriteList;
+        sem_post(&SEM_MENU);
     #endif
 
     //***************************************************************************************************************************
@@ -1183,7 +1208,7 @@ void * colliderThread(void * argCollider){
 
                     *(data->score) = 0;//Se borra el score
                     objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                    GAME_STATUS.usrLives = MAX_USR_LIVES;
+                    GAME_STATUS.usrLives = assetUsuario->initLives;
                     (data->audioCallback)(COLISION_USER_MUERTO);
                     lost = 0;
                     break;

@@ -31,8 +31,8 @@ extern gameStatus_t GAME_STATUS;
 extern sem_t SEM_GAME;
 extern sem_t SEM_MENU;
 
-static ALLEGRO_FONT * fuentes[FONTMAX] = {NULL};
-static float generalVolume;
+static ALLEGRO_FONT * fuentes[FONTMAX] = {0};
+static float generalVolume = 1.0;
 
 /***********************************************************************************************************************************************************
  * 
@@ -113,7 +113,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     audio_t audios[AUDIOMAX];
     audio_t musica[MUSICAMAX - AUDIOMAX];
-    ALLEGRO_SAMPLE_ID * musicaActual = NULL;
+    ALLEGRO_SAMPLE_ID musicaActual;
 
     //Inicializacion de musica
     INITMUSICA
@@ -121,7 +121,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     //Inicializacion de Sonidos
     INITAUDIO
 
-
+    al_play_sample(musica[0].sample, musica[0].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
     //-------------------------------------------------
 
     background = al_load_bitmap("game/spritesAllegro/fondo.png");
@@ -159,7 +159,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
 
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                //sem_wait(&SEM_GAME);
+                sem_wait(&SEM_GAME);
  
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
@@ -173,7 +173,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 //Objectos varios
                 
 
-                //sem_post(&SEM_GAME);
+                sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);
@@ -201,13 +201,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
         for(i=0; i<20; i++){
             if(idQeue[i] != 0){
-                if(idQeue[i] < AUDIOMAX){
+                if(0 < idQeue[i] && idQeue[i] < AUDIOMAX){
                     al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                 }
-                else if(idQeue[i] < MUSICAMAX){
-                    al_stop_sample(musicaActual);
+                else if(0 < idQeue[i] && idQeue[i] < MUSICAMAX){
+                    al_stop_sample(&musicaActual);
                     
-                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
                 }
             }
             idQeue[i]=0;
