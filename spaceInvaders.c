@@ -319,7 +319,7 @@ int main(void){
                 sprintf(stringWithScore,"%d",score);
                 #endif
 
-                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3, &audioCallback};
+                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3, audioCallback};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
