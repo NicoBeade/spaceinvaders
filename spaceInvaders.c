@@ -271,8 +271,6 @@ int main(void){
         return -1;
     }
     GAME_STATUS.nivelActual = 1;
-
-    audioCallback(MUSICA_JUEGO);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -280,8 +278,8 @@ int main(void){
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
 
-                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    audioCallback(MUSICA_MENU);
+                if(GAME_STATUS.menuActual == MENU_INICIO){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
+                    audioCallback(MUSICA_JUEGO);
                 }
 
                 #ifdef RASPI
