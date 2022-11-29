@@ -4,7 +4,7 @@ ancho 39
 alto 57
 initLives 5
 shootProb 100
-maxBullets 3
+maxBullets 6
 balaID 21
 sprite1 game/spritesAllegro/nave.png
 sprite2 game/spritesAllegro/nave.png
