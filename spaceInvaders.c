@@ -1232,7 +1232,7 @@ void * colliderThread(void * argCollider){
                         *(data->score) = 0;//Se borra el score
                         objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
                         GAME_STATUS.usrLives = assetUsuario->initLives;
-                        (data->audioCallback)(COLISION_USER_MUERTO);
+                        (data->audioCallback)(PARTIDA_PERDIDA);
                         lost = 0;
                         GAME_STATUS.inGame = 0;
                         break;
