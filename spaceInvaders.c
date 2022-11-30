@@ -1091,8 +1091,8 @@ void * moveAlienThread(void* argMoveAlien){
             switch (evento){
             case FASTER_ALIENS:
                 velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
-                if(velAliens <= 0){
-                    velAliens = 1;
+                if(velAliens <= 15){
+                    velAliens = 15;
                 }
                 (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
                 usleep((velAliens) * U_SEC2M_SEC);

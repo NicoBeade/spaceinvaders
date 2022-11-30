@@ -1,3 +1,17 @@
+ASSET_MODIFY    1 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+ASSET_MODIFY    13 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+ASSET_MODIFY    28 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+
+velAliens			70
 ;------------------ALIENS FILA 1-------------------
 
 ALIEN
@@ -183,3 +197,4 @@ ASSET_MODIFY    7 ;modifico la mothership
     score 100
 END
 velMothership		20
+
