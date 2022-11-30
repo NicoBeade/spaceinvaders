@@ -761,7 +761,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);
-        usleep(5000);
+        usleep(BARRIDO_LETRA);
     }
     return;
 }
