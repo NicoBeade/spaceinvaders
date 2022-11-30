@@ -42,6 +42,94 @@ ALIEN
     posY  100
 END
 
+;------------------ALIENS FILA 2-------------------
+
+ALIEN
+    type  28
+    posX  150
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  250
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  350
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  450
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  550
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  650
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  750
+    posY  200
+END
+
+;------------------ALIENS FILA 3-------------------
+
+ALIEN
+    type  28
+    posX  150
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  250
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  350
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  450
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  550
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  650
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  750
+    posY  300
+END
+
 ;------------------USUARIO-------------------
 
 USUARIO
