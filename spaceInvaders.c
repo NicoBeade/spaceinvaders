@@ -332,6 +332,8 @@ int main(void){
 
                 sem_post(&SEM_GAME);
 
+                scoreInstantaneo = 0;
+
                 break;
             
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------

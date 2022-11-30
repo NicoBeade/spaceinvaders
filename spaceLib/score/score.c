@@ -97,7 +97,7 @@ static int locateInLeaderboard(leaderboard_t leaderboard, int score){
         printf("El score que se busco fue %d\n",score);
         return POS_LEADERBOARD_NOT_FOUND;
     } 
-
+    printf("La posicion en el top encontrada es la %d\n",posInTop);
     return posInTop;
 }
 
