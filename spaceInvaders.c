@@ -273,16 +273,14 @@ int main(void){
         return -1;
     }
     GAME_STATUS.nivelActual = 1;
+
+    audioCallback(MUSICA_JUEGO);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
-
-                if(GAME_STATUS.menuActual == MENU_INICIO){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    audioCallback(MUSICA_JUEGO);
-                }
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
