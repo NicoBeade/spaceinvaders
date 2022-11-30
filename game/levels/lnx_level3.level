@@ -1,0 +1,200 @@
+ASSET_MODIFY    1 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+ASSET_MODIFY    13 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+ASSET_MODIFY    28 ;modifico la mothership
+    shootProb 7
+    maxBullets 20
+END
+
+velAliens			70
+;------------------ALIENS FILA 1-------------------
+
+ALIEN
+    type  1
+    posX  150
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  250
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  350
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  450
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  550
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  650
+    posY  100
+END
+
+ALIEN
+    type  1
+    posX  750
+    posY  100
+END
+
+;------------------ALIENS FILA 2-------------------
+
+ALIEN
+    type  28
+    posX  150
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  250
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  350
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  450
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  550
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  650
+    posY  200
+END
+
+ALIEN
+    type  28
+    posX  750
+    posY  200
+END
+
+;------------------ALIENS FILA 3-------------------
+
+ALIEN
+    type  28
+    posX  150
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  250
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  350
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  450
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  550
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  650
+    posY  300
+END
+
+ALIEN
+    type  28
+    posX  750
+    posY  300
+END
+
+;------------------USUARIO-------------------
+
+USUARIO
+    type 40
+    posX 100
+    posY 650
+END
+
+;------------------BARRERAS------------------
+
+BARRERA
+    type  35
+    posX  100
+    posY  500
+END
+
+BARRERA
+    type  34
+    posX  154
+    posY  500
+END
+
+BARRERA
+    type  35
+    posX  700
+    posY  500
+END
+
+BARRERA
+    type  34
+    posX  754
+    posY  500
+END
+
+BARRERA
+    type  35
+    posX  400
+    posY  500
+END
+
+BARRERA
+    type  34
+    posX  454
+    posY  500
+END
+
+velBalas			5
+
+ASSET_MODIFY    7 ;modifico la mothership
+    shootProb 2
+    score 100
+END
+velMothership		20
+

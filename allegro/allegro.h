@@ -1,21 +1,24 @@
  #ifndef ALLEGRO_H
  #define ALLEGRO_H
 
- #include "../spaceLib/spaceLib.h"
+#include "../spaceLib/spaceLib.h"
 
 /******************************************************************
  * 
  *                          Structs
  * 
 *******************************************************************/
-enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA,
+enum SONIDOS {COLISION_ALIEN_TOCADO = 1,COLISION_ALIEN_MUERTO,COLISION_USER_TOCADO,COLISION_USER_MUERTO,
+              COLISION_MOTHERSHIP_MUERTA,COLISION_BARRERA_TOCADA,COLISION_BARRERA_MUERTA, COLISION_CHOQUE_BALAS,
               MOTHERSHIP_APARECE,
               MOVIMIENTO_ALIENS,
               BALA_USER,BALA_ALIEN,
-              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA,
-              SAVED_SCORE, AUDIOMAX};
+              SELECT_MENU,SWAP_MENU,ERROR_MENU,SWEEP_LETRA, PARTIDA_GANADA, PARTIDA_PERDIDA,
+              SAVED_SCORE, AUDIOMAX};                               //id de los sonidos
 
-enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};
+enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};      //id de la musica
+
+enum VOLUME {SUBIR_AUDIO,BAJAR_AUDIO,CHECK_AUDIO};
 
 typedef int (*option_t)(void);
 
@@ -59,6 +62,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
 
     void (*audioCallback)(int);
+    int (*volumeCallback)(int);
     
 }menu_t;
 
@@ -104,6 +108,10 @@ typedef struct {
 //protoripo de thread principal de allegro
 void * allegroThread (void * arg);
 
+//levelAllegro: esta funcion de encarga de preparar las listas para la reproduccion de los niveles
+texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
+//refresca los datos del jugador
+void refreshDatos( char * toScore, char * toVidas, int score, int vidas);
 
 //allegroMenu: Esta funcion se encarga de preparar las listas para mostrar un menu en pantalla
 //Como segundo parametro debe recibir el puntero a la lista de textos de allegro
@@ -120,21 +128,27 @@ void changeLetra(char letras[15][2], int letraActual, int dir);
 //texto_t * changeCol(texto_t * toshow, int nextOp);
 sprite_t * changeCol(sprite_t * toshow, int nextOp);
 
-//allegroScore: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
+//allegroLiderboard: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
 TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
 
-//limpia una lista de textos_t
-texto_t * emptyText(texto_t * firstText); 
+TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual);
+sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual);
+
 //añade un texto_t a una lista
 texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy);
+//limpia una lista de textos_t
+texto_t * emptyText(texto_t * firstText); 
 
+//añade un sprite a la lista
 sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy);
-
+//limpia una lista de los sprites
 sprite_t * emptySprite(sprite_t * firstSprite);
 
+//añade un sonido a la cola a partir de la id
 void playAudioAllegro(int id);
+//regula el volumen general del audio o devuelve el volumen actual
+int regAudioAllegro(int reg);
 
-texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
-void refreshDatos( char * toScore, char * toVidas, int score, int vidas);
+
 
 #endif

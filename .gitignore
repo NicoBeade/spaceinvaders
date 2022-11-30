@@ -47,11 +47,13 @@ Mkfile.old
 dkms.conf
 
 # .o que surgen de la compilacion
-allegro.o
-inputAllegro.o
-levelLoader.o
-menuUtilities.o
-outputAllegro.o
-score.o 
-spaceLib.o 
+/allegro.o
+/inputAllegro.o
+/levelLoader.o
+/menuUtilities.o
+/outputAllegro.o
+/score.o 
+/spaceLib.o 
+/spaceLib/score/score.txt
+
 

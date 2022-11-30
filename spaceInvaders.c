@@ -27,7 +27,7 @@
 #include "raspi/inputRaspi.h"
 #include "raspi/drivers/disdrv.h"
 #include "raspi/drivers/joydrv.h"
-#include "raspi/audiosRaspi/audioHandlerRaspi.h"
+#include "raspi/audioHandlerRaspi.h"
 #endif
 
 #ifdef ALLEGRO
@@ -135,13 +135,19 @@ unsigned int timerTick = 1000000;
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
+const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
+#define STOP_SHOOT 10
+#define VEL_INCR_ALIENS 10
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 10;     //Velocidad a la que se realiza el barrido del display durante un menu
-#endif
-const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
+const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
+#define VEL_INCR_ALIENS 5
+#define STOP_SHOOT 20
+#endif
 const int velInput = 1;
 
 int velAliens;
@@ -246,6 +252,7 @@ int main(void){
     char platform[4] = "lnx";
 
     audioCallback = playAudioAllegro;
+    volumeCallback = regAudioAllegro;
     #endif
 
     menuGame.audioCallback = audioCallback;
@@ -267,6 +274,8 @@ int main(void){
         return -1;
     }
     GAME_STATUS.nivelActual = 1;
+
+    audioCallback(MUSICA_JUEGO);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
@@ -274,15 +283,18 @@ int main(void){
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
 
-                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    //Reproducir musica de MENU.
-                }
-
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
                     sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Resume   Score > ", scoreInstantaneo,"   Lives > ", UsrList->lives);
                 }
+                else if(GAME_STATUS.menuActual == MENU_WON_LEVEL){
+                    sprintf(menuWonLevel.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", score,"   Lives > ", UsrList->lives);
+                }
                 #endif
+
+                if(GAME_STATUS.menuActual != LOST_LEVEL){
+                    scoreInstantaneo = score;
+                }
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
@@ -290,9 +302,8 @@ int main(void){
 
                 MENUES[GAME_STATUS.menuActual] -> audioCallback = audioCallback; 
 
-                #ifdef RASPI
-                    MENUES[GAME_STATUS.menuActual] -> volumeCallback = volumeCallback;
-                #endif
+                MENUES[GAME_STATUS.menuActual] -> volumeCallback = volumeCallback;
+
 
                 pthread_create(&menuHandlerT, NULL, menuHandlerThread, MENUES[GAME_STATUS.menuActual]);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -304,21 +315,17 @@ int main(void){
             
             case SAVE_SCORE://-----------------------------     SAVE_SCORE: Entra a este caso cuando el usuario desea cargar su score.      ----------------------------------------
 
-                if(GAME_STATUS.pantallaAnterior != MENU && GAME_STATUS.pantallaAnterior != SAVE_SCORE){//Detecta si se tiene que comenzar a reproducir la muscia del menu.
-                    //Reproducir musica de MENU.
-                }
-
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
                 #ifdef RASPI
-                sprintf(stringWithScore,"%d    ",score);
+                sprintf(stringWithScore,"%d    ",scoreInstantaneo);
                 #endif
 
                 #ifdef ALLEGRO
-                sprintf(stringWithScore,"%d",score);
+                sprintf(stringWithScore,"%d",scoreInstantaneo);
                 #endif
 
-                saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3, &audioCallback};
+                saveScore_t saveScore = { &KEYS, stringWithScore, scoreInstantaneo, 1, 3, audioCallback};
 
                 pthread_create(&saveScoreT, NULL, saveScoreHandlerThread, &saveScore);//Se inicializa el thread de menu handler con el menu indicado.
                 
@@ -326,11 +333,13 @@ int main(void){
 
                 sem_post(&SEM_GAME);
 
+                scoreInstantaneo = 0;
+
                 break;
             
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
-                //Reproducir musica de juego.
+                GAME_STATUS.pantallaAnterior = START_LEVEL;
                 
                 sem_wait(&SEM_MENU);
 
@@ -391,7 +400,7 @@ int main(void){
 
             case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
                 
-                //Reproducir musica de juego
+                GAME_STATUS.pantallaAnterior = IN_GAME;
 
                 sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
@@ -422,6 +431,9 @@ int main(void){
                 if(balasUsr != NULL){
                     balasUsr = removeList(balasUsr);
                 }
+                if(mothershipList != NULL){
+                    mothershipList = removeList(mothershipList);
+                }
 
                 if(GAME_STATUS.menuActual == START_LEVEL_MENU){
                     GAME_STATUS.pantallaActual = START_LEVEL; //Si hay que iniciar nuevamente el juego
@@ -450,6 +462,9 @@ int main(void){
                 }
                 if(balasUsr != NULL){
                     balasUsr = removeList(balasUsr);
+                }
+                if(mothershipList != NULL){
+                    mothershipList = removeList(mothershipList);
                 }
 
                 GAME_STATUS.exitStatus = 0;
@@ -485,7 +500,7 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
-    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+    unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
     if(GAME_STATUS.menuActual == MENU_VOLUME){
@@ -496,8 +511,7 @@ static void* menuHandlerThread(void * data){
 
         halfDisp_t* halfDispNameScore;
 
-        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-            halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
+        halfDisp_t nameDispMenu = {//Matriz para almacenar el nombre del jugador a mostrar.
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -507,6 +521,8 @@ static void* menuHandlerThread(void * data){
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
+
+        if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
             halfDispNameScore = &nameDispMenu;
             (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
         }
@@ -536,27 +552,34 @@ static void* menuHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
 
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
-        if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-            allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
-            toText = allegroList->textoList;
-            screenObjects = allegroList->spriteList;
-        }else{
+        float volumenActual = 0;
+        sem_wait(&SEM_MENU);
+
+        if(GAME_STATUS.menuActual == MENU_VOLUME){
+            volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+            allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
+
+        }else if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
             allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
-            toText = allegroList->textoList;
-            screenObjects = allegroList->spriteList;
+
+        }else{
+            allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
+
         }
+        toText = allegroList->textoList;
+        screenObjects = allegroList->spriteList;
+        sem_post(&SEM_MENU);
     #endif
     //***************************************************************************************************************************
 
     if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
-
         fillLeaderboardMenu(menu);
     }
 
@@ -581,32 +604,43 @@ static void* menuHandlerThread(void * data){
                     select = 0;
                 }
                 else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(SUBIR_AUDIO);
                     select -= 1;
                 }
 
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
-                    (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
+                    (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
-                (menu -> changeOption)(&argChangeOption);
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
-                }
+                }              
                 #endif
 
                 #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    (menu -> changeOption)(&argChangeOption);
-                    stopSweep = 4;
+                
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+                stopSweep = 4;
+                
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(SUBIR_AUDIO);
+                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
+
                 }
                 #endif
+
+                (menu -> changeOption)(&argChangeOption);
                 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
+
+                #ifdef ALLEGRO
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
+                #endif
             }
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -617,8 +651,7 @@ static void* menuHandlerThread(void * data){
                 if(select < 0 && GAME_STATUS.menuActual != MENU_VOLUME){//Si llegamos a la ultima opcion pasamos a la primera
                     select = (menu -> cantOpciones) - 1;
                 }
-                else if(select == (menu -> cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->volumeCallback)(BAJAR_AUDIO);
+                else if(select < 0 && GAME_STATUS.menuActual == MENU_VOLUME){
                     select += 1;
                 }
 
@@ -626,24 +659,34 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, &GAME_STATUS.menuActual };
-                (menu -> changeOption)(&argChangeOption);
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
                 #endif
 
                 #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
-                    changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
-                    (menu -> changeOption)(&argChangeOption);
-                    stopSweep = 4;
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+                stopSweep = 4;
+                
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                 }
-                #endif
+                #endif                
+
+                (menu -> changeOption)(&argChangeOption);
 
                 if(GAME_STATUS.menuActual != MENU_VOLUME){
                     (menu->audioCallback)(SWAP_MENU);                
                 }
+
+                #ifdef ALLEGRO
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
+                #endif
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
@@ -658,12 +701,18 @@ static void* menuHandlerThread(void * data){
                 else{
                     menu -> exitStatus = (menu->selectOption[select])();//Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-
-                (menu->audioCallback)(SELECT_MENU);
+                if(menu -> exitStatus == 0){
+                    (menu->audioCallback)(SELECT_MENU);
+                }
             }
-
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(MUSICA_JUEGO);
+                }
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
+            }
+            else if(ATRAS && GAME_STATUS.menuAnterior == -1){
+                (menu->audioCallback)(ERROR_MENU);
             }
         }
     }
@@ -683,13 +732,13 @@ static void* menuHandlerThread(void * data){
 
 
 static void* saveScoreHandlerThread(void * data){
-//Este thread es el encargado de manejar los menues.
+//Este thread es el encargado de manejar el guardado del score.
 
 	saveScore_t * menu = (saveScore_t *) data;
 
     int select = 0;//Esta variable se utiliza para indicar la letra seleccionada dentro del menu. 
 
-    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+    unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
     
     char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
@@ -731,7 +780,7 @@ static void* saveScoreHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, &GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 
@@ -743,8 +792,11 @@ static void* saveScoreHandlerThread(void * data){
 
     #ifdef ALLEGRO
         allegroList = allegroScore(allegroList, menu -> puntaje , letras);
+
+        sem_wait(&SEM_MENU);
         toText = allegroList->textoList;
         screenObjects = allegroList->spriteList;
+        sem_post(&SEM_MENU);
     #endif
 
     //***************************************************************************************************************************
@@ -754,10 +806,11 @@ static void* saveScoreHandlerThread(void * data){
     while(menu -> exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if( (timerTick % velMenu) == 0 ){
-            
+            #ifdef ALLEGRO
             if(stopSweep){
                 stopSweep -= 1;
             }
+            #endif
 
             if (SIGUIENTESCORE && !stopSweep){//Si se presiona para ir a la siguiente opcion
                 #ifdef RASPI
@@ -777,6 +830,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                     screenObjects = changeCol(screenObjects, select);
+                    stopSweep = 4; 
                 #endif
                 
                 #ifdef RASPI
@@ -785,8 +839,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA);
-                stopSweep = 4;                
+                (menu->audioCallback)(SWEEP_LETRA);               
             }
 
             if (ANTERIORSCORE && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -807,6 +860,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                     screenObjects = changeCol(screenObjects, select);
+                    stopSweep = 4;
                 #endif
 
                 #ifdef RASPI
@@ -815,9 +869,7 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.  
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA); 
-
-                stopSweep = 4;
+                (menu->audioCallback)(SWEEP_LETRA); 
             }
 
             if(ARRIBA_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia arriba
@@ -835,6 +887,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 changeLetra(letras, select, 1);
+                stopSweep = 4;
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
@@ -860,8 +913,6 @@ static void* saveScoreHandlerThread(void * data){
                 #endif
 
                 (*menu->audioCallback)(SWEEP_LETRA);
-
-                stopSweep = 4;
             }
 
             if(ABAJO_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia abajo
@@ -879,6 +930,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 changeLetra(letras, select, -1);
+                stopSweep = 4;
                 #endif
 
                 switch (letraActual[select]){//Chequea que no se pase de los caracteres posibles.
@@ -903,23 +955,33 @@ static void* saveScoreHandlerThread(void * data){
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
 
-                (*menu->audioCallback)(SWEEP_LETRA);
-                
+                (menu->audioCallback)(SWEEP_LETRA);
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
+                int successAddScore;
                 leaderboard_t leaderboard;
                 parseScore(leaderboard);//Obtiene el valor actual del leaderboard
-                addScore(leaderboard, menu -> puntajeNumerico, letraActual);//Modifica el leaderboard con el valor a guardar
+                successAddScore = addScore(leaderboard, menu -> puntajeNumerico, letraActual);
+                //Modifica el leaderboard con el valor a guardar
                 //Si el score no entra en el leaderboard entonces no modifica el leaderboard
                 saveScore(leaderboard);
+
+                switch(successAddScore){
+                    case POS_LEADERBOARD_FOUND:
+                        (menu->audioCallback)(SAVED_SCORE);
+                        break;
+                    case POS_LEADERBOARD_NOT_FOUND:
+                    case ERROR_LEADERBOARD:
+                    default:
+                        (menu->audioCallback)(ERROR_MENU);
+                        break;
+                }
 
                 GAME_STATUS.pantallaActual = MENU;
                 GAME_STATUS.menuActual = MENU_INICIO;
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
-
-                (*menu->audioCallback)(SAVED_SCORE);
                 
                 stopSweep = 4;
             }
@@ -982,7 +1044,7 @@ static void* levelHandlerThread(void * data){
                     (menu->audioCallback)(BALA_USER);
                 }
 
-                stopShoot = 20;
+                stopShoot = STOP_SHOOT;
             }
         }
         if( ((timerTick % velInputGameMoove) == 0) && menu -> exitStatus ){
@@ -1032,8 +1094,12 @@ void * moveAlienThread(void* argMoveAlien){
             evento = moveAlien( data -> levelSettings,  (data -> alienList), &direccion);
             switch (evento){
             case FASTER_ALIENS:
-                velAliens -= 2; //Incrementa la velocidad de los aliens.
+                velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
+                if(velAliens <= 15){
+                    velAliens = 15;
+                }
                 (data->audioCallback)(MOVIMIENTO_ALIENS);
+                usleep((velAliens) * U_SEC2M_SEC);
                 break;
             case SL_MOVIMIENTO_ALIENS:
                 (data->audioCallback)(MOVIMIENTO_ALIENS);
@@ -1065,20 +1131,9 @@ void * moveAlienThread(void* argMoveAlien){
 void * moveMothershipThread(void* argMoveMothership){
 
     argMoveMothership_t * data = (argMoveMothership_t*)argMoveMothership;
-
     while(GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        object_t * mothership = *(data -> mothership);
-        /*
-        if( (timerTick % 500 && mothership->lives == 0)){ //el 500 debe ser un numero random asi aparece cada 
-            mothership->type = timerTick%2; //se genera aleatoriamente a la derecha o a la izquierda de la pantalla
-            mothership->lives = 1;
-            mothership->pos.x = (mothership->type)?-3:16;
-            (data->audioCallback)(MOTHERSHIP_APARECE);
-            //si el tipo de mothership es 1, la nave nodriza se genera a la izquierda del display
-        }
-        */       
-
+        object_t * mothership = *(data -> mothership);   
         if( ((timerTick % ((data -> levelSettings) -> velMothership) == 0))){
             sem_wait(&SEM_GAME);
             if(*(data->mothership) != NULL){
@@ -1086,14 +1141,16 @@ void * moveMothershipThread(void* argMoveMothership){
                 //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
                 objectType_t * motherAsset = getObjType((*(data->mothership))->type);
-                printf("segfault1\n");
                 mothership->pos.x += motherAsset->velocidad;
-                if((mothership->pos.x > ((data -> levelSettings) -> xMax + motherAsset->ancho)) || (mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho))){
+                if(((((mothership->pos).x > ((data -> levelSettings) -> xMax ))) && (motherAsset->velocidad)>= 0 )|| ((mothership->pos.x < ((data -> levelSettings) -> xMin - motherAsset->ancho)) && (motherAsset->velocidad)< 0)){
                     mothership->lives = 0; // Si se va out of bounds mata a la nave
+                    (*(data->mothership)) = destroyObj((*(data->mothership)), mothership);
                 }
             }
             if((data -> levelSettings) -> maxMShipXLevel > 0){  //Si todavia hay naves nodrizas disponibles en el nivel
-                mothershipCreator(data->mothership, data -> levelSettings); //Ejecuta la funcion que las intenta crear
+                if(mothershipCreator(data->mothership, data -> levelSettings) == MOTHERSHIP_CREATED){//Ejecuta la funcion que las intenta crear
+                    (data->audioCallback)(MOTHERSHIP_APARECE);
+                } 
             }
             sem_post(&SEM_GAME);
         }
@@ -1180,55 +1237,61 @@ void * colliderThread(void * argCollider){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
+            if(*(data->alienList) != NULL && *(data->alienList) != NULL){   //Si hay aliens y usuario 
+                gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
-            gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
-
-            switch (gameData){//Detecta el evento
-                case LOST_LEVEL://Si se perdio el nivel
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                    menuGame.exitStatus = 0;
-
-                    *(data->score) = 0;//Se borra el score
-                    objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                    GAME_STATUS.usrLives = MAX_USR_LIVES;
-                    (data->audioCallback)(COLISION_USER_MUERTO);
-                    lost = 0;
-                    break;
-                
-                case WON_LEVEL://Si se gano el nivel
-                    GAME_STATUS.pantallaActual = MENU;
-                    GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                    menuGame.exitStatus = 0;
-                    (*(data->usrList))->lives += 1;
-                    //(data->audioCallback)(PARTIDA_GANADA);
-                    break;
-                
-                case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
-                    
-                    (data->audioCallback)(COLISION_ALIEN_MUERTO);
-                    break;
-                
-                case SL_COLISION_ALIEN_TOCADO://SI se golpeo a un alien
-
-                    (data->audioCallback)(COLISION_ALIEN_TOCADO);
-                    break;
-
-                case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
-
-                    (data->audioCallback)(COLISION_USER_TOCADO);
-                    break;
-
-                default:
-                    break;
+                switch (gameData){//Detecta el evento
+                    case LOST_LEVEL://Si se perdio el nivel
+                        GAME_STATUS.pantallaActual = MENU;
+                        GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                        menuGame.exitStatus = 0;
+                        *(data->score) = 0;//Se borra el score
+                        objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                        GAME_STATUS.usrLives = assetUsuario->initLives;
+                        (data->audioCallback)(PARTIDA_PERDIDA);
+                        lost = 0;
+                        GAME_STATUS.inGame = 0;
+                        break;
+                    case WON_LEVEL://Si se gano el nivel
+                        GAME_STATUS.pantallaActual = MENU;
+                        GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                        menuGame.exitStatus = 0;
+                        (*(data->usrList))->lives += 1;
+                        (data->audioCallback)(PARTIDA_GANADA);
+                        GAME_STATUS.inGame = 0;
+                        break;
+                    case SL_COLISION_BALAS://Si hubo colision entre las balas
+                        (data->audioCallback)(COLISION_CHOQUE_BALAS);
+                        break;
+                    case SL_COLISION_BARRERA_TOCADA://Si toco una barrera
+                        (data->audioCallback)(COLISION_BARRERA_TOCADA);
+                        break;
+                    case SL_COLISION_BARRERA_MUERTA://Si mato una barrera
+                        (data->audioCallback)(COLISION_BARRERA_MUERTA);
+                        break;
+                    case SL_COLISION_MOTHERSHIP_MUERTA://Si se mato la mothership
+                        (data->audioCallback)(COLISION_MOTHERSHIP_MUERTA);
+                        break;
+                    case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
+                        (data->audioCallback)(COLISION_ALIEN_MUERTO);
+                        break;
+                    case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
+                        (data->audioCallback)(COLISION_ALIEN_TOCADO);
+                        break;
+                    case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
+                        (data->audioCallback)(COLISION_USER_TOCADO);
+                        break;
+                    default:
+                        break;
+                }
+                sem_post(&SEM_GAME);
             }
-
-            sem_post(&SEM_GAME);
         }
     }
     if(lost){
         GAME_STATUS.usrLives = (*(data->usrList))->lives;
     }
+    GAME_STATUS.inGame = 0;
 
     pthread_exit(0);
 }

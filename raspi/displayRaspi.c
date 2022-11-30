@@ -349,20 +349,23 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             barriers = aux;
             punto.y=0;
+
             if(*(((argDisplayRPI_t*)argDisplayRPI)->mothership) != NULL){
-                if(mothership->pos.x>0&&mothership->pos.x<15){
+                if(mothership->pos.x>=0&&mothership->pos.x<=15){
                     punto.x=mothership->pos.x;
                     disp_write(punto,D_ON);
                 }
-                if(mothership->pos.x+1>0&&mothership->pos.x+1<15){
+                if(mothership->pos.x+1>=0&&mothership->pos.x+1<=15){
                     punto.x=mothership->pos.x+1;
                     disp_write(punto,D_ON);
                 }    
-                if(mothership->pos.x+2>0&&mothership->pos.x+2<15){
+                if(mothership->pos.x+2>=0&&mothership->pos.x+2<=15){
                     punto.x=mothership->pos.x+2;
                     disp_write(punto,D_ON);
                 }
-            }   
+            } 
+
+
             if(GAME_STATUS.inGame && fueraDeRango == 0){
                 sem_wait(&SEM_DRIVER);
                 disp_update(); //se transfiere del buffer al display de la RPI
@@ -419,7 +422,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         pthread_exit(0);
     }
 
-    if(*(data->menuActual) == MENU_VOLUME){
+    if((data->menuActual) == MENU_VOLUME){
         int i;
         caracteres_t* caracter;
         dcoord_t pos = { 0, 8 };
@@ -454,7 +457,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        if(*(data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
+        if((data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
             for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
                 offset = offsetAlfabeto((data -> msg)[j]);
@@ -588,20 +591,13 @@ void changeOption(void* argChangeOption){
 
     static argTextAnimMenu_t argTextAnimMenu;
 
-    unsigned char menuActual = *(data->menuActual);
-    //sem_wait(&SEM_MENU);
-    *(data->menuActual) = 0;
-
     velDispAnimation = 1;
 
     *(data -> animStatus) = 0;
-    // sem_post(&SEM_MENU);
 
     pthread_join(*(data -> threadMenu), NULL);//Termina el thread anterior aumentando la velocidad del barrido.
 
     *(data -> animStatus) = 1;
-
-    *(data->menuActual) = menuActual;
 
     argTextAnimMenu.msg = data -> nuevoTexto;
     argTextAnimMenu.lowerDispMenu = data -> lowerDispMenu;
@@ -611,6 +607,7 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.changeAnimation = data -> animStatus;
     argTextAnimMenu.menuActual = data -> menuActual;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
+
     if(data->higherDispMenu == NULL){
         printf("Error in displayRaspi.c, higherDispMenu cannot be NULL in function changeOption\n");
     }
@@ -662,10 +659,8 @@ halfDisp_t* getLeaderBoardName(halfDisp_t* nameDispMenu, int select){
         name[caracter]=leaderboard[select][letra];
         caracter++;
     }
-    printf("%s\n",name);
 
     nameDispMenu = strToHalfDisplay(nameDispMenu, name); //Convierte el string a algo que se puede mostrar en el display.
-
     return nameDispMenu;
 }
 
@@ -689,7 +684,6 @@ halfDisp_t* strToHalfDisplay(halfDisp_t * nombre, char* nombreStr){
                 (*nombre)[j][k] = (*caracter)[j][k-l]; //Copia el caracter en el halfDisplay
             }
         }
-
         l += 4;
     }
 
@@ -770,7 +764,7 @@ void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenad
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
         printLetter(matriz, coordenada);
-        usleep(5000);
+        usleep(BARRIDO_LETRA);
     }
     return;
 }

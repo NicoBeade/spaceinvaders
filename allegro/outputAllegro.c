@@ -31,7 +31,9 @@ extern gameStatus_t GAME_STATUS;
 extern sem_t SEM_GAME;
 extern sem_t SEM_MENU;
 
-static ALLEGRO_FONT * fuentes[FONTMAX] = {NULL};
+static ALLEGRO_FONT * fuentes[FONTMAX] = {0};
+static float generalVolume = 1.0;
+
 /***********************************************************************************************************************************************************
  * 
  *                                                                      PROTOTIPOS DE FUNCIONES LOCALES
@@ -111,18 +113,64 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     audio_t audios[AUDIOMAX];
     audio_t musica[MUSICAMAX - AUDIOMAX];
-    ALLEGRO_SAMPLE_ID * musicaActual = NULL;
+    ALLEGRO_SAMPLE_ID musicaActual;
 
     //Inicializacion de musica
     INITMUSICA
 
     //Inicializacion de Sonidos
-    INITAUDIO
+    audios[COLISION_ALIEN_TOCADO].sample = al_load_sample("game/audioFiles/alien_tocado.wav");
+    audios[COLISION_ALIEN_TOCADO].volume = 1.0;
+    audios[COLISION_ALIEN_MUERTO].sample = al_load_sample("game/audio/invaderkilled.wav");
+    audios[COLISION_ALIEN_MUERTO].volume = 0.3;
+    if(!audios[COLISION_ALIEN_MUERTO].sample){
+        printf("fallo\n");
+    }
+    audios[COLISION_USER_TOCADO].sample = al_load_sample("game/audioFiles/user_tocado.wav");
+    audios[COLISION_USER_TOCADO].volume = 1.0;
+    audios[COLISION_USER_MUERTO].sample = al_load_sample("game/audioFiles/user_muerto.wav");
+    audios[COLISION_USER_MUERTO].volume = 0.9;
+    audios[BALA_USER].sample = al_load_sample("game/audioFiles/alien_tocado.wav");
+    audios[BALA_USER].volume = 0.3;
+    audios[COLISION_MOTHERSHIP_MUERTA].sample = al_load_sample("game/audioFiles/mothership_muerta.wav");
+    audios[COLISION_MOTHERSHIP_MUERTA].volume = 0.8;
+    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/user_muerto.wav");
+    audios[COLISION_BARRERA_TOCADA].volume = 0.7;
+    audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/user_muerto.wav");
+    audios[COLISION_BARRERA_MUERTA].volume = 0.6;
+    audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/user_muerto.wav");
+    audios[MOTHERSHIP_APARECE].volume = 0.95;
+    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audio/fastinvader1.wav");
+    audios[MOVIMIENTO_ALIENS].volume = 0.85;
+    audios[BALA_ALIEN].sample = al_load_sample("game/audioFiles/bala_alien.wav");
+    audios[BALA_ALIEN].volume = 0.75;
+    audios[SELECT_MENU].sample = al_load_sample("game/audioFiles/select_menu.wav");
+    audios[SELECT_MENU].volume = 0.65;
+    audios[SWAP_MENU].sample = al_load_sample("game/audioFiles/swap_menu.wav");
+    audios[SWAP_MENU].volume = 0.55;
+    audios[ERROR_MENU].sample = al_load_sample("game/audioFiles/error_menu.wav");
+    audios[ERROR_MENU].volume = 0.5;
+    audios[SWEEP_LETRA].sample = al_load_sample("game/audioFiles/sweep_letra.wav");
+    audios[SWEEP_LETRA].volume = 0.45;
+    audios[SAVED_SCORE].sample = al_load_sample("game/audioFiles/saved_score.wav");
+    audios[SAVED_SCORE].volume = 0.4;
+    audios[COLISION_CHOQUE_BALAS].sample = al_load_sample("game/audioFiles/user_muerto.wav");
+    audios[COLISION_CHOQUE_BALAS].volume = 0.35;
+    audios[PARTIDA_GANADA].sample = al_load_sample("game/audioFiles/partida_ganada.wav");
+    audios[PARTIDA_GANADA].volume = 0.3;
+    audios[PARTIDA_PERDIDA].sample = al_load_sample("game/audioFiles/partida_perdida.wav");
+    audios[PARTIDA_PERDIDA].volume = 0.2;
 
-    al_play_sample(audios[COLISION_ALIEN_MUERTO].sample, audios[COLISION_ALIEN_MUERTO].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    for(int i = 1; i<AUDIOMAX; i++){
+        if(audios[i].sample == NULL){
+            printf("fallo audio : %d, %f\n", i, audios[i].volume);
+            
+        }
+    }
 
-    al_play_sample(musica[MUSICA_MENU - AUDIOMAX].sample, musica[MUSICA_MENU - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+    al_play_sample(musica[0].sample, musica[0].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
 
+    al_play_sample(audios[COLISION_USER_TOCADO].sample, audios[COLISION_ALIEN_MUERTO].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     //-------------------------------------------------
 
     background = al_load_bitmap("game/spritesAllegro/fondo.png");
@@ -160,7 +208,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
 
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                //sem_wait(&SEM_GAME);
+                sem_wait(&SEM_GAME);
  
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
@@ -174,7 +222,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 //Objectos varios
                 
 
-                //sem_post(&SEM_GAME);
+                sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
                 sem_wait(&SEM_MENU);
@@ -202,13 +250,14 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
         for(i=0; i<20; i++){
             if(idQeue[i] != 0){
-                if(idQeue[i] < AUDIOMAX){
-                    al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                }
-                else if(idQeue[i] < MUSICAMAX){
-                    al_stop_sample(musicaActual);
+                if(0 < idQeue[i] && idQeue[i] < AUDIOMAX){
+                    al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                     
-                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, musicaActual);
+                }
+                else if(0 < idQeue[i] && idQeue[i] < MUSICAMAX){
+                    al_stop_sample(&musicaActual);
+                    
+                    al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
                 }
             }
             idQeue[i]=0;
@@ -246,12 +295,20 @@ int showEntity(object_t * entity){
     objectType_t * asset = getObjType(entity->type);
     
     char * sprite;
-    if(entity->animationStatus %2){
-        sprite = asset->sprite1;
-    }
-    else{
+    
+    if(entity->animationStatus == 2){
         sprite = asset->sprite2;
     }
+    else if(entity->animationStatus == 3){
+        sprite = asset->sprite3;
+    }
+    else if(entity->animationStatus == 4){
+        sprite = asset->sprite4;
+    }
+    else{
+        sprite = asset->sprite1;
+    }
+
     if (sprite == NULL){
         return -1;
     }
@@ -259,7 +316,6 @@ int showEntity(object_t * entity){
         image = al_load_bitmap(sprite);    //Se carga en el bitmap
     }
     
-
     //Si no se pudo cargar salta error
     if (!image) {
         return -1;
@@ -402,6 +458,43 @@ void playAudioAllegro(int id){
 
     idQeue[i] = id;
 
+}
+
+int regAudioAllegro(int reg){
+
+    if( reg == SUBIR_AUDIO && generalVolume > 0.0){
+        generalVolume -= 0.1;
+    }else if( reg == BAJAR_AUDIO && generalVolume < 1.0){
+        generalVolume += 0.1;
+    }
+    
+    if( reg == CHECK_AUDIO){
+        if(generalVolume < 0.95 && generalVolume > 0.85){
+            return 9;
+        }else if(generalVolume < 0.85 && generalVolume > 0.75){
+            return 8;
+        }else if(generalVolume < 0.75 && generalVolume > 0.65){
+            return 7;
+        }else if(generalVolume < 0.65 && generalVolume > 0.55){
+            return 6;
+        }else if(generalVolume < 0.55 && generalVolume > 0.45){
+            return 5;
+        }else if(generalVolume < 0.45 && generalVolume > 0.35){
+            return 4;
+        }else if(generalVolume < 0.35 && generalVolume > 0.25){
+            return 3;
+        }else if(generalVolume < 0.25 && generalVolume > 0.15){
+            return 2;
+        }else if(generalVolume < 0.15 && generalVolume > 0.05){
+            return 1;
+        }else if(generalVolume < 0.05){
+            return 0;
+        }else {
+            return 10;
+        }
+    }
+
+    return 0;
 }
 
 /**********************************************************************************************************************************************************/

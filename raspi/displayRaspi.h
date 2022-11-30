@@ -53,7 +53,7 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
     int direccion;                  //Direccion en la que se debe mostrar el primer barrido.
     int* changeAnimation;           //Indica cuando salir del thread.
-    unsigned char* menuActual;      //Indica que menu se esta ejecutando.
+    unsigned char menuActual;      //Indica que menu se esta ejecutando.
 }argTextAnimMenu_t;
 
 typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
@@ -70,7 +70,7 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
     char* nuevoTexto;               //Nuevo texto a mostrar en pantalla.
     int direccion;                  //Direccion de la animacion.
-    unsigned char* menuActual;      //Indica que menu se esta ejecutando.
+    unsigned char menuActual;      //Indica que menu se esta ejecutando.
 }argChangeOption_t;
 
 typedef int (*option_t)(void);      //Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.
@@ -84,7 +84,7 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     halfDisp_t* drawingOpciones[20];//Arreglo de punteros a los dibujos que se deben mostrar en cada opcion.
     int cantOpciones;               //Cantidad de opciones del menu.
     int exitStatus;                 //Esta variable se utiliza para saber cuando hay que salir del thread.
-    void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
+    void (*changeOption)(void* argChangeOption_t);//Callback a la funcion que cambia la opcion seleccionada.
     void (*audioCallback)(int);     //Callback a la funcion que ejecuta los sonidos.
     int (*volumeCallback)(int);     //Callback a la funcion que regula el volumen.
 } menu_t;
@@ -125,6 +125,8 @@ typedef struct {
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
 #define DERECHA 1
 #define ABAJO 2
+
+#define BARRIDO_LETRA 2000  //Velocidad del barrido de la letra
 
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************

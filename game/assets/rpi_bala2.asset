@@ -9,7 +9,8 @@ balaID 0
 sprite1 7
 sprite2 8
 sprite3 7
-score 5
+sprite4 7
+score 0
 deathSound NULL
 shootSound NULL
 aliado 0

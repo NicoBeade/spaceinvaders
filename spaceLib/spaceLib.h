@@ -25,6 +25,7 @@
 #define ABAJO 2
 #define MAX_SPRITE_FILE_LENGTH 100
 #define MAX_SOUND_FILE_LENGTH 100
+#define MOTHERSHIP_CREATED 1
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
@@ -84,7 +85,7 @@ typedef struct{//Contiene el estado del juego.
     unsigned char pantallaAnterior;//Indica el estado anterior del juego.
     unsigned char nivelActual;//Indica el nivel que esta en juego.
     unsigned char menuActual;//Indica el menu que esta corriendo.
-    char menuAnterior;//Almacena temporalmente el menu anterior.
+    signed char menuAnterior;//Almacena temporalmente el menu anterior.
     unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
     unsigned char usrLives;//Vidas del usuario.
     unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
@@ -120,6 +121,7 @@ typedef struct{
     char sprite1[MAX_SPRITE_FILE_LENGTH];    //Sprite 1
     char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
     char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
+    char sprite4[MAX_SPRITE_FILE_LENGTH];    //Sprite 4
     int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien
     char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
     char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
@@ -152,7 +154,7 @@ enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, M
 
 //*************EVENTOS DE SPACELIB
 enum EVENTOS_SPACELIB {  FASTER_ALIENS = 1,WON_LEVEL,LOST_LEVEL,
-                        SL_COLISION_ALIEN_TOCADO,SL_COLISION_ALIEN_MUERTO,SL_COLISION_USER_TOCADO,SL_COLISION_USER_MUERTO,SL_COLISION_MOTHERSHIP_MUERTA,SL_COLISION_BARRERA_TOCADA,SL_COLISION_BARRERA_MUERTA,
+                        SL_COLISION_ALIEN_TOCADO,SL_COLISION_ALIEN_MUERTO,SL_COLISION_USER_TOCADO,SL_COLISION_USER_MUERTO,SL_COLISION_MOTHERSHIP_MUERTA,SL_COLISION_BARRERA_TOCADA,SL_COLISION_BARRERA_MUERTA, SL_COLISION_BALAS,
                         SL_MOTHERSHIP_APARECE,
                         SL_MOVIMIENTO_ALIENS,
                         SL_BALA_USER,SL_BALA_ALIEN,
@@ -177,7 +179,7 @@ char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* dire
 void printLista(object_t * lista, char * id);
 
 
-mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings);
+int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings);
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * destroyObj(object_t * ListObj, object_t * RipObj);
@@ -196,7 +198,7 @@ int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * deathSound, char * shootSound, int score, int aliado);
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * sprite4, char * deathSound, char * shootSound, int score, int aliado);
 int delObjType(int id);			
 object_t* removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 

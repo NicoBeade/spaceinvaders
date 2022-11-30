@@ -131,7 +131,7 @@ typedef struct {
     int puntajeNumerico;//Contiene el puntaje numerico.
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     int cantOpciones;//Cantidad de letras del usuario.
-    audioCallback_t * audioCallback;
+    audioCallback_t audioCallback;
 
 } saveScore_t;
 
