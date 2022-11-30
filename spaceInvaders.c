@@ -287,7 +287,7 @@ int main(void){
                     sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Resume   Score > ", scoreInstantaneo,"   Lives > ", UsrList->lives);
                 }
                 else if(GAME_STATUS.menuActual == MENU_WON_LEVEL){
-                    sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", score,"   Lives > ", UsrList->lives);
+                    sprintf(menuWonLevel.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", score,"   Lives > ", UsrList->lives);
                 }
                 #endif
                 
