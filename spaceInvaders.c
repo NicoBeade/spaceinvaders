@@ -290,6 +290,10 @@ int main(void){
                     sprintf(menuWonLevel.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", score,"   Lives > ", UsrList->lives);
                 }
                 #endif
+
+                if(GAME_STATUS.menuActual != LOST_LEVEL){
+                    scoreInstantaneo = score;
+                }
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
@@ -313,11 +317,11 @@ int main(void){
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
 
                 #ifdef RASPI
-                sprintf(stringWithScore,"%d    ",score);
+                sprintf(stringWithScore,"%d    ",scoreInstantaneo);
                 #endif
 
                 #ifdef ALLEGRO
-                sprintf(stringWithScore,"%d",score);
+                sprintf(stringWithScore,"%d",scoreInstantaneo);
                 #endif
 
                 saveScore_t saveScore = { &KEYS, stringWithScore, score, 1, 3, audioCallback};

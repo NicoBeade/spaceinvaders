@@ -349,20 +349,23 @@ void* displayRPIThread (void* argDisplayRPI){
             }
             barriers = aux;
             punto.y=0;
+
             if(*(((argDisplayRPI_t*)argDisplayRPI)->mothership) != NULL){
-                if(mothership->pos.x>0&&mothership->pos.x<15){
+                if(mothership->pos.x>=0&&mothership->pos.x<=15){
                     punto.x=mothership->pos.x;
                     disp_write(punto,D_ON);
                 }
-                if(mothership->pos.x+1>0&&mothership->pos.x+1<15){
+                if(mothership->pos.x+1>=0&&mothership->pos.x+1<=15){
                     punto.x=mothership->pos.x+1;
                     disp_write(punto,D_ON);
                 }    
-                if(mothership->pos.x+2>0&&mothership->pos.x+2<15){
+                if(mothership->pos.x+2>=0&&mothership->pos.x+2<=15){
                     punto.x=mothership->pos.x+2;
                     disp_write(punto,D_ON);
                 }
-            }   
+            } 
+
+
             if(GAME_STATUS.inGame && fueraDeRango == 0){
                 sem_wait(&SEM_DRIVER);
                 disp_update(); //se transfiere del buffer al display de la RPI
