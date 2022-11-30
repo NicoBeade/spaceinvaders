@@ -31,13 +31,13 @@ menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, 
                       {&halfDispResume, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
 
-menu_t menuLostLevel = { &KEYS , {selectNothing, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame, backMenuAnterior}, backMenuAnterior, 
-                      {"Lost Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
-                      {&halfDispLostGame, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
-                      6 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
+menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
+                      {"Lost Level    ","Save Score   " "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
+                      {&halfDispLostGame, &halfDispSaveScore, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
+                      7 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
 
-menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior, 
-                      {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volumen    ", "Quit Game    "}, 
+menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
+                      {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
                       7 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
