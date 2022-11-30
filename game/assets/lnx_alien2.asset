@@ -10,7 +10,7 @@ sprite1 game/spritesAllegro/alien21.png
 sprite2 game/spritesAllegro/alien22.png
 sprite3 NULL
 sprite4 NULL
-score 5
+score 200
 deathSound 0
 shootSound 0
 aliado 0

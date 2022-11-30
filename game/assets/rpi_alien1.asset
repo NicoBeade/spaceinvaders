@@ -10,7 +10,7 @@ sprite1 1
 sprite2 2
 sprite3 4
 sprite4 4
-score 5
+score 100
 deathSound NULL
 shootSound NULL
 aliado 0
