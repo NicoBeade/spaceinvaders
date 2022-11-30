@@ -32,7 +32,7 @@ menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, 
                       6 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
-                      {"Lost Level    ","Save Score   " "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
+                      {"Lost Level    ","Save Score   ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
                       {&halfDispLostGame, &halfDispSaveScore, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
                       7 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
 
