@@ -176,6 +176,9 @@ char moveAlien(level_setting_t *  levelSettings, object_t ** alienList, int* dir
             vx = 0;
             vy = levelSettings -> desplazamientoY;
             break;
+        case LOST_LEVEL://Si los aliens llegan al suelo, se pierde el nivel
+            *direccion = DERECHA;
+            return LOST_LEVEL;
         default:
             break;
     }
@@ -235,7 +238,8 @@ static int detectarDireccion (int direccion, level_setting_t * levelSettings, ob
             break;
 
         case ABAJO: //Si se viene moviendo para abajo
-            if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, esta funcion no hace nada al respecto
+            if (tocaBorde(levelSettings, listAliens) == ABAJO){ //Si algun alien toca el suelo, indica que se perdio la partida
+                return LOST_LEVEL;
             }
             if (tocaBorde(levelSettings, listAliens) == DERECHA){ //Si esta tocando el borde derecho, se mueve hacia la izquierda
                 return IZQUIERDA;
@@ -267,7 +271,7 @@ static int tocaBorde(level_setting_t * levelSettings, object_t * alien){
     int borde = 0;
     while ((alien != NULL) && (borde != ABAJO)){ //mientras no se haya llegado al final de la lista o no se haya detectado suelo
         objectType_t * tipoAlien = getObjType(alien->type);
-        if (alien->pos.x <= 0 + levelSettings->margenX){ //deteccion borde izquierdo
+        if (alien->pos.x - levelSettings->desplazamientoX < 0 + levelSettings->margenX){ //deteccion borde izquierdo
             borde = IZQUIERDA;
         }
         else if (alien->pos.x + levelSettings -> desplazamientoX > levelSettings->xMax - levelSettings->margenX - tipoAlien->ancho + 1){ //deteccion borde derecho

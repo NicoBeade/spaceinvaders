@@ -46,6 +46,7 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
+    int * score;//Almacena el score del usuario.
     audioCallback_t audioCallback;
 }argMoveAlien_t;
 
@@ -361,7 +362,7 @@ int main(void){
                 UsrList->lives = GAME_STATUS.usrLives;
 
                 //Inicializa los threads encargados de controlar el juego.
-                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, audioCallback};
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &score, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList, audioCallback };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &mothershipList, &score, &scoreInstantaneo, GAME_STATUS.nivelActual, audioCallback };
@@ -1016,24 +1017,37 @@ static void* levelHandlerThread(void * data){
 void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 
-    static int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-
+    int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
+    int lost = 1;
     char evento;
+
+    argMoveAlien_t * data = (argMoveAlien_t*)argMoveAlien;
+
     while(GAME_STATUS.inGame){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
 
-            evento = moveAlien( ((argMoveAlien_t*)argMoveAlien) -> levelSettings,  (((argMoveAlien_t*)argMoveAlien) -> alienList), &direccion);
+            evento = moveAlien( data -> levelSettings,  (data -> alienList), &direccion);
             switch (evento){
             case FASTER_ALIENS:
                 velAliens -= 2; //Incrementa la velocidad de los aliens.
-                (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
+                (data->audioCallback)(MOVIMIENTO_ALIENS);
                 break;
             case SL_MOVIMIENTO_ALIENS:
-                (((argMoveAlien_t*)argMoveAlien)->audioCallback)(MOVIMIENTO_ALIENS);
+                (data->audioCallback)(MOVIMIENTO_ALIENS);
+                break;
+            case LOST_LEVEL:
+                GAME_STATUS.pantallaActual = MENU;
+                GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                menuGame.exitStatus = 0;
 
+                *(data->score) = 0;//Se borra el score
+                objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                GAME_STATUS.usrLives = MAX_USR_LIVES;
+                (data->audioCallback)(COLISION_USER_MUERTO);
+                lost = 0;
                 break;
             default:
                 break;
@@ -1042,7 +1056,9 @@ void * moveAlienThread(void* argMoveAlien){
 
         }   
     }
-
+    if(lost){
+        GAME_STATUS.usrLives = (*(data->usrList))->lives;
+    }
     pthread_exit(0);
 }
 
