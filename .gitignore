@@ -54,6 +54,6 @@ dkms.conf
 /outputAllegro.o
 /score.o 
 /spaceLib.o 
-/spaceLib/score/score.txt
+
 
 

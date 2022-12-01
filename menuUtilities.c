@@ -34,12 +34,12 @@ menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, 
 menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
                       {"Lost Level    ","Save Score   ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
                       {&halfDispLostGame, &halfDispSaveScore, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame},
-                      7 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
+                      6 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
 
 menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
                       {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
                       {&halfDispAlienSpaceInvaders, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
-                      7 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
+                      6 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
