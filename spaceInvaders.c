@@ -341,9 +341,6 @@ int main(void){
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
                 GAME_STATUS.pantallaAnterior = START_LEVEL;
-
-                GAME_STATUS.inGame = 1;
-
                 
                 sem_wait(&SEM_MENU);
 
@@ -370,7 +367,7 @@ int main(void){
                 velMothership = levelSettings.velMothership;
                 velBalas = levelSettings.velBalas;
 
-                
+                GAME_STATUS.inGame = 1;
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
@@ -408,12 +405,12 @@ int main(void){
                 
                 GAME_STATUS.pantallaAnterior = IN_GAME;
 
-                sem_wait(&SEM_GAME);
+                sem_wait(&SEM_MENU);
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
 
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
 
-                sem_post(&SEM_GAME);
+                sem_post(&SEM_MENU);
                 break;
 
             case DESTROY_LEVEL://---------------------      DESTROY_LEVEL: Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.   -----------
@@ -728,7 +725,9 @@ static void* menuHandlerThread(void * data){
     }
     #ifdef RASPI
     animStatus = 0;
+    printf("Saliendo de animMenu\n");
     pthread_join(displayMenuT, NULL);
+    printf("Salio de animMenu\n");
     #endif
 
     #ifdef ALLEGRO
@@ -736,7 +735,7 @@ static void* menuHandlerThread(void * data){
         screenObjects = emptySprite(screenObjects);
         KEYS.press=0;
     #endif
-
+    printf("Booo\n");
     pthread_exit(0);
 }
 
@@ -756,7 +755,7 @@ static void* saveScoreHandlerThread(void * data){
 
 
     #ifdef ALLEGRO
-    char letras[15][2] = {"8","9","A","B","C","8","9","A","B","C","8","9","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
+    char letras[15][2] = {"Y","Z","A","B","C","Y","Z","A","B","C","Y","Z","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
     #endif
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
@@ -1178,6 +1177,8 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 && GAME_STATUS.inGame ){
 
             sem_wait(&SEM_GAME);
+
+            printf("Collider\n");
 
             if(*(data -> balasEnemigas) != NULL){
 
