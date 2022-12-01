@@ -5,7 +5,7 @@ desplazamientoY     20
 velAliens			100
 velBalas			3
 margenX             1
-margenY             50
+margenY             100
 saltoX              4
 saltoY              4
 xMax                900
