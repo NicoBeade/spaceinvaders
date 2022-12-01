@@ -1119,7 +1119,6 @@ void * moveAlienThread(void* argMoveAlien){
                 objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
                 GAME_STATUS.usrLives = assetUsuario->initLives;
                 (data->audioCallback)(COLISION_USER_MUERTO);
-                lost = 0;
                 break;
             default:
                 break;
