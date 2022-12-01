@@ -46,6 +46,7 @@
 typedef struct{
 	level_setting_t * levelSettings;
 	object_t ** alienList;
+    object_t ** usrList;
     int * score;//Almacena el score del usuario.
     audioCallback_t audioCallback;
 }argMoveAlien_t;
@@ -371,7 +372,7 @@ int main(void){
                 UsrList->lives = GAME_STATUS.usrLives;
 
                 //Inicializa los threads encargados de controlar el juego.
-                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &score, audioCallback};
+                argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &UsrList, &score, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
                 argMoveBala_t argMoveBala = { &levelSettings, &balasAlien, &balasUsr, &alienList, audioCallback };
                 argCollider_t argCollider = { &levelSettings, &alienList, &UsrList, &barrerasList, &balasAlien, &balasUsr, &mothershipList, &score, &scoreInstantaneo, GAME_STATUS.nivelActual, audioCallback };
