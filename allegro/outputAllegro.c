@@ -119,59 +119,10 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     INITMUSICA
 
     //Inicializacion de Sonidos
-    audios[COLISION_ALIEN_TOCADO].sample = al_load_sample("game/audioFiles/alien_tocado.wav");
-    audios[COLISION_ALIEN_TOCADO].volume = 1.0;
-    audios[COLISION_ALIEN_MUERTO].sample = al_load_sample("game/audio/invaderkilled.wav");
-    audios[COLISION_ALIEN_MUERTO].volume = 0.3;
-    if(!audios[COLISION_ALIEN_MUERTO].sample){
-        printf("fallo\n");
-    }
-    audios[COLISION_USER_TOCADO].sample = al_load_sample("game/audioFiles/user_tocado.wav");
-    audios[COLISION_USER_TOCADO].volume = 1.0;
-    audios[COLISION_USER_MUERTO].sample = al_load_sample("game/audioFiles/user_muerto.wav");
-    audios[COLISION_USER_MUERTO].volume = 0.9;
-    audios[BALA_USER].sample = al_load_sample("game/audioFiles/alien_tocado.wav");
-    audios[BALA_USER].volume = 0.3;
-    audios[COLISION_MOTHERSHIP_MUERTA].sample = al_load_sample("game/audioFiles/mothership_muerta.wav");
-    audios[COLISION_MOTHERSHIP_MUERTA].volume = 0.8;
-    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/user_muerto.wav");
-    audios[COLISION_BARRERA_TOCADA].volume = 0.7;
-    audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/user_muerto.wav");
-    audios[COLISION_BARRERA_MUERTA].volume = 0.6;
-    audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/user_muerto.wav");
-    audios[MOTHERSHIP_APARECE].volume = 0.95;
-    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audio/fastinvader1.wav");
-    audios[MOVIMIENTO_ALIENS].volume = 0.85;
-    audios[BALA_ALIEN].sample = al_load_sample("game/audioFiles/bala_alien.wav");
-    audios[BALA_ALIEN].volume = 0.75;
-    audios[SELECT_MENU].sample = al_load_sample("game/audioFiles/select_menu.wav");
-    audios[SELECT_MENU].volume = 0.65;
-    audios[SWAP_MENU].sample = al_load_sample("game/audioFiles/swap_menu.wav");
-    audios[SWAP_MENU].volume = 0.55;
-    audios[ERROR_MENU].sample = al_load_sample("game/audioFiles/error_menu.wav");
-    audios[ERROR_MENU].volume = 0.5;
-    audios[SWEEP_LETRA].sample = al_load_sample("game/audioFiles/sweep_letra.wav");
-    audios[SWEEP_LETRA].volume = 0.45;
-    audios[SAVED_SCORE].sample = al_load_sample("game/audioFiles/saved_score.wav");
-    audios[SAVED_SCORE].volume = 0.4;
-    audios[COLISION_CHOQUE_BALAS].sample = al_load_sample("game/audioFiles/user_muerto.wav");
-    audios[COLISION_CHOQUE_BALAS].volume = 0.35;
-    audios[PARTIDA_GANADA].sample = al_load_sample("game/audioFiles/partida_ganada.wav");
-    audios[PARTIDA_GANADA].volume = 0.3;
-    audios[PARTIDA_PERDIDA].sample = al_load_sample("game/audioFiles/partida_perdida.wav");
-    audios[PARTIDA_PERDIDA].volume = 0.2;
-
-    for(int i = 1; i<AUDIOMAX; i++){
-        if(audios[i].sample == NULL){
-            printf("fallo audio : %d, %f\n", i, audios[i].volume);
-            
-        }
-    }
+    INITAUDIO
 
     al_play_sample(musica[0].sample, musica[0].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
-
-    al_play_sample(audios[COLISION_USER_TOCADO].sample, audios[COLISION_ALIEN_MUERTO].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    //-------------------------------------------------
+  //-------------------------------------------------
 
     background = al_load_bitmap("game/spritesAllegro/fondo.png");
     if(!background){
@@ -232,6 +183,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showSprites( *((*data).punteros.screenObjects) );
                 sem_post(&SEM_MENU);
 
+            }else{
+                printf("no se encontro el escenario actual\n");
             }
 
             //Se muestra en pantalla

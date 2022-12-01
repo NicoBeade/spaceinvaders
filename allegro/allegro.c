@@ -401,13 +401,13 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
     return lists;
 }
 
-void changeLetra(char letras[15][2], int letraActual, int dir){
+void changeLetra(char letras[15][2], int colActual, int dir){
 
     int i;
     char (* puntero)[2] = &(letras[0]); //Se crea un puntero temporal
     char str[2]={0,0}; //Se crea un string temporal
 
-    puntero += letraActual*CANTOP; //Se mueve el puntero hacia la primer letra a cambiar
+    puntero += colActual*CANTOP; //Se mueve el puntero hacia la primer letra a cambiar
 
     for(i = 0; i < CANTOP; i++){
         
@@ -415,10 +415,32 @@ void changeLetra(char letras[15][2], int letraActual, int dir){
 
         str[0]+=dir; //Se modifica el string temporal
 
-        if(dir<0 && str[0] == 'A'-1){
-            str[0] = 'Z';
-        }else if(dir>0 && str[0] == 'Z'+1){
-            str[0] = 'A';
+        if(dir<0){
+            switch (str[0]){//Chequea que no se pase de los caracteres posibles.
+                case 'A' - 1:
+                    str[0] = '9';
+                    break;
+                case '0' - 1:
+                    str[0] = ' ';
+                    break;
+                case ' ' - 1: 
+                    str[0] = 'Z';
+                default:
+                    break;
+                }
+        }else if(dir>0){
+            switch (str[0]){//Chequea que no se pase de los caracteres posibles.
+                case 'Z' + 1:
+                    str[0] = ' ';
+                    break;
+                case ' ' + 1:
+                    str[0] = '0';
+                    break;
+                case '9' + 1:
+                    str[0] = 'A';
+                default:
+                    break;
+                }
         }
 
         strcpy(*puntero,str); //Se modifica el string original
