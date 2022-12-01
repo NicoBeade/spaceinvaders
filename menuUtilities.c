@@ -69,13 +69,13 @@ menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMen
                       {}, 
                       6, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuLostLevel= { &KEYS , {selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
+menu_t menuLostLevel= { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
+                      {"Lost Level","Save Score", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
                       {},  
-                      5, 1, changeOption };//Estructura del menu de pausa.
+                      6, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Next Level ", "Restart Level ", "Main menu ", "Select level ", "Volumen ", "Quit Game "},
+menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
+                      {"Won Level", "Next Level", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
                       {{0}}, 
                       6, 1, changeOption };//Estructura del menu de pausa.
 
@@ -136,7 +136,8 @@ int selectPlayInicio(void){
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
-    GAME_STATUS.pantallaActual = START_LEVEL;
+    GAME_STATUS.pantallaActual = DESTROY_LEVEL;
+    GAME_STATUS.menuActual = START_LEVEL_MENU;
     GAME_STATUS.menuAnterior = -1;
     return 0;
 }
