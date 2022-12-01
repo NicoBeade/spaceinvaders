@@ -121,6 +121,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     //Inicializacion de Sonidos
     INITAUDIO
 
+    for(int i = 1; i < AUDIOMAX; i++)
+    {
+        if(audios[i].sample == NULL){
+            printf("falla audio: %d\n", i);
+        }
+    }
+
     al_play_sample(musica[0].sample, musica[0].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
   //-------------------------------------------------
 
