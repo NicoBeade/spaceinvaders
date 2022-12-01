@@ -725,9 +725,7 @@ static void* menuHandlerThread(void * data){
     }
     #ifdef RASPI
     animStatus = 0;
-    printf("Saliendo de animMenu\n");
     pthread_join(displayMenuT, NULL);
-    printf("Salio de animMenu\n");
     #endif
 
     #ifdef ALLEGRO
@@ -735,7 +733,7 @@ static void* menuHandlerThread(void * data){
         screenObjects = emptySprite(screenObjects);
         KEYS.press=0;
     #endif
-    printf("Booo\n");
+
     pthread_exit(0);
 }
 
