@@ -707,11 +707,15 @@ static void* menuHandlerThread(void * data){
                 if(menu -> exitStatus == 0){
                     (menu->audioCallback)(SELECT_MENU);
                 }
+                else{
+                    (menu->audioCallback)(ERROR_MENU);
+                }
             }
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->audioCallback)(MUSICA_JUEGO);
                 }
+                (menu->audioCallback)(SELECT_MENU);
                 menu -> exitStatus = (menu->backMenuAnterior)();//Se llama al callback que indica que accion realizar al volver hacia atras.          
             }
             else if(ATRAS && GAME_STATUS.menuAnterior == -1){
@@ -1083,7 +1087,6 @@ void * moveAlienThread(void* argMoveAlien){
     //Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 
     int direccion = DERECHA; //Determina la direccion en la que se tienen que mover los aliens en el proximo tick
-    int lost = 1;
     char evento;
 
     argMoveAlien_t * data = (argMoveAlien_t*)argMoveAlien;
