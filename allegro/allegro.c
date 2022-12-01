@@ -1,11 +1,4 @@
-#include <allegro5/allegro.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <time.h>
-#include "allegro.h"
-#include "outputAllegro.h"
-#include "inputAllegro.h"
+#include "allegroUtilities.h"
 
 /************************************************************************************************
  * 

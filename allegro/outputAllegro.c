@@ -13,56 +13,17 @@
 *   Este archivo contiene las funciones y threads encargadas de mostrar en pantalla el juego a traves de la libreria Allegro
 *
  **********************************************************************************************************************************************************/
-
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h> //Manejo de ttfs
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h> 
-#include <pthread.h>
-#include <stdio.h>
 #include "outputAllegro.h"
-#include "allegro.h"
-#include "../spaceLib/spaceLib.h"
-#include <semaphore.h>
-
-extern gameStatus_t GAME_STATUS;
-extern sem_t SEM_GAME;
-extern sem_t SEM_MENU;
-
-static ALLEGRO_FONT * fuentes[FONTMAX] = {0};
-static float generalVolume = 1.0;
 
 /***********************************************************************************************************************************************************
  * 
- *                                                                      PROTOTIPOS DE FUNCIONES LOCALES
+ *                                                                      VARIABLES GLOBALES
  * 
  * ********************************************************************************************************************************************************/
 
-
-    /******************************************************************************
-     *  SHOW ENTITY
-     *      Esta funcion recibe como unico parametro un puntero a un object_t
-     *      y se encarga de mostrarlo en pantalla
-     * 
-     * ***************************************************************************/
-
-int showEntity(object_t * entity);
-
-    /******************************************************************************
-     *  SHOW LISTA
-     *      Esta funcion recibe como unico parametro un puntero al primer elemento
-     *      de una lista de objetos (object_t) y los imprime en pantalla 
-     * 
-     * ***************************************************************************/
-
-int showObjects(object_t * inicial);
-void showText(texto_t * data);
-int showTexts(texto_t * inicial);
-int showSprite(sprite_t * sprite);
-int showSprites(sprite_t * inicial);
-
+static ALLEGRO_FONT * fuentes[FONTMAX] = {0};   //Array de fuentes
+static float generalVolume = 1.0;               //Volumen general
+static int idQeue[20];                          //Qeue de sonidos a reproducir
 
 /***********************************************************************************************************************************************************
  * 
@@ -70,30 +31,30 @@ int showSprites(sprite_t * inicial);
  * 
  * ********************************************************************************************************************************************************/
 
-static int idQeue[20];
-
 void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
-    output_data_t * data = (output_data_t *) dataIn;
+    output_data_t * data = (output_data_t *) dataIn;                //Se obtiene la informacion de entrada
 
-    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;
+    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue;        //Se toma la cola de eventos de la entrada
 
-    ALLEGRO_BITMAP * background = NULL;
-
-    int bgpos = 0;
-    int bgtimer = 0;
-    int i = 0; //Contador
+    int bgpos = 0;      //Posicion del background
+    int bgtimer = 0;    //Timer del background
+    int i = 0;          //Contador
 
     //---------INICIALIZACION PARA EL USO DEL DISPLAY
 
-    ALLEGRO_DISPLAY * display = NULL; 
+    ALLEGRO_DISPLAY * display = NULL;                               //Se inicializa el display
+    ALLEGRO_BITMAP * background = NULL;                             //Se inicializa el bitmap del fondo
 
-    al_init_image_addon();
+    //Inicializacion para las imagenes y letras en pantalla
+    al_init_image_addon();  
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_primitives_addon();
 
-    display = al_create_display(X_MAX,Y_MAX); //Se crea el display
+    display = al_create_display(X_MAX,Y_MAX);                       //Se crea el display
+
+    //Inicializacion de las fuentes
     fuentes[smallF] = al_load_ttf_font("allegro/spaceInv.ttf", 20, 0); //fuente small
 
     fuentes[mediumF] = al_load_ttf_font("allegro/spaceInv.ttf", 30, 0); //fuente medium
@@ -102,18 +63,24 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 
     fuentes[bigF] = al_load_ttf_font("allegro/spaceInv.ttf", 80, 0); //fuente big
     
-    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_display_event_source(display));    //Se registra el display en la cola de eventos
 
+    //Se inicializa el png el fondo
+    background = al_load_bitmap("game/spritesAllegro/fondo.png");
+    if(!background){
+         printf("fallo background\n");
+    }
     //-------------------------------------------------
     //---------INICIALIZACION PARA EL USO DEL AUDIO
 
+    //Inicializacion para el sonido
     al_install_audio();
     al_init_acodec_addon();
     al_reserve_samples(MUSICAMAX - 1);
 
-    audio_t audios[AUDIOMAX];
-    audio_t musica[MUSICAMAX - AUDIOMAX];
-    ALLEGRO_SAMPLE_ID musicaActual;
+    audio_t audios[AUDIOMAX];                                       //Array para almacenar los samples de los sonidos
+    audio_t musica[MUSICAMAX - AUDIOMAX];                           //Array para almacenar los samples de la musica
+    ALLEGRO_SAMPLE_ID musicaActual;                                 //Id de la musica en reproduccion
 
     //Inicializacion de musica
     INITMUSICA
@@ -121,24 +88,15 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     //Inicializacion de Sonidos
     INITAUDIO
 
-    for(int i = 1; i < AUDIOMAX; i++)
-    {
-        if(audios[i].sample == NULL){
-            printf("falla audio: %d\n", i);
-        }
-    }
-
+    //Comienza a sonar la musica
     al_play_sample(musica[0].sample, musica[0].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
   //-------------------------------------------------
 
-    background = al_load_bitmap("game/spritesAllegro/fondo.png");
-    if(!background){
-         printf("fallo background\n");
-    }
-
     while(!*data->close_display){
 
-        usleep(10 * U_SEC2M_SEC);    
+        usleep(10 * U_SEC2M_SEC);       //Cada cierto tiempo se ejecuta el hilo   
+
+        //---------MOVIMIENTO DEL FONDO
 
         bgtimer += 1;
 
@@ -162,8 +120,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
 
-            al_draw_bitmap(background, 0, bgpos, 0);
-            al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);
+            al_draw_bitmap(background, 0, bgpos, 0);                //Se dibuja el fondo
+            al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);     //Se dibuja una replica del fondo
 
             if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
                 sem_wait(&SEM_GAME);
@@ -208,26 +166,35 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
          * 
          * ***********************************************************/
 
-        for(i=0; i<20; i++){
-            if(idQeue[i] != 0){
-                if(0 < idQeue[i] && idQeue[i] < AUDIOMAX){
+        for(i=0; i<20; i++){                //Se recorre la queue
+            if(idQeue[i] != 0){             
+                if(0 < idQeue[i] && idQeue[i] < AUDIOMAX){//Si hay que reproducir un audio
+                    //Se reproduce
                     al_play_sample(audios[idQeue[i]].sample, audios[idQeue[i]].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                    
                 }
-                else if(0 < idQeue[i] && idQeue[i] < MUSICAMAX){
+                else if(0 < idQeue[i] && idQeue[i] < MUSICAMAX){//Se hay que reproducir una musica nueva
+                    //Se para la vieja
                     al_stop_sample(&musicaActual);
-                    
+                    //Se reproduce la nueva
                     al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
                 }
             }
-            idQeue[i]=0;
+            idQeue[i]=0;    //Se limpia la qeue
         }
               
 
          /*************************************************************/
     }
 
-    al_destroy_display(display);
+    al_destroy_display(display);    //Se elimina el display
+    al_destroy_bitmap(background);  //Se elimina el fondo
+
+    for(i = 1; i < AUDIOMAX; i++){
+        al_destroy_sample(audios[i].sample);    //Se destruyen los audios
+    }
+    for(i = AUDIOMAX; i < MUSICAMAX - AUDIOMAX; i++){
+        al_destroy_sample(musica[i].sample);    //Se destruyen las canciones
+    }
     al_uninstall_audio();
     pthread_exit(0);
 }
@@ -256,6 +223,7 @@ int showEntity(object_t * entity){
     
     char * sprite;
     
+    //Se selecciona el sprite segun la instancia de animacion
     if(entity->animationStatus == 2){
         sprite = asset->sprite2;
     }
@@ -411,24 +379,23 @@ void playAudioAllegro(int id){
     
     int i = 0;
 
-    while (idQeue[i] != 0)
-    {
+    while (idQeue[i] != 0){     //Se busca el espacio libre en la cola de sonidos
         i++;
     }
 
-    idQeue[i] = id;
+    idQeue[i] = id;             //Se agrega la id
 
 }
 
 int regAudioAllegro(int reg){
 
-    if( reg == SUBIR_AUDIO && generalVolume > 0.0){
+    if( reg == SUBIR_AUDIO && generalVolume > 0.0){ //Si se quiere bajar el audio
         generalVolume -= 0.1;
-    }else if( reg == BAJAR_AUDIO && generalVolume < 1.0){
+    }else if( reg == BAJAR_AUDIO && generalVolume < 1.0){ //Si se quiere subir el audio
         generalVolume += 0.1;
     }
     
-    if( reg == CHECK_AUDIO){
+    if( reg == CHECK_AUDIO){                               //Si se quiere saber el volumen actual
         if(generalVolume < 0.95 && generalVolume > 0.85){
             return 9;
         }else if(generalVolume < 0.85 && generalVolume > 0.75){

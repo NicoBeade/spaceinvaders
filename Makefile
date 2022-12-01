@@ -34,13 +34,13 @@ COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 all
 mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o menuUtilitiesAllegro.o spaceInvaders.c
 	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o menuUtilities.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
 
-allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h
+allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h allegro/allegroUtilities.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
 
-outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h spaceLib/spaceLib.h allegro/audio.h
+outputAllegro.o: allegro/outputAllegro.c allegro/outputAllegro.h allegro/audio.h allegro/allegroUtilities.h
 	gcc -c -g allegro/outputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
-inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h
+inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h allegro/allegroUtilities.h
 	gcc -c -g allegro/inputAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h levelLoader/levelLoader.h spaceLib/score/score.h
