@@ -371,6 +371,8 @@ int main(void){
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
+                printf("UsrLIves en main: %d\n", UsrList->lives);
+
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &UsrList, &score, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
@@ -1112,7 +1114,7 @@ void * moveAlienThread(void* argMoveAlien){
 
                 *(data->score) = 0;//Se borra el score
                 objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                GAME_STATUS.usrLives = MAX_USR_LIVES;
+                GAME_STATUS.usrLives = assetUsuario->initLives;
                 (data->audioCallback)(COLISION_USER_MUERTO);
                 lost = 0;
                 break;
@@ -1122,9 +1124,6 @@ void * moveAlienThread(void* argMoveAlien){
             sem_post(&SEM_GAME);
 
         }   
-    }
-    if(lost){
-        GAME_STATUS.usrLives = (*(data->usrList))->lives;
     }
     pthread_exit(0);
 }
@@ -1174,6 +1173,8 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 && GAME_STATUS.inGame ){
 
             sem_wait(&SEM_GAME);
+
+            printf("Collider\n");
 
             if(*(data -> balasEnemigas) != NULL){
 
