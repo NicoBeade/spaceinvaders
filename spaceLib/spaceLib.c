@@ -638,7 +638,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     *balasUsr = destroyObj(*balasUsr, balaADestruir);
                 }
                 else{//Si la bala no debe morir
-                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala         !!!!!ESTO ESTA RARO¡¡¡¡¡
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala
                 }
             }
             else{//Si no golpeo a ese alien chequea el siguiente
@@ -689,8 +689,8 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
             listBalasEnemigas = *balasEnemigas;
         }
 
-        if(collition){//Si no hubo colision
-            listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala        !!!!!ESTO TAMBIEN ESTA RARO
+            if(collition){//Si no hubo colision
+                listBalasUsr = listBalasUsr->next;//Apunta a la siguiente bala 
         }
 
         collition = 1;
