@@ -176,13 +176,11 @@ enum EVENTOS_SPACELIB {  FASTER_ALIENS = 1,WON_LEVEL,LOST_LEVEL,
 object_t* addObj(object_t * firstObj, vector_t setPos, int setTypeId, int setLives);   //Agrega un objeto a la lista0
 char moveAlien(level_setting_t*  levelSettings, object_t ** alienList, int* direccion);//Esta funcion es llamada por el thread y es la
                                                                                                      //la encargada de modificar la posicion de los aliens.
-void printLista(object_t * lista, char * id);
-
-
 int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelSettings);
+
+
 //*****************BALAS
 object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
-object_t * destroyObj(object_t * ListObj, object_t * RipObj);
 object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting);
 char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting);
 
@@ -193,38 +191,23 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
 
 //*****************COLLIDER
 char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo);//Recorre todas las listas para chequear si hubo colisiones
-int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType); //Detecta si hubo colision entre dos objetos.
+
 
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
 int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * sprite4, char * deathSound, char * shootSound, int score, int aliado);
-int delObjType(int id);			
-object_t* removeList(object_t* lista);                                                                               //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
+int delObjType(int id);			                                                                             //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 
+
+//*****************OBJETOS
+object_t* removeList(object_t* lista); 
+object_t * destroyObj(object_t * ListObj, object_t * RipObj);
+
+
+//*****************GENERAL
+void printLista(object_t * lista, char * id);
 void imprimirLevelSetting(level_setting_t * levelSettings);
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
-
-
-/*******************************************************************************************************************************************
- * 
-                                             __  __                              
-                                            |  \/  |  __ _   __   _ _   ___   ___
-                                            | |\/| | / _` | / _| | '_| / _ \ (_-<
-                                            |_|  |_| \__,_| \__| |_|   \___/ /__/                                                    
- * 
- ******************************************************************************************************************************************/
-
-#define CHECK_HEXA(c)    ( ( ( (c) >= '0' && (c) <= '9' ) || ( (c) >= 'A' && (c) >= 'F' ) ) ? 1 : 0 )
-//Esta macro devuelve un 1 si un char es un numero en hexa sino devuelve 0
-
-
-//Esta macro devuelve un 1 si es una letra mayuscula
-#define CHECK_LETRA(c)  (((c)>='A' && (c)<= 'Z')? 1 : 0)
-
-#define ASCII2HEXA(c)    ( ( (c) >= '0' && (c) <= '9' ) ? (c) - '0' : (c) - 'A' + 0xA )   //Convierte un numero de ascii a hexadecimal.
-#define MAXCANTINPUT    27 //Cantidad de letras en el abecedario + el espacio
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

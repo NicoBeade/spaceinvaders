@@ -43,12 +43,43 @@ game_t menuGame;
                                                                         |_|                                                            
  * 
  ******************************************************************************************************************************************/
-
+//*****************ALIENS
 static int detectarDireccion (int direccion, level_setting_t * levelSettings, object_t * listAliens);    //Detecta en que direccion se debe mover a los aliens.
 static int tocaBorde(level_setting_t * argMoveAlien, object_t * listAliens);  //Detecta si algun alien esta tocando un borde
+
+
+//*****************COLLIDER
+static int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType); //Detecta si hubo colision entre dos objetos.
+
+
+static unsigned int countList(object_t * lista);
+
+
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-static unsigned int countList(object_t * lista);
+
+
+
+/*******************************************************************************************************************************************
+ * 
+                                             __  __                              
+                                            |  \/  |  __ _   __   _ _   ___   ___
+                                            | |\/| | / _` | / _| | '_| / _ \ (_-<
+                                            |_|  |_| \__,_| \__| |_|   \___/ /__/                                                    
+ * 
+ ******************************************************************************************************************************************/
+
+#define CHECK_HEXA(c)    ( ( ( (c) >= '0' && (c) <= '9' ) || ( (c) >= 'A' && (c) >= 'F' ) ) ? 1 : 0 )
+//Esta macro devuelve un 1 si un char es un numero en hexa sino devuelve 0
+
+
+//Esta macro devuelve un 1 si es una letra mayuscula
+#define CHECK_LETRA(c)  (((c)>='A' && (c)<= 'Z')? 1 : 0)
+
+#define ASCII2HEXA(c)    ( ( (c) >= '0' && (c) <= '9' ) ? (c) - '0' : (c) - 'A' + 0xA )   //Convierte un numero de ascii a hexadecimal.
+#define MAXCANTINPUT    27 //Cantidad de letras en el abecedario + el espacio
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
 
 
 /*******************************************************************************************************************************************
@@ -748,7 +779,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 }
 
 
-int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType){
+static int collision(vector_t balaPos, int balaType, vector_t objectPos, int objectType){
 //Esta funcion se encarga de detectar si hubo una colision teniendo en cuenta la hitbox de los objetos.
 
     objectType_t * objType = getObjType(objectType);
