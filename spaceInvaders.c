@@ -292,10 +292,6 @@ int main(void){
                     sprintf(menuWonLevel.textOpciones[0],"%s%d%s%d    ","Won Level   Score > ", score,"   Lives > ", UsrList->lives);
                 }
                 #endif
-
-                if(GAME_STATUS.menuActual != LOST_LEVEL){
-                    scoreInstantaneo = score;
-                }
                 
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
