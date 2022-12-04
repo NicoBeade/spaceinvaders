@@ -331,6 +331,7 @@ int main(void){
                 sem_post(&SEM_GAME);
 
                 scoreInstantaneo = 0;
+                score = 0;
 
                 break;
             
