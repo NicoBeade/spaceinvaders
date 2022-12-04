@@ -118,6 +118,7 @@ sem_t SEM_DRIVER;
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del level handler.
 
 #ifdef ALLEGRO
+int flagCloseGame = 0;
 texto_t * toText = NULL;
 sprite_t * screenObjects = NULL;
 TextObj_t listasAllegro = {NULL, NULL};
@@ -224,7 +225,7 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
-    data_allegro_t dataIn = {punteros, &toText, &KEYS};
+    data_allegro_t dataIn = {punteros, &toText, &KEYS, &flagCloseGame};
     data_allegro_t * dataInput = &dataIn;
     #endif
 
@@ -728,6 +729,11 @@ static void* menuHandlerThread(void * data){
                 (menu->audioCallback)(ERROR_MENU);
             }
         }
+
+        if(flagCloseGame){
+            GAME_STATUS.pantallaActual = QUIT_GAME;
+            menu->exitStatus = 0;
+        }
     }
     #ifdef RASPI
     animStatus = 0;
@@ -999,6 +1005,10 @@ static void* saveScoreHandlerThread(void * data){
                 stopSweep = 4;
             }
         }
+        if(flagCloseGame){
+            GAME_STATUS.pantallaActual = QUIT_GAME;
+            menu->exitStatus = 0;
+        }
     }
     #ifdef RASPI
     animStatus = 0;
@@ -1073,6 +1083,10 @@ static void* levelHandlerThread(void * data){
 
                 moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
             }
+        }
+        if(flagCloseGame){
+            GAME_STATUS.pantallaActual = QUIT_GAME;
+            menu->exitStatus = 0;
         }
     }
 

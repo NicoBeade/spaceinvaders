@@ -44,6 +44,7 @@ typedef struct {
     int * keycode;
     bool * displayFlag; 
     bool * close_display;
+    int * closeGameFlag;
 
 } eventH_data_t;
 
@@ -80,7 +81,7 @@ void * allegroThread (void * dataIn){
     
     /*****************DATOS DE LOS THREADS*******************/
 
-    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
+    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display, data->flagCloseGame};
 
     output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
@@ -236,6 +237,7 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
         if (al_get_next_event(event_queue, evp)) 
         {    
             if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
+                *data->closeGameFlag = 1;
                 *data->close_display = true;
             }
             else if (evp->type == ALLEGRO_EVENT_KEY_DOWN){
