@@ -135,9 +135,6 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.mothershipList) );
 
                 showTexts(*data->text);
-                //Objectos varios
-                
-
                 sem_post(&SEM_GAME);
 
             }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
@@ -249,6 +246,7 @@ int showEntity(object_t * entity){
     
     //Si no se pudo cargar salta error
     if (!image) {
+        al_destroy_bitmap(image);
         return -1;
     }
 
@@ -338,6 +336,7 @@ int showSprite(sprite_t * sprite){
 
     //Si no se pudo cargar salta error
     if (!image) {
+        al_destroy_bitmap(image);
         return -1;
     }
 

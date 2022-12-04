@@ -759,7 +759,7 @@ static void* saveScoreHandlerThread(void * data){
 
 
     #ifdef ALLEGRO
-    char letras[15][2] = {"Y","Z","A","B","C","Y","Z","A","B","C","Y","Z","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
+    char letras[15][2] = {"8","9","A","B","C","8","9","A","B","C","8","9","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
     #endif
 
     //*****************************************     Inicializa el thread que barre el display       *****************************

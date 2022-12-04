@@ -289,12 +289,17 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     };
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
+
     return lists;
 }
 
 void changeOption(void * dataIn){
 //Esta funcion realiza la animacion de cambio de oipcion
 
+    if(!dataIn){
+        printf("puntero a datos NULL\n");
+    }
+    
     if(GAME_STATUS.menuActual != MENU_VOLUME){
         changeOptionData_t * data = (changeOptionData_t *) dataIn;
         texto_t * puntero = *data->toText;
@@ -435,6 +440,9 @@ void changeLetra(char letras[15][2], int colActual, int dir){
 
 sprite_t * changeCol(sprite_t * toshow, int nextOp){
 
+    if(!toshow){
+        printf("puntero a lista de sprites NULL\n");
+    }
     sprite_t * puntero = toshow; //Se crea un puntero temporal a la lista de textos
 
     puntero->posx = LETRAX - 15 + nextOp*SPACELETX; //Se mueve el selector
@@ -497,6 +505,12 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
 
 sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual){
 
+    if(!listText){
+        printf("puntero a lista de textos NULL\n");
+    }
+    if(!listSprite){
+        printf("puntero a lista de sprites NULL\n");
+    }
     listText->texto = data->textOpciones[volumenActual];
 
     listSprite = emptySprite(listSprite);
