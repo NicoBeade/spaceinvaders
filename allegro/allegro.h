@@ -97,6 +97,7 @@ typedef struct {
     punteros_t punteros;
     texto_t ** textToShow;
     keys_t * keys;
+    int * flagCloseGame;
 
 }data_allegro_t;
 

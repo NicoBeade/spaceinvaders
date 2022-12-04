@@ -44,6 +44,7 @@ typedef struct {
     int * keycode;
     bool * displayFlag; 
     bool * close_display;
+    int * closeGameFlag;
 
 } eventH_data_t;
 
@@ -80,7 +81,7 @@ void * allegroThread (void * dataIn){
     
     /*****************DATOS DE LOS THREADS*******************/
 
-    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
+    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display, data->flagCloseGame};
 
     output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, &displayFlag};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
@@ -236,6 +237,7 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
         if (al_get_next_event(event_queue, evp)) 
         {    
             if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
+                *data->closeGameFlag = 1;
                 *data->close_display = true;
             }
             else if (evp->type == ALLEGRO_EVENT_KEY_DOWN){
@@ -492,6 +494,7 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
 TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
 
     TextObj_t salida = {NULL,NULL};
+    int titleLen = strlen(data->titulo);
     float volumeLen = strlen(data->textOpciones[volumenActual]);
     
     salida.textoList = addText(salida.textoList, data->textOpciones[volumenActual], bigF , (X_MAX*0.3) - (volumeLen + 1)*40, Y_MAX * 0.4);
@@ -499,6 +502,8 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
     for(int i =0; i< volumenActual; i++){
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
     }
+    salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36, 50);
+
     lists->textoList= salida.textoList;
     lists->spriteList=salida.spriteList;
 
@@ -509,9 +514,6 @@ sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite
 
     if(!listText){
         printf("puntero a lista de textos NULL\n");
-    }
-    if(!listSprite){
-        printf("puntero a lista de sprites NULL\n");
     }
     listText->texto = data->textOpciones[volumenActual];
 
