@@ -567,6 +567,7 @@ static void* menuHandlerThread(void * data){
 
         if(GAME_STATUS.menuActual == MENU_VOLUME){
             volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+            stopMusicAllegro();
             allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
 
         }else if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
@@ -694,6 +695,12 @@ static void* menuHandlerThread(void * data){
 
             if (PRESS_INPUT){//Si se selecciona la opcion
 
+                #ifdef ALLEGRO
+                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                    (menu->audioCallback)(MUSICA_JUEGO);
+                }
+                #endif
+                
                 if(GAME_STATUS.menuActual == MENU_LEVELS){
                     GAME_STATUS.nivelActual = select + 1;
                     GAME_STATUS.menuActual = START_LEVEL_MENU;
@@ -710,6 +717,8 @@ static void* menuHandlerThread(void * data){
                 else{
                     (menu->audioCallback)(ERROR_MENU);
                 }
+
+                
             }
             if(ATRAS && GAME_STATUS.menuAnterior != -1){//Si se quiere volver al menu anterior
                 if(GAME_STATUS.menuActual == MENU_VOLUME){

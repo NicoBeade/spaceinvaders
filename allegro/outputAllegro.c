@@ -178,6 +178,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                     //Se reproduce la nueva
                     al_play_sample(musica[idQeue[i] - AUDIOMAX].sample, musica[idQeue[i] - AUDIOMAX].volume * generalVolume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &musicaActual);
                 }
+                else if( idQeue[i] == MUSICAMAX){
+                    al_stop_sample(&musicaActual);
+                }
             }
             idQeue[i]=0;    //Se limpia la qeue
         }
@@ -385,6 +388,16 @@ void playAudioAllegro(int id){
 
     idQeue[i] = id;             //Se agrega la id
 
+}
+
+void stopMusicAllegro(){
+    int i = 0;
+
+    while (idQeue[i] != 0){     //Se busca el espacio libre en la cola de sonidos
+        i++;
+    }
+
+    idQeue[i] = MUSICAMAX;      //Se agrega la id
 }
 
 int regAudioAllegro(int reg){

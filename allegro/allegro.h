@@ -148,7 +148,7 @@ sprite_t * emptySprite(sprite_t * firstSprite);
 void playAudioAllegro(int id);
 //regula el volumen general del audio o devuelve el volumen actual
 int regAudioAllegro(int reg);
-
-
+//Detiene la musica que se esta reproduciendo
+void stopMusicAllegro();
 
 #endif
