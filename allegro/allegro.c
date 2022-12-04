@@ -63,22 +63,13 @@ void * allegroThread (void * dataIn){
 
     data_allegro_t * data = (data_allegro_t*) dataIn;
 
-
-    /**************************************************************
-     * 
-     *              PUNTEROS DE ALLEGRO
-     * 
-     * ***********************************************************/
+    /*****************PUNTEROS DE ALLEGRO*******************/
 
     ALLEGRO_EVENT_QUEUE * event_queue = NULL;
     ALLEGRO_EVENT ev;
     ALLEGRO_THREAD * teventH, * tdisplay, * tkeyboard; 
 
-    /**************************************************************
-     * 
-     *              FLAGS Y VARIABLES
-     * 
-     * ***********************************************************/
+    /*****************FLAGS Y VARIABLES*********************/
 
     bool close_display = false;
     bool keybordDownFlag = false;
@@ -87,11 +78,7 @@ void * allegroThread (void * dataIn){
 
     int keycode = 0;
     
-    /**************************************************************
-     * 
-     *              DATOS DE LOS THREADS
-     * 
-     * ***********************************************************/
+    /*****************DATOS DE LOS THREADS*******************/
 
     eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display};
 
@@ -241,6 +228,10 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
     while(!*data->close_display){
 
         usleep(10 * U_SEC2M_SEC);
+
+        if(GAME_STATUS.exitStatus == 0){
+            *data->close_display = true;
+        }
 
         if (al_get_next_event(event_queue, evp)) 
         {    

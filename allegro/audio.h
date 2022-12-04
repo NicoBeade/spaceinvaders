@@ -41,7 +41,7 @@
     audios[PARTIDA_PERDIDA].sample = al_load_sample("game/audioFiles/partida_perdida.wav");\
     audios[PARTIDA_PERDIDA].volume = 1.0;\
     
-#define INITMUSICA musica[MUSICA_MENU- AUDIOMAX].sample = al_load_sample("game/audio/spaceinvadersMainTheme.wav");\
+#define INITMUSICA musica[MUSICA_MENU- AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_menu.wav");\
     musica[MUSICA_MENU- AUDIOMAX].volume = 1.0;\
     musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_juego.wav");\
     musica[MUSICA_JUEGO - AUDIOMAX].volume = 1.0;
