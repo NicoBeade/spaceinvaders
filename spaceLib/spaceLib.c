@@ -10,7 +10,7 @@
                                             |_|                                                                          
  * 
  ***********************************************************************************************************************************************************
-*   Este archivo contiene las funciones y threads encargados del backEnd del juego. Tiene las siguientes funcionalidades:
+*   Este archivo contiene las funciones encargadas del backEnd del juego. Tiene las siguientes funcionalidades:
 *       -Funciones para crear las listas de los aliens y las balas.
 *       -Funciones que se encargan de mover los aliens durante la ejecucion del juego.
 *       -Funciones que se encargan de que los aliens disparen.
