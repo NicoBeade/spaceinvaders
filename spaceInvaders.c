@@ -338,6 +338,8 @@ int main(void){
             case START_LEVEL://-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
                 GAME_STATUS.pantallaAnterior = START_LEVEL;
+
+                GAME_STATUS.inGame = 1;
                 
                 sem_wait(&SEM_MENU);
 
@@ -363,8 +365,6 @@ int main(void){
                 velAliens = levelSettings.velAliens;
                 velMothership = levelSettings.velMothership;
                 velBalas = levelSettings.velBalas;
-
-                GAME_STATUS.inGame = 1;
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
