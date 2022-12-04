@@ -234,6 +234,7 @@ int selectMainMenu(void){
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = MENU_INICIO;
     GAME_STATUS.menuAnterior = -1;
+    GAME_STATUS.inGame = 0;
     return 0;
 }
 
