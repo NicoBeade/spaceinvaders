@@ -492,6 +492,7 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
 TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
 
     TextObj_t salida = {NULL,NULL};
+    int titleLen = strlen(data->titulo);
     float volumeLen = strlen(data->textOpciones[volumenActual]);
     
     salida.textoList = addText(salida.textoList, data->textOpciones[volumenActual], bigF , (X_MAX*0.3) - (volumeLen + 1)*40, Y_MAX * 0.4);
@@ -499,6 +500,8 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
     for(int i =0; i< volumenActual; i++){
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
     }
+    salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36, 50);
+
     lists->textoList= salida.textoList;
     lists->spriteList=salida.spriteList;
 
@@ -509,9 +512,6 @@ sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite
 
     if(!listText){
         printf("puntero a lista de textos NULL\n");
-    }
-    if(!listSprite){
-        printf("puntero a lista de sprites NULL\n");
     }
     listText->texto = data->textOpciones[volumenActual];
 

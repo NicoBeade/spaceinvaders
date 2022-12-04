@@ -735,9 +735,11 @@ static void* menuHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
+    sem_wait(&SEM_MENU); 
         toText = emptyText(toText);
         screenObjects = emptySprite(screenObjects);
         KEYS.press=0;
+    sem_post(&SEM_MENU); 
     #endif
 
     pthread_exit(0);
@@ -1006,9 +1008,11 @@ static void* saveScoreHandlerThread(void * data){
     #endif
 
     #ifdef ALLEGRO
+    sem_wait(&SEM_MENU); 
         toText = emptyText(toText);
         screenObjects = emptySprite(screenObjects);
         KEYS.press=0;
+    sem_post(&SEM_MENU); 
     #endif
 
     pthread_exit(0);
@@ -1023,8 +1027,10 @@ static void* levelHandlerThread(void * data){
     
     #ifdef ALLEGRO
     char vidas[2] = {(*(menu -> naveUsr)) -> lives + '0', 0};
-    char score[7] = {'0', '0', '0', '0', '0', '0', 0}; 
+    char score[7] = {'0', '0', '0', '0', '0', '0', 0};
+    sem_wait(&SEM_GAME); 
     toText = levelAllegro(toText, score, vidas);
+    sem_post(&SEM_GAME); 
     #endif
     while(menu -> exitStatus){
         

@@ -78,7 +78,7 @@ menu_t menuLostLevel= { &KEYS , {selectSaveScore, selectRestartLevel, selectMain
                       5, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
-                      {5 "Next Level", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
+                      {"Next Level", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
                       {{0}},
                       "You Won", 
                       5, 1, changeOption };//Estructura del menu de pausa.
