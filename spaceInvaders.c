@@ -753,10 +753,8 @@ static void* saveScoreHandlerThread(void * data){
 
     unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
     
-    char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
     char letraAnterior;
-    char titilar = 1; //Flag que indica si se debe titilar la letra.
-
+    char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
 
     #ifdef ALLEGRO
     char letras[15][2] = {"8","9","A","B","C","8","9","A","B","C","8","9","A","B","C"}; //Array para almacenar las letras que se muestran en pantalla 
@@ -764,7 +762,7 @@ static void* saveScoreHandlerThread(void * data){
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
-
+        char titilar = 1; //Flag que indica si se debe titilar la letra.
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
         dcoord_t posLetraDisplay;
 
@@ -1182,8 +1180,6 @@ void * moveBalaThread(void * argMoveBala){
         if( (timerTick % velBalas) == 0 && GAME_STATUS.inGame ){
 
             sem_wait(&SEM_GAME);
-
-            printf("Collider\n");
 
             if(*(data -> balasEnemigas) != NULL){
 

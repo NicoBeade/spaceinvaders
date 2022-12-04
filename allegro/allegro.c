@@ -269,7 +269,10 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
 //Esta funcion se utiliza para mostrar los menues en pantalla
     
     int i;
+    int titleLen = strlen(data->titulo);
     TextObj_t salida = {NULL,NULL};
+
+    salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36 + 50, 50);
 
     for( i = 0; i<data->cantOpciones; i++){
         //Se agregan los textos de las opciones a la lista de textos
@@ -299,10 +302,10 @@ void changeOption(void * dataIn){
     if(!dataIn){
         printf("puntero a datos NULL\n");
     }
-    
+
     if(GAME_STATUS.menuActual != MENU_VOLUME){
         changeOptionData_t * data = (changeOptionData_t *) dataIn;
-        texto_t * puntero = *data->toText;
+        texto_t * puntero = (*data->toText)->next;
         sprite_t * sprite = *data->toSprite;
         
         int i = 0;
@@ -472,7 +475,6 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
         }else{
             salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, RIGHTCOLUMNX , COLUMNY + 60* (i-1)/2);
         }
-        printf("for vuelta : %d\n", i);
     }
 
     lists->spriteList= salida.spriteList;

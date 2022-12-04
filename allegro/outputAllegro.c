@@ -381,10 +381,15 @@ void playAudioAllegro(int id){
     
     int i = 0;
 
-    while (idQeue[i] != 0){     //Se busca el espacio libre en la cola de sonidos
+    while (idQeue[i] != 0 && i < 20){     //Se busca el espacio libre en la cola de sonidos
         i++;
+
     }
 
+    if(i == 20){
+        printf("se alcanzo el maximo de sonidos\n");
+        return;
+    }
     idQeue[i] = id;             //Se agrega la id
 
 }

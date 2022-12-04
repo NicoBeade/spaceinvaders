@@ -93,5 +93,5 @@ void * keyboardt (ALLEGRO_THREAD * thr, void * dataIn){
         }
     }
 
-    pthread_exit(0); 
+    pthread_exit(0);
 }
