@@ -131,7 +131,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
         strtok(copiaLeaderboard," "); //Corta el texto del leaderboard hasta el espacio, se queda solo con el numero
         #endif
 
-        sprintf(puntajeMenu, "%d.%s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
+        sprintf(puntajeMenu, "%d. %s    ",i+1,copiaLeaderboard); //Crea un string de la forma en la que se miestra en el display
         strcpy((menuLeaderboard->textOpciones)[i], puntajeMenu); //Guarda el valor de puntaje en cada posicion del menu.
     }
         
@@ -274,7 +274,6 @@ int backMenuAnterior(void){
     GAME_STATUS.pantallaActual = MENU;
     GAME_STATUS.menuActual = GAME_STATUS.menuAnterior;
     GAME_STATUS.menuAnterior = -1;
-    printf("se cambiaron los datos\n");
     return 0;
 }
 

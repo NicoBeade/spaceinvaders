@@ -53,7 +53,7 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
     int direccion;                  //Direccion en la que se debe mostrar el primer barrido.
     int* changeAnimation;           //Indica cuando salir del thread.
-    unsigned char menuActual;      //Indica que menu se esta ejecutando.
+    unsigned char notSwipe;         //Indica si se debe realizar barrido.
 }argTextAnimMenu_t;
 
 typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
@@ -70,7 +70,7 @@ typedef struct{//Argumentos que recibe la funcion changeOption.
     halfDisp_t* drawing;            //Dibujo a mostrar en la opcion seleccionada.
     char* nuevoTexto;               //Nuevo texto a mostrar en pantalla.
     int direccion;                  //Direccion de la animacion.
-    unsigned char menuActual;      //Indica que menu se esta ejecutando.
+    unsigned char notSwipe;         //Indica si se debe realizar barrido.
 }argChangeOption_t;
 
 typedef int (*option_t)(void);      //Punteros a funcion utilizadas en los menues. Se utilizan para realizar las acciones necesarias al seleccionar una opcion en un menu.

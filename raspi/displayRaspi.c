@@ -424,7 +424,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         pthread_exit(0);
     }
 
-    if((data->menuActual) == MENU_VOLUME){
+    if((data->notSwipe) == 1){
         int i;
         caracteres_t* caracter;
         dcoord_t pos = { 0, 8 };
@@ -459,7 +459,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     }
 
     do{//Barre el texto hasta que se le indique lo contrario.
-        if((data->menuActual) != MENU_VOLUME){//Si esta en el menu de volumen no hay que barrer el texto.
+        if((data->notSwipe) == 1){//Si esta en el menu de volumen no hay que barrer el texto.
             for(j = firstBarr ; (data -> msg)[j] != '\0' ; j++){//Barre todas las letras del texto.
 
                 offset = offsetAlfabeto((data -> msg)[j]);
@@ -607,7 +607,7 @@ void changeOption(void* argChangeOption){
     argTextAnimMenu.drawing = data -> drawing;
     argTextAnimMenu.direccion = data -> direccion;
     argTextAnimMenu.changeAnimation = data -> animStatus;
-    argTextAnimMenu.menuActual = data -> menuActual;
+    argTextAnimMenu.notSwipe = data -> notSwipe;
                                         //Inicia el nuevo thread que mostrara el nuevo texto.
 
     if(data->higherDispMenu == NULL){

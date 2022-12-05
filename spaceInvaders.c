@@ -141,6 +141,7 @@ const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el dis
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
 #define VEL_INCR_ALIENS 10
+#define MIN_VEL_ALIENS 50
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
@@ -149,6 +150,7 @@ const int velInputGameMoove = 2;//Velocidad a la que se lee el input para el mov
 const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 #define VEL_INCR_ALIENS 5
 #define STOP_SHOOT 20
+#define MIN_VEL_ALIENS 15
 #endif
 const int velInput = 1;
 
@@ -509,6 +511,7 @@ static void* menuHandlerThread(void * data){
     }
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
+        unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 1 : 0;
 
         halfDisp_t* halfDispNameScore;
 
@@ -553,7 +556,7 @@ static void* menuHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { (menu -> textOpciones)[select],  &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], IZQUIERDA, &animStatus, notSwipe};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
@@ -613,7 +616,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, GAME_STATUS.menuActual };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, notSwipe };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }              
@@ -661,7 +664,7 @@ static void* menuHandlerThread(void * data){
                 if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si hay que rellenar utilizando el leaderBoard.
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
-                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, GAME_STATUS.menuActual };
+                argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, notSwipe };
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
@@ -770,6 +773,7 @@ static void* saveScoreHandlerThread(void * data){
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
+        unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 1 : 0;
         char titilar = 1; //Flag que indica si se debe titilar la letra.
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
         dcoord_t posLetraDisplay;
@@ -799,7 +803,7 @@ static void* saveScoreHandlerThread(void * data){
 
         int animStatus = 1;
 
-        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, GAME_STATUS.menuActual};
+        argTextAnimMenu_t argTextAnimMenu = { menu -> puntaje,  &lowerDispMenu, &higherDispMenu, &halfDispAAA, IZQUIERDA, &animStatus, notSwipe};
     
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);//Inicia el thread encargado de barrer el display
 
@@ -1125,8 +1129,8 @@ void * moveAlienThread(void* argMoveAlien){
             switch (evento){
             case FASTER_ALIENS:
                 velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
-                if(velAliens <= 15){
-                    velAliens = 15;
+                if(velAliens <= MIN_VEL_ALIENS){
+                    velAliens = MIN_VEL_ALIENS;
                 }
                 (data->audioCallback)(MOVIMIENTO_ALIENS);
                 usleep((velAliens) * U_SEC2M_SEC);
