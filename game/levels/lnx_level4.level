@@ -1,3 +1,13 @@
+ASSET_MODIFY    1 ;modifico los aliens
+    shootProb 4
+    maxBullets 10
+    initLives 4
+END
+ASSET_MODIFY    7 ;modifico la mothership
+    shootProb 2
+    score 100
+    initLives 1
+END
 velMothership		20
 ;------------------ALIENS FILA 1-------------------
 
@@ -91,7 +101,3 @@ END
 
 velBalas			5
 
-ASSET_MODIFY    7 ;modifico la mothership
-    shootProb 2
-    score 100
-END
