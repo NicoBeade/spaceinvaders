@@ -1,3 +1,8 @@
+ASSET_MODIFY    7 ;modifico la mothership
+    shootProb 2
+    score 100
+    initLives 1
+END
 velMothership		20
 ;------------------ALIENS FILA 1-------------------
 

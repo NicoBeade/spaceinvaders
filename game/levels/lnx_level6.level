@@ -1,14 +1,17 @@
 ASSET_MODIFY    1 ;modifico los aliens
     shootProb 4
     maxBullets 10
+    initLives 4
 END
 ASSET_MODIFY    13 ;
     shootProb 4
     maxBullets 10
+    initLives 4
 END
 ASSET_MODIFY    28 ;
     shootProb 4
     maxBullets 10
+    initLives 4
 END
 
 ASSET_MODIFY    7 ;modifico la mothership
