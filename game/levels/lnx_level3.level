@@ -11,11 +11,7 @@ ASSET_MODIFY    28 ;
     maxBullets 10
 END
 
-ASSET_MODIFY    7 ;modifico la mothership
-    shootProb 2
-    score 100
-    initLives 1
-END
+maxMShipXLevel      3
 
 velAliens			70
 ;------------------ALIENS FILA 1-------------------

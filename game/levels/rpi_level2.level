@@ -2,6 +2,9 @@ ASSET_MODIFY 1
     shootProb += 
     shootProb *= 2
 END
+
+maxMShipXLevel      3
+
 ALIEN
     type  1
     posX  2
