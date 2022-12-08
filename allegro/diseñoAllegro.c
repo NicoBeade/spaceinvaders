@@ -48,9 +48,9 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     
     if(data->titulo != NULL){
         int titleLen = strlen(data->titulo);
-        salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36 + 50, 50);
+        salida.textoList=addText(salida.textoList, data->titulo, bigF, (X_MAX/2) - (titleLen/2)*40, 50);
     }else{
-        salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2, 0);
+        salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2 - 50, 0);
     };
 
     lists->spriteList= salida.spriteList;
@@ -233,14 +233,14 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
     int firstLen = strlen(data->textOpciones[0]); //Se obtiene el largo del puntaje mas alto
     int secondLen = strlen(data->textOpciones[1]); //Se obtiene el largo del segundo puntaje mas alto
 
-    salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX -(firstLen/2)*40 , FIRSTY); //Se posiciona el primer puntaje
+    salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX - (firstLen/2)*30 , FIRSTY); //Se posiciona el primer puntaje
     salida.textoList=addText(salida.textoList, data->textOpciones[1], largeF, FIRSTX -(secondLen/2)*25 , FIRSTY + 120); //Se posiciona el segundo puntaje
 
     for(i=2; i < data->cantOpciones; i++){  //Se posicionan el resto de puntajes en dos columnas distintas
         if(i%2 == 0){
-            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, LEFTCOLUMNX , COLUMNY + 60*i/2);
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, LEFTCOLUMNX , COLUMNY + 70*i/2);
         }else{
-            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, RIGHTCOLUMNX , COLUMNY + 60* (i-1)/2);
+            salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, RIGHTCOLUMNX , COLUMNY + 70* (i-1)/2);
         }
     }
 

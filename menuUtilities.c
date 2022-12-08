@@ -49,25 +49,25 @@ game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del le
  ******************************************************************************************************************************************/
 
 #ifdef RASPI
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispSaveScore, &halfDispVolume, &halfDispQuitGame}, 
-                      6 , 1 , changeOption };//Estructura del menu de inicio.
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectVolume, selectQuitGame}, backMenuAnterior,
+                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Volume    ", "Quit Game    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispVolume, &halfDispQuitGame}, 
+                      5 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Resume    ", "Restart Level    ", "Main menu    ", "Select level    ", "Volume    ", "Quit Game    "}, 
-                      {&halfDispResume, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispVolume, &halfDispQuitGame}, 
-                      6 , 1 , changeOption };//Estructura del menu de pausa.
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectVolume, selectQuitGame}, backMenuAnterior,
+                      {"Resume    ", "Restart Level    ", "Main menu    ",  "Volume    ", "Quit Game    "}, 
+                      {&halfDispResume, &halfDispRestart, &halfDispHome,  &halfDispVolume, &halfDispQuitGame}, 
+                      5 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
                       {"Lost Level    ","Save Score   ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
                       {&halfDispLostGame, &halfDispSaveScore, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispQuitGame},
                       6 , 1 , changeOption };//Estructura del menu de cuando se pierde un nivel.
 
-menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
-                      {"Won Level    ", "Next Level    ", "Restart Level    ", "Main menu    ", "Select level    ", "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispNextLevel, &halfDispRestart, &halfDispHome, &halfDispSelectLevels, &halfDispQuitGame}, 
-                      6 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
+menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectSaveScore, selectMainMenu, selectQuitGame}, backMenuAnterior, 
+                      {"Won Level    ", "Next Level    ", "Save Score    " "Main menu    ",  "Quit Game    "}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispNextLevel, halfDispSaveScore ,&halfDispHome,  &halfDispQuitGame}, 
+                      5 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
                       {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "}, 
@@ -87,17 +87,17 @@ menu_t menuVolume = { &KEYS , {selectNothing, selectNothing, selectNothing, sele
 
 
 #ifdef ALLEGRO
-menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectSaveScore, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Save Score    ", "Volume    ", "Quit Game    "}, 
-                      {"game/spritesAllegro/spriteQP.png", "game/spritesAllegro/spriteLVL.png", "game/spritesAllegro/spriteLB.png", "game/spritesAllegro/spriteSS.png", "game/spritesAllegro/spriteV.png", "game/spritesAllegro/spriteQG.png"},
+menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard, selectVolume, selectQuitGame}, backMenuAnterior,
+                      {"Quick Play    ", "Levels    ", "Leaderboard    ", "Volume    ", "Quit Game    "}, 
+                      {"game/spritesAllegro/spriteQP.png", "game/spritesAllegro/spriteLVL.png", "game/spritesAllegro/spriteLB.png", "game/spritesAllegro/spriteV.png", "game/spritesAllegro/spriteQG.png"},
                       NULL,
-                      6 , 1 , changeOption };//Estructura del menu de inicio.
+                      5 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectLevels, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Resume ", "Restart Level ", "Main menu ", "Select level ", "Volume ", "Quit Game "},
+menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectVolume, selectQuitGame}, backMenuAnterior,
+                      {"Resume ", "Restart Level ", "Main menu ", "Volume ", "Quit Game "},
                       {},
                       "Pause", 
-                      6, 1, changeOption };//Estructura del menu de pausa.
+                      5, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel= { &KEYS , {selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
                       {"Save Score", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
@@ -105,14 +105,14 @@ menu_t menuLostLevel= { &KEYS , {selectSaveScore, selectRestartLevel, selectMain
                       "You Lose",  
                       5, 1, changeOption };//Estructura del menu de pausa.
 
-menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
-                      {"Next Level", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
+menu_t menuWonLevel = { &KEYS , {selectNextLevel, selectSaveScore, selectMainMenu, selectQuitGame}, backMenuAnterior, 
+                      {"Next Level", "Save Score", "Main menu", "Quit Game"}, 
                       {{0}},
                       "You Won", 
-                      5, 1, changeOption };//Estructura del menu de pausa.
+                      4, 1, changeOption };//Estructura del menu de pausa.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior,
-                      {"1. 0000    ", "2. 0000    ", "3. 0000    ", "4. 0000    ", "5. 0000    ", "6. 0000    ", "7. 0000    ", "8. 0000    ", "9. 0000    ", "10. 0000    "},
+                      {"1. 00000   ", "2. 00000   ", "3. 00000   ", "4. 00000   ", "5. 00000   ", "6. 00000   ", "7. 00000   ", "8. 00000   ", "9. 00000   ", "10. 00000   "},
                       {{0}},
                       "",  
                       10 , 1 , changeOption };//Estructura del menu de pausa.

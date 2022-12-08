@@ -558,6 +558,10 @@ static void* menuHandlerThread(void * data){
         pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
     #endif
 
+    if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
+        fillLeaderboardMenu(menu);
+    }
+
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
         float volumenActual = 0;
@@ -584,10 +588,6 @@ static void* menuHandlerThread(void * data){
         sem_post(&SEM_MENU);
     #endif
     //***************************************************************************************************************************
-
-    if(GAME_STATUS.menuActual == MENU_LEADERBOARD){//Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
-        fillLeaderboardMenu(menu);
-    }
 
     usleep(200 * U_SEC2M_SEC);
     while(menu -> exitStatus){

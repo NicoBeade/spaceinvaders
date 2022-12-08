@@ -28,8 +28,8 @@
 
 #define FIRSTX X_MAX/2  //Posicion X de la posicion 1 del leaderboard
 #define FIRSTY 70       //Posicion Y de la posicion 1 del leaderboard
-#define LEFTCOLUMNX 100 //Posicion X de la columna izquierda del leaderboard
-#define COLUMNY 220     //Posicion Y de las columnas del leaderboard
+#define LEFTCOLUMNX 50 //Posicion X de la columna izquierda del leaderboard
+#define COLUMNY 250     //Posicion Y de las columnas del leaderboard
 #define RIGHTCOLUMNX X_MAX-300 //Posicion X de la columna derecha del leaderboard
 
  #endif
