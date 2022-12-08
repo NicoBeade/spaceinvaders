@@ -58,7 +58,7 @@ static unsigned int countList(object_t * lista);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 #define MAX_EVENTS 5
-char eventArray[MAX_EVENTS] = {-1, -1, -1, -1, 0};//Array utilizado para devolver eventos en el collider.
+signed char eventArray[MAX_EVENTS] = {-1, -1, -1, -1, 0};//Array utilizado para devolver eventos en el collider.
 
 /*******************************************************************************************************************************************
  * 
@@ -524,13 +524,13 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
+signed char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
     int i = 0; //Desreferenciacion para el array de eventos.
 
     if(levelSettings == NULL){
         printf("Err in gameLib, collider function: levelSettings cannot be NULL\n");
-        return -1;
+        return NULL;
     }
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
 
@@ -538,12 +538,12 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
     object_t * listAliens = *alienList;
     if(listAliens == NULL){
         printf("Err in spaceLib.c alienList cannot be NULL in collider.\n"); 
-        return -1;
+        return NULL;
     }
     object_t * listUsr = *usrList;
     if(listUsr == NULL){
         printf("Err in spaceLib.c usrList cannot be NULL in collider.\n");
-        return -1;
+        return NULL;
     }
     object_t * listBarreras = *barrerasList;
     object_t * listBalasEnemigas = *balasEnemigas;
@@ -568,7 +568,7 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
                 objectType_t * barreraObjType = getObjType(typeBarrera);   //Se recupera el object type
                 if(barreraObjType == NULL){
                     printf("Err in spaceLib.c: collider function, object type of barrier not found with type %d.\n", typeBarrera);
-                    return -1;
+                    return NULL;
                 }
                 listBarreras->animationStatus = barreraObjType->initLives - listBarreras->lives + 1;
                 if(listBarreras->animationStatus >= 4){
@@ -614,7 +614,14 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
             collition = 0;
             listUsr->lives -= 1;//Si una bala golpeo al usuario se le quita una vida.
             if(listUsr->lives == 0){//Si el usuario muere termina el nivel.
-                return LOST_LEVEL;
+                if(i < MAX_EVENTS){
+                    eventArray[i] = LOST_LEVEL;
+                    i++;
+                }
+                else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                }
+                return eventArray;
             }
             else{//Si el usuario no debe morir
                 if(i < MAX_EVENTS){
@@ -658,7 +665,7 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
                         objectType_t * alienRipedAsset = getObjType(listAliens->type);//Incrementa el puntaje
                         if(alienRipedAsset == NULL){
                             printf("Err in spaceLib.c alienRipedAsset cannot be NULL in collider, with type %d.\n", listAliens->type);
-                            return -1;
+                            return NULL;
                         }
                         *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
                     }
@@ -677,7 +684,14 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
                         if(scoreInstantaneo != NULL && scoreReal != NULL){    
                             *scoreReal = *scoreInstantaneo;
                         }
-                        return WON_LEVEL;
+                        if(i < MAX_EVENTS){
+                            eventArray[i] = WON_LEVEL;
+                            i++;
+                        }
+                        else{
+                                printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                        }
+                        return eventArray;
                     }
                 }
                 else{//SI el alien no de morir
@@ -775,7 +789,7 @@ char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t 
                         objectType_t * alienRipedAsset = getObjType(listMotherShip->type);//Incrementa el puntaje
                         if(alienRipedAsset == NULL){
                             printf("Err in spaceLib.c alienRipedAsset cannot be NULL in collider, with type %d.\n", listMotherShip->type);
-                            return -1;
+                            return NULL;
                         }
                         *scoreInstantaneo += (alienRipedAsset->score) * nivelActual; 
                     }

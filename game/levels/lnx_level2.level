@@ -51,6 +51,7 @@ ALIEN
     posY  200
 END
 
+
 ALIEN
     type  28
     posX  250

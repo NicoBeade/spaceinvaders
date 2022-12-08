@@ -147,6 +147,8 @@ typedef struct{
 
 enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, MENU_VOLUME, START_LEVEL_MENU};//Determinan un valor para cada menu
 
+enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
+
 //*************EVENTOS DE SPACELIB
 enum EVENTOS_SPACELIB {  FASTER_ALIENS = 1,WON_LEVEL,LOST_LEVEL,
                         SL_COLISION_ALIEN_TOCADO,SL_COLISION_ALIEN_MUERTO,SL_COLISION_USER_TOCADO,SL_COLISION_USER_MUERTO,SL_COLISION_MOTHERSHIP_MUERTA,SL_COLISION_BARRERA_TOCADA,SL_COLISION_BARRERA_MUERTA, SL_COLISION_BALAS,
@@ -185,7 +187,7 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
 
 
 //*****************COLLIDER
-char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo);//Recorre todas las listas para chequear si hubo colisiones
+signed char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo);//Recorre todas las listas para chequear si hubo colisiones
 
 
 //*****************OBJTYPES

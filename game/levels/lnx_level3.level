@@ -1,17 +1,15 @@
 ASSET_MODIFY    1 ;modifico los aliens
-    shootProb 4
-    maxBullets 10
+    shootProb 7
+    maxBullets 20
 END
 ASSET_MODIFY    13 ;
-    shootProb 4
-    maxBullets 10
+    shootProb 7
+    maxBullets 20
 END
 ASSET_MODIFY    28 ;
-    shootProb 4
-    maxBullets 10
+    shootProb 7
+    maxBullets 20
 END
-
-maxMShipXLevel      3
 
 velAliens			70
 ;------------------ALIENS FILA 1-------------------
@@ -105,43 +103,43 @@ END
 ;------------------ALIENS FILA 3-------------------
 
 ALIEN
-    type  13
+    type  28
     posX  150
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  250
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  350
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  450
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  550
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  650
     posY  300
 END
 
 ALIEN
-    type  13
+    type  28
     posX  750
     posY  300
 END

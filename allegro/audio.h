@@ -14,7 +14,7 @@
     audios[BALA_USER].volume = 0.3;\
     audios[COLISION_MOTHERSHIP_MUERTA].sample = al_load_sample("game/audioFiles/mothership_muerta.wav");\
     audios[COLISION_MOTHERSHIP_MUERTA].volume = 1.0;\
-    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/barrera_tocada.wav");\
+    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/choque_balas.wav");\
     audios[COLISION_BARRERA_TOCADA].volume = 1.0;\
     audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/barrera_muerta.wav");\
     audios[COLISION_BARRERA_MUERTA].volume = 1.0;\

@@ -1258,7 +1258,7 @@ void * colliderThread(void * argCollider){
 
     argCollider_t * data = (argCollider_t*)argCollider;
     
-    char* eventArray;
+    signed char* eventArray;
     int i = 0;
     char lost = 1;
 
@@ -1272,7 +1272,8 @@ void * colliderThread(void * argCollider){
             if(*(data->alienList) != NULL && *(data->alienList) != NULL){   //Si hay aliens y usuario 
                 eventArray = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
-                for(i = 0 ; eventArray[i] != 0){
+                for(i = 0 ; eventArray[i] != -1  && eventArray[i] != 0 ; i++){
+                    printf("\n\nEventArray: %d\n\n", eventArray[i]);
                     switch (eventArray[i]){//Detecta el evento
                         case LOST_LEVEL://Si se perdio el nivel
                             GAME_STATUS.pantallaActual = MENU;

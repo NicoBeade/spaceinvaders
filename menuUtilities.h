@@ -68,8 +68,6 @@ extern keys_t KEYS;
 
 extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues.
 
-enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
-
 #ifdef RASPI
 extern halfDisp_t halfDispTrophy;
 extern halfDisp_t halfDispAlienSpaceInvaders;
