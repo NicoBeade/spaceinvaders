@@ -54,6 +54,10 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar lo
 
 extern keys_t KEYS;
 
+enum MENUES_VALUE { MENU_INICIO , MENU_PAUSA, MENU_WON_LEVEL, MENU_LOST_LEVEL, MENU_LEADERBOARD, MENU_LEVELS, MENU_VOLUME, START_LEVEL_MENU};//Determinan un valor para cada menu
+
+enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_GAME};//Determinan un valor para cada pantalla
+
 extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues.
 
 #ifdef RASPI
@@ -84,9 +88,6 @@ extern gameStatus_t GAME_STATUS;
 
 extern game_t menuGame;
 
-extern int velDispAnimation;
-
-extern sem_t SEM_DRIVER;
 
 extern menu_t menuInicio; 
 extern menu_t menuPausa; 

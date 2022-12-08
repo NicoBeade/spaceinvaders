@@ -83,6 +83,7 @@ typedef struct{
     int actualOp;      //Opcion acutal
     int nextOp;        //Nueva opcion
     menu_t * menu;     //Datos del menu actual
+    int menuActual;
 
 }changeOptionData_t;
 

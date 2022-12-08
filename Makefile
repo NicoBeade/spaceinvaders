@@ -31,8 +31,8 @@ audioHandlerRaspi.o: raspi/audioHandlerRaspi.h raspi/audioHandlerRaspi.c game/au
 
 COMPILACION_ALLEGRO = $$(pkg-config allegro-5 allegro_image-5 allegro_font-5 allegro_ttf-5 allegro_primitives-5 allegro_audio-5 allegro_acodec-5 --libs --cflags)
 
-mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o menuUtilitiesAllegro.o spaceInvaders.c
-	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o menuUtilities.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
+mainAllegro: spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o menuUtilitiesAllegro.o diseñoAllegro.o spaceInvaders.c
+	gcc spaceInvaders.c spaceLib.o levelLoader.o allegro.o outputAllegro.o inputAllegro.o score.o diseñoAllegro.o menuUtilities.o -o spaceInvadersAllegro $(COMPILACION_ALLEGRO) -pthread -g -Wall -D ALLEGRO
 
 allegro.o: allegro/allegro.c allegro/allegro.h spaceLib/spaceLib.h allegro/allegroUtilities.h
 	gcc -c -g allegro/allegro.c -Wall $(COMPILACION_ALLEGRO)
@@ -46,6 +46,8 @@ inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h allegro/allegroUti
 menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h levelLoader/levelLoader.h spaceLib/score/score.h
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D ALLEGRO
 
+diseñoAllegro.o: allegro/diseñoAllegro.c allegro/allegro.h allegro/allegroUtilities.h
+	gcc -c -g allegro/diseñoAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 #*******************************************************************************************************************************************
 #													TARGETS GENERALES DE BACK END
