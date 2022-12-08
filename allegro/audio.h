@@ -47,14 +47,11 @@
     musica[MUSICA_MENU- AUDIOMAX].volume = 0.8;\
     time_t fecha;\
     time (&fecha);\
-    printf("strncmp: %i\n La fecha de hoy es: %s",strncmp("Dec 25",ctime(&fecha)+4,6),ctime(&fecha));\
     if(!strncmp("Dec 25",ctime(&fecha)+4,6)){\
         musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_easter_egg.wav");\
-        printf("Se seteo la musica navidena\n");\
     }\
     else {\
         musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_juego.wav");\
-        printf("Se seteo la musica comun\n");\
     }\
     musica[MUSICA_JUEGO - AUDIOMAX].volume = 1.0;
 
