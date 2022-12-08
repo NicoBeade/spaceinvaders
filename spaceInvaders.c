@@ -207,7 +207,6 @@ int main(void){
     initSem();
     disp_init();
     joy_init();
-    pthread_t displayT;
     #endif
 
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT, displayT;
