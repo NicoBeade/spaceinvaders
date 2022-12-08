@@ -1,10 +1,8 @@
 ASSET_MODIFY    1 ;modifico los aliens
-    shootProb 4
     maxBullets 10
     initLives 4
 END
 maxMShipXLevel      3
-velMothership		20
 ;------------------ALIENS FILA 1-------------------
 
 ALIEN

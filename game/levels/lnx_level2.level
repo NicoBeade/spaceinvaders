@@ -140,4 +140,3 @@ ASSET_MODIFY    7 ;modifico la mothership
     shootProb 2
     score 100
 END
-velMothership		20
