@@ -4,7 +4,7 @@
 
 #define INITAUDIO audios[COLISION_ALIEN_TOCADO].sample = al_load_sample("game/audioFiles/alien_tocado.wav");\
     audios[COLISION_ALIEN_TOCADO].volume = 1.0;\
-    audios[COLISION_ALIEN_MUERTO].sample = al_load_sample("game/audio/invaderkilled.wav");\
+    audios[COLISION_ALIEN_MUERTO].sample = al_load_sample("game/audioFiles/alien_muerto.wav");\
     audios[COLISION_ALIEN_MUERTO].volume = 0.3;\
     audios[COLISION_USER_TOCADO].sample = al_load_sample("game/audioFiles/user_tocado.wav");\
     audios[COLISION_USER_TOCADO].volume = 1.0;\

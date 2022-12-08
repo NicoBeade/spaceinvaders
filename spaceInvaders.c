@@ -442,6 +442,10 @@ int main(void){
             case QUIT_GAME://-------------------------      QUIT_GAME: Entra a este caso cuadno se quiere salir del juego.      ------------------------------------------------------
                 GAME_STATUS.inGame = 0;
 
+                #ifdef ALLEGRO
+                    flagCloseGame = 1;  //Este flag le indica al thread de allegro que se cerro el juego
+                #endif
+                
                 usleep(50 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
