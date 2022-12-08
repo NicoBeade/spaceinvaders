@@ -63,7 +63,8 @@ void * keyboardt (ALLEGRO_THREAD * thr, void * dataIn){
             *data->keyboardUpFlag= false;       
         }
 
-        if(timerTick % FPS == 0 ){             //Cada cierto tiempo se envian las teclas precionadas al main
+
+        if(*data->refreshInput){             //Cada cierto tiempo se envian las teclas precionadas al main
                                                //A traves del puntero keys
             if(key_pressed[UP]){
                 (*data->keys).y = 1;
@@ -89,8 +90,9 @@ void * keyboardt (ALLEGRO_THREAD * thr, void * dataIn){
                 (*data->keys).press = 1;
                 key_pressed[SPACE] = false;
             }
-
+            *data->refreshInput = false;
         }
+        
     }
 
     pthread_exit(0);
