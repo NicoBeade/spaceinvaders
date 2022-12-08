@@ -293,6 +293,12 @@ int main(void){
                 }
                 #endif
                 
+                if(GAME_STATUS.menuActual == MENU_INICIO){
+                    score = 0;
+                    scoreInstantaneo = 0;
+                    GAME_STATUS.usrLives = MAX_USR_LIVES;
+                }
+
                 sem_wait(&SEM_GAME);//Pausa la ejecucion del juego.
                 
                 MENUES[GAME_STATUS.menuActual] -> exitStatus = 1;
@@ -1008,7 +1014,7 @@ static void* saveScoreHandlerThread(void * data){
                 GAME_STATUS.menuActual = MENU_INICIO;
                 GAME_STATUS.menuAnterior = -1;
                 menu -> exitStatus = 0;
-                
+                GAME_STATUS.usrLives = MAX_USR_LIVES;
                 stopSweep = 4;
             }
         }

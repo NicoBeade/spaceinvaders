@@ -60,6 +60,8 @@ enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_G
 
 extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues.
 
+#define MAX_USR_LIVES 5
+
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
