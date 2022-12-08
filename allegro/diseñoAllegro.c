@@ -35,19 +35,19 @@
 #define ESPACIADOMENU 120   //Espaciado entre opciones del menu
 #define SELECTOR 50     //Espacio entre el selector y la opcion seleccionada
 
-#define CANTOP 5
-#define SPACELETX 70
-#define SPACELETY 70 
-#define SCOREX X_MAX/2
-#define SCOREY 70
-#define LETRAX X_MAX/2 - TAMLETRAX*(0.5) - SPACELETX
-#define LETRAY 200
+#define CANTOP 5 //Cantidad de letras por columnas en el menu save score
+#define SPACELETX 70    //Espaciado en X entre las columnas
+#define SPACELETY 70    //Espaciado en Y entre las columnas
+#define SCOREX X_MAX/2  //Posicion X del score en pantalla
+#define SCOREY 70       //Posicion Y del score en pantalla
+#define LETRAX X_MAX/2 - TAMLETRAX*(0.5) - SPACELETX //Posicion en X de la primer columna
+#define LETRAY 200  //Posicion en Y de la primer columna
 
-#define FIRSTX X_MAX/2
-#define FIRSTY 70
-#define LEFTCOLUMNX 100
-#define COLUMNY 220
-#define RIGHTCOLUMNX X_MAX-300
+#define FIRSTX X_MAX/2  //Posicion X de la posicion 1 del leaderboard
+#define FIRSTY 70       //Posicion Y de la posicion 1 del leaderboard
+#define LEFTCOLUMNX 100 //Posicion X de la columna izquierda del leaderboard
+#define COLUMNY 220     //Posicion Y de las columnas del leaderboard
+#define RIGHTCOLUMNX X_MAX-300 //Posicion X de la columna derecha del leaderboard
 
 
 /***********************************************************************************************************************************************************
@@ -56,8 +56,8 @@
  * 
  * ********************************************************************************************************************************************************/
 
-TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
 //Esta funcion se utiliza para mostrar los menues en pantalla
+TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     
     int i;
     TextObj_t salida = {NULL,NULL};
@@ -89,8 +89,9 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     return lists;
 }
 
+//Esta funcion realiza la animacion de cambio de opcion
 void changeOption(void * dataIn){
-//Esta funcion realiza la animacion de cambio de oipcion
+
 
     if(!dataIn){
         printf("puntero a datos NULL\n");
@@ -152,6 +153,7 @@ void changeOption(void * dataIn){
  * 
  * ********************************************************************************************************************************************************/
 
+//Esta funcion muestra el menu de save score
 TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2]){
     
     int i, j;
@@ -177,9 +179,9 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
             }
         }
     }
-    //salida.textoList = addText(salida.textoList, ">", largeF, LETRAX - 35 , LETRAY + SPACELETY* 2); //se añade el cursor
     salida.textoList = addText(salida.textoList, scoreActual, bigF, SCOREX - (scoreLen/2.0)*58, SCOREY); //se añade el score 
     
+    //Se añade el selector
     salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/Selector1.png", LETRAX -15, LETRAY + 123);
     lists->textoList= salida.textoList;
     lists->spriteList=salida.spriteList;
@@ -187,6 +189,7 @@ TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2
     return lists;
 }
 
+//Esta funcion cambia las columnas del save score hacia arriba y abajo
 void changeLetra(char letras[15][2], int colActual, int dir){
 
     int i;
@@ -235,6 +238,7 @@ void changeLetra(char letras[15][2], int colActual, int dir){
 
 }
 
+//Esta funcion cambia de columna en save score
 sprite_t * changeCol(sprite_t * toshow, int nextOp){
 
     if(!toshow){
@@ -252,18 +256,19 @@ sprite_t * changeCol(sprite_t * toshow, int nextOp){
  * 
  * ********************************************************************************************************************************************************/
 
+//Esta funcion muestra el leaderboard
 TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
     
     int i;
     TextObj_t salida = {NULL,NULL};
 
-    int firstLen = strlen(data->textOpciones[0]);
-    int secondLen = strlen(data->textOpciones[1]);
+    int firstLen = strlen(data->textOpciones[0]); //Se obtiene el largo del puntaje mas alto
+    int secondLen = strlen(data->textOpciones[1]); //Se obtiene el largo del segundo puntaje mas alto
 
-    salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX -(firstLen/2)*40 , FIRSTY);
-    salida.textoList=addText(salida.textoList, data->textOpciones[1], largeF, FIRSTX -(secondLen/2)*25 , FIRSTY + 120);
+    salida.textoList=addText(salida.textoList, data->textOpciones[0], bigF, FIRSTX -(firstLen/2)*40 , FIRSTY); //Se posiciona el primer puntaje
+    salida.textoList=addText(salida.textoList, data->textOpciones[1], largeF, FIRSTX -(secondLen/2)*25 , FIRSTY + 120); //Se posiciona el segundo puntaje
 
-    for(i=2; i < data->cantOpciones; i++){
+    for(i=2; i < data->cantOpciones; i++){  //Se posicionan el resto de puntajes en dos columnas distintas
         if(i%2 == 0){
             salida.textoList=addText(salida.textoList, data->textOpciones[i], mediumF, LEFTCOLUMNX , COLUMNY + 60*i/2);
         }else{
@@ -283,17 +288,21 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
  * 
  * ********************************************************************************************************************************************************/
 
+//Esta funcion muestra el menu de cambio de volumen
 TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
 
     TextObj_t salida = {NULL,NULL};
-    int titleLen = strlen(data->titulo);
-    float volumeLen = strlen(data->textOpciones[volumenActual]);
+    int titleLen = strlen(data->titulo);    //Se obtiene en largo del titulo
+    float volumeLen = strlen(data->textOpciones[volumenActual]);    //Se obtiene el largo de volumen actual
     
+    //Se agrega el volumen actual
     salida.textoList = addText(salida.textoList, data->textOpciones[volumenActual], bigF , (X_MAX*0.3) - (volumeLen + 1)*40, Y_MAX * 0.4);
 
+    //Se agregan las barras que muestran el menu
     for(int i =0; i< volumenActual; i++){
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
     }
+    //Se agrega el titulo
     salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36, 50);
 
     lists->textoList= salida.textoList;
@@ -317,23 +326,29 @@ sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite
 
     return listSprite;
 }
+
 /***********************************************************************************************************************************************************
  * 
  *                                                                      LEVELS
  * 
  * ********************************************************************************************************************************************************/
 
+//Prepara las listas para mostrar los datos ingame
 texto_t * levelAllegro(texto_t * toText, char * score, char * vidas ){
 
     texto_t * temp = toText;
 
-    temp = addText(temp, vidas, mediumF, X_MAX - 50, Y_MAX - 50);
+    //Añade las vidas
+    temp = addText(temp, vidas, mediumF, X_MAX - 50, Y_MAX - 50); 
     temp = addText(temp, "Lives :", mediumF, X_MAX - 200, Y_MAX - 50);
+
+    //Añade el score
     temp = addText(temp, score, mediumF, 20, Y_MAX - 50);
 
     return temp;
 }
 
+//funcion exponencial
 int expo(int num, int exp){
 
     int temp = num;
@@ -348,7 +363,7 @@ int expo(int num, int exp){
 
     return num;
 }
-
+//funcion de redondeo
 int techo(float num){
 
     int i;
@@ -361,15 +376,16 @@ int techo(float num){
 }
 
 void refreshDatos( char * toScore, char * toVidas, int score, int vidas){
-
+    //Refresca los datos mostrados
     int  i; 
     float temp;
-    toVidas[0] = '0' + vidas;
+    toVidas[0] = '0' + vidas; //Actualiza las vidas
 
-    for( i = 0; i < 6; i++){
-
+    for( i = 0; i < 6; i++){//Refresca digito a digito del score mostrado en pantalla
+        
+        //Calcula cual es el digito a mostrar
         temp = (float)((score % (expo(10, i)*10)) - (score % expo(10, i)));
-
+        //Actualiza el string en la posicion correspondiente
         toScore[5 - i] = '0' + techo(temp / expo(10, i));
         
     }
