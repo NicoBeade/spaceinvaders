@@ -66,7 +66,7 @@ menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartL
 
 menu_t menuWonLevel = { &KEYS , {selectNothing, selectNextLevel, selectSaveScore, selectMainMenu, selectQuitGame}, backMenuAnterior, 
                       {"Won Level    ", "Next Level    ", "Save Score    " "Main menu    ",  "Quit Game    "}, 
-                      {&halfDispAlienSpaceInvaders, &halfDispNextLevel, halfDispSaveScore ,&halfDispHome,  &halfDispQuitGame}, 
+                      {&halfDispAlienSpaceInvaders, &halfDispNextLevel, &halfDispSaveScore ,&halfDispHome,  &halfDispQuitGame}, 
                       5 , 1 , changeOption };//Estructura del menu de cuando se gana un nivel.
 
 menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing, selectNothing}, backMenuAnterior, 
