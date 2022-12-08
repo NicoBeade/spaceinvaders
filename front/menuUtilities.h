@@ -12,9 +12,9 @@
 #ifndef MENU_UTILITIES_H
 #define MENU_UTILITIES_H
 
-#include "spaceLib/spaceLib.h"
-#include "levelLoader/levelLoader.h"
-#include "spaceLib/score/score.h"
+#include "../back/spaceLib/spaceLib.h"
+#include "../back/levelLoader/levelLoader.h"
+#include "../back/spaceLib/score/score.h"
 #include <stdio.h>
 #include <semaphore.h>
 #include <string.h>

@@ -55,13 +55,13 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     display = al_create_display(X_MAX,Y_MAX);                       //Se crea el display
 
     //Inicializacion de las fuentes
-    fuentes[smallF] = al_load_ttf_font("allegro/spaceInv.ttf", 20, 0); //fuente small
+    fuentes[smallF] = al_load_ttf_font("game/spaceInv.ttf", 20, 0); //fuente small
 
-    fuentes[mediumF] = al_load_ttf_font("allegro/spaceInv.ttf", 30, 0); //fuente medium
+    fuentes[mediumF] = al_load_ttf_font("game/spaceInv.ttf", 30, 0); //fuente medium
 
-    fuentes[largeF] = al_load_ttf_font("allegro/spaceInv.ttf", 50, 0); //fuente large
+    fuentes[largeF] = al_load_ttf_font("game/spaceInv.ttf", 50, 0); //fuente large
 
-    fuentes[bigF] = al_load_ttf_font("allegro/spaceInv.ttf", 80, 0); //fuente big
+    fuentes[bigF] = al_load_ttf_font("game/spaceInv.ttf", 80, 0); //fuente big
     
     al_register_event_source(event_queue, al_get_display_event_source(display));    //Se registra el display en la cola de eventos
 

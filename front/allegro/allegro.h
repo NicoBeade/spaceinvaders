@@ -1,7 +1,8 @@
  #ifndef ALLEGRO_H
  #define ALLEGRO_H
 
-#include "../spaceLib/spaceLib.h"
+#include "../../back/spaceLib/spaceLib.h"
+
 #define FPS 2
 
 /******************************************************************
@@ -24,6 +25,7 @@ enum VOLUME {SUBIR_AUDIO,BAJAR_AUDIO,CHECK_AUDIO};
 enum MENUESALLEGRO {ADEFAULT, AVOLUMEN, ALEADERBOARD};
 
 typedef int (*option_t)(void);
+
 typedef struct
 {
     char pantalla;

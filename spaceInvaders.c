@@ -21,18 +21,15 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
-#include "menuUtilities.h"
+#include "front/menuUtilities.h"
 
 #ifdef RASPI
-#include "raspi/inputRaspi.h"
-#include "raspi/drivers/disdrv.h"
-#include "raspi/drivers/joydrv.h"
-#include "raspi/audioHandlerRaspi.h"
+#include "front/raspi/inputRaspi.h"
+#include "front/raspi/drivers/disdrv.h"
+#include "front/raspi/drivers/joydrv.h"
+#include "front/raspi/audioHandlerRaspi.h"
 #endif
 
-#ifdef ALLEGRO
-
-#endif
 
 /*******************************************************************************************************************************************
  * 

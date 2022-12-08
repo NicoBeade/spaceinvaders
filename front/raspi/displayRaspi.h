@@ -15,7 +15,7 @@
 #ifndef DISPLAY_RASPI_H
 #define DISPLAY_RASPI_H
 
-#include "../spaceLib/spaceLib.h"
+#include "../../back/spaceLib/spaceLib.h"
 #include "sprites.h"
 #include "drivers/disdrv.h"
 #include <semaphore.h>

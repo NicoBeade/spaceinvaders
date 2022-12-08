@@ -7,7 +7,7 @@ enum ADDSCORE {POS_LEADERBOARD_FOUND,POS_LEADERBOARD_NOT_FOUND=-1,ERROR_LEADERBO
 
 #define LEADERBOARD 10
 #define ROWSIZE 15
-#define FILENAME_SCORE "spaceLib/score/score.txt"
+#define FILENAME_SCORE "game/score.txt"
 
 //TIPOS DE DATOS
 

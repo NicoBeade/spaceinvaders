@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include "audioHandlerRaspi.h"
-#include "../game/audioFiles/audioFiles.h"
+#include "audioFilesRaspi.h"
 
 
 #define VOLUME_JUMP 16
