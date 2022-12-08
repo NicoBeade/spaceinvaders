@@ -389,11 +389,6 @@ int main(void){
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
-                #ifdef RASPI
-                argDisplayRPI_t argDisplayRPI = {&balasAlien, &balasUsr, &alienList, &UsrList, &barrerasList, &mothershipList };
-                pthread_create(&displayT, NULL, displayRPIThread, &argDisplayRPI);
-                #endif
-
                 menuGame.naveUsr = &UsrList;
                 menuGame.levelSettings = &levelSettings;
                 menuGame.balasUsr = &balasUsr;
