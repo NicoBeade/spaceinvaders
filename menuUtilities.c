@@ -201,9 +201,7 @@ static int selectQuitGame(void){
     printf("Select Quit Game\n");
     #ifdef RASPI
     velDispAnimation = 1;
-    sem_wait(&SEM_DRIVER);
     disp_clear();
-    sem_post(&SEM_DRIVER);
     #endif
     GAME_STATUS.pantallaActual = QUIT_GAME;
     return 0;
