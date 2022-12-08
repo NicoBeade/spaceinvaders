@@ -203,7 +203,7 @@ static int selectQuitGame(void){
     printf("Select Quit Game\n");
     #ifdef RASPI
     velDispAnimation = 1;
-    disp_clear();
+    clearDisplay();
     #endif
     GAME_STATUS.pantallaActual = QUIT_GAME;
     return 0;
