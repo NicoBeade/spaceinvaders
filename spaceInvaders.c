@@ -744,10 +744,12 @@ static void* menuHandlerThread(void * data){
             }
         }
 
+        #ifdef ALLEGRO
         if(flagCloseGame){
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
+        #endif
     }
     #ifdef RASPI
     animStatus = 0;
