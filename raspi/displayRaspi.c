@@ -27,9 +27,7 @@
 #include <stdlib.h>
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
-#include "sprites.h"
 #include "../spaceLib/score/score.h"
-#include <semaphore.h>
 #include <string.h>
 
 sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
