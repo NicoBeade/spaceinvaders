@@ -1353,15 +1353,14 @@ void * displayThread(void * argDisplay){
         
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % FPS) == 0 ){
-            
+            #ifdef ALLEGRO
             if(GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE){
-                #ifdef ALLEGRO
-                    sem_wait(&SEM_MENU);
-                    data->pantalla = 0;
-                    display(argDisplay);
-                    sem_post(&SEM_MENU);
-                #endif
+                sem_wait(&SEM_MENU);
+                data->pantalla = 0;
+                display(argDisplay);
+                sem_post(&SEM_MENU);
             }
+            #endif
 
             else if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
                 sem_wait(&SEM_GAME);

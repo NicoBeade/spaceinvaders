@@ -522,9 +522,7 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
             (*lowerDispMenu)[fil][colFinalB + direccion] = caracter[fil][i];
         }
         
-        sem_wait(&SEM_MENU);
         printHalfDisp(*lowerDispMenu, 'I');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
     }
     
 }
@@ -555,9 +553,7 @@ static void* swipeDrawing(void* data){
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
         }
-        sem_wait(&SEM_MENU);
         printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
     }
     pthread_exit(0);
 }
@@ -702,9 +698,7 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = 0;
             }
         }
-        sem_wait(&SEM_MENU);
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
 
         usleep(VEL_TITILEO * U_SEC2M_SEC);
 
@@ -715,9 +709,7 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
             }
         }
-        sem_wait(&SEM_MENU);
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
 
         usleep(2 * VEL_TITILEO * U_SEC2M_SEC);        
     }
