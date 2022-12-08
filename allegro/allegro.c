@@ -1,9 +1,5 @@
 #include "allegroUtilities.h"
 
-//Timer tick
-extern int timerTick;
-extern gameStatus_t GAME_STATUS;
-
 void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn);
 
 
@@ -105,7 +101,7 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
 
         usleep(10 * U_SEC2M_SEC);
 
-        if(GAME_STATUS.exitStatus == 0){
+        if(*data->closeGameFlag == 1){
             *data->close_display = true;
         }
 
