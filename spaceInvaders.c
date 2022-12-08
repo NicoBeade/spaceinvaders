@@ -107,16 +107,10 @@ static void* levelHandlerThread(void * data);
  * 
  ******************************************************************************************************************************************/
 
-#define MAX_USR_LIVES 5
-
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .pantallaAnterior = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .usrLives = MAX_USR_LIVES, .exitStatus = 1};
-
 keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas por el usuario.
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
-
-game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del level handler.
 
 #ifdef ALLEGRO
 int flagCloseGame = 0;
