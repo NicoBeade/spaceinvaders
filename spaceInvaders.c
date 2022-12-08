@@ -90,7 +90,7 @@ void * moveBalaThread(void * argMoveBala);
 
 void * colliderThread(void * argCollider);
 
-void * displayThread(void * argDisplay);
+void * displayHandlerThread(void * argDisplay);
 
 static void* menuHandlerThread(void * data);
 
@@ -150,7 +150,6 @@ const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el dis
 #define MIN_VEL_ALIENS 15
 int (*display)(argDisplay_t* argDisplay) = displayHandler;
 #endif
-const int velInput = 1;
 
 int velAliens;
 int velMothership;
@@ -229,7 +228,7 @@ int main(void){
     #endif
 
     #ifdef RASPI
-    keys_t * dataInput = &KEYS;
+    argInputRPI_t* dataInput = {&KEYS, &GAME_STATUS.exitStatus}
     argDisplay_t argDisplay = { &balasAlien , &balasUsr , &alienList , &UsrList , &barrerasList , &mothershipList , 0 };
     #endif
 
@@ -443,9 +442,6 @@ int main(void){
             case QUIT_GAME://-------------------------      QUIT_GAME: Entra a este caso cuadno se quiere salir del juego.      ------------------------------------------------------
                 GAME_STATUS.inGame = 0;
 
-                #ifdef ALLEGRO
-                    flagCloseGame = 1;
-                #endif
                 usleep(50 * U_SEC2M_SEC);
                 //Elimina todas las listas del heap.
                 if(alienList != NULL){
@@ -1341,7 +1337,7 @@ void * colliderThread(void * argCollider){
 
 
 
-void * displayThread(void * argDisplay){
+void * displayHandlerThread(void * argDisplay){
     //Este thread se encarga de regular los timings del display.
 
     argDisplay_t* data = (argDisplay_t*)argDisplay;

@@ -102,6 +102,31 @@ extern menu_t menuVolume;
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
+typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
+typedef int (*volumeCallback_t)(int);  //Puntero a la funcion que regula el volumen del audio
+
+typedef struct{//Contiene el estado del juego.
+
+    unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
+    unsigned char pantallaAnterior;//Indica el estado anterior del juego.
+    unsigned char nivelActual;//Indica el nivel que esta en juego.
+    unsigned char menuActual;//Indica el menu que esta corriendo.
+    signed char menuAnterior;//Almacena temporalmente el menu anterior.
+    unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
+    unsigned char usrLives;//Vidas del usuario.
+    unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
+}gameStatus_t;
+
+typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
+
+	keys_t * keys;
+    object_t** naveUsr;
+    object_t** balasUsr;
+    level_setting_t* levelSettings;
+    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
+    int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
+    audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
+} game_t;
 
 typedef struct {
 
@@ -139,7 +164,9 @@ typedef struct {
 #define ARRIBA_INPUT ((menu->keys)->y == 1)
 #define ABAJO_INPUT  ((menu->keys)->y == -1)
 #define ATRAS   ((menu->keys)->y == -1)
+
 #endif
+
 
 #ifdef ALLEGRO
 
@@ -157,8 +184,6 @@ typedef struct {
 #define IZQUIERDA_INPUT  ((menu->keys)->x == -1)
 
 #define PRESS_INPUT     ((menu->keys)->press == 1)    //Macro para detectar cuando se presiona para seleccionar una opcion en un menu.
-/*******************************************************************************************************************************************
-*******************************************************************************************************************************************/
 
 #endif
 /*******************************************************************************************************************************************

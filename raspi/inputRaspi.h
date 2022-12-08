@@ -26,7 +26,11 @@
                                             |_|                                                          
  * 
  ******************************************************************************************************************************************/
+typedef struct{
 
+    keys_t* KEYS;
+    unsigned char* exitStatus;
+}argInputRPI_t;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -79,15 +83,6 @@ void* inputRPIThread(void* argInputRPI);  //Se encarga de leer el input durante 
                                             |___| /_\_\  \__| \___| |_|   |_||_| /__/                                                                                                                      
  * 
  ******************************************************************************************************************************************/
-
-extern unsigned int timerTick;   //Variable del timer utilizada para saber cuando se deben ejecutar los threads.
-extern const int velInput;    /*Determina que tan rapido se leera el input. La conversion es: si velInput = 1, entonces updateInputGame se ejecuta 
-                                                                cada 10mS. Para ejecutar updateInputGame cada 1s velInput debe valer 100.*/
-
-extern gameStatus_t GAME_STATUS;
-
-extern sem_t SEM_GAME;
-extern sem_t SEM_MENU;
 extern sem_t SEM_DRIVER;
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

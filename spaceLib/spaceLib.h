@@ -36,9 +36,6 @@
  * 
  ******************************************************************************************************************************************/
 
-typedef void (*audioCallback_t)(int);  //Puntero a la funcion que ejecuta audio
-typedef int (*volumeCallback_t)(int);  //Puntero a la funcion que regula el volumen del audio
-
 typedef struct{//Esta estructura define un vector para las coordenadas
     int x;
     int y;
@@ -78,36 +75,12 @@ typedef struct{
     int maxMShipXLevel;         //Maxima cantidad de motherships por nivel
 }level_setting_t;
 
-
-typedef struct{//Contiene el estado del juego.
-
-    unsigned char pantallaActual;//Indica si el juego se encuentra en partida o en un menu.
-    unsigned char pantallaAnterior;//Indica el estado anterior del juego.
-    unsigned char nivelActual;//Indica el nivel que esta en juego.
-    unsigned char menuActual;//Indica el menu que esta corriendo.
-    signed char menuAnterior;//Almacena temporalmente el menu anterior.
-    unsigned char inGame;//Indica si se deben correr los threads que ejecutan el juego.
-    unsigned char usrLives;//Vidas del usuario.
-    unsigned char exitStatus;//Flag utilizado para saber cuando salir del programa. Si es 0 se debe salir del programa.
-}gameStatus_t;
-
 typedef struct {//Este struct se utiliza para obtener la entrada del usuario.
 
 	int x;
 	int y;
 	uint8_t press;
 } keys_t;
-
-typedef struct {//Este struct contiene la informacion necesaria para ejecutar el juego.
-
-	keys_t * keys;
-    object_t** naveUsr;
-    object_t** balasUsr;
-    level_setting_t* levelSettings;
-    int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
-    int * scoreInstantaneo;//Esta variable almacena el score constantemente sin necesidad de ganar un nivel.
-    audioCallback_t audioCallback;  //Puntero a la funcion que ejecuta audio
-} game_t;
 
 typedef struct{
 	int id;             //Identificador del tipo de objeto

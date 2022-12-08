@@ -30,9 +30,11 @@ void* inputRPIThread(void* argInputRPI){
     jcoord_t coordJoy;
     jswitch_t switchJoy;
 
-    while(GAME_STATUS.exitStatus){
+    argInputRPI_t* data = (argInputRPI_t*)argInputRPI;
 
-        usleep(10 * U_SEC2M_SEC * velInput);//Espera 10mS para igualar el tiempo del timer.
+    while(*(data->exitStatus)){
+
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         sem_wait(&SEM_DRIVER);
         joy_update();
         coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
@@ -40,12 +42,12 @@ void* inputRPIThread(void* argInputRPI){
         sem_post(&SEM_DRIVER);
 
         //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
-        ((keys_t*)argInputRPI) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0); 
+        (data->KEYS) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0); 
 
-        ((keys_t*)argInputRPI) -> y = (coordJoy.y <= JOY_ACTIVE_NEG_Y) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
+        (data->KEYS) -> y = (coordJoy.y <= JOY_ACTIVE_NEG_Y) ? -1 : ( (coordJoy.y >= JOY_ACTIVE_POS) ? 1 : 0);
 
         //Esta seccion detecta si se presiono el boton del joystick.
-        ((keys_t*)argInputRPI) -> press = (switchJoy == J_PRESS) ? 1 : 0;
+        (data->KEYS) -> press = (switchJoy == J_PRESS) ? 1 : 0;
 
     }
     pthread_exit(0);
