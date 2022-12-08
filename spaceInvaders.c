@@ -1355,12 +1355,12 @@ void * displayThread(void * argDisplay){
         if( (timerTick % FPS) == 0 ){
             
             if(GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE){
-                if(("lnx", platform, 3) == 1){
+                #ifdef ALLEGRO
                     sem_wait(&SEM_MENU);
-                        data->pantalla = 0;
-                        display(argDisplay);
+                    data->pantalla = 0;
+                    display(argDisplay);
                     sem_post(&SEM_MENU);
-                }
+                #endif
             }
 
             else if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
