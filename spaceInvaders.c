@@ -1258,7 +1258,8 @@ void * colliderThread(void * argCollider){
 
     argCollider_t * data = (argCollider_t*)argCollider;
     
-    char gameData = 0;
+    char* eventArray;
+    int i = 0;
     char lost = 1;
 
     *(data->scoreInstantaneo) = *(data->score);    //Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
@@ -1269,54 +1270,57 @@ void * colliderThread(void * argCollider){
         if( (timerTick % velCollider) == 0 && GAME_STATUS.inGame ){
             sem_wait(&SEM_GAME);
             if(*(data->alienList) != NULL && *(data->alienList) != NULL){   //Si hay aliens y usuario 
-                gameData = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
+                eventArray = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
-                switch (gameData){//Detecta el evento
-                    case LOST_LEVEL://Si se perdio el nivel
-                        GAME_STATUS.pantallaActual = MENU;
-                        GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                        menuGame.exitStatus = 0;
-                        *(data->score) = 0;//Se borra el score
-                        objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                        GAME_STATUS.usrLives = assetUsuario->initLives;
-                        (data->audioCallback)(PARTIDA_PERDIDA);
-                        lost = 0;
-                        GAME_STATUS.inGame = 0;
-                        break;
-                    case WON_LEVEL://Si se gano el nivel
-                        GAME_STATUS.pantallaActual = MENU;
-                        GAME_STATUS.menuActual = MENU_WON_LEVEL;
-                        menuGame.exitStatus = 0;
-                        (*(data->usrList))->lives += 1;
-                        (data->audioCallback)(PARTIDA_GANADA);
-                        GAME_STATUS.inGame = 0;
-                        break;
-                    case SL_COLISION_BALAS://Si hubo colision entre las balas
-                        (data->audioCallback)(COLISION_CHOQUE_BALAS);
-                        break;
-                    case SL_COLISION_BARRERA_TOCADA://Si toco una barrera
-                        (data->audioCallback)(COLISION_BARRERA_TOCADA);
-                        break;
-                    case SL_COLISION_BARRERA_MUERTA://Si mato una barrera
-                        (data->audioCallback)(COLISION_BARRERA_MUERTA);
-                        break;
-                    case SL_COLISION_MOTHERSHIP_MUERTA://Si se mato la mothership
-                        (data->audioCallback)(COLISION_MOTHERSHIP_MUERTA);
-                        break;
-                    case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
-                        (data->audioCallback)(COLISION_ALIEN_MUERTO);
-                        break;
-                    case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
-                        (data->audioCallback)(COLISION_ALIEN_TOCADO);
-                        break;
-                    case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
-                        (data->audioCallback)(COLISION_USER_TOCADO);
-                        break;
-                    default:
-                        break;
+                for(i = 0 ; eventArray[i] != 0){
+                    switch (eventArray[i]){//Detecta el evento
+                        case LOST_LEVEL://Si se perdio el nivel
+                            GAME_STATUS.pantallaActual = MENU;
+                            GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                            menuGame.exitStatus = 0;
+                            *(data->score) = 0;//Se borra el score
+                            objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                            GAME_STATUS.usrLives = assetUsuario->initLives;
+                            (data->audioCallback)(PARTIDA_PERDIDA);
+                            lost = 0;
+                            GAME_STATUS.inGame = 0;
+                            break;
+                        case WON_LEVEL://Si se gano el nivel
+                            GAME_STATUS.pantallaActual = MENU;
+                            GAME_STATUS.menuActual = MENU_WON_LEVEL;
+                            menuGame.exitStatus = 0;
+                            (*(data->usrList))->lives += 1;
+                            (data->audioCallback)(PARTIDA_GANADA);
+                            GAME_STATUS.inGame = 0;
+                            break;
+                        case SL_COLISION_BALAS://Si hubo colision entre las balas
+                            (data->audioCallback)(COLISION_CHOQUE_BALAS);
+                            break;
+                        case SL_COLISION_BARRERA_TOCADA://Si toco una barrera
+                            (data->audioCallback)(COLISION_BARRERA_TOCADA);
+                            break;
+                        case SL_COLISION_BARRERA_MUERTA://Si mato una barrera
+                            (data->audioCallback)(COLISION_BARRERA_MUERTA);
+                            break;
+                        case SL_COLISION_MOTHERSHIP_MUERTA://Si se mato la mothership
+                            (data->audioCallback)(COLISION_MOTHERSHIP_MUERTA);
+                            break;
+                        case SL_COLISION_ALIEN_MUERTO://Si se mato a un alien
+                            (data->audioCallback)(COLISION_ALIEN_MUERTO);
+                            break;
+                        case SL_COLISION_ALIEN_TOCADO://Si se golpeo a un alien
+                            (data->audioCallback)(COLISION_ALIEN_TOCADO);
+                            break;
+                        case SL_COLISION_USER_TOCADO://Si el usuario recibio un disparo
+                            (data->audioCallback)(COLISION_USER_TOCADO);
+                            break;
+                        default:
+                            break;
+                    }
+                    eventArray[i] = -1;
                 }
-                sem_post(&SEM_GAME);
             }
+            sem_post(&SEM_GAME);
         }
     }
     if(lost){

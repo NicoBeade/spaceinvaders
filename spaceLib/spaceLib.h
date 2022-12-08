@@ -185,7 +185,7 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
 
 
 //*****************COLLIDER
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo);//Recorre todas las listas para chequear si hubo colisiones
+char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo);//Recorre todas las listas para chequear si hubo colisiones
 
 
 //*****************OBJTYPES

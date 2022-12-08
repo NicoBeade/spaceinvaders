@@ -57,8 +57,8 @@ static unsigned int countList(object_t * lista);
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-
-
+#define MAX_EVENTS 5
+char eventArray[MAX_EVENTS] = {-1, -1, -1, -1, 0};//Array utilizado para devolver eventos en el collider.
 
 /*******************************************************************************************************************************************
  * 
@@ -524,15 +524,15 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
                                              \___| \___/ |_| |_| |_| \__,_| \___| |_|                                                                                       
  * 
  ******************************************************************************************************************************************/
-char collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
+char* collider(level_setting_t * levelSettings, object_t ** alienList, object_t ** usrList, object_t ** barrerasList, object_t ** balasEnemigas, object_t ** balasUsr, object_t ** motherShip, int nivelActual, int* scoreReal, int* scoreInstantaneo){
 //Esta funcion se encarga de detectar si una bala impacta contra algo.
+    int i = 0; //Desreferenciacion para el array de eventos.
+
     if(levelSettings == NULL){
         printf("Err in gameLib, collider function: levelSettings cannot be NULL\n");
         return -1;
     }
     char collition = 1;//Flag para detectar colisiones. El 1 significa que no hubo colision
-
-    char returnEvent = 0;
 
     //Primero se crea una copia de los punteros al primer elemento de cada lista para facilitar los llamados.
     object_t * listAliens = *alienList;
@@ -577,10 +577,22 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 
                 if(listBarreras->lives == 0){//Si se mato a esa barrera hay que eliminarla de la lista
                     *barrerasList = destroyObj(*barrerasList, listBarreras);
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_MUERTA : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_BARRERA_MUERTA;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
                 }
                 else{//Si no se mato a la barrera
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_BARRERA_TOCADA : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_BARRERA_TOCADA;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
                 }
                 listBalasEnemigas->lives -= 1;
                 if(listBalasEnemigas->lives == 0){//Si la bala debe morir
@@ -605,7 +617,13 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                 return LOST_LEVEL;
             }
             else{//Si el usuario no debe morir
-                returnEvent = (returnEvent == 0) ? SL_COLISION_USER_TOCADO: returnEvent;
+                if(i < MAX_EVENTS){
+                    eventArray[i] = SL_COLISION_USER_TOCADO;
+                    i++;
+                }
+                else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                }
             }
             listBalasEnemigas->lives -= 1;
             if(listBalasEnemigas-> lives == 0){//Si la bala debe morir
@@ -647,8 +665,13 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
                     *alienList = destroyObj(*alienList, listAliens);//Elimina a ese alien de la lista
                     listAliens = *alienList;
-
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_MUERTO : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_ALIEN_MUERTO;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
 
                     if(listAliens == NULL){//Si se mataron a todos los aliens hay que terminar el juego.
                         if(scoreInstantaneo != NULL && scoreReal != NULL){    
@@ -658,7 +681,13 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     }
                 }
                 else{//SI el alien no de morir
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_TOCADO : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_ALIEN_TOCADO;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
                 }
 
                 listBalasUsr->lives -= 1;
@@ -696,7 +725,13 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
                 collition = 0;
                 listBalasEnemigas->lives -= 1;
-                returnEvent = (returnEvent == 0) ? SL_COLISION_BALAS : returnEvent;
+                if(i < MAX_EVENTS){
+                    eventArray[i] = SL_COLISION_BALAS;
+                    i++;
+                }
+                else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                }
                 if(listBalasEnemigas->lives == 0){//Si se mato a esa bala hay que eliminarla de la lista
                     *balasEnemigas = destroyObj(*balasEnemigas, listBalasEnemigas);
                     listBalasEnemigas = *balasEnemigas;
@@ -746,10 +781,22 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
                     }
                     *motherShip = destroyObj(*motherShip, listMotherShip);
                     listMotherShip = *motherShip;
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_MOTHERSHIP_MUERTA : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_MOTHERSHIP_MUERTA;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
                 }
                 else{//Si la nave nodriza no muere
-                    returnEvent = (returnEvent == 0) ? SL_COLISION_ALIEN_TOCADO : returnEvent;
+                    if(i < MAX_EVENTS){
+                        eventArray[i] = SL_COLISION_ALIEN_TOCADO;
+                        i++;
+                    }
+                    else{
+                        printf("Err in spaceLib.c: collider function, maximum events reached\n");
+                    }
                 }
                 listBalasUsr->lives -= 1;
                 if(listBalasUsr->lives == 0){//Si la bala debe morir
@@ -775,7 +822,7 @@ char collider(level_setting_t * levelSettings, object_t ** alienList, object_t *
 
         collition = 1;
     }
-    return returnEvent;
+    return eventArray;
 }
 
 
