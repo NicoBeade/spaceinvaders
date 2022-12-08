@@ -278,7 +278,7 @@ int main(void){
 
     audioCallback(MUSICA_JUEGO);
 
-    pthread_create(&displayT, NULL, displayThread, &argDisplay);
+    pthread_create(&displayT, NULL, displayHandlerThread, &argDisplay);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
