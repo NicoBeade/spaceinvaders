@@ -1355,10 +1355,12 @@ void * displayThread(void * argDisplay){
         if( (timerTick % FPS) == 0 ){
             
             if(GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE){
-                sem_wait(&SEM_MENU);
-                    data->pantalla = 0;
-                    display(argDisplay);
-                sem_post(&SEM_MENU);
+                if(("lnx", platform, 3) == 1){
+                    sem_wait(&SEM_MENU);
+                        data->pantalla = 0;
+                        display(argDisplay);
+                    sem_post(&SEM_MENU);
+                }
             }
 
             else if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
