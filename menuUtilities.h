@@ -60,15 +60,6 @@ enum PANTALLAS { MENU , SAVE_SCORE, START_LEVEL , IN_GAME, DESTROY_LEVEL, QUIT_G
 
 extern menu_t* MENUES[10];//Arreglo que contiene punteros a todos los menues.
 
-#ifdef RASPI
-extern halfDisp_t halfDispTrophy;
-extern halfDisp_t halfDispAlienSpaceInvaders;
-extern halfDisp_t halfDispVolume;
-extern halfDisp_t halfDispResume;
-extern halfDisp_t halfDispRestart;
-extern halfDisp_t halfDispAAA;
-#endif
-
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -87,7 +78,6 @@ extern halfDisp_t halfDispAAA;
 extern gameStatus_t GAME_STATUS;
 
 extern game_t menuGame;
-
 
 extern menu_t menuInicio; 
 extern menu_t menuPausa; 
