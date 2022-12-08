@@ -5,7 +5,7 @@
 #define INITAUDIO audios[COLISION_ALIEN_TOCADO].sample = al_load_sample("game/audioFiles/alien_tocado.wav");\
     audios[COLISION_ALIEN_TOCADO].volume = 1.0;\
     audios[COLISION_ALIEN_MUERTO].sample = al_load_sample("game/audioFiles/alien_muerto.wav");\
-    audios[COLISION_ALIEN_MUERTO].volume = 0.3;\
+    audios[COLISION_ALIEN_MUERTO].volume = 0.5;\
     audios[COLISION_USER_TOCADO].sample = al_load_sample("game/audioFiles/user_tocado.wav");\
     audios[COLISION_USER_TOCADO].volume = 1.0;\
     audios[COLISION_USER_MUERTO].sample = al_load_sample("game/audioFiles/user_muerto.wav");\
@@ -14,13 +14,13 @@
     audios[BALA_USER].volume = 0.3;\
     audios[COLISION_MOTHERSHIP_MUERTA].sample = al_load_sample("game/audioFiles/mothership_muerta.wav");\
     audios[COLISION_MOTHERSHIP_MUERTA].volume = 1.0;\
-    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/choque_balas.wav");\
+    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/choque_balas_1.wav");\
     audios[COLISION_BARRERA_TOCADA].volume = 1.0;\
-    audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/barrera_muerta.wav");\
+    audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/barrera_muerta_1.wav");\
     audios[COLISION_BARRERA_MUERTA].volume = 1.0;\
-    audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/bkp_audios_bajo_volumen/mothership_aparece.wav");\
+    audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/mothership_aparece_1.wav");\
     audios[MOTHERSHIP_APARECE].volume = 1.0;\
-    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audio/fastinvader1.wav");\
+    audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audioFiles/movimiento_aliens.wav");\
     audios[MOVIMIENTO_ALIENS].volume = 1.0;\
     audios[BALA_ALIEN].sample = al_load_sample("game/audioFiles/bala_alien.wav");\
     audios[BALA_ALIEN].volume = 1.0;\
@@ -42,7 +42,7 @@
     audios[PARTIDA_PERDIDA].volume = 1.0;\
     
 #define INITMUSICA musica[MUSICA_MENU- AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_menu.wav");\
-    musica[MUSICA_MENU- AUDIOMAX].volume = 1.0;\
+    musica[MUSICA_MENU- AUDIOMAX].volume = 0.8;\
     musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_juego.wav");\
     musica[MUSICA_JUEGO - AUDIOMAX].volume = 1.0;
 
