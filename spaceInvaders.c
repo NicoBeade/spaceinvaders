@@ -90,6 +90,8 @@ void * moveBalaThread(void * argMoveBala);
 
 void * colliderThread(void * argCollider);
 
+void * displayThread(void * argDisplay);
+
 static void* menuHandlerThread(void * data);
 
 static void* saveScoreHandlerThread(void * data);
@@ -113,12 +115,13 @@ keys_t KEYS = { .x =0, .y = 0, .press = 0 };//Almacena las teclas presionadas po
 
 sem_t SEM_GAME;//Semaforo que regula la ejecucion de los niveles.
 sem_t SEM_MENU;//Semaforo que regula la ejecucion de los menues.
-sem_t SEM_DRIVER;
 
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del level handler.
 
 #ifdef ALLEGRO
 int flagCloseGame = 0;
+int displayStatus;
+argDisplay_t argDisplay = {0, &displayStatus};
 texto_t * toText = NULL;
 sprite_t * screenObjects = NULL;
 TextObj_t listasAllegro = {NULL, NULL};
@@ -132,16 +135,16 @@ char stringWithScore[20];
 
 unsigned int timerTick = 1000000;
 
-//------------------------    Variables de velocidad de ejecucion de threads     ------------------------
+//------------------------    Variables de velocidad de ejecucion de threads y callbacks     ------------------------
 #ifdef RASPI
 const int velMenu = 20;         //Velocidad a la que se lee el input durante un menu
 const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
-int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
 #define VEL_INCR_ALIENS 10
 #define MIN_VEL_ALIENS 50
+int (*display)(argDisplay_t* argDisplay) = displayRPI;
 #endif
 #ifdef ALLEGRO
 const int velMenu = 5;         //Velocidad a la que se lee el input durante un menu
@@ -151,6 +154,7 @@ const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el dis
 #define VEL_INCR_ALIENS 5
 #define STOP_SHOOT 20
 #define MIN_VEL_ALIENS 15
+int (*display)(argDisplay_t* argDisplay) = displayHandler;
 #endif
 const int velInput = 1;
 
@@ -205,11 +209,10 @@ int main(void){
     pthread_t displayT;
     #endif
 
-    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT;
+    pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT, displayT;
     
     sem_init(&SEM_GAME, 0, 1);//Inicializa los semaforos
     sem_init(&SEM_MENU, 0, 1);
-    sem_init(&SEM_DRIVER, 0, 1);
 
     pthread_create(&timerT, NULL, timer, NULL);
 
@@ -227,12 +230,13 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
-    data_allegro_t dataIn = {punteros, &toText, &KEYS, &flagCloseGame};
+    data_allegro_t dataIn = {punteros, &toText, &KEYS, &flagCloseGame, &displayStatus};
     data_allegro_t * dataInput = &dataIn;
     #endif
 
     #ifdef RASPI
     keys_t * dataInput = &KEYS;
+    argDisplay_t argDisplay = { &balasAlien , &balasUsr , &alienList , &UsrList , &barrerasList , &mothershipList , 0 };
     #endif
 
     pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
@@ -280,13 +284,14 @@ int main(void){
     GAME_STATUS.nivelActual = 1;
 
     audioCallback(MUSICA_JUEGO);
+
+    pthread_create(&displayT, NULL, displayThread, &argDisplay);
     
     while(GAME_STATUS.exitStatus){//El juego se ejecuta hasta que se indique lo contrario en exitStatus.
 
         switch(GAME_STATUS.pantallaActual){//Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                                            //actual y de la opcion seleccionada en algun menu.
             case MENU://-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
-
                 #ifdef RASPI
                 if(GAME_STATUS.menuActual == MENU_PAUSA){
                     sprintf(menuPausa.textOpciones[0],"%s%d%s%d    ","Resume   Score > ", scoreInstantaneo,"   Lives > ", UsrList->lives);
@@ -480,6 +485,7 @@ int main(void){
     }
 
     pthread_join(inputT, NULL);
+    pthread_join(displayT, NULL);
     pthread_join(timerT, NULL);
 
     return 0;
@@ -1331,5 +1337,35 @@ void * colliderThread(void * argCollider){
     pthread_exit(0);
 }
 
- /*******************************************************************************************************************************************
+
+
+void * displayThread(void * argDisplay){
+    //Este thread se encarga de regular los timings del display.
+
+    argDisplay_t* data = (argDisplay_t*)argDisplay;
+
+    while (GAME_STATUS.exitStatus){
+        
+        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
+        if( (timerTick % FPS) == 0 ){
+            
+            if(GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE){
+                sem_wait(&SEM_MENU);
+                    data->pantalla = 0;
+                    display(argDisplay);
+                sem_post(&SEM_MENU);
+            }
+
+            else if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
+                sem_wait(&SEM_GAME);
+                    data->pantalla = 1;
+                    display(argDisplay);
+                sem_post(&SEM_GAME);
+            }
+        }
+    }
+    pthread_exit(0);
+}
+
+/*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

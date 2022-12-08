@@ -49,7 +49,6 @@ typedef uint8_t halfDisp_t [8][16]; //matriz de 8x16 para imprimir sobre la mita
  ******************************************************************************************************************************************/
 enum SPRITESALIENS {DANIEL, PABLO, NICOLAS};
 
-#define FRAMERATE 4 //tasa de refresco del display
 #define FIRSTROW(a) (((a)==1)? 0: 7) //Macro para el barrido vertical de las letras. Ubica la primer linea en funcion del sentido
 
 /*******************************************************************************************************************************************

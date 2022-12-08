@@ -23,21 +23,19 @@
 #include <pthread.h>
 #include "displayRaspi.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "drivers/disdrv.h"
+#include "drivers/termlib.h"
+#include "sprites.h"
+#include "../spaceLib/spaceLib.h"
+#include "../spaceLib/score/score.h"
+#include <semaphore.h>
+#include <string.h>
 
-
-/*int main (void){
-    dcoord_t p = {5,5};
-    disp_init();
-    disp_clear();
-    drawSprite(p,daniel1);
-    disp_update()
-    usleep(500*1000);
-    cleanEnemy(p);
-    drawSprite(p,daniel2);
-    disp_update();
-    return 0;
-}
-*/ //Ejemplo de main 
+sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
+sem_init(&SEM_DRIVER, 0, 1);
+int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 
 
 /*******************************************************************************************************************************************
@@ -207,7 +205,7 @@ static void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la m
  * 
  ******************************************************************************************************************************************/
 
-void* displayRPIThread (void* argDisplayRPI){
+int displayRPI (argDisplay_t* argDisplayRPI){
 
     char fueraDeRango = 0;
 
@@ -220,168 +218,158 @@ void* displayRPIThread (void* argDisplayRPI){
 
     dcoord_t punto; //punto del display a escribir
 
-    while(GAME_STATUS.inGame){
-        usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        if( (timerTick % FRAMERATE) == 0 && GAME_STATUS.inGame ){
-            sem_wait(&SEM_GAME);
-            fueraDeRango = 0;
+    fueraDeRango = 0;
 
-            balasEnemigas = *(((argDisplayRPI_t*)argDisplayRPI)->balasEnemigas); //Puntero a la lista de balas enemigas
-            balasUsr = *(((argDisplayRPI_t*)argDisplayRPI)->balasUsr); //Puntero a la lista de balas del usuario
-            aliens = *(((argDisplayRPI_t*)argDisplayRPI)->aliens); //Puntero a la lista de aliens
-            naveUser = *(((argDisplayRPI_t*)argDisplayRPI)->naveUser); //Puntero a la nave del usuario
-            barriers = *(((argDisplayRPI_t*)argDisplayRPI)->barriers); //Puntero a la nave nodriza
-            mothership = *(((argDisplayRPI_t*)argDisplayRPI)->mothership); //Puntero a la nave nodriza
+    balasEnemigas = *(argDisplayRPI->balasEnemigas); //Puntero a la lista de balas enemigas
+    balasUsr = *(argDisplayRPI->balasUsr); //Puntero a la lista de balas del usuario
+    aliens = *(argDisplayRPI->aliens); //Puntero a la lista de aliens
+    naveUser = *(argDisplayRPI->naveUser); //Puntero a la nave del usuario
+    barriers = *(argDisplayRPI->barriers); //Puntero a la nave nodriza
+    mothership = *(argDisplayRPI->mothership); //Puntero a la nave nodriza
 
-            clearBuffer(); //limpio el buffer            
-            //Actualizo el buffer con la nueva posicion de los aliens
-            object_t* aux = aliens;
-            objectType_t * objTypePointer;      //Variable auxiliar que almacena el objectType de cada elemento
-            while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
+    clearBuffer(); //limpio el buffer            
+    //Actualizo el buffer con la nueva posicion de los aliens
+    object_t* aux = aliens;
+    objectType_t * objTypePointer;      //Variable auxiliar que almacena el objectType de cada elemento
+    while (aliens!= NULL){ //mientras no se haya llegado al final de la lista
 
-                punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
-                punto.y=aliens->pos.y;
+        punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
+        punto.y=aliens->pos.y;
 
-                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la nave\n"); //chequeo de pixel a imprimir
-                    fueraDeRango = 1;
-                }
-                objTypePointer = getObjType(aliens->type);
-                if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
-                    printf("Error in displayRaspi.c, displayRPIThread function : Object type %d not found\n", aliens->type);
-                    pthread_exit(0);
-                }
-                int sprite1 = atoi(objTypePointer->sprite1);
-                int sprite2 = atoi(objTypePointer->sprite2);
-                int sprite;
-                if(sprite1 < 1 || sprite1 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite1, sprite1, objTypePointer->id);
-                   sem_post(&SEM_GAME);
-                   pthread_exit(0); 
-                }
-                if(sprite1 < 1 || sprite2 > MAX_SPRITES){
-                   printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite2, sprite2, objTypePointer->id);
-                   sem_post(&SEM_GAME);
-                   pthread_exit(0);
-                }
-                if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
-                    sprite = sprite1;
-                }
-                else{
-                    sprite = sprite2;
-                }
-                switch(sprite){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
-                    case 1:
-                        drawSprite(punto,daniel1);
-                        break;
-                    case 2:
-                        drawSprite(punto,daniel2);
-                        break;
-                    case 3:
-                        drawSprite(punto,nicolas1);
-                        break;
-                    case 4:
-                        drawSprite(punto,nicolas2);
-                        break;
-                    case 5:
-                        drawSprite(punto,pablo1);
-                        break;
-                    case 6:
-                        drawSprite(punto,pablo2);
-                        break;
-                    
-                    default: printf("Se esta queriendo imprimir como alien algo que no es un alien");
-                        break;
-                    
-                }   
-                aliens=aliens->next; //se pasa al siguiente alien en la lista
-            }
-            aliens=aux; //devuelve aliens al principio de la lista
-
-            punto.x=naveUser->pos.x; //posicion en x y en y de la nave
-            punto.y=naveUser->pos.y;
-            drawSprite(punto,nave); //copia la nave en el buffer
-            
-            aux = balasEnemigas;
-
-            while (balasEnemigas!= NULL){ //mientras no se haya llegado al final de la lista
-
-                punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
-                punto.y=balasEnemigas->pos.y;
-                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la bala enemiga \n"); //chequea de pixel a imprimir
-                    fueraDeRango = 1;
-                }
-                else{   
-                    disp_write(punto,D_ON);
-                }
-                balasEnemigas = balasEnemigas -> next;
-            }
-            balasEnemigas = aux;
-
-            aux = balasUsr;
-            while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
-
-                punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
-                punto.y=balasUsr->pos.y;
-                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion en la bala aliada\n"); //chequea de pixel a imprimir
-                    fueraDeRango = 1;
-                }
-                else{   
-                    disp_write(punto,D_ON);
-                }
-                balasUsr = balasUsr -> next;
-            }
-            balasUsr = aux;
-
-            aux = barriers;
-            while (barriers!= NULL){ //mientras no se haya llegado al final de la lista
-
-                punto.x=barriers->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
-                punto.y=barriers->pos.y;
-                if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
-                    printf("Fuera de rango de impresion de las barreras\n"); //chequea de pixel a imprimir
-                    fueraDeRango = 1;
-                }
-                else{   
-                    disp_write(punto,D_ON);
-                }
-                barriers = barriers -> next;
-            }
-            barriers = aux;
-            punto.y=0;
-
-            if(*(((argDisplayRPI_t*)argDisplayRPI)->mothership) != NULL){
-                if(mothership->pos.x>=0&&mothership->pos.x<=15){
-                    punto.x=mothership->pos.x;
-                    disp_write(punto,D_ON);
-                }
-                if(mothership->pos.x+1>=0&&mothership->pos.x+1<=15){
-                    punto.x=mothership->pos.x+1;
-                    disp_write(punto,D_ON);
-                }    
-                if(mothership->pos.x+2>=0&&mothership->pos.x+2<=15){
-                    punto.x=mothership->pos.x+2;
-                    disp_write(punto,D_ON);
-                }
-            } 
-
-
-            if(GAME_STATUS.inGame && fueraDeRango == 0){
-                sem_wait(&SEM_DRIVER);
-                disp_update(); //se transfiere del buffer al display de la RPI
-                sem_post(&SEM_DRIVER);
-            }
-            else if(fueraDeRango == 1){
-                pthread_exit(0);
-            }
-            sem_post(&SEM_GAME);
-
+        if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            printf("Fuera de rango de impresion en la nave\n"); //chequeo de pixel a imprimir
+            fueraDeRango = 1;
         }
+        objTypePointer = getObjType(aliens->type);
+        if(objTypePointer == NULL){ //Si no encuentra el object type devuelve null
+            printf("Error in displayRaspi.c, displayRPIThread function : Object type %d not found\n", aliens->type);
+            return -1;
+        }
+        int sprite1 = atoi(objTypePointer->sprite1);
+        int sprite2 = atoi(objTypePointer->sprite2);
+        int sprite;
+        if(sprite1 < 1 || sprite1 > MAX_SPRITES){
+            printf("Error in displayRaspi.c displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite1, sprite1, objTypePointer->id);
+            return -1; 
+        }
+        if(sprite1 < 1 || sprite2 > MAX_SPRITES){
+            printf("Error in displayRaspi.c,231 displayRPIThread function : sprite: %s (atoi %d, id %d) has an invalid format\n", objTypePointer->sprite2, sprite2, objTypePointer->id);
+            return -1;
+        }
+        if (aliens->animationStatus%2){ //chequeo de estado de animacion, se imprime un sprite u otro dependiendo de cuantas veces se haya desplazado un alien
+            sprite = sprite1;
+        }
+        else{
+            sprite = sprite2;
+        }
+        switch(sprite){ //dependiendo del estado de animacion y el alien a imprimir, se imprime un sprite distinto
+            case 1:
+                drawSprite(punto,daniel1);
+                break;
+            case 2:
+                drawSprite(punto,daniel2);
+                break;
+            case 3:
+                drawSprite(punto,nicolas1);
+                break;
+            case 4:
+                drawSprite(punto,nicolas2);
+                break;
+            case 5:
+                drawSprite(punto,pablo1);
+                break;
+            case 6:
+                drawSprite(punto,pablo2);
+                break;
+            
+            default: printf("Se esta queriendo imprimir como alien algo que no es un alien");
+                break;
+            
+        }   
+        aliens=aliens->next; //se pasa al siguiente alien en la lista
     }
-    printf("Killed Display RPI\n");
-    pthread_exit(0);
+    aliens=aux; //devuelve aliens al principio de la lista
+
+    punto.x=naveUser->pos.x; //posicion en x y en y de la nave
+    punto.y=naveUser->pos.y;
+    drawSprite(punto,nave); //copia la nave en el buffer
+    
+    aux = balasEnemigas;
+
+    while (balasEnemigas!= NULL){ //mientras no se haya llegado al final de la lista
+
+        punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+        punto.y=balasEnemigas->pos.y;
+        if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            printf("Fuera de rango de impresion en la bala enemiga \n"); //chequea de pixel a imprimir
+            fueraDeRango = 1;
+        }
+        else{   
+            disp_write(punto,D_ON);
+        }
+        balasEnemigas = balasEnemigas -> next;
+    }
+    balasEnemigas = aux;
+
+    aux = balasUsr;
+    while (balasUsr!= NULL){ //mientras no se haya llegado al final de la lista
+
+        punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+        punto.y=balasUsr->pos.y;
+        if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            printf("Fuera de rango de impresion en la bala aliada\n"); //chequea de pixel a imprimir
+            fueraDeRango = 1;
+        }
+        else{   
+            disp_write(punto,D_ON);
+        }
+        balasUsr = balasUsr -> next;
+    }
+    balasUsr = aux;
+
+    aux = barriers;
+    while (barriers!= NULL){ //mientras no se haya llegado al final de la lista
+
+        punto.x=barriers->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
+        punto.y=barriers->pos.y;
+        if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            printf("Fuera de rango de impresion de las barreras\n"); //chequea de pixel a imprimir
+            fueraDeRango = 1;
+        }
+        else{   
+            disp_write(punto,D_ON);
+        }
+        barriers = barriers -> next;
+    }
+    barriers = aux;
+    punto.y=0;
+
+    if(*(argDisplayRPI->mothership) != NULL){
+        if(mothership->pos.x>=0&&mothership->pos.x<=15){
+            punto.x=mothership->pos.x;
+            disp_write(punto,D_ON);
+        }
+        if(mothership->pos.x+1>=0&&mothership->pos.x+1<=15){
+            punto.x=mothership->pos.x+1;
+            disp_write(punto,D_ON);
+        }    
+        if(mothership->pos.x+2>=0&&mothership->pos.x+2<=15){
+            punto.x=mothership->pos.x+2;
+            disp_write(punto,D_ON);
+        }
+    } 
+
+
+    if(fueraDeRango == 0){
+        sem_wait(&SEM_DRIVER);
+        disp_update(); //se transfiere del buffer al display de la RPI
+        sem_post(&SEM_DRIVER);
+    }
+    else if(fueraDeRango == 1){
+        return -1;
+    }
+
+    return 0;
 }
 
 /*******************************************************************************************************************************************
@@ -533,9 +521,9 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
             (*lowerDispMenu)[fil][colFinalB + direccion] = caracter[fil][i];
         }
         
-        sem_wait(&SEM_MENU);
+        //sem_wait(&SEM_MENU);
         printHalfDisp(*lowerDispMenu, 'I');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
+        //sem_post(&SEM_MENU);
     }
     
 }
@@ -566,9 +554,9 @@ static void* swipeDrawing(void* data){
         for(fil = 0 ; fil < 8 ; fil++){//Ingresa la columna del dibujo.
             (*( argSwipeDrawing -> higerDispMenu ))[fil][colFinalB + argSwipeDrawing -> direccion] = (*( argSwipeDrawing -> drawing ))[fil][i];
         }
-        sem_wait(&SEM_MENU);
+        //sem_wait(&SEM_MENU);
         printHalfDisp(*( argSwipeDrawing -> higerDispMenu ), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
+        //sem_post(&SEM_MENU);
     }
     pthread_exit(0);
 }
@@ -713,9 +701,9 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = 0;
             }
         }
-        sem_wait(&SEM_MENU);
+        //sem_wait(&SEM_MENU);
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
+        //sem_post(&SEM_MENU);
 
         usleep(VEL_TITILEO * U_SEC2M_SEC);
 
@@ -726,9 +714,9 @@ void* letterFlashThread(void* data){
                 (*(letterFlash->display))[i][j] = (*caracter)[i][j - (letterFlash->pos)->x];
             }
         }
-        sem_wait(&SEM_MENU);
+        //sem_wait(&SEM_MENU);
         printHalfDisp(*(letterFlash->display), 'S');//Muestra el contenido en el display.
-        sem_post(&SEM_MENU);
+        //sem_post(&SEM_MENU);
 
         usleep(2 * VEL_TITILEO * U_SEC2M_SEC);        
     }

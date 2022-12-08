@@ -12,6 +12,32 @@
 
 #include "menuUtilities.h"
 
+
+/*******************************************************************************************************************************************
+ * 
+                                        ___               _           _     _                   
+                                        | _ \  _ _   ___  | |_   ___  | |_  (_)  _ __   ___   ___
+                                        |  _/ | '_| / _ \ |  _| / _ \ |  _| | | | '_ \ / _ \ (_-<
+                                        |_|   |_|   \___/  \__| \___/  \__| |_| | .__/ \___/ /__/
+                                                                                |_|                                                            
+ * 
+ ******************************************************************************************************************************************/
+static int selectPlayInicio(void);
+static int selectLevels(void);
+static int selectVolume(void);
+static int selectQuitGame(void);
+static int selectResume(void);
+static int selectRestartLevel(void);
+static int selectNextLevel(void);
+static int selectMainMenu(void);
+static int selectLeaderboard(void);
+static int selectSaveScore(void);
+static int backMenuAnterior(void);
+static int selectNothing(void);
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
+
 /*******************************************************************************************************************************************
  * 
                                              _ __    ___   _ _    _  _   ___   ___
@@ -138,7 +164,7 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
 }
 
 
-int selectPlayInicio(void){
+static int selectPlayInicio(void){
     printf("Select Play Inicio\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -149,7 +175,7 @@ int selectPlayInicio(void){
     return 0;
 }
 
-int selectLevels(void){
+static int selectLevels(void){
     printf("Select Levels\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -160,7 +186,7 @@ int selectLevels(void){
     return 0;
 }
 
-int selectVolume(void){
+static int selectVolume(void){
     printf("Select Volume\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -171,7 +197,7 @@ int selectVolume(void){
     return 0;
 }
 
-int selectQuitGame(void){
+static int selectQuitGame(void){
     printf("Select Quit Game\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -183,7 +209,7 @@ int selectQuitGame(void){
     return 0;
 }
 
-int selectResume(void){
+static int selectResume(void){
     printf("Select Resume\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -194,7 +220,7 @@ int selectResume(void){
     return 0;
 }
 
-int selectRestartLevel(void){
+static int selectRestartLevel(void){
     printf("Select Restart Level\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -205,7 +231,7 @@ int selectRestartLevel(void){
     return 0;
 }
 
-int selectNextLevel(void){
+static int selectNextLevel(void){
     printf("Select Restart Level\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -233,7 +259,7 @@ int selectNextLevel(void){
     return 0;
 }
 
-int selectMainMenu(void){
+static int selectMainMenu(void){
     printf("Select Main Menu\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -245,7 +271,7 @@ int selectMainMenu(void){
     return 0;
 }
 
-int selectLeaderboard(void){
+static int selectLeaderboard(void){
     printf("Select Leaderboard\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -256,7 +282,7 @@ int selectLeaderboard(void){
     return 0;
 }
 
-int selectSaveScore(void){
+static int selectSaveScore(void){
     printf("Select Save Score\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -266,7 +292,7 @@ int selectSaveScore(void){
     return 0;
 }
 
-int backMenuAnterior(void){
+static int backMenuAnterior(void){
     printf("Select Back Menu Anterior\n");
     #ifdef RASPI
     velDispAnimation = 1;
@@ -277,7 +303,7 @@ int backMenuAnterior(void){
     return 0;
 }
 
-int selectNothing(void){
+static int selectNothing(void){
     return 1;
 }
 

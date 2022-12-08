@@ -6,7 +6,6 @@
  * 
 *************************************************************************************************/
 
-#define FPS 2
 #define MENUX 80   //Posicion x del menu
 #define MENUY 300   //Posicion y del menu
 #define ESPACIADOMENU 120   //Espaciado entre opciones del menu
@@ -42,7 +41,6 @@ typedef struct {
     bool * keyboardDownFlag;
     bool * keyboardUpFlag;
     int * keycode;
-    bool * displayFlag; 
     bool * close_display;
     int * closeGameFlag;
 
@@ -75,15 +73,14 @@ void * allegroThread (void * dataIn){
     bool close_display = false;
     bool keybordDownFlag = false;
     bool keybordUpFlag = false;
-    bool displayFlag = false; 
 
     int keycode = 0;
     
     /*****************DATOS DE LOS THREADS*******************/
 
-    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &displayFlag, &close_display, data->flagCloseGame};
+    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &close_display, data->flagCloseGame};
 
-    output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, &displayFlag};
+    output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, data->comPointer};
     keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
 
     /*************************************************************************************************************
@@ -115,6 +112,73 @@ void * allegroThread (void * dataIn){
 }
 
 /*******************************************************/
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      EVENT HANDLER
+ * 
+ * ********************************************************************************************************************************************************/
+
+void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
+
+    eventH_data_t * data = (eventH_data_t *) dataIn;
+
+    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue; 
+
+    ALLEGRO_EVENT * evp = data->ev;
+
+    while(!*data->close_display){
+
+        usleep(10 * U_SEC2M_SEC);
+
+        if(GAME_STATUS.exitStatus == 0){
+            *data->close_display = true;
+        }
+
+        if (al_get_next_event(event_queue, evp)) 
+        {    
+            if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
+                *data->closeGameFlag = 1;
+                *data->close_display = true;
+            }
+            else if (evp->type == ALLEGRO_EVENT_KEY_DOWN){
+                *data->keycode = evp->keyboard.keycode;
+                *data->keyboardDownFlag=true;
+            }
+            else if (evp->type == ALLEGRO_EVENT_KEY_UP){
+                *data->keycode = evp->keyboard.keycode;
+                *data->keyboardUpFlag=true;
+            }
+
+        }
+
+    }
+
+    pthread_exit(0);
+
+}
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      DISPLAY STATUS
+ * 
+ * ********************************************************************************************************************************************************/
+
+int displayHandler(argDisplay_t * dataIn){
+
+    *dataIn->comPointer = dataIn->pantalla + 1;
+    
+    while(*dataIn->comPointer);
+
+    return 0;
+
+}
+
+/***********************************************************************************************************************************************************
+ * 
+ *                                                                      MANEJO DE LISTAS
+ * 
+ * ********************************************************************************************************************************************************/
 
 texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy){
 // Esta funcion se encarga de agregar un nuevo texto a la lista
@@ -215,50 +279,6 @@ sprite_t * emptySprite(sprite_t * firstSprite){
         }
     }
     return NULL;             //Se devuelve la lista
-}
-
-
-void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
-
-    eventH_data_t * data = (eventH_data_t *) dataIn;
-
-    ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue; 
-
-    ALLEGRO_EVENT * evp = data->ev;
-
-    while(!*data->close_display){
-
-        usleep(10 * U_SEC2M_SEC);
-
-        if(GAME_STATUS.exitStatus == 0){
-            *data->close_display = true;
-        }
-
-        if (al_get_next_event(event_queue, evp)) 
-        {    
-            if (evp->type  == ALLEGRO_EVENT_DISPLAY_CLOSE){
-                *data->closeGameFlag = 1;
-                *data->close_display = true;
-            }
-            else if (evp->type == ALLEGRO_EVENT_KEY_DOWN){
-                *data->keycode = evp->keyboard.keycode;
-                *data->keyboardDownFlag=true;
-            }
-            else if (evp->type == ALLEGRO_EVENT_KEY_UP){
-                *data->keycode = evp->keyboard.keycode;
-                *data->keyboardUpFlag=true;
-            }
-
-        }
-
-        if (timerTick % FPS == 0){
-            *data->displayFlag = true;
-        }
-
-    }
-
-    pthread_exit(0);
-
 }
 
 /***********************************************************************************************************************************************************
@@ -583,4 +603,3 @@ void refreshDatos( char * toScore, char * toVidas, int score, int vidas){
     }
 
 }
-

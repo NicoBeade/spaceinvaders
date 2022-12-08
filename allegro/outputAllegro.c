@@ -115,7 +115,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
          * 
          * ***********************************************************/
         
-        if(*data->displayFlag){
+        if(*data->comPointer){
         
             //Se limpia la pantalla
             al_clear_to_color(al_map_rgb(BGCOLOR));
@@ -123,8 +123,7 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
             al_draw_bitmap(background, 0, bgpos, 0);                //Se dibuja el fondo
             al_draw_bitmap(background, 0, bgpos - BGHEIGHT, 0);     //Se dibuja una replica del fondo
 
-            if(GAME_STATUS.inGame == 1 && GAME_STATUS.pantallaActual != MENU){
-                sem_wait(&SEM_GAME);
+            if(*data->comPointer == 2){
  
                 //Se dibujan los elementos y textos en el buffer
                 showObjects( *((*data).punteros.balasUsr) );
@@ -135,24 +134,24 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
                 showObjects( *((*data).punteros.mothershipList) );
 
                 showTexts(*data->text);
-                sem_post(&SEM_GAME);
 
-            }else if(GAME_STATUS.inGame == 0 || GAME_STATUS.pantallaActual == MENU){
-                sem_wait(&SEM_MENU);
+                *data->comPointer = 0;
+
+            }else if(*data->comPointer == 1){
 
                 //Se escriben los textos en el buffer
                 showTexts(*data->text);
                 showSprites( *((*data).punteros.screenObjects) );
-                sem_post(&SEM_MENU);
+
+                *data->comPointer = 0;
 
             }else{
                 printf("no se encontro el escenario actual\n");
+                *data->comPointer = 3;
             }
 
             //Se muestra en pantalla
             al_flip_display();
-
-            *data->displayFlag= false;
 
         }
 

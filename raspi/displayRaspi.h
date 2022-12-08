@@ -15,18 +15,6 @@
 #ifndef DISPLAY_RASPI_H
 #define DISPLAY_RASPI_H
 
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "drivers/disdrv.h"
-#include "drivers/termlib.h"
-#include "sprites.h"
-#include "../spaceLib/spaceLib.h"
-#include "../spaceLib/score/score.h"
-#include <semaphore.h>
-#include <string.h>
-
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
@@ -44,7 +32,8 @@ typedef struct{ //argumentos a recibir por el thread del display en juego RPI
     object_t** naveUser;
     object_t** barriers;
     object_t** mothership;
-}argDisplayRPI_t;
+    char pantalla;  //Indica si ejecutar el display o no.
+}argDisplay_t;
 
 typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     char* msg;                      //Mensaje a mostrar
@@ -111,6 +100,8 @@ typedef struct {
  * 
  ******************************************************************************************************************************************/
 
+#define FPS 4 //tasa de refresco del display
+
 #define VEL_DISP_ANIMATION 3000
 
 #define OFFSETLETRA 0
@@ -142,16 +133,7 @@ typedef struct {
  * 
  ******************************************************************************************************************************************/
 
-extern unsigned int timerTick;   //Variables utilizadas para saber cuando se deben ejecutar los threads.
-
-extern keys_t KEYS;
-extern gameStatus_t GAME_STATUS;
-
-extern sem_t SEM_GAME;
 extern sem_t SEM_MENU; 
-extern sem_t SEM_DRIVER;
-
-extern int velDispAnimation;
 
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -167,7 +149,7 @@ extern int velDispAnimation;
  ******************************************************************************************************************************************/
 
 //*****************THREAD DISPLAY IN GAME
-void* displayRPIThread (void* argDisplayRPI); //prototipo del thread del display del juego en RPI
+int displayRPI (argDisplay_t* argDisplayRPI); //prototipo del thread del display del juego en RPI
 
 //*****************THREAD DISPLAY DURANTE MENUES
 void* textAnimMenu(void* argTextAnimMenu); //Se encarga de realizar la animacion de barrido de los textos durante la ejecucion de un menu.

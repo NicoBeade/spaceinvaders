@@ -31,7 +31,7 @@ typedef struct
     texto_t ** text;
 
     bool * close_display;
-    bool * displayFlag;
+    int * comPointer;
 
 }output_data_t;
 

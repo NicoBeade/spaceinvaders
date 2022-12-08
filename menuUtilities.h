@@ -38,18 +38,6 @@
  * 
  ******************************************************************************************************************************************/
 void fillLeaderboardMenu(menu_t * menuLeaderboard);  //Se utiliza para llenar los campos del menu que muestra el leaderBoard.
-int selectPlayInicio(void);
-int selectLevels(void);
-int selectVolume(void);
-int selectQuitGame(void);
-int selectResume(void);
-int selectRestartLevel(void);
-int selectNextLevel(void);
-int selectMainMenu(void);
-int selectLeaderboard(void);
-int selectSaveScore(void);
-int backMenuAnterior(void);
-int selectNothing(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 

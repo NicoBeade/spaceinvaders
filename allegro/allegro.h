@@ -2,6 +2,7 @@
  #define ALLEGRO_H
 
 #include "../spaceLib/spaceLib.h"
+#define FPS 2
 
 /******************************************************************
  * 
@@ -21,6 +22,13 @@ enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};      //id de la m
 enum VOLUME {SUBIR_AUDIO,BAJAR_AUDIO,CHECK_AUDIO};
 
 typedef int (*option_t)(void);
+typedef struct
+{
+    char pantalla;
+    int * comPointer;
+
+}argDisplay_t;
+
 
 typedef struct TEXTO
 {
@@ -98,6 +106,7 @@ typedef struct {
     texto_t ** textToShow;
     keys_t * keys;
     int * flagCloseGame;
+    int * comPointer;
 
 }data_allegro_t;
 
@@ -152,5 +161,7 @@ void playAudioAllegro(int id);
 int regAudioAllegro(int reg);
 //Detiene la musica que se esta reproduciendo
 void stopMusicAllegro();
+
+int displayHandler(argDisplay_t * dataIn);
 
 #endif
