@@ -1137,33 +1137,34 @@ void * moveAlienThread(void* argMoveAlien){
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
         if( (timerTick % velAliens) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
+            if(GAME_STATUS.inGame == 1){
+                evento = moveAlien( data -> levelSettings,  (data -> alienList), &direccion);
+                switch (evento){
+                case FASTER_ALIENS:
+                    velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
+                    if(velAliens <= MIN_VEL_ALIENS){
+                        velAliens = MIN_VEL_ALIENS;
+                    }
+                    (data->audioCallback)(MOVIMIENTO_ALIENS);
+                    usleep((velAliens) * U_SEC2M_SEC);
+                    break;
+                case SL_MOVIMIENTO_ALIENS:
+                    (data->audioCallback)(MOVIMIENTO_ALIENS);
+                    break;
+                case LOST_LEVEL:
+                    GAME_STATUS.pantallaActual = MENU;
+                    GAME_STATUS.menuActual = MENU_LOST_LEVEL;
+                    menuGame.exitStatus = 0;
 
-            evento = moveAlien( data -> levelSettings,  (data -> alienList), &direccion);
-            switch (evento){
-            case FASTER_ALIENS:
-                velAliens -= VEL_INCR_ALIENS; //Incrementa la velocidad de los aliens.
-                if(velAliens <= MIN_VEL_ALIENS){
-                    velAliens = MIN_VEL_ALIENS;
+                    *(data->score) = 0;//Se borra el score
+                    objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
+                    GAME_STATUS.usrLives = assetUsuario->initLives;
+                    (data->audioCallback)(COLISION_USER_MUERTO);
+                    GAME_STATUS.inGame = 0;
+                    break;
+                default:
+                    break;
                 }
-                (data->audioCallback)(MOVIMIENTO_ALIENS);
-                usleep((velAliens) * U_SEC2M_SEC);
-                break;
-            case SL_MOVIMIENTO_ALIENS:
-                (data->audioCallback)(MOVIMIENTO_ALIENS);
-                break;
-            case LOST_LEVEL:
-                GAME_STATUS.pantallaActual = MENU;
-                GAME_STATUS.menuActual = MENU_LOST_LEVEL;
-                menuGame.exitStatus = 0;
-
-                *(data->score) = 0;//Se borra el score
-                objectType_t * assetUsuario = getObjType((*(data->usrList))->type);
-                GAME_STATUS.usrLives = assetUsuario->initLives;
-                (data->audioCallback)(COLISION_USER_MUERTO);
-                GAME_STATUS.inGame = 0;
-                break;
-            default:
-                break;
             }
             sem_post(&SEM_GAME);
 
@@ -1180,7 +1181,7 @@ void * moveMothershipThread(void* argMoveMothership){
         object_t * mothership = *(data -> mothership);   
         if( ((timerTick % ((data -> levelSettings) -> velMothership) == 0))){
             sem_wait(&SEM_GAME);
-            if(*(data->mothership) != NULL){
+            if(*(data->mothership) != NULL && GAME_STATUS.inGame == 1){
                 //Se incrementa/decrementa en una unidad de desplazamiento la posicion en x de la nave nodriza
                 //Este evento sucede nada mas si la nave nodriza "esta viva", es decir si sus vidas son distintas de 0
                 //El desplazamiento se da hasta que la nave nodriza haya llegado al otro lado de la pantalla
@@ -1218,12 +1219,12 @@ void * moveBalaThread(void * argMoveBala){
 
             sem_wait(&SEM_GAME);
 
-            if(*(data -> balasEnemigas) != NULL){
+            if(*(data -> balasEnemigas) != NULL && GAME_STATUS.inGame == 1){
 
                 (*(data -> balasEnemigas)) = moveBala(data -> balasEnemigas, data -> levelSettings);
             }
 
-            if(*(data -> alienList) != NULL){
+            if(*(data -> alienList) != NULL && GAME_STATUS.inGame == 1){
 
                 evento = shootBala(data -> alienList, (data -> balasEnemigas), data -> levelSettings);
             }
@@ -1285,7 +1286,7 @@ void * colliderThread(void * argCollider){
             if(*(data->alienList) != NULL && *(data->alienList) != NULL){   //Si hay aliens y usuario 
                 eventArray = collider(data->levelSettings, data->alienList, data->usrList, data->barriersList, data->balasEnemigas, data->balasUsr, data->motherShip, data->nivelActual, data->score, data->scoreInstantaneo);
 
-                for(i = 0 ; eventArray[i] != -1  && eventArray[i] != 0 ; i++){
+                for(i = 0 ; eventArray[i] != -1  && eventArray[i] != 0 && GAME_STATUS.inGame == 1 ; i++){
                     switch (eventArray[i]){//Detecta el evento
                         case LOST_LEVEL://Si se perdio el nivel
                             GAME_STATUS.pantallaActual = MENU;
@@ -1367,7 +1368,9 @@ void * displayHandlerThread(void * argDisplay){
             if((GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME) ){
                 sem_wait(&SEM_GAME);
                     data->pantalla = 1;
-                    display(argDisplay);
+                    if(GAME_STATUS.inGame == 1){
+                        display(argDisplay);
+                    }
                 sem_post(&SEM_GAME);
             }
         }
