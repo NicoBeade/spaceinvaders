@@ -51,6 +51,7 @@ typedef struct {
 
     keys_t * keys;
 
+    bool * refreshInput;
     bool * close_display;
     bool * keyboardDownFlag;
     bool * keyboardUpFlag;

@@ -11,6 +11,7 @@ typedef struct {
     bool * keyboardDownFlag;
     bool * keyboardUpFlag;
     int * keycode;
+    bool * refreshInput;
     bool * close_display;
     int * closeGameFlag;
 
@@ -40,6 +41,7 @@ void * allegroThread (void * dataIn){
 
     /*****************FLAGS Y VARIABLES*********************/
 
+    bool refreshInput = false;
     bool close_display = false;
     bool keybordDownFlag = false;
     bool keybordUpFlag = false;
@@ -48,10 +50,10 @@ void * allegroThread (void * dataIn){
     
     /*****************DATOS DE LOS THREADS*******************/
 
-    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &close_display, data->flagCloseGame};
+    eventH_data_t dataH = {&event_queue, &ev, &keybordDownFlag, &keybordUpFlag, &keycode, &refreshInput ,&close_display, data->flagCloseGame};
 
-    output_data_t dataD = {&event_queue, data->punteros, data->textToShow ,&close_display, data->comPointer};
-    keyboard_data_t dataK = {&event_queue, &ev, data->keys, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
+    output_data_t dataD = {&event_queue, data->punteros, data->textToShow , &close_display, data->comPointer};
+    keyboard_data_t dataK = {&event_queue, &ev, data->keys, &refreshInput, &close_display, &keybordDownFlag, &keybordUpFlag, &keycode};
 
     /*************************************************************************************************************
      * 
@@ -96,6 +98,18 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
     ALLEGRO_EVENT_QUEUE * event_queue = * data->event_queue; 
 
     ALLEGRO_EVENT * evp = data->ev;
+        
+    ALLEGRO_TIMER * timer = NULL;
+
+    timer = al_create_timer(1.0 / 60.0);                         //Se crea el timer
+    if (!timer) {
+        fprintf(stderr, "failed to create timer!\n");
+        return -1;
+    }
+
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    
+    al_start_timer(timer); //Empieza el timer
 
     while(!*data->close_display){
 
@@ -119,11 +133,15 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
                 *data->keycode = evp->keyboard.keycode;
                 *data->keyboardUpFlag=true;
             }
+            else if (evp->type == ALLEGRO_EVENT_TIMER){
+                *data->refreshInput = true;
+            }
 
         }
 
     }
 
+    al_destroy_timer(timer);
     pthread_exit(0);
 
 }

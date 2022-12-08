@@ -46,7 +46,7 @@ inputAllegro.o: allegro/inputAllegro.c allegro/inputAllegro.h allegro/allegroUti
 menuUtilitiesAllegro.o: menuUtilities.h menuUtilities.c spaceLib/spaceLib.h allegro/allegro.h levelLoader/levelLoader.h spaceLib/score/score.h
 	gcc -c -g menuUtilities.c -Wall -o menuUtilities.o -D ALLEGRO
 
-diseñoAllegro.o: allegro/diseñoAllegro.c allegro/allegro.h allegro/allegroUtilities.h
+diseñoAllegro.o: allegro/diseñoAllegro.c allegro/diseñoAllegro.h allegro/allegro.h allegro/allegroUtilities.h
 	gcc -c -g allegro/diseñoAllegro.c -Wall $(COMPILACION_ALLEGRO)
 
 #*******************************************************************************************************************************************
