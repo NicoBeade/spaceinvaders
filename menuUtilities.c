@@ -173,6 +173,7 @@ static int selectPlayInicio(void){
     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
     GAME_STATUS.menuActual = START_LEVEL_MENU;
     GAME_STATUS.menuAnterior = -1;
+    GAME_STATUS.nivelActual = 1;
     return 0;
 }
 
