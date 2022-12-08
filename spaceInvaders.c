@@ -1362,7 +1362,7 @@ void * displayThread(void * argDisplay){
             }
             #endif
 
-            else if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
+            if(GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME){
                 sem_wait(&SEM_GAME);
                     data->pantalla = 1;
                     display(argDisplay);
