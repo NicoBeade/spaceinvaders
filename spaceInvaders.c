@@ -1017,10 +1017,12 @@ static void* saveScoreHandlerThread(void * data){
                 stopSweep = 4;
             }
         }
+        #ifdef ALLEGRO
         if(flagCloseGame){
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
+        #endif
     }
     #ifdef RASPI
     animStatus = 0;
@@ -1096,10 +1098,12 @@ static void* levelHandlerThread(void * data){
                 moveNaveUsuario(menu -> naveUsr, menu -> levelSettings, IZQUIERDA);
             }
         }
+        #ifdef ALLEGRO
         if(flagCloseGame){
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
+        #endif
     }
 
     pthread_exit(0);
