@@ -228,7 +228,7 @@ int main(void){
     #endif
 
     #ifdef RASPI
-    argInputRPI_t* dataInput = {&KEYS, &GAME_STATUS.exitStatus}
+    argInputRPI_t* dataInput = {&KEYS, &GAME_STATUS.exitStatus};
     argDisplay_t argDisplay = { &balasAlien , &balasUsr , &alienList , &UsrList , &barrerasList , &mothershipList , 0 };
     #endif
 
