@@ -110,9 +110,7 @@ void changeOption(void * dataIn){
                 puntero = puntero->next;
             }
 
-            if(((data->menu)->spritesDir)[0] != 0){
-                sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
-            }
+            sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
         }
     }
 }
