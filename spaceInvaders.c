@@ -571,18 +571,22 @@ static void* menuHandlerThread(void * data){
     #ifdef ALLEGRO
         int preSelect = 0;//Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
         float volumenActual = 0;
+        int menuActualAllegro = 0;
         sem_wait(&SEM_MENU);
 
         if(GAME_STATUS.menuActual == MENU_VOLUME){
             volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
             stopMusicAllegro();
             allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
+            menuActualAllegro = AVOLUMEN;
 
         }else if(GAME_STATUS.menuActual == MENU_LEADERBOARD){
             allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
+            menuActualAllegro = ALEADERBOARD;
 
         }else{
             allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
+            menuActualAllegro = ADEFAULT;
 
         }
         toText = allegroList->textoList;
@@ -631,7 +635,7 @@ static void* menuHandlerThread(void * data){
 
                 #ifdef ALLEGRO
                 
-                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
                 
                 if(GAME_STATUS.menuActual == MENU_VOLUME){
@@ -678,7 +682,7 @@ static void* menuHandlerThread(void * data){
                 #endif
 
                 #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu};
+                changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
                 
                 if(GAME_STATUS.menuActual == MENU_VOLUME){

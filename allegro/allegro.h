@@ -21,6 +21,8 @@ enum MUSICA {MUSICA_MENU = AUDIOMAX ,MUSICA_JUEGO, MUSICAMAX};      //id de la m
 
 enum VOLUME {SUBIR_AUDIO,BAJAR_AUDIO,CHECK_AUDIO};
 
+enum MENUESALLEGRO {ADEFAULT, AVOLUMEN, ALEADERBOARD};
+
 typedef int (*option_t)(void);
 typedef struct
 {
