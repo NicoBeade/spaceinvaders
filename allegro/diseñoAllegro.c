@@ -70,16 +70,17 @@ void changeOption(void * dataIn){
     if(!dataIn){
         printf("puntero a datos NULL\n");
     }
+        
+    changeOptionData_t * data = (changeOptionData_t *) dataIn;
 
-    if(GAME_STATUS.menuActual != MENU_VOLUME){
-        changeOptionData_t * data = (changeOptionData_t *) dataIn;
+    if(data->menuActual != VOLUMEN){
         texto_t * puntero = (*data->toText)->next;
         sprite_t * sprite = *data->toSprite;
         
         int i = 0;
         int esc = 0; //Esta variable se encarga de saber si hay que subir o bajar las opciones
 
-        if(GAME_STATUS.menuActual != MENU_LEADERBOARD){
+        if(data->menuActual != LEADERBOARD){
             if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
 
                 esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo

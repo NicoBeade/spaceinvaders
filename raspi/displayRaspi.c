@@ -28,7 +28,6 @@
 #include "drivers/disdrv.h"
 #include "drivers/termlib.h"
 #include "sprites.h"
-#include "../spaceLib/spaceLib.h"
 #include "../spaceLib/score/score.h"
 #include <semaphore.h>
 #include <string.h>
