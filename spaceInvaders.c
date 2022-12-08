@@ -504,7 +504,7 @@ static void* menuHandlerThread(void * data){
 */
 	menu_t * menu = (menu_t *) data;
 
-    unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
 
     int select = 0;//Esta variable se utiliza para indicar la opcion seleccionada dentro del menu.
     if(GAME_STATUS.menuActual == MENU_VOLUME){
@@ -769,7 +769,7 @@ static void* saveScoreHandlerThread(void * data){
 
     int select = 0;//Esta variable se utiliza para indicar la letra seleccionada dentro del menu. 
 
-    unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
+    unsigned char stopSweep = 1;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
     
     char letraAnterior;
     char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
