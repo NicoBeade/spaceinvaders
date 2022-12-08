@@ -223,16 +223,15 @@ int main(void){
 
     #ifdef ALLEGRO
     punteros_t punteros = {&alienList, &UsrList, &barrerasList, &balasUsr, &balasAlien, &mothershipList, &screenObjects};
-    data_allegro_t dataIn = {punteros, &toText, &KEYS, &flagCloseGame, &displayStatus};
-    data_allegro_t * dataInput = &dataIn;
+    data_allegro_t dataInput = {punteros, &toText, &KEYS, &flagCloseGame, &displayStatus};
     #endif
 
     #ifdef RASPI
-    argInputRPI_t* dataInput = {&KEYS, &GAME_STATUS.exitStatus};
+    argInputRPI_t dataInput = {&KEYS, &GAME_STATUS.exitStatus};
     argDisplay_t argDisplay = { &balasAlien , &balasUsr , &alienList , &UsrList , &barrerasList , &mothershipList , 0 };
     #endif
 
-    pthread_create(&inputT, NULL, INPUT_THREAD, dataInput);//Comienza a leer el input
+    pthread_create(&inputT, NULL, INPUT_THREAD, &dataInput);//Comienza a leer el input
 
     audioCallback_t audioCallback;
     volumeCallback_t volumeCallback;
