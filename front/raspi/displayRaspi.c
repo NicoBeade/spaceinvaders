@@ -45,10 +45,8 @@ int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del d
  ******************************************************************************************************************************************/
 //*****************FUNCIONES GENERICAS DEL DISPLAY
 static void drawSprite(dcoord_t, sprite_t); //prototipos  de dibujar y limpiar enemigos
-//static void cleanSprite(dcoord_t);
 static void clearBuffer(void); //borra los contenidos del buffer del display sin eliminar el del display
 static void printLetter(caracteres_t letter, dcoord_t coordenada); //imprime letra en display en la coordenada correspondiente
-//static void printFullDisp(fullDisp_t displaySprite); //imprime todo el display
 static void printHalfDisp(halfDisp_t halfDispSprite, char mitad); //Imprime una mitad del display.
 
 //*****************THREAD DISPLAY DURANTE MENUES
@@ -57,7 +55,6 @@ static void swipeCharacter(halfDisp_t* lowerDispMenu, caracteres_t caracter, int
 static void copyMatrixLetter(char,uint8_t [8][4]); //Copia de matrices de letra
 static void sweepMatrix(uint8_t [8][4], int ); //Barrido de letra x1 linea 
 static void addRow(uint8_t [8][4], uint8_t [4], int ); //Agrega una linea en la matriz con las celdas correspondientes
-//static void printTerminalMatrix(uint8_t [8][4]); //Funcion auxiliar de debugeo para imprimir en display una letra dada una coord
 static void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del display.
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
@@ -83,30 +80,14 @@ static void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en di
             if (alien [j][i] == 1){
                 pAux.x = p.x+i;
                 pAux.y = p.y+j;
-                if(pAux.x>15||pAux.y>15)printf("Fuera de ranfo de impresion en algun pixel de la nave");
+                if(pAux.x>15||pAux.y>15)printf("Fuera de rango de impresion en algun pixel de la nave");
                 disp_write(pAux,D_ON); //Actualiza el buffer          
             }
         }
     }
 }
 
-/*
-static void cleanSprite(dcoord_t p){ //Esta funcion borra en display un enemigo (tienen todos el mismo tamanyo) en la posicion p
-    uint8_t i,j;
-    dcoord_t pAux;
-    for (i=0 ; i<=2 ; i++){
-        for(j=0 ; j<=1 ; j++){
-            pAux.x = p.x+i; 
-            pAux.y = p.y+j;
-            if(pAux.x>15||pAux.y>15){
-            printf("Fuera de rango de impresion en algun pixel de la nave");
-            }
-            disp_write(pAux ,D_OFF); //Actualiza el buffer
-        }
-    }
-}*/
-
-static void clearBuffer(void){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
+static void clearBuffer(void){ //Esta limpia el buffer
     uint8_t i,j;
     dcoord_t pAux;
     for (i=0 ; i<16 ; i++){
@@ -137,27 +118,6 @@ static void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una
     disp_update();
     sem_post(&SEM_DRIVER);
 }
-
-/*
-static void printFullDisp(fullDisp_t displaySprite){ //imprime toda la pantalla barriendo los 256 pixeles de una matriz de 16x16
-    int i,j;
-    dcoord_t punto;
-    for (i=0; i<16; i++){
-        for (j=0; j<16; j++){
-            punto.x=j;
-            punto.y=i;
-            if (displaySprite[i][j]==1){
-                disp_write(punto,D_ON);
-            }
-            else{
-                disp_write(punto,D_OFF);
-            }
-        }
-    }
-    sem_wait(&SEM_DRIVER);
-    disp_update();
-    sem_post(&SEM_DRIVER);
-}*/
 
 static void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la mitad de la pantalla barriendo los 128 pixeles de una matriz
     int i,j,offset;                                        //se puede elegir cual mitad del display ingresando I (inf) o S (sup)
