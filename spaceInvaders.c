@@ -766,8 +766,7 @@ static void* saveScoreHandlerThread(void * data){
     int select = 0;//Esta variable se utiliza para indicar la letra seleccionada dentro del menu. 
 
     unsigned char stopSweep = 0;//Esta variable se utiliza para evitar que el usuario pueda cambiar de opcion muy rapido
-    
-    char letraAnterior;
+       
     char letraActual[4] = {'A', 'A', 'A', 0}; //En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
 
     #ifdef ALLEGRO
@@ -776,6 +775,7 @@ static void* saveScoreHandlerThread(void * data){
 
     //*****************************************     Inicializa el thread que barre el display       *****************************
     #ifdef RASPI
+        char letraAnterior;
         unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 0 : 1;
         char titilar = 1; //Flag que indica si se debe titilar la letra.
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
@@ -901,10 +901,10 @@ static void* saveScoreHandlerThread(void * data){
             if(ARRIBA_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia arriba
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra    
-                pthread_join(titileoT, NULL);            
+                pthread_join(titileoT, NULL);       
+                letraAnterior = letraActual[select];     
                 #endif
 
-                letraAnterior = letraActual[select];
                 letraActual[select] += 1; //Apunta a la siguiente letra.
 
                 #ifdef RASPI
@@ -944,10 +944,10 @@ static void* saveScoreHandlerThread(void * data){
             if(ABAJO_INPUT && !stopSweep){//Si se presiona para cambiar de letra hacia abajo
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra    
-                pthread_join(titileoT, NULL);            
+                pthread_join(titileoT, NULL);
+                letraAnterior = letraActual[select];            
                 #endif
 
-                letraAnterior = letraActual[select];
                 letraActual[select] -= 1; //Apunta a la siguiente letra.
 
                 #ifdef RASPI
