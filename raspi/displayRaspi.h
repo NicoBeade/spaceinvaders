@@ -122,7 +122,7 @@ typedef struct {
 #define DERECHA 1
 #define ABAJO 2
 
-#define BARRIDO_LETRA 2000  //Velocidad del barrido de la letra
+#define BARRIDO_LETRA 1000  //Velocidad del barrido de la letra
 
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
