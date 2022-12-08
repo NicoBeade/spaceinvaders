@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "drivers/termlib.h"
+#include "drivers/disdrv.h"
 #include "../spaceLib/score/score.h"
 #include <string.h>
 
