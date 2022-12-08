@@ -413,7 +413,7 @@ void* textAnimMenu(void* argTextAnimMenu){
         pthread_exit(0);
     }
 
-    if((data->notSwipe) == 1){
+    if((data->notSwipe) == 0){
         int i;
         caracteres_t* caracter;
         dcoord_t pos = { 0, 8 };
