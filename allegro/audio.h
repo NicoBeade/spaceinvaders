@@ -23,7 +23,7 @@
     audios[MOTHERSHIP_APARECE].sample = al_load_sample("game/audioFiles/mothership_aparece_1.wav");\
     audios[MOTHERSHIP_APARECE].volume = 1.0;\
     audios[MOVIMIENTO_ALIENS].sample = al_load_sample("game/audioFiles/movimiento_aliens.wav");\
-    audios[MOVIMIENTO_ALIENS].volume = 1.0;\
+    audios[MOVIMIENTO_ALIENS].volume = 0.7;\
     audios[BALA_ALIEN].sample = al_load_sample("game/audioFiles/bala_alien.wav");\
     audios[BALA_ALIEN].volume = 1.0;\
     audios[SELECT_MENU].sample = al_load_sample("game/audioFiles/select_menu.wav");\
