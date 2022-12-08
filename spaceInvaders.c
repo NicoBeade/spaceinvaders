@@ -25,8 +25,6 @@
 
 #ifdef RASPI
 #include "front/raspi/inputRaspi.h"
-#include "front/raspi/drivers/disdrv.h"
-#include "front/raspi/drivers/joydrv.h"
 #include "front/raspi/audioHandlerRaspi.h"
 #endif
 
@@ -195,8 +193,8 @@ int main(void){
 
     #ifdef RASPI//Inicializa los drives para la raspi
     initSem();
-    disp_init();
-    joy_init();
+    dispInit();
+    joyInit();
     #endif
 
     pthread_t timerT, inputT, menuHandlerT, levelHandlerT, moveAlienT, moveBalaT, colliderT, mothershipT, saveScoreT, displayT;

@@ -52,3 +52,7 @@ void* inputRPIThread(void* argInputRPI){
     }
     pthread_exit(0);
 }
+
+void joyInit(void){
+    joy_init();
+}

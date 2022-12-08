@@ -152,6 +152,7 @@ extern int velDispAnimation;
                                                                                 |_|                                                            
  * 
  ******************************************************************************************************************************************/
+void dispInit(void);
 void initSem(void);
 void clearDisplay(void);
 

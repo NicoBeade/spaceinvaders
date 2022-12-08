@@ -72,6 +72,10 @@ static void* swipeDrawing(void*);//Muestra un dibujo en la parte superior del di
 
 //IMPORTANTE: AL DIBUJAR O LIMPIAR EL DISPLAY HAY QUE LLAMAR A disp_update() Y DEBE HABER SIDO INICIALIZADO CON disp_init()
 
+void dispInit(void){
+    disp_init();
+}
+
 static void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
