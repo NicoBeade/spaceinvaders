@@ -1,3 +1,23 @@
+/**********************************************************************************************************************************************************
+ *
+                     _____    _                                             _   _                               
+                    |  __ \  (_)              ~~~~~~                /\     | | | |                              
+                    | |  | |  _   ___    ___   _ __     ___        /  \    | | | |   ___    __ _   _ __    ___  
+                    | |  | | | | / __|  / _ \ | '_ \   / _ \      / /\ \   | | | |  / _ \  / _` | | '__|  / _ \ 
+                    | |__| | | | \__ \ |  __/ | | | | | (_) |    / ____ \  | | | | |  __/ | (_| | | |    | (_) |
+                    |_____/  |_| |___/  \___| |_| |_|  \___/    /_/    \_\ |_| |_|  \___|  \__, | |_|     \___/ 
+                                                                                            __/ |               
+                                                                                            |___/                
+* 
+ ***********************************************************************************************************************************************************
+*   Este archivo contiene las funciones encargadas de diseñar los distintos menues del juego junto a las funciones encargadas
+*   de modificarlos a la hora de interactuar con ellos.
+*   Por un lado tenemos la funcion allegroMenu encargada de mostrar menues genericos y por otro funciones aparte para el diseño
+*   de otros menues como el leaderbaord o savescore
+*   Utiliza funciones de manejo de listas declaradas en allegro.c.
+*
+ **********************************************************************************************************************************************************/
+
 #include "allegro.h"
 #include "allegroUtilities.h"
 
@@ -5,7 +25,10 @@
  * 
  *                              CONSTANTES
  * 
-*************************************************************************************************/
+*************************************************************************************************
+*  Estas constantes se utilizan para el diseño de los menues
+*
+**************************************************************/
 
 #define MENUX 80   //Posicion x del menu
 #define MENUY 300   //Posicion y del menu

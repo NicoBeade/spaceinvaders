@@ -121,6 +121,10 @@ typedef struct {
 
 //protoripo de thread principal de allegro
 void * allegroThread (void * arg);
+//Callback de manejo del display
+int displayHandler(argDisplay_t * dataIn);
+
+/*******Diseño de menues************/
 
 //levelAllegro: esta funcion de encarga de preparar las listas para la reproduccion de los niveles
 texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
@@ -133,7 +137,6 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists);
 //changeOption: Esta funcion se encarga de ejucutar la animacion de cambiar de opcion en el menu
 void changeOption(void * data);
 
-
 //allegroScore: Esta funcion se encarga de preparar las listas para mostrar el menu de savescore
 TextObj_t * allegroScore(TextObj_t * lists, char* scoreActual, char letras[15][2]);
 //changeLetra: Se encarga de realizar la animacion de cambio de letras en el menu de score
@@ -145,8 +148,12 @@ sprite_t * changeCol(sprite_t * toshow, int nextOp);
 //allegroLiderboard: Esta funcion se encarga de preparar las listas para mostrar el menu de liderboard
 TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
 
+//allegroVolume: Esta funcion se encarga de preparar las listas para mostrar el menu del volumen
 TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual);
+//changeVolume: Esta funcon se encarga de actualizar el menu del volumen
 sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual);
+
+/*******Manejo de listas************/
 
 //añade un texto_t a una lista
 texto_t* addText(texto_t * firstObj, char * texto, int fuente, int posx, int posy);
@@ -158,13 +165,13 @@ sprite_t* addSprite(sprite_t * firstObj, char * direccion, int posx, int posy);
 //limpia una lista de los sprites
 sprite_t * emptySprite(sprite_t * firstSprite);
 
+/*******Manejo de audio************/
+
 //añade un sonido a la cola a partir de la id
 void playAudioAllegro(int id);
 //regula el volumen general del audio o devuelve el volumen actual
 int regAudioAllegro(int reg);
 //Detiene la musica que se esta reproduciendo
 void stopMusicAllegro();
-
-int displayHandler(argDisplay_t * dataIn);
 
 #endif
