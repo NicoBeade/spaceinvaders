@@ -36,16 +36,8 @@
 TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
 //Esta funcion se utiliza para mostrar los menues en pantalla
     
-    printf("se muestra el menu 1\n");
     int i;
-    int titleLen = strlen(data->titulo);
     TextObj_t salida = {NULL,NULL};
-
-    if(data->titulo != NULL){
-        salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36 + 50, 50);
-    }
-
-    printf("se muestra el menu 2\n");
 
     for( i = 0; i<data->cantOpciones; i++){
         //Se agregan los textos de las opciones a la lista de textos
@@ -60,9 +52,14 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
 
     salida.spriteList = addSprite(salida.spriteList, ((data->spritesDir)[0]), X_MAX - 400, Y_MAX/2);
-    /*if(data->titulo == NULL){
+    
+    if(data->titulo != NULL){
+        int titleLen = strlen(data->titulo);
+        salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36 + 50, 50);
+    }else{
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2, 0);
-    };*/
+    };
+
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
 
@@ -79,7 +76,7 @@ void changeOption(void * dataIn){
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
 
     if(data->menuActual != AVOLUMEN){
-        texto_t * puntero = (*data->toText)->next;
+        texto_t * puntero = (*data->toText);
         sprite_t * sprite = *data->toSprite;
         
         int i = 0;
