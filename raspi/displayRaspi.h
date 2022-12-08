@@ -153,6 +153,8 @@ extern int velDispAnimation;
  * 
  ******************************************************************************************************************************************/
 void initSem(void);
+void clearDisplay(void);
+
 //*****************THREAD DISPLAY IN GAME
 int displayRPI (argDisplay_t* argDisplayRPI); //prototipo del thread del display del juego en RPI
 

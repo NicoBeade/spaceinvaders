@@ -192,6 +192,12 @@ static void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la m
 void initSem(void){
     sem_init(&SEM_DRIVER, 0, 1);
 }
+
+void clearDisplay(void){
+    sem_wait(&SEM_DRIVER);
+    disp_clear();
+    sem_post(&SEM_DRIVER);
+}
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
 
