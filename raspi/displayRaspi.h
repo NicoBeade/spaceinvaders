@@ -152,7 +152,7 @@ extern sem_t SEM_MENU;
                                                                                 |_|                                                            
  * 
  ******************************************************************************************************************************************/
-
+void initSem(void);
 //*****************THREAD DISPLAY IN GAME
 int displayRPI (argDisplay_t* argDisplayRPI); //prototipo del thread del display del juego en RPI
 

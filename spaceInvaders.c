@@ -204,6 +204,7 @@ int main(void){
     directory_t carpetaNiveles = {};
 
     #ifdef RASPI//Inicializa los drives para la raspi
+    initSem();
     disp_init();
     joy_init();
     pthread_t displayT;

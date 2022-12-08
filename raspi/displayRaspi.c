@@ -30,7 +30,7 @@
 #include <string.h>
 
 sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
-sem_init(&SEM_DRIVER, 0, 1);
+
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
 
 
@@ -187,6 +187,10 @@ static void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la m
     sem_wait(&SEM_DRIVER);
     disp_update();
     sem_post(&SEM_DRIVER);
+}
+
+void initSem(void){
+    sem_init(&SEM_DRIVER, 0, 1);
 }
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
