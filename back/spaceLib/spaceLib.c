@@ -29,10 +29,6 @@
 
 #define ABS(x) (((x) > 0)? (x) : (-x))
 
-#ifdef FIX_UNDEF_EXTERNS
-gameStatus_t GAME_STATUS;
-game_t menuGame;
-#endif
 //extern unsigned int timerTick;
 /*******************************************************************************************************************************************
  * 
