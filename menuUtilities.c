@@ -53,9 +53,9 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
                       {&halfDispAlienSpaceInvaders, &halfDispSelectLevels, &halfDispTrophy, &halfDispVolume, &halfDispQuitGame}, 
                       5 , 1 , changeOption };//Estructura del menu de inicio.
 
-menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Resume    ", "Restart Level    ", "Main menu    ",  "Volume    ", "Quit Game    "}, 
-                      {&halfDispResume, &halfDispRestart, &halfDispHome,  &halfDispVolume, &halfDispQuitGame}, 
+menu_t menuPausa = { &KEYS , {selectResume, selectRestartLevel, selectVolume, selectMainMenu,  selectQuitGame}, backMenuAnterior,
+                      {"Resume    ", "Restart Level    ","Volume    ","Main menu    ", "Quit Game    "}, 
+                      {&halfDispResume, &halfDispRestart,  &halfDispVolume, &halfDispHome, &halfDispQuitGame}, 
                       5 , 1 , changeOption };//Estructura del menu de pausa.
 
 menu_t menuLostLevel = { &KEYS , {selectNothing, selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
