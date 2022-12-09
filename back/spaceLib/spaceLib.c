@@ -452,7 +452,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         }
         int vidaBala = balaType -> initLives;
         if(naveType -> maxBullets > 0){
-            factorCorreccion = 1 - (balasActuales)/10;
+            factorCorreccion = (naveType -> maxBullets - balasActuales)/(2*(naveType -> maxBullets))+0.5;
         }
         else{
             factorCorreccion = 0;
