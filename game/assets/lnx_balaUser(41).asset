@@ -6,8 +6,8 @@ initLives 1
 shootProb 6
 maxBullets 7
 balaID 0
-sprite1 game/spritesAllegro/balaUser.png
-sprite2 game/spritesAllegro/balaUser.png
+sprite1 game/spritesAllegro/balaUser1.png
+sprite2 game/spritesAllegro/balaUser2.png
 sprite3 NULL
 sprite4 NULL
 score 0
