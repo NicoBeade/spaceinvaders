@@ -442,7 +442,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
             printf("Err in gameLib, shootBala function: naveType not found with type %d\n", nave->type);
             return -1;
         }
-        probabilidad = (naveType -> shootProb) * (float)(TIRADAS_DE_PROBABILIDAD/contadorAliens);
+        probabilidad = (naveType -> shootProb) * (float)(TIRADAS_DE_PROBABILIDAD/contadorAliens)+contadorAliens;
         int balaTypeID = naveType -> balaID;
         balaType = getObjType(balaTypeID);
         if (balaType == NULL){
