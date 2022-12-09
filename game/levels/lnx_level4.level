@@ -1,4 +1,4 @@
-ASSET_MODIFY    1 ;modifico los aliens
+ASSET_MODIFY    11 ;modifico los aliens
     maxBullets 10
     initLives 4
 END
