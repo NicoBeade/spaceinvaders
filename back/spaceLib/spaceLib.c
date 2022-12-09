@@ -426,6 +426,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         printf("Err in gameLib, shootBala function: listaNaves cannot be empty (null)\n");
         return -1;
     }
+
     int probabilidad;                                           //Probabilidad de disparo de la nave
     objectType_t * balaType;                                    //Puntero al tipo de bala
     objectType_t * naveType = getObjType(nave->type);           //Puntero al tipo de nave
@@ -435,6 +436,10 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     }
     int balasDisponibles;                                       //Balas disponibles para disparar
     balasDisponibles = naveType -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales. Se toma la primera nave como ref
+
+    int alienSeleccionado = rand()%(countList(*listaNaves)+1);
+    
+
     while(balasDisponibles > 0 && nave != NULL){
         contadorAliens++;
         naveType = getObjType(nave -> type);
@@ -442,7 +447,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
             printf("Err in gameLib, shootBala function: naveType not found with type %d\n", nave->type);
             return -1;
         }
-        probabilidad = (naveType -> shootProb) * (float)(TIRADAS_DE_PROBABILIDAD/contadorAliens)+contadorAliens;
+        probabilidad = (naveType -> shootProb);
         int balaTypeID = naveType -> balaID;
         balaType = getObjType(balaTypeID);
         if (balaType == NULL){
@@ -456,7 +461,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         else{
             factorCorreccion = 0;
         }
-        if(((rand()%1000) < (float) (probabilidad * factorCorreccion))|| (naveType->aliado && naveType->shootProb > 0)){
+        if((alienSeleccionado == contadorAliens && ((rand()%1000) < (float) (probabilidad * factorCorreccion))) || (naveType->aliado && naveType->shootProb > 0)){
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - (balaType -> ancho)/2 ;
             int yOffset = (naveType -> aliado)? 1 - (balaType -> alto) : (naveType -> alto);
