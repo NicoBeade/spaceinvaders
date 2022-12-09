@@ -244,6 +244,8 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists){
         }
     }
 
+    salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/laureles.png", X_MAX/2 - 120 , Y_MAX/2);
+
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
 
