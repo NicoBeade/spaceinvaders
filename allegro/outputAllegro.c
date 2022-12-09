@@ -22,7 +22,7 @@
  * ********************************************************************************************************************************************************/
 
 static ALLEGRO_FONT * fuentes[FONTMAX] = {0};   //Array de fuentes
-static float generalVolume = 1.0;               //Volumen general
+static float generalVolume = 0.8;               //Volumen general
 static int idQeue[20];                          //Qeue de sonidos a reproducir
 
 /***********************************************************************************************************************************************************

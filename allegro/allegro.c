@@ -104,7 +104,6 @@ void * eventHandler(ALLEGRO_THREAD * thr, void * dataIn){
     timer = al_create_timer(1.0 / 60.0);                         //Se crea el timer
     if (!timer) {
         fprintf(stderr, "failed to create timer!\n");
-        return -1;
     }
 
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
