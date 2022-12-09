@@ -2,43 +2,43 @@ maxMShipXLevel      3
 ;------------------ALIENS FILA 1-------------------
 
 ALIEN
-    type  1
+    type  11
     posX  150
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  250
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  350
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  450
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  550
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  650
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  750
     posY  100
 END
@@ -46,7 +46,7 @@ END
 ;------------------USUARIO-------------------
 
 USUARIO
-    type 40
+    type 1
     posX 100
     posY 650
 END
@@ -54,37 +54,37 @@ END
 ;------------------BARRERAS------------------
 
 BARRERA
-    type  35
+    type  22
     posX  100
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  154
     posY  500
 END
 
 BARRERA
-    type  35
+    type  22
     posX  700
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  754
     posY  500
 END
 
 BARRERA
-    type  35
+    type  22
     posX  400
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  454
     posY  500
 END
