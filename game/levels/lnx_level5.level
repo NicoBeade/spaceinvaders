@@ -1,53 +1,64 @@
-ASSET_MODIFY    1 ;modifico los aliens
+ASSET_MODIFY    11 ;modifico los aliens1
+    shootProb 4
     maxBullets 10
     initLives 4
 END
-ASSET_MODIFY    28 ;
-    maxBullets 10
-    initLives 4
+ASSET_MODIFY    1	;modifico el usuario
+    maxBullets 2
+    initLives 3
 END
 
-maxMShipXLevel      3
+maxMShipXLevel      3	;Seteo la cantidad maxima de naves nodrizas en 3
+velMothership		20	;Seteo la velocidad de las naves nodrizas en 20
+
+;------------------USUARIO-------------------
+
+USUARIO
+    type 1
+    posX 100
+    posY 650
+END
+
 ;------------------ALIENS FILA 1-------------------
 
 ALIEN
-    type  1
+    type  11
     posX  150
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  250
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  350
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  450
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  550
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  650
     posY  100
 END
 
 ALIEN
-    type  1
+    type  11
     posX  750
     posY  100
 END
@@ -55,91 +66,85 @@ END
 ;------------------ALIENS FILA 2-------------------
 
 ALIEN
-    type  28
+    type  13
     posX  150
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  250
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  350
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  450
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  550
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  650
     posY  200
 END
 
 ALIEN
-    type  28
+    type  13
     posX  750
     posY  200
-END
-
-;------------------USUARIO-------------------
-
-USUARIO
-    type 40
-    posX 100
-    posY 650
 END
 
 ;------------------BARRERAS------------------
 
 BARRERA
-    type  35
+    type  22
     posX  100
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  154
     posY  500
 END
 
 BARRERA
-    type  35
+    type  22
     posX  700
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  754
     posY  500
 END
 
 BARRERA
-    type  35
+    type  22
     posX  400
     posY  500
 END
 
 BARRERA
-    type  34
+    type  21
     posX  454
     posY  500
 END
 
-velBalas			5
+desplazamientoUsr -  ;Se cambia el signo (inversion de controles)
+
+

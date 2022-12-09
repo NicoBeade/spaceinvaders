@@ -2,13 +2,13 @@
 maxMShipXLevel      3
 
 ALIEN
-    type  9
+    type  13
     posX  2
     posY  1
 END
 
 ALIEN
-    type  9
+    type  13
     posX  6
     posY  1
 END
@@ -20,29 +20,29 @@ END
 
 ;Nave del usuario
 USUARIO
-    type 40
+    type 1
     posX 6
     posY 14
 END
 
 ; Barrera 1
     BARRERA
-        type 50
+        type 21
         posX 2
         posY 11
     END
     BARRERA
-        type 50
+        type 21
         posX 3
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 2
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 3
         posY 11
     END
@@ -50,22 +50,22 @@ END
 
 ; Barrera 2
     BARRERA
-        type 50
+        type 21
         posX 12
         posY 11
     END
     BARRERA
-        type 50
+        type 21
         posX 13
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 12
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 13
         posY 11
     END
