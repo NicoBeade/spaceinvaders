@@ -1,6 +1,8 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#include <string.h>
+#include <time.h>
 
 #define INITAUDIO audios[COLISION_ALIEN_TOCADO].sample = al_load_sample("game/audioFiles/alien_tocado.wav");\
     audios[COLISION_ALIEN_TOCADO].volume = 1.0;\
