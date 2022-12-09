@@ -462,7 +462,7 @@ int main(void)
 		directory_t carpetaAssets = {};
     		loadDirectory(ASSETSDIR, &carpetaAssets);
     		loadAllAssets(platform, &carpetaAssets);
-    		levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
+    		levelStatus = loadLevel(0, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
             break;
 		
         case QUIT_GAME: //-------------------------      QUIT_GAME: Entra a este caso cuando se quiere salir del juego.      ------------------------------------------------------
