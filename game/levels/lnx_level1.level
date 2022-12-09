@@ -55,37 +55,37 @@ END
 
 BARRERA
     type  22
-    posX  100
+    posX  171
     posY  500
 END
 
 BARRERA
     type  21
-    posX  154
+    posX  225
     posY  500
 END
 
 BARRERA
     type  22
-    posX  700
+    posX  396
     posY  500
 END
 
 BARRERA
     type  21
-    posX  754
+    posX  450
     posY  500
 END
 
 BARRERA
     type  22
-    posX  400
+    posX  621
     posY  500
 END
 
 BARRERA
     type  21
-    posX  454
+    posX  675
     posY  500
 END
 
