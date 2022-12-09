@@ -98,16 +98,15 @@ END
 
 ;------------------BARRERAS------------------
 
-
 BARRERA
     type  22
-    posX  171
+    posX  121
     posY  500
 END
 
 BARRERA
     type  21
-    posX  225
+    posX  175
     posY  500
 END
 
@@ -125,13 +124,13 @@ END
 
 BARRERA
     type  22
-    posX  621
+    posX  671
     posY  500
 END
 
 BARRERA
     type  21
-    posX  675
+    posX  725
     posY  500
 END
 velBalas			5

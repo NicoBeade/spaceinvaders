@@ -1,43 +1,39 @@
 velBalas /=2
 ALIEN
-    type  11
-    posX  2
+    type  13
+    posX  1
     posY  1
 END
+
+
+
+ALIEN
+    type  13
+    posX  12
+    posY  1
+END
+
+
+ALIEN
+    type  12
+    posX  1
+    posY  4
+END
+
+
+
+ALIEN
+    type  12
+    posX  12
+    posY  4
+END
+
 
 ALIEN
     type  11
     posX  6
-    posY  1
+    posY  7
 END
-
-ALIEN
-    type  11
-    posX  11
-    posY  1
-END
-
-
-ALIEN
-    type  12
-    posX  2
-    posY  4
-END
-
-ALIEN
-    type  12
-    posX  6
-    posY  4
-END
-
-ALIEN
-    type  12
-    posX  11
-    posY  4
-END
-
-
-
 
 
 ;Nave del usuario

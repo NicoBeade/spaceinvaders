@@ -4,7 +4,7 @@ ancho 54
 alto 39
 initLives 2
 shootProb 40
-maxBullets 7
+maxBullets 13
 balaID 31
 sprite1 game/spritesAllegro/alien31.png
 sprite2 game/spritesAllegro/alien32.png
