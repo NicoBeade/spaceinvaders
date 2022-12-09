@@ -369,6 +369,12 @@ int main(void){
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
+                menuGame.naveUsr = &UsrList;
+                menuGame.levelSettings = &levelSettings;
+                menuGame.balasUsr = &balasUsr;
+                menuGame.exitStatus = 1;
+                menuGame.scoreInstantaneo = &scoreInstantaneo;
+
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &UsrList, &score, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
@@ -378,12 +384,6 @@ int main(void){
                 pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
                 pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
-
-                menuGame.naveUsr = &UsrList;
-                menuGame.levelSettings = &levelSettings;
-                menuGame.balasUsr = &balasUsr;
-                menuGame.exitStatus = 1;
-                menuGame.scoreInstantaneo = &scoreInstantaneo;
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
                 pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
