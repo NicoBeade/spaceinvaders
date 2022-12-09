@@ -16,7 +16,7 @@
     audios[BALA_USER].volume = 0.3;\
     audios[COLISION_MOTHERSHIP_MUERTA].sample = al_load_sample("game/audioFiles/mothership_muerta.wav");\
     audios[COLISION_MOTHERSHIP_MUERTA].volume = 1.0;\
-    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/choque_balas_1.wav");\
+    audios[COLISION_BARRERA_TOCADA].sample = al_load_sample("game/audioFiles/barrera_tocada_1.wav");\
     audios[COLISION_BARRERA_TOCADA].volume = 1.0;\
     audios[COLISION_BARRERA_MUERTA].sample = al_load_sample("game/audioFiles/barrera_muerta_1.wav");\
     audios[COLISION_BARRERA_MUERTA].volume = 1.0;\
@@ -36,7 +36,7 @@
     audios[SWEEP_LETRA].volume = 1.0;\
     audios[SAVED_SCORE].sample = al_load_sample("game/audioFiles/saved_score.wav");\
     audios[SAVED_SCORE].volume = 1.0;\
-    audios[COLISION_CHOQUE_BALAS].sample = al_load_sample("game/audioFiles/choque_balas.wav");\
+    audios[COLISION_CHOQUE_BALAS].sample = al_load_sample("game/audioFiles/choque_balas_1.wav");\
     audios[COLISION_CHOQUE_BALAS].volume = 1.0;\
     audios[PARTIDA_GANADA].sample = al_load_sample("game/audioFiles/partida_ganada.wav");\
     audios[PARTIDA_GANADA].volume = 1.0;\
