@@ -26,6 +26,7 @@
 #define MAX_SPRITE_FILE_LENGTH 100
 #define MAX_SOUND_FILE_LENGTH 100
 #define MOTHERSHIP_CREATED 1
+#define TIRADAS_DE_PROBABILIDAD 30
 /*******************************************************************************************************************************************
  * 
                                  _____   _                          _           ___           _              
