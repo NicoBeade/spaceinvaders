@@ -447,7 +447,6 @@ int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLengh
 int loadDirectory(char * carpeta, directory_t * directoryStore){
     struct dirent *directoryEntry;
     DIR *directoryPointer = opendir(carpeta);
-    printf("ADENTRO LOAD DIRECTORY: CARPETA %s    PUNTERO %p\n", carpeta, directoryPointer);
     if(directoryPointer == NULL){
         printf("Error in levelLoader.c, loadDirectory function : \"%s\" could not open directory\n", carpeta);
         return -1;
@@ -752,7 +751,6 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
         return -1;
     }
     sprintf(levelFile, "%s/%s", LEVELSDIR, &(levelArray[levelIndex].levelName[0])); //Genera el string del archivo a leer
-    printf("NIVEL NUMERO: %d LEVEL TRUE: %d\n", levelNo, level0True);
     if(readLevelSettings(level0True, levelFile,  levelSettings) == -1){ //Carga el levelSettings
         printf("LEVEL SETTING ATRODEN YMAX %d, YMIN %d, XMAX %d, XMIN %d\n", levelSettings->yMax, levelSettings->yMin, levelSettings->xMax, levelSettings->xMin);
         printf("Error in levelLoader.c, loadLevel function : readLevelSettings failed at level No %d\n", levelNo);
