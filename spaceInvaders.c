@@ -133,6 +133,7 @@ const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el mov
 #define STOP_SHOOT 10
 #define VEL_INCR_ALIENS 15
 #define MIN_VEL_ALIENS 50
+#define VEL_SHOOT_BALA 20
 int (*display)(argDisplay_t* argDisplay) = displayRPI;
 #endif
 #ifdef ALLEGRO
@@ -143,6 +144,7 @@ const int velInputGameShoot = 2;//Velocidad a la que se lee el input para el dis
 #define VEL_INCR_ALIENS 5
 #define STOP_SHOOT 20
 #define MIN_VEL_ALIENS 15
+#define VEL_SHOOT_BALA 1
 int (*display)(argDisplay_t* argDisplay) = displayHandler;
 #endif
 
@@ -363,13 +365,13 @@ int main(void){
                     return -1;
                 }
 
-                velAliens = levelSettings.velAliens;
+                velAliens = levelSettings.velAliens;            //Inicializa la velocidad de los aliens y las balas para el nivel.
                 velMothership = levelSettings.velMothership;
                 velBalas = levelSettings.velBalas;
 
-                UsrList->lives = GAME_STATUS.usrLives;
+                UsrList->lives = GAME_STATUS.usrLives;          //Vidas del usuario en el nivel
 
-                menuGame.naveUsr = &UsrList;
+                menuGame.naveUsr = &UsrList;                    //Carga el struct utilizado en levelHandlerThread
                 menuGame.levelSettings = &levelSettings;
                 menuGame.balasUsr = &balasUsr;
                 menuGame.exitStatus = 1;
@@ -386,13 +388,13 @@ int main(void){
                 pthread_create(&colliderT, NULL, colliderThread, &argCollider);
 
                 pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame);//Se inicializa el thread de level handler con el nivel indicado.
-                pthread_join(levelHandlerT, NULL);//Espera hasta que se cree un menu.
+                pthread_join(levelHandlerT, NULL);                                  //Espera hasta que se cree un menu.
 
                 sem_post(&SEM_MENU);
 
                 break;
 
-            case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuadno se reanuda un nivel.      -------------------------------------------------------------------
+            case IN_GAME://--------------------------   IN_GAME: Entra a este caso cuando se reanuda un nivel.      -------------------------------------------------------------------
                 
                 GAME_STATUS.pantallaAnterior = IN_GAME;
 
@@ -404,7 +406,7 @@ int main(void){
                 sem_post(&SEM_MENU);
                 break;
 
-            case DESTROY_LEVEL://---------------------      DESTROY_LEVEL: Entra a este caso cuando hay que eliminar las listas del heap. Como cuadno se pierde un nivel.   -----------
+            case DESTROY_LEVEL://---------------------      DESTROY_LEVEL: Entra a este caso cuando hay que eliminar las listas del heap. Como cuando se pierde un nivel.   -----------
 
                 GAME_STATUS.inGame = 0;
 
@@ -437,7 +439,7 @@ int main(void){
                 }
                 break;
 
-            case QUIT_GAME://-------------------------      QUIT_GAME: Entra a este caso cuadno se quiere salir del juego.      ------------------------------------------------------
+            case QUIT_GAME://-------------------------      QUIT_GAME: Entra a este caso cuando se quiere salir del juego.      ------------------------------------------------------
                 GAME_STATUS.inGame = 0;
 
                 #ifdef ALLEGRO
@@ -465,8 +467,7 @@ int main(void){
                     mothershipList = removeList(mothershipList);
                 }
 
-                GAME_STATUS.exitStatus = 0;
-
+                GAME_STATUS.exitStatus = 0;//Indica que hay que salir del juego. Este flag genera que se deje de ejecutar el while.
                 break;
 
             default:
@@ -617,7 +618,7 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);        
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], IZQUIERDA, notSwipe };
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                if(GAME_STATUS.menuActual == MENU_VOLUME){//Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }              
                 #endif
@@ -627,25 +628,19 @@ static void* menuHandlerThread(void * data){
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
                 
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                if(GAME_STATUS.menuActual == MENU_VOLUME){//Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
                     volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
-
-                }
-                #endif
-
-                (menu -> changeOption)(&argChangeOption);
-                
-                if(GAME_STATUS.menuActual != MENU_VOLUME){
-                    (menu->audioCallback)(SWAP_MENU);                
-                }
-
-                #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->audioCallback)(SELECT_MENU);
                 }
                 #endif
+
+                (menu -> changeOption)(&argChangeOption);//Cambia la opcion
+                
+                if(GAME_STATUS.menuActual != MENU_VOLUME){//Decide si hay que ejecutar el sonido de swap menu.
+                    (menu->audioCallback)(SWAP_MENU);                
+                }
             }
 
             if (ANTERIOR && !stopSweep){//Si se presiona para ir a la opcion anterior
@@ -665,7 +660,7 @@ static void* menuHandlerThread(void * data){
                     (menu -> drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = { &displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu -> drawingOpciones)[select], (menu -> textOpciones)[select], DERECHA, notSwipe };
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                if(GAME_STATUS.menuActual == MENU_VOLUME){//Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
                 #endif
@@ -674,24 +669,19 @@ static void* menuHandlerThread(void * data){
                 changeOptionData_t argChangeOption = { &toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
                 
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
+                if(GAME_STATUS.menuActual == MENU_VOLUME){//Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
                     volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
+                    (menu->audioCallback)(SELECT_MENU);
                 }
                 #endif                
 
-                (menu -> changeOption)(&argChangeOption);
+                (menu -> changeOption)(&argChangeOption);//Cambia la opcion
 
-                if(GAME_STATUS.menuActual != MENU_VOLUME){
+                if(GAME_STATUS.menuActual != MENU_VOLUME){//Decide si hay que ejecutar el sonido de swap menu.
                     (menu->audioCallback)(SWAP_MENU);                
                 }
-
-                #ifdef ALLEGRO
-                if(GAME_STATUS.menuActual == MENU_VOLUME){
-                    (menu->audioCallback)(SELECT_MENU);
-                }
-                #endif
             }
 
             if (PRESS_INPUT){//Si se selecciona la opcion
@@ -1213,6 +1203,14 @@ void * moveBalaThread(void * argMoveBala){
                 (*(data -> balasEnemigas)) = moveBala(data -> balasEnemigas, data -> levelSettings);
             }
 
+            if(*(data -> balasUsr) != NULL){
+
+                (*(data -> balasUsr)) = moveBala(data -> balasUsr, data -> levelSettings);
+            }
+            sem_post(&SEM_GAME);
+        }
+        if( (timerTick % VEL_SHOOT_BALA) == 0 && GAME_STATUS.inGame ){
+            sem_wait(&SEM_GAME);
             if(*(data -> alienList) != NULL && GAME_STATUS.inGame == 1){
 
                 evento = shootBala(data -> alienList, (data -> balasEnemigas), data -> levelSettings);
@@ -1230,11 +1228,6 @@ void * moveBalaThread(void * argMoveBala){
                 break;
             default:
                 break;
-            }
-
-            if(*(data -> balasUsr) != NULL){
-
-                (*(data -> balasUsr)) = moveBala(data -> balasUsr, data -> levelSettings);
             }
             sem_post(&SEM_GAME);
         } 
