@@ -458,8 +458,13 @@ int main(void)
             {
                 GAME_STATUS.pantallaActual = MENU; // Se pasa al menu correspondiente.
             }
+		delAllObjType();
+		directory_t carpetaAssets = {};
+    		loadDirectory(ASSETSDIR, &carpetaAssets);
+    		loadAllAssets(platform, &carpetaAssets);
+    		int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
             break;
-
+		
         case QUIT_GAME: //-------------------------      QUIT_GAME: Entra a este caso cuando se quiere salir del juego.      ------------------------------------------------------
             GAME_STATUS.inGame = 0;
 

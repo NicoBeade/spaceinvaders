@@ -966,6 +966,14 @@ objectType_t * getObjType(int id){
     }
 }
 
+
+int delAllObjType(void){   //Se eliminan todos los objType
+    int contador;
+    for(contador = 0; contador < (MAX_CANT_OBJTIPOS-1); contador++){
+        (objtypes[index]).id = NONEOBJTYPEID;
+    }
+}
+
 void imprimirARRAY(void){
     int index;
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++){      //Se recorre el arreglo hasta encontrar el object type indicado
