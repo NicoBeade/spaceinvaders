@@ -369,8 +369,6 @@ int main(void){
 
                 UsrList->lives = GAME_STATUS.usrLives;
 
-                printf("UsrLIves en main: %d\n", UsrList->lives);
-
                 //Inicializa los threads encargados de controlar el juego.
                 argMoveAlien_t argMoveAlien = { &levelSettings, &alienList, &UsrList, &score, audioCallback};
                 argMoveMothership_t argMoveMothership = {&levelSettings, &mothershipList, audioCallback};
