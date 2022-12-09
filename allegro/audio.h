@@ -43,7 +43,14 @@
     
 #define INITMUSICA musica[MUSICA_MENU- AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_menu.wav");\
     musica[MUSICA_MENU- AUDIOMAX].volume = 0.8;\
-    musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_juego.wav");\
+    time_t fecha;\
+    time (&fecha);\
+    if(!strncmp("Dec  25",ctime(&fecha)+4,7)){\
+        musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_easter_egg.wav");\
+    }\
+    else {\
+        musica[MUSICA_JUEGO - AUDIOMAX].sample = al_load_sample("game/audioFiles/musica_juego.wav");\
+    }\
     musica[MUSICA_JUEGO - AUDIOMAX].volume = 1.0;
 
 #endif
