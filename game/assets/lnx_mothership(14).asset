@@ -1,0 +1,16 @@
+id 14
+vel 10    
+ancho 90
+alto 50
+initLives 1
+shootProb 3
+maxBullets 0
+balaID 0
+sprite1 game/spritesAllegro/naveNodriza.png
+sprite2 game/spritesAllegro/naveNodriza.png
+sprite3 NULL
+sprite4 NULL
+score 500
+deathSound 0
+shootSound 0
+aliado 0

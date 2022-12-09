@@ -1,0 +1,16 @@
+id 1
+vel 1    
+ancho 3
+alto 2
+initLives 5
+shootProb 100
+maxBullets 10
+balaID 41
+sprite1 3
+sprite2 3
+sprite3 3
+sprite4 4
+score 0
+deathSound NULL
+shootSound NULL
+aliado 1

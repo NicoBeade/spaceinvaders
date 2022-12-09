@@ -1,0 +1,16 @@
+id 1
+vel 5    
+ancho 39
+alto 57
+initLives 5
+shootProb 100
+maxBullets 3
+balaID 41
+sprite1 game/spritesAllegro/nave.png
+sprite2 game/spritesAllegro/nave.png
+sprite3 game/spritesAllegro/nave.png
+sprite4 NULL
+score 0
+deathSound 0
+shootSound 0
+aliado 1

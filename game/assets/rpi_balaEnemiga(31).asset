@@ -1,7 +1,7 @@
-id 21
-vel -1    
+id 31
+vel 1    
 ancho 1
-alto 1
+alto 2
 initLives 1
 shootProb 0
 maxBullets 0
@@ -13,4 +13,4 @@ sprite4 7
 score 0
 deathSound NULL
 shootSound NULL
-aliado 0
+aliado 1
