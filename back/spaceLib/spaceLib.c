@@ -435,10 +435,13 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     }
     int balasDisponibles;                                       //Balas disponibles para disparar
     balasDisponibles = naveType -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales. Se toma la primera nave como ref
-    while(contadorAliens <= TIRADAS_DE_PROBABILIDAD){
+    while(contadorAliens < TIRADAS_DE_PROBABILIDAD){
         nave = *listaNaves;
         bala = *listaBalas; 
         balasActuales = countList(*listaBalas);
+        if(nave == NULL){
+            contadorAliens = TIRADAS_DE_PROBABILIDAD;
+        }
         while(balasDisponibles > 0 && nave != NULL){
             contadorAliens++;
             naveType = getObjType(nave -> type);
