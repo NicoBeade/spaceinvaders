@@ -437,8 +437,9 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     int balasDisponibles;                                       //Balas disponibles para disparar
     balasDisponibles = naveType -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales. Se toma la primera nave como ref
 
-    int alienSeleccionado = rand()%(countList(*listaNaves)+1);
-    
+    int alienSeleccionado1 = rand()%(countList(*listaNaves)+1);
+    int alienSeleccionado2 = rand()%(countList(*listaNaves)+1);
+    int alienSeleccionado3 = rand()%(countList(*listaNaves)+1);
 
     while(balasDisponibles > 0 && nave != NULL){
         contadorAliens++;
@@ -461,7 +462,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         else{
             factorCorreccion = 0;
         }
-        if((alienSeleccionado == contadorAliens && ((rand()%1000) < (float) (probabilidad * factorCorreccion))) || (naveType->aliado && naveType->shootProb > 0)){
+        if(((alienSeleccionado1 == contadorAliens || alienSeleccionado2 == contadorAliens || alienSeleccionado3 == contadorAliens ) && ((rand()%1000) < (float) (probabilidad * factorCorreccion))) || (naveType->aliado && naveType->shootProb > 0)){
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - (balaType -> ancho)/2 ;
             int yOffset = (naveType -> aliado)? 1 - (balaType -> alto) : (naveType -> alto);
