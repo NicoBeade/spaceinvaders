@@ -431,12 +431,15 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         return -1;
     }
     int balasDisponibles;                                       //Balas disponibles para disparar
+	int maxBull = naveType -> maxBullets;
     balasDisponibles = naveType -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales. Se toma la primera nave como ref
 
     int alienSeleccionado1 = rand()%(countList(*listaNaves)+1);
     int alienSeleccionado2 = rand()%(countList(*listaNaves)+1);
 
     while(balasDisponibles > 0 && nave != NULL){
+		maxBull = (maxBull > naveType -> maxBullets)? maxBull : naveType -> maxBullets;
+		balasDisponibles = maxBull - balasActuales;
         contadorAliens++;
         naveType = getObjType(nave -> type);
         if (naveType == NULL){
@@ -452,7 +455,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
         }
         int vidaBala = balaType -> initLives;
         if(naveType -> maxBullets > 0){
-            factorCorreccion = 1 - (balasActuales)/10;
+            factorCorreccion = (naveType -> maxBullets - balasActuales)/(2*(naveType -> maxBullets))+0.5;
         }
         else{
             factorCorreccion = 0;
