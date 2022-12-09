@@ -333,7 +333,7 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
     }
     int probOfBirth = mothershipAsset->shootProb;       //La probabilidad de que nazca otra es el shootProb del asset
     int initLives = mothershipAsset->initLives;
-    if(rand()%100 < probOfBirth && (*mothershipListPointer) == NULL){     //Se lanzan los dados si no hay nave nodriza
+    if(rand()%1000 < probOfBirth && (*mothershipListPointer) == NULL){     //Se lanzan los dados si no hay nave nodriza
         vector_t posMothership;                         //Aux posicion de la nave nodriza
         posMothership.y = levelSettings->mothershipYpos;    //La posicion en y la determina el levelsetting
         int direccionIztoDer = 1;  //Variable auxiliar que decide si va para la izquierda o para la derecha
@@ -418,6 +418,8 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     }
     int disparo = 0;                                            //Variable para detectar si se disparo o no
     int balasActuales = countList(*listaBalas);                 //Se cuenta la cantidad de balas activas
+    int contadorAliens = countList(*listaNaves);                //Se cuenta la cantidad de aliens activos
+    float factorCorreccion;
     object_t * nave = *listaNaves;                              //Se crea un puntero a la lista de naves
     object_t * bala = *listaBalas;                              //Se crea un puntero a la lista de balas
     if(nave == NULL){
@@ -434,6 +436,7 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
     int balasDisponibles;                                       //Balas disponibles para disparar
     balasDisponibles = naveType -> maxBullets - balasActuales;   //La cantidad de balas disponibles es la resta entre las maximas y las actuales. Se toma la primera nave como ref
     while(balasDisponibles > 0 && nave != NULL){
+        contadorAliens++;
         naveType = getObjType(nave -> type);
         if (naveType == NULL){
             printf("Err in gameLib, shootBala function: naveType not found with type %d\n", nave->type);
@@ -447,7 +450,13 @@ char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t *
             return -1;
         }
         int vidaBala = balaType -> initLives;
-        if((rand()%100) < probabilidad){
+        if(naveType -> maxBullets > 0){
+            factorCorreccion = (naveType -> maxBullets - balasActuales)/(2*(naveType -> maxBullets))+0.5;
+        }
+        else{
+            factorCorreccion = 0;
+        }
+        if(((rand()%1000) < (float) (probabilidad * factorCorreccion))|| (naveType->aliado && naveType->shootProb > 0)){
             vector_t posicionBala;
             posicionBala.x = nave->pos.x + (naveType -> ancho)/2 - (balaType -> ancho)/2 ;
             int yOffset = (naveType -> aliado)? 1 - (balaType -> alto) : (naveType -> alto);

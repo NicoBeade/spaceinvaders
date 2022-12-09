@@ -1228,7 +1228,7 @@ void * moveBalaThread(void * argMoveBala){
 
                 evento = shootBala(data -> alienList, (data -> balasEnemigas), data -> levelSettings);
             }
-            else{
+            else if(*(data -> alienList) == NULL && GAME_STATUS.inGame == 1){
                 printf("Err in spaceInvaders.c, alienList cannot be null in moveBalaThread\n");
             }
             
