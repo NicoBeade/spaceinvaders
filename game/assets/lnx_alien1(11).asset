@@ -3,7 +3,7 @@ vel 10  		;Velocidad
 ancho 54		;Ancho
 alto 39			;Alto
 initLives 2		;Vidas iniciales
-shootProb 200		;Probabilidad de disparo
+shootProb 20	;Probabilidad de disparo
 maxBullets 7	;Cantidad maxima de balas
 balaID 31		;ID correspondiente a la bala que dispara
 sprite1 game/spritesAllegro/alien11.png
