@@ -6,8 +6,8 @@
 #include <dirent.h>
 
 
-int getAbsValue(int relativeMode, char * valueReaded, int previousValue);
-int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings);
+static int getAbsValue(int relativeMode, char * valueReaded, int previousValue);
+static int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings);
 
 #define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
 
@@ -679,7 +679,7 @@ int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSe
     return 0;
 }
 
-int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
+static int getAbsValue(int relativeMode, char * valueReaded, int previousValue){   //Funcion que devuelve el valor de un valor corregido segun si es relativo o absoluto
     enum states {ABSOLUTE,RELATIVE_MUL, RELATIVE_ADD, RELATIVE_OPP, RELATIVE_DIV};   
     int state = ABSOLUTE;
     int value, number;
@@ -851,8 +851,8 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
 }
 
 
-int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings){       //Devuelve 1 si el objeto esta out of bounds
-    return( posicion.x < levelSettings->xMin || posicion.x + ancho > levelSettings->xMax || posicion.y + alto > levelSettings->yMax || posicion.y < levelSettings->yMin );
+static int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings){       //Devuelve 1 si el objeto esta out of bounds
+    return( posicion.x +1 < levelSettings->xMin || posicion.x + ancho > levelSettings->xMax +1 || posicion.y + alto > levelSettings->yMax +1 || posicion.y +1 < levelSettings->yMin );
 }
 
 int readObj(int paramNo, object_t * objOut){
