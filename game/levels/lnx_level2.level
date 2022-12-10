@@ -136,7 +136,7 @@ END
 
 velBalas			5
 
-ASSET_MODIFY    7 ;modifico la mothership
+ASSET_MODIFY    14 ;modifico la mothership
     shootProb 2
     score 100
 END

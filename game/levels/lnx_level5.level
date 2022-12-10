@@ -6,6 +6,7 @@ END
 ASSET_MODIFY    1	;modifico el usuario
     maxBullets 2
     initLives 3
+    vel	-		;Inversion de controles sorpresa *risa malevola*
 END
 
 maxMShipXLevel      3	;Seteo la cantidad maxima de naves nodrizas en 3
@@ -145,6 +146,5 @@ BARRERA
     posY  500
 END
 
-desplazamientoUsr -  ;Se cambia el signo (inversion de controles)
 
 

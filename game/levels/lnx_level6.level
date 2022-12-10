@@ -2,14 +2,7 @@ ASSET_MODIFY    1 ;modifico los aliens
     maxBullets 10
     initLives 4
 END
-ASSET_MODIFY    13 ;
-    maxBullets 10
-    initLives 4
-END
-ASSET_MODIFY    28 ;
-    maxBullets 10
-    initLives 4
-END
+
 
 maxMShipXLevel      3
 
@@ -194,7 +187,7 @@ END
 
 velBalas			5
 
-ASSET_MODIFY    7 ;modifico la mothership
+ASSET_MODIFY    14 ;modifico la mothership
     shootProb 2
     score 100
 END
