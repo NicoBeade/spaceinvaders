@@ -44,14 +44,19 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
     //se agrega el selector
     salida.textoList = addText(salida.textoList, ">", largeF, MENUX, MENUY);
 
-    salida.spriteList = addSprite(salida.spriteList, ((data->spritesDir)[0]), X_MAX - 400, Y_MAX/2);
+    salida.spriteList = addSprite(salida.spriteList, ((data->spritesDir)[0]), X_MAX - 420, Y_MAX/2);
     
     if(data->titulo != NULL){
         int titleLen = strlen(data->titulo);
-        salida.textoList=addText(salida.textoList, data->titulo, bigF, (X_MAX/2) - (titleLen/2)*40, 50);
+        salida.textoList=addText(salida.textoList, data->titulo, bigF, (5*X_MAX/8) - (titleLen/2)* 48, 50);
     }else{
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2 - 50, 0);
     };
+
+    salida.textoList=addText(salida.textoList, data->dataInGame[0], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2 - 100); //Se muestra la cantidad de vidas actuales
+    salida.textoList=addText(salida.textoList, data->dataInGame[1], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2);
+    salida.textoList=addText(salida.textoList, data->dataInGame[2], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2 + 100);
+
 
     lists->spriteList= salida.spriteList;
     lists->textoList= salida.textoList;
@@ -300,7 +305,7 @@ sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite
 
 /***********************************************************************************************************************************************************
  * 
- *                                                                      LEVELS
+ *                                                                      LEVEL
  * 
  * ********************************************************************************************************************************************************/
 

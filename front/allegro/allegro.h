@@ -74,8 +74,10 @@ typedef struct {//Este struct contiene la informacion necesaria para ejecutar un
     int exitStatus;//Esta variable se utiliza para saber cuando hay que salir del thread.
     void (*changeOption)(void* argChangeOption);//Callback a la funcion que cambia la opcion seleccionada.
 
-    void (*audioCallback)(int);
+    void (*audioCallback)(int);//Callbacks para el audio.
     int (*volumeCallback)(int);
+
+    char dataInGame[3][20]; //Datos dentro de juego 
     
 }menu_t;
 

@@ -93,13 +93,13 @@ menu_t menuInicio = { &KEYS , {selectPlayInicio, selectLevels, selectLeaderboard
                       5 , 1 , changeOption };//Estructura del menu de inicio.
 
 menu_t menuPausa    = { &KEYS , {selectResume, selectRestartLevel, selectMainMenu, selectVolume, selectQuitGame}, backMenuAnterior,
-                      {"Resume ", "Restart Level ", "Main menu ", "Volume ", "Quit Game "},
+                      {"Resume", "Restart", "Main menu", "Volume", "Quit Game"},
                       {},
                       "Pause", 
-                      5, 1, changeOption };//Estructura del menu de pausa.
+                      5, 1, changeOption};//Estructura del menu de pausa.
 
 menu_t menuLostLevel= { &KEYS , {selectSaveScore, selectRestartLevel, selectMainMenu, selectLevels, selectQuitGame}, backMenuAnterior, 
-                      {"Save Score", "Restart Level", "Main menu", "Select level", "Quit Game"}, 
+                      {"Save Score", "Restart", "Main menu", "Select level", "Quit Game"}, 
                       {},
                       "You Lose",  
                       5, 1, changeOption };//Estructura del menu de pausa.
@@ -118,9 +118,9 @@ menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing,
 
 menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, backMenuAnterior, 
                       {"Nivel 1", "Nivel 2", "Nivel 3", "Nivel 4", "Nivel 5", "Nivel 6", "Nivel 7", "Nivel 8", "Nivel 9", "Nivel 10", "Nivel 11", "Nivel 12", "Nivel 13", "Nivel 14", "Nivel 15", "Nivel 16", "Nivel 17", "Nivel 18", "Nivel 19", "Nivel 20"},
-                      {{0}},
+                      {},
                       "Levels", 
-                      5 , 1 , changeOption };//Estructura del menu de pausa.
+                      5 , 1 , changeOption};//Estructura del menu de pausa.
 
 menu_t menuVolume = { &KEYS , {backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior, backMenuAnterior}, backMenuAnterior, 
                       {"00 ", "01 ", "02 ", "03 ", "04 ", "05 ", "06 ", "07 ", "08 ", "09 ", "10 "}, 
