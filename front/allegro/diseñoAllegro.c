@@ -271,7 +271,11 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
 
     //Se agregan las barras que muestran el menu
     for(int i =0; i< 10; i++){
-        salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
+        if(i < volumenActual){
+            salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
+        }else{
+            salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX, Y_MAX * 0.4);   
+        }
     }
     //Se agrega el titulo
     salida.textoList=addText(salida.textoList, data->titulo, largeF, (X_MAX/2) - (titleLen/2)*36, 50);
