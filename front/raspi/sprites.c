@@ -28,8 +28,8 @@
 sprite_t daniel1 = {{1,0,1},{1,1,1}}; //2 sprites para cada tipo de enemigo
 sprite_t daniel2 = {{1,1,1},{1,0,1}};
 
-sprite_t pablo1 ={{1,1,0},{1,0,1}};
-sprite_t pablo2 ={{0,1,1},{1,0,1}};
+sprite_t pablo1 ={{1,1,0},{0,1,1}};
+sprite_t pablo2 ={{0,1,1},{1,1,0}};
 
 sprite_t nicolas1 ={{1,0,1},{0,1,0}};
 sprite_t nicolas2 ={{0,1,0},{1,0,1}};
