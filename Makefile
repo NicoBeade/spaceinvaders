@@ -14,7 +14,7 @@ sprites.o: front/raspi/sprites.h front/raspi/sprites.c
 	gcc -c -g front/raspi/sprites.c -Wall -o sprites.o
 
 menuUtilitiesRaspi.o: front/menuUtilities.h back/spaceLib/spaceLib.h back/levelLoader/levelLoader.h back/spaceLib/score/score.h front/raspi/displayRaspi.h front/raspi/sprites.h front/menuUtilities.c
-	gcc -c -g front/menuUtilities.c -Wall -o front/menuUtilities.o -D RASPI
+	gcc -c -g front/menuUtilities.c -Wall -o menuUtilities.o -D RASPI
 
 audioHandlerRaspi.o: front/raspi/audioHandlerRaspi.h front/raspi/audioHandlerRaspi.c front/raspi/audioFilesRaspi.h
 	gcc -c -g front/raspi/audioHandlerRaspi.c -Wall -o audioHandlerRaspi.o
