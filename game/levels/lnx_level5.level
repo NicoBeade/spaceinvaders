@@ -18,6 +18,11 @@ ASSET_MODIFY    13 ;modifico los aliens
     maxBullets +=6
 END
 
+ASSET_MODIFY    1 ;modifico el usuario
+    vel 10
+    maxBullets +=1
+END
+
 ALIEN
     type  11
     posX  150
