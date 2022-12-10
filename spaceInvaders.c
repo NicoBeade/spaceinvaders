@@ -533,8 +533,7 @@ int main(void)
  *
  ******************************************************************************************************************************************/
 
-static void *menuHandlerThread(void *data)
-{
+static void *menuHandlerThread(void *data){
     /*Este thread es el encargado de manejar los menues.
      */
     menu_t *menu = (menu_t *)data;
@@ -658,7 +657,7 @@ static void *menuHandlerThread(void *data)
                 #endif
 
                 #ifdef ALLEGRO
-                
+
                 if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->audioCallback)(SELECT_MENU);
                 }
@@ -779,8 +778,7 @@ static void *menuHandlerThread(void *data)
     pthread_exit(0);
 }
 
-static void *saveScoreHandlerThread(void *data)
-{
+static void *saveScoreHandlerThread(void *data){
     // Este thread es el encargado de manejar el guardado del score.
 
     saveScore_t *menu = (saveScore_t *)data;
@@ -1055,8 +1053,7 @@ static void *saveScoreHandlerThread(void *data)
     pthread_exit(0);
 }
 
-static void *levelHandlerThread(void *data)
-{
+static void *levelHandlerThread(void *data){
 
     unsigned char stopShoot = 1; // Esta variable se utiliza para evitar que el usuario pueda disparar mas de una bala a la vez
 
@@ -1146,8 +1143,7 @@ static void *levelHandlerThread(void *data)
  ******************************************************************************************************************************************/
 
 //******************************************    Thread moveAlien    **********************************************************
-void *moveAlienThread(void *argMoveAlien)
-{
+void *moveAlienThread(void *argMoveAlien){
     // Este thread se encarga de mover la posicion de los aliens teniendo en cuenta para ello la variable direccion.
 
     int direccion = DERECHA; // Determina la direccion en la que se tienen que mover los aliens en el proximo tick
@@ -1155,8 +1151,7 @@ void *moveAlienThread(void *argMoveAlien)
 
     argMoveAlien_t *data = (argMoveAlien_t *)argMoveAlien;
 
-    while (GAME_STATUS.inGame)
-    {
+    while (GAME_STATUS.inGame){
 
         usleep(10 * U_SEC2M_SEC); // Espera 10mS para igualar el tiempo del timer.
         if ((timerTick % velAliens) == 0 && GAME_STATUS.inGame)
@@ -1199,12 +1194,10 @@ void *moveAlienThread(void *argMoveAlien)
     pthread_exit(0);
 }
 
-void *moveMothershipThread(void *argMoveMothership)
-{
+void *moveMothershipThread(void *argMoveMothership){
 
     argMoveMothership_t *data = (argMoveMothership_t *)argMoveMothership;
-    while (GAME_STATUS.inGame)
-    {
+    while (GAME_STATUS.inGame){
         usleep(10 * U_SEC2M_SEC); // Espera 10mS para igualar el tiempo del timer.
         object_t *mothership = *(data->mothership);
         if (((timerTick % ((data->levelSettings)->velMothership) == 0)))
@@ -1238,15 +1231,13 @@ void *moveMothershipThread(void *argMoveMothership)
 }
 
 //******************************************    Thread moveBala    **********************************************************
-void *moveBalaThread(void *argMoveBala)
-{
+void *moveBalaThread(void *argMoveBala){
     // Este thread se encarga de accionar el disparo de los aliens y el movimiento de las balas del usuario y de los aliens.
     argMoveBala_t *data = (argMoveBala_t *)argMoveBala;
 
     char evento;
 
-    while (GAME_STATUS.inGame)
-    {
+    while (GAME_STATUS.inGame){
 
         usleep(10 * U_SEC2M_SEC); // Espera 10mS para igualar el tiempo del timer.
         if ((timerTick % velBalas) == 0 && GAME_STATUS.inGame)
@@ -1267,8 +1258,7 @@ void *moveBalaThread(void *argMoveBala)
             }
             sem_post(&SEM_GAME);
         }
-        if ((timerTick % VEL_SHOOT_BALA) == 0 && GAME_STATUS.inGame)
-        {
+        if ((timerTick % VEL_SHOOT_BALA) == 0 && GAME_STATUS.inGame){
             sem_wait(&SEM_GAME);
             if (*(data->alienList) != NULL && GAME_STATUS.inGame == 1)
             {
@@ -1309,8 +1299,7 @@ void *moveBalaThread(void *argMoveBala)
  *
  ******************************************************************************************************************************************/
 
-void *colliderThread(void *argCollider)
-{
+void *colliderThread(void *argCollider){
     // Este thread se utiliza para detectar si hubo colisiones.
 
     argCollider_t *data = (argCollider_t *)argCollider;
@@ -1321,8 +1310,7 @@ void *colliderThread(void *argCollider)
 
     *(data->scoreInstantaneo) = *(data->score); // Esta variable almacena el score del usuario constantemente y solo se almacena cuando se gana el nivel.
 
-    while (GAME_STATUS.inGame)
-    {
+    while (GAME_STATUS.inGame){
 
         usleep(10 * U_SEC2M_SEC); // Espera 10mS para igualar el tiempo del timer.
         if ((timerTick % velCollider) == 0 && GAME_STATUS.inGame)
@@ -1385,8 +1373,7 @@ void *colliderThread(void *argCollider)
             sem_post(&SEM_GAME);
         }
     }
-    if (lost)
-    {
+    if (lost){
         GAME_STATUS.usrLives = (*(data->usrList))->lives;
     }
     GAME_STATUS.inGame = 0;
