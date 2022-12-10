@@ -481,7 +481,6 @@ int readAssetModifiers(int paramNo, int AssetID){   //Recibe el nombre del archi
     for(fila = paramNo; (strcmp(decodedFile[fila].parameter, "END") != 0) && (decodedFile[fila].parameter[0] != 0); fila++){    //Por cada fila del archivo a partir de la del parametro
         if(strcmp(decodedFile[fila].parameter, "velocidad") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es velocidad, la modifica
             assetModified->velocidad = getAbsValue(1,decodedFile[fila].value, assetModified->velocidad);
-            printf("Se modifico la velocidad del asset %d con el valor %d\n",AssetID,assetModified->velocidad);
         }
         else if(strcmp(decodedFile[fila].parameter, "ancho") == 0 && strlen(decodedFile[fila].value) > 0){   //Si el parametro es ancho, la modifica
             assetModified->ancho = getAbsValue(1,decodedFile[fila].value, assetModified->ancho);
