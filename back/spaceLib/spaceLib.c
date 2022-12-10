@@ -92,7 +92,7 @@ object_t* addObj(object_t * firstObj, vector_t setPos, int setType, int setLives
 /* Esta funcion se encarga de agregar un nuevo alien a la lista, inicializando su posicion, tipo y cantidad de vidas.
     Devuelve un puntero al primer elemento de la lista.
 */	
-	object_t * newObj = malloc(sizeof(object_t));//Agrega el nuevo alien
+	object_t * newObj = (object_t*)malloc(sizeof(object_t));//Agrega el nuevo alien
 
 	if(newObj == NULL){//Si no se puede hacer el malloc indica error.
 		printf("Err in gameLib, addObj function: couldnt add node to the list\n");
