@@ -360,6 +360,10 @@ int main(void)
             scoreInstantaneo = 0;
             score = 0;
 
+            if (UsrList != NULL){
+                UsrList = removeList(UsrList);
+            }
+
             break;
 
         case START_LEVEL: //-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
@@ -441,37 +445,29 @@ int main(void)
 
             usleep(50 * U_SEC2M_SEC);
             // Elimina todas las listas del heap.
-            if (alienList != NULL)
-            {
+            if (alienList != NULL){
                 alienList = removeList(alienList);
             }
-            if (UsrList != NULL)
-            {
+            if (UsrList != NULL){
                 UsrList = removeList(UsrList);
             }
-            if (barrerasList != NULL)
-            {
+            if (barrerasList != NULL){
                 barrerasList = removeList(barrerasList);
             }
-            if (balasAlien != NULL)
-            {
+            if (balasAlien != NULL){
                 balasAlien = removeList(balasAlien);
             }
-            if (balasUsr != NULL)
-            {
+            if (balasUsr != NULL){
                 balasUsr = removeList(balasUsr);
             }
-            if (mothershipList != NULL)
-            {
+            if (mothershipList != NULL){
                 mothershipList = removeList(mothershipList);
             }
 
-            if (GAME_STATUS.menuActual == START_LEVEL_MENU)
-            {
+            if (GAME_STATUS.menuActual == START_LEVEL_MENU){
                 GAME_STATUS.pantallaActual = START_LEVEL; // Si hay que iniciar nuevamente el juego
             }
-            else
-            {
+            else{
                 GAME_STATUS.pantallaActual = MENU; // Se pasa al menu correspondiente.
             }
 		    delAllObjType();
@@ -490,28 +486,22 @@ int main(void)
 
             usleep(50 * U_SEC2M_SEC);
             // Elimina todas las listas del heap.
-            if (alienList != NULL)
-            {
+            if (alienList != NULL){
                 alienList = removeList(alienList);
             }
-            if (UsrList != NULL)
-            {
+            if (UsrList != NULL){
                 UsrList = removeList(UsrList);
             }
-            if (barrerasList != NULL)
-            {
+            if (barrerasList != NULL){
                 barrerasList = removeList(barrerasList);
             }
-            if (balasAlien != NULL)
-            {
+            if (balasAlien != NULL){
                 balasAlien = removeList(balasAlien);
             }
-            if (balasUsr != NULL)
-            {
+            if (balasUsr != NULL){
                 balasUsr = removeList(balasUsr);
             }
-            if (mothershipList != NULL)
-            {
+            if (mothershipList != NULL){
                 mothershipList = removeList(mothershipList);
             }
 
