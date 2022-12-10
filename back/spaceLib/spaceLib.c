@@ -515,6 +515,7 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
         return -1;
     }
     int velocidad = assetUsr->velocidad;
+        printf("VELOCIDAD %d", velocidad);
     if( direccion == DERECHA && ((*naveUsuario) -> pos.x <= levelSettings->xMax - assetUsr->ancho) ){//Si se tiene que mover para la derecha y no llego al limite
         (*naveUsuario) -> pos.x += velocidad;//Desplaza la nave
     }
