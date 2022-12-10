@@ -8,6 +8,8 @@
 
 static int getAbsValue(int relativeMode, char * valueReaded, int previousValue);
 static int checkOutOfBounds(vector_t posicion, int ancho, int alto, level_setting_t * levelSettings);
+static int stringEndCmp(char * string, char * end);
+static int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut);
 
 #define ISNUM(caracter) (((caracter) >= '0' ) && ((caracter) <= '9' ))
 
@@ -393,7 +395,7 @@ int levelArrayLen(level_t levelArray[]){ //Calcula la longitud del array de nive
     return contador;
 }
 
-int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut){
+static int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut){
     //nameOut is an optional output, set to NULL if not needed
     int contadorChar = prefixLenghtToIgnore; //El contador de char se incrementa hasta pasar la plataforma y el prefijo
     char * fileNameP = fileName + contadorChar;    //Variable auxiliar para recorrer el nombre
@@ -910,7 +912,7 @@ int getLevelNoOfArray(level_t levelArray[], int levelNumber){
 }
 
 
-int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings terminan de la misma manera
+static int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings terminan de la misma manera
     int lenString = strlen(string); //variable auxiliar que guarda la longitud del string
     int lenEnd = strlen(end);       //Variable auxiliar que guarda la longitud del final a comparar
     return !strncmp(string + lenString-lenEnd, end, lenEnd) && (lenEnd <= lenString); //Devuelve 1 si el sufijo es igual y si es mas corto que el string
@@ -1000,68 +1002,68 @@ int main(int argc, char *argv[]){
     if(strcmp(plataforma,"rpi") == 0){
         maxX = 15;
         maxY = 15;
-    }
-    else if(strcmp(plataforma,"lnx") == 0){
-        maxX = 80;
-        maxY = 60;
-        divisor = 10;
-    }
- 
-    object_t * lista = alienList;
-    objectType_t * objectType;
-    
-    while(lista != NULL){
-        objectType = getObjType(lista->type);
-        int pintX;
-        int pintY;
-        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
-           //printf("%p %d\n\n", lista, pintY);
-            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
-            matrix[pintY][pintX]++;
-            //printf("        %p %d\n\n", lista, pintX);
+        object_t * lista = alienList;
+        objectType_t * objectType;
+        while(lista != NULL){
+            objectType = getObjType(lista->type);
+            int pintX;
+            int pintY;
+            for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+            //printf("%p %d\n\n", lista, pintY);
+                for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+                matrix[pintY][pintX]++;
+                //printf("        %p %d\n\n", lista, pintX);
+                }
             }
+        // printf("it 1\n");
+            lista = lista->next;
         }
-       // printf("it 1\n");
-        lista = lista->next;
-    }
-    lista = UsrList;
-    while(lista != NULL){
-        objectType = getObjType(lista->type);
-        int pintX;
-        int pintY;
-        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
-           //printf("%p %d\n\n", lista, pintY);
-            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
-            matrix[pintY][pintX]++;
-            //printf("        %p %d\n\n", lista, pintX);
+        lista = UsrList;
+        while(lista != NULL){
+            objectType = getObjType(lista->type);
+            int pintX;
+            int pintY;
+            for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+            //printf("%p %d\n\n", lista, pintY);
+                for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+                matrix[pintY][pintX]++;
+                //printf("        %p %d\n\n", lista, pintX);
+                }
             }
+        // printf("it 1\n");
+            lista = lista->next;
         }
-       // printf("it 1\n");
-        lista = lista->next;
-    }
-    lista = barrerasList;
-    while(lista != NULL){
-        objectType = getObjType(lista->type);
-        int pintX;
-        int pintY;
-        for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
-           //printf("%p %d\n\n", lista, pintY);
-            for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
-            matrix[pintY][pintX]++;
-            //printf("        %p %d\n\n", lista, pintX);
+        lista = barrerasList;
+        while(lista != NULL){
+            objectType = getObjType(lista->type);
+            int pintX;
+            int pintY;
+            for(pintY = (lista->pos.y)/divisor; pintY < (objectType->alto)/divisor + lista->pos.y && pintY <= maxY; pintY++){
+            //printf("%p %d\n\n", lista, pintY);
+                for(pintX = (lista->pos.x)/divisor; pintX < (objectType->ancho)/divisor + lista->pos.x && pintX <= maxX; pintX++){
+                matrix[pintY][pintX]++;
+                //printf("        %p %d\n\n", lista, pintX);
+                }
             }
+        // printf("it 1\n");
+            lista = lista->next;
         }
-       // printf("it 1\n");
-        lista = lista->next;
-    }
-    int fila;
-    int columna;
+        int fila;
+        int columna;
         for(fila = 0; fila <= maxX; fila++){
             for(columna = 0; columna <= maxY; columna++){
                 printf(" %d", matrix[fila][columna]);
             }
             printf("\n");
         }
+    }
+    else if(strcmp(plataforma,"lnx") == 0){
+        maxX = 80;
+        maxY = 60;
+        divisor = 10;
+        
+    }
+
     imprimirARRAY();
     printf("\n\n");
     imprimirLevelSetting(&levelSettings);

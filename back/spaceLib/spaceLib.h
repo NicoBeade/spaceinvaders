@@ -147,7 +147,6 @@ int mothershipCreator(object_t **mothershipListPointer, level_setting_t * levelS
 
 
 //*****************BALAS
-object_t * initBarreras(level_setting_t * levelSetting, int cantBarreras, int miniBarrerasY, int miniBarrerasX, ...);
 object_t * moveBala(object_t ** ListBalasEnemy, level_setting_t * levelSetting);
 char shootBala(object_t ** listaNaves, object_t ** listaBalas, level_setting_t * levelSetting);
 

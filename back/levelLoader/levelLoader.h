@@ -1,15 +1,15 @@
 #ifndef LEVEL_LOADER_H
 #define LEVEL_LOADER_H
 #include "../spaceLib/spaceLib.h"
-#define MAX_PARAM_LETTERS 30        //Maximo tamaño de char que ocupa un parametro
-#define MAX_VALUE_LETTERS 50        //Maximo tamaño de char que ocupa un valor
-#define MAX_FILE_ROWS 300           //Maxima cantidad de filas de un archivo
+#define MAX_PARAM_LETTERS 40        //Maximo tamaño de char que ocupa un parametro
+#define MAX_VALUE_LETTERS 60        //Maximo tamaño de char que ocupa un valor
+#define MAX_FILE_ROWS 350           //Maxima cantidad de filas de un archivo
 
 #define MAX_FILE_ROW_LENGHT 100     //Maximo tamaño de fila para un archivo
 
 #define MAX_FILE_NAME 150        //Maximo tamaño de archivo
 
-#define MAX_FILES_IN_FOLDER 100  //Maxima cantidad de archivos en una carpeta
+#define MAX_FILES_IN_FOLDER 50  //Maxima cantidad de archivos en una carpeta
 
 #define ASSETSDIR "game/assets"
 #define LEVELSDIR "game/levels"
@@ -21,7 +21,7 @@
 
 #define MAX_DIR_LENGTH 150       //Maxaima longitud de un directorio
 
-#define MAX_LEVEL 999       //Maximo nivel
+#define MAX_LEVEL 100       //Maximo nivel
 typedef char fileName_t[MAX_FILE_NAME];
 
 typedef fileName_t directory_t[MAX_FILES_IN_FOLDER];
@@ -44,8 +44,6 @@ int levelArrayLen(level_t levelArray[]); //Calcula la longitud del array de nive
 int readObj(int paramNo, object_t * objOut);
 int readLevelSettings(int checkAllFields, char * file, level_setting_t * levelSettings);
 int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings, char * platform, object_t ** listaAliens, object_t ** listaUsr, object_t ** listaBarreras);
-int stringEndCmp(char * string, char * end);
-int getLevelNoOfFile(int prefixLenghtToIgnore, char * fileName, int maxFileLenght, char * nameOut);
 void imprimirNIVELES(level_t levelArray[]);
 int getLevelNoOfArray(level_t levelArray[], int levelNumber);
 #endif
