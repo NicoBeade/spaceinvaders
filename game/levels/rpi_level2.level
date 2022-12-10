@@ -1,43 +1,36 @@
-ASSET_MODIFY 1
-    shootProb += 
-    shootProb *= 2
-END
-
-maxMShipXLevel      3
-
 ALIEN
-    type  1
+    type  11
     posX  2
     posY  1
 END
 
 ALIEN
-    type  1
+    type  11
     posX  6
     posY  1
 END
 
 ALIEN
-    type  1
+    type  11
     posX  11
     posY  1
 END
 
 
 ALIEN
-    type  13
+    type  12
     posX  2
     posY  4
 END
 
 ALIEN
-    type  13
+    type  12
     posX  6
     posY  4
 END
 
 ALIEN
-    type  13
+    type  12
     posX  11
     posY  4
 END
@@ -48,39 +41,39 @@ END
 
 ;Nave del usuario
 USUARIO
-    type 40
+    type 1
     posX 6
     posY 14
 END
 
 ; Barrera 1
     BARRERA
-        type 50
+        type 21
         posX 2
         posY 11
     END
     BARRERA
-        type 50
+        type 21
         posX 3
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 2
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 3
         posY 11
     END
 	BARRERA
-        type 50
+        type 21
         posX 4
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 4
         posY 11
     END
@@ -91,33 +84,40 @@ END
 
 ; Barrera 2
     BARRERA
-        type 50
+        type 21
         posX 12
         posY 11
     END
     BARRERA
-        type 50
+        type 21
         posX 13
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 12
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 13
         posY 11
     END
 	BARRERA
-        type 50
+        type 21
         posX 11
         posY 12
     END
     BARRERA
-        type 50
+        type 21
         posX 11
         posY 11
     END
-maxMShipXLevel      3
+
+
+maxMShipXLevel      3	;Seteo la cantidad maxima de motherhsips en el nivel como 3
+
+ASSET_MODIFY    14		;Modifico la mothership
+    shootProb	2		;Bajo la probabilidad de aparicion
+    score		100		;Asigno un score mas alto
+END
