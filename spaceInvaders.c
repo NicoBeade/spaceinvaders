@@ -131,7 +131,7 @@ const int velCollider = 1;      //Velocidad a la que se ejecuta el collider
 const int velInputGameShoot = 5;//Velocidad a la que se lee el input para el disparo del usuario durante el juego.
 const int velInputGameMoove = 5;//Velocidad a la que se lee el input para el movimiento del usuario durante el juego.
 #define STOP_SHOOT 10
-#define VEL_INCR_ALIENS 10
+#define VEL_INCR_ALIENS 15
 #define MIN_VEL_ALIENS 50
 int (*display)(argDisplay_t* argDisplay) = displayRPI;
 #endif

@@ -3,7 +3,7 @@ desplazamientoUsr   1
 desplazamientoX     1
 desplazamientoY     1
 margenX             0
-margenY             1
+margenY             3
 saltoX              4
 saltoY              4
 velAliens			200
