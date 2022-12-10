@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include "drivers/termlib.h"
 #include "drivers/disdrv.h"
-#include "../spaceLib/score/score.h"
+#include "../../back/spaceLib/score/score.h"
 #include <string.h>
 
 sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
@@ -706,16 +706,17 @@ static void printTerminalMatrix(uint8_t matriz[8][4]){
 //BARRIDO LETRA: recibe la primer y segunda letra a barrer, el sentido del barrido y la coordenada a imprimir el barrido
 //Esta funcion hace el barrido vertical de las letras en el display 
 //Asumo el display ya correctamente incializado
-void barridoLetra (char letraUno, char letraDos, int sentido, dcoord_t coordenada ){
+void barridoLetra (char letraUno, char letraDos, int sentido, vector_t coordenada ){
     int i;
     uint8_t matriz [8][4];
     uint8_t matrizCopy [8][4];
     copyMatrixLetter(letraUno, matriz);
     copyMatrixLetter(letraDos, matrizCopy);
+    dcoord_t coordenadaAImprimir = {coordenada.x,coordenada.y};
     for (i = 0; i<8 ; i++){
         sweepMatrix(matriz, sentido);
         addRow(matriz,matrizCopy[FIRSTROW(sentido)+i*sentido],sentido);
-        printLetter(matriz, coordenada);
+        printLetter(matriz, coordenadaAImprimir);
         usleep(BARRIDO_LETRA);
     }
     return;

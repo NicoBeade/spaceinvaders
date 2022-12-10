@@ -780,7 +780,6 @@ static void* saveScoreHandlerThread(void * data){
         unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 0 : 1;
         char titilar = 1; //Flag que indica si se debe titilar la letra.
         vector_t posLetra = {4,0};//Variable que indica la posicion de la esquina izquierda superior de la letra a mostrar en el display.
-        dcoord_t posLetraDisplay;
 
         pthread_t displayMenuT, titileoT;
         halfDisp_t higherDispMenu = {//Parte superior del display
@@ -932,9 +931,7 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = posLetra.y;
-                barridoLetra(letraAnterior, letraActual[select],1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
+                barridoLetra(letraAnterior, letraActual[select],1, posLetra); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
@@ -975,9 +972,8 @@ static void* saveScoreHandlerThread(void * data){
 
                 #ifdef RASPI
                 titilar = 0;//Dejamos de titilar la letra
-                posLetraDisplay.x = posLetra.x;
-                posLetraDisplay.y = posLetra.y;
-                barridoLetra(letraAnterior, letraActual[select],-1, posLetraDisplay); //Realiza un barrido para mostrar la nueva letra.
+
+                barridoLetra(letraAnterior, letraActual[select],-1, posLetra); //Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;//Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash);//Inicia el thread encargado de hacer titilar las letras.
                 #endif
