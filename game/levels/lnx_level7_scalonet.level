@@ -1,20 +1,65 @@
 velAliens			70
 velBalas +=-1
+mothershipYpos      20
 ;------------------ALIENS FILA 1-------------------
-
-ASSET_MODIFY    11 ;modifico los aliens
-    shootProb *=2
-    maxBullets +=3
+ASSET_MODIFY    1 ;modifico a la nave usuario (messi)
+    sprite1 game/spritesAllegro/mes.png
 END
 
-ASSET_MODIFY    12 ;modifico los aliens
+ASSET_MODIFY    11 ;modifico a mbappe
     shootProb *=2
     maxBullets +=3
+    sprite1 game/spritesAllegro/mba1.png
+    sprite2 game/spritesAllegro/mba2.png
+    sprite3 game/spritesAllegro/mba1.png
+    sprite4 game/spritesAllegro/mba2.png
 END
 
-ASSET_MODIFY    13 ;modifico los aliens
+ASSET_MODIFY    12 ;modifico modric
     shootProb *=2
     maxBullets +=3
+    sprite1 game/spritesAllegro/mod1.png
+    sprite2 game/spritesAllegro/mod2.png
+    sprite3 game/spritesAllegro/mod1.png
+    sprite4 game/spritesAllegro/mod2.png
+END
+
+ASSET_MODIFY    13 ;modifico kane
+    shootProb *=2
+    maxBullets +=3
+    sprite1 game/spritesAllegro/kan1.png
+    sprite2 game/spritesAllegro/kan2.png
+    sprite3 game/spritesAllegro/kan1.png
+    sprite4 game/spritesAllegro/kan2.png
+END
+
+ASSET_MODIFY    22 ;modifico barrera (otamendi)
+    ancho 108
+    sprite1 game/spritesAllegro/ota1.png
+    sprite2 game/spritesAllegro/ota2.png
+    sprite3 game/spritesAllegro/ota3.png
+    sprite4 game/spritesAllegro/ota4.png
+END
+
+ASSET_MODIFY    31 ;modifico la bala enemiga (pelota)
+    ancho 10
+    alto 10
+    sprite1 game/spritesAllegro/bal.png
+    sprite2 game/spritesAllegro/bal.png
+END
+
+ASSET_MODIFY    41 ;modifico la bala aliada (pelota)
+    ancho 10
+    alto 10
+    sprite1 game/spritesAllegro/bal.png
+    sprite2 game/spritesAllegro/bal.png
+END
+
+ASSET_MODIFY    14 ;modifico la mothership (arco)
+    shootProb 2
+    score 100
+    sprite1 game/spritesAllegro/arc.png
+    sprite2 game/spritesAllegro/arc.png
 END
 
 ALIEN
@@ -62,43 +107,43 @@ END
 ;------------------ALIENS FILA 2-------------------
 
 ALIEN
-    type  13
+    type  12
     posX  150
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  250
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  350
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  450
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  550
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  650
     posY  200
 END
 
 ALIEN
-    type  13
+    type  12
     posX  750
     posY  200
 END
@@ -159,42 +204,20 @@ END
 
 BARRERA
     type  22
-    posX  121
-    posY  500
-END
-
-BARRERA
-    type  21
-    posX  175
+    posX  148
     posY  500
 END
 
 BARRERA
     type  22
-    posX  396
+    posX  423
     posY  500
 END
 
-BARRERA
-    type  21
-    posX  450
-    posY  500
-END
 
 BARRERA
     type  22
-    posX  671
+    posX  698
     posY  500
-END
-
-BARRERA
-    type  21
-    posX  725
-    posY  500
-END
-
-ASSET_MODIFY    14 ;modifico la mothership
-    shootProb 2
-    score 100
 END
 
