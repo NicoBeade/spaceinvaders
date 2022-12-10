@@ -3,14 +3,14 @@ vel 10  		;Velocidad
 ancho 54		;Ancho
 alto 39			;Alto
 initLives 2		;Vidas iniciales
-shootProb 10		;Probabilidad de disparo
+shootProb 10	;Probabilidad de disparo
 maxBullets 7	;Cantidad maxima de balas
 balaID 31		;ID correspondiente a la bala que dispara
 sprite1 game/spritesAllegro/alien11.png
 sprite2 game/spritesAllegro/alien12.png
 sprite3 NULL
 sprite4 NULL
-score 100
+score 200
 deathSound 0
 shootSound 0
 aliado 0

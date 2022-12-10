@@ -907,68 +907,6 @@ int getLevelNoOfArray(level_t levelArray[], int levelNumber){
     printf("Error in levelLoader.c, getLevelNoOfArray function : level %d not found in the array\n", levelNumber);
      return -1;
 }
-/*
-int main (){
-    //loadAsset("../game/assets/test.asset");
-    //imprimirARRAY();
-    directory_t carpetaAssets = {};
-    loadDirectory("../game/assets", &carpetaAssets);
-    loadAllAssets("rpi", &carpetaAssets);
-    imprimirARRAY();
-    clearFileBuffer();
-    readFile("../game/levels/rpi_level1.level");
-    object_t alien;
-
-    printf("%s\t%s\n", decodedFile[0].parameter,decodedFile[0].value);
-    printf("%s\t%s\n", decodedFile[1].parameter,decodedFile[1].value);
-    printf("%s\t%s\n", decodedFile[2].parameter,decodedFile[2].value);
-    printf("%s\t%s\n", decodedFile[3].parameter,decodedFile[3].value);
-    printf("%s\t%s\n", decodedFile[4].parameter,decodedFile[4].value);
-    printf("%s\t%s\n", decodedFile[5].parameter,decodedFile[5].value);
-    printf("%s\t%s\n", decodedFile[6].parameter,decodedFile[6].value);
-    printf("%s\t%s\n", decodedFile[7].parameter,decodedFile[7].value);
-    printf("%s\t%s\n", decodedFile[8].parameter,decodedFile[8].value);
-    printf("%s\t%s\n", decodedFile[9].parameter,decodedFile[9].value);
-    printf("%s\t%s\n", decodedFile[10].parameter,decodedFile[10].value);
-    printf("%s\t%s\n", decodedFile[11].parameter,decodedFile[11].value);
-    printf("%s\t%s\n", decodedFile[12].parameter,decodedFile[12].value);
-    printf("%s\t%s\n", decodedFile[13].parameter,decodedFile[13].value);
-    printf("%s\t%s\n", decodedFile[14].parameter,decodedFile[14].value);
-    printf("%s\t%s\n", decodedFile[15].parameter,decodedFile[15].value);
-    printf("%s\t%s\n", decodedFile[16].parameter,decodedFile[16].value);
-    printf("%s\t%s\n", decodedFile[17].parameter,decodedFile[17].value);
-    printf("%s\t%s\n", decodedFile[18].parameter,decodedFile[18].value);
-    printf("%s\t%s\n", decodedFile[19].parameter,decodedFile[19].value);
-    printf("%s\t%s\n", decodedFile[20].parameter,decodedFile[20].value);
-
-    level_setting_t levelSettings;
-        object_t * listaAliens = NULL;
-    loadLevel(0, &levelSettings, "rpi",&listaAliens,NULL,NULL);
-
-    loadLevel(1, &levelSettings, "rpi",&listaAliens,NULL,NULL);
-    readLevel("../game/levels/rpi_level0.level", &levelSettings);
-    printf("%d\n", levelSettings.velBalas); 
-    printf("%d\n", levelSettings.desplazamientoUsr);
-    printf("%d\n", levelSettings.desplazamientoX);
-    printf("%d\n", levelSettings.desplazamientoY);
-    printf("%d\n", levelSettings.velAliens);
-    printf("%d\n", levelSettings.velMothership);
-    printf("%d\n", levelSettings.distInicialX);
-    printf("%d\n", levelSettings.distInicialY);
-    printf("%d\n", levelSettings.margenX);
-    printf("%d\n", levelSettings.margenY);
-    printf("%d\n", levelSettings.saltoX);
-    printf("%d\n", levelSettings.saltoY);
-    printf("%d\n", levelSettings.xMax);
-    printf("%d\n", levelSettings.xMin);
-    printf("%d\n", levelSettings.yMax);
-    printf("%d\n", levelSettings.yMin);
-    
-    printAliens(&listaAliens);
-    
-}
-
-*/
 
 
 int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings terminan de la misma manera
@@ -979,19 +917,18 @@ int stringEndCmp(char * string, char * end){    //Devuelve 1 si dos strings term
 
 
 #ifdef LEVELTESTER
-int main(){
-/*
-    directory_t carpetaAssets = {};
-    loadAllAssets("rpi", &carpetaAssets);
-    imprimirARRAY();
-    clearFileBuffer();
-    printf("%d\n",getLevelNoOfFile(strlen("rpi")+strlen("_level")+strlen(LEVELSDIR)+1, "../game/levels/lnx_level0.level", MAX_FILE_ROW_LENGHT, NULL));
-
-    directory_t carpetaNiveles = {};
-    level_t levelArray[100];
-    indexAllLevels("rpi", "_level", &carpetaNiveles, levelArray);
-    imprimirNIVELES(levelArray);
-*/  
+int main(int argc, char *argv[]){
+    char gameDirectory[MAX_DIR_LENGTH] = {};
+    if(argc != 2){
+        printf("Error no se ingreso el directorio /game correctamente\n");
+        return -1;
+    }
+    strcpy(gameDirectory, argv[1]);
+    printf("Carpeta Game ingresada %s\n", gameDirectory);
+    char levelsDirec[MAX_DIR_LENGTH+MAX_DIR_LENGTH] = {};
+    char assetDirec[MAX_DIR_LENGTH+MAX_DIR_LENGTH] = {};
+    sprintf(levelsDirec,"%s/levels", gameDirectory);
+    sprintf(assetDirec,"%s/assets", gameDirectory);
     object_t * alienList = NULL;
     object_t * UsrList = NULL;
     object_t * barrerasList = NULL;
@@ -1009,7 +946,7 @@ int main(){
     while(strlen(plataforma) != 3);
     directory_t carpetaNiveles = {};
     level_t levelArray[100];
-    indexAllLevels(plataforma,"../game/levels", "_level", &carpetaNiveles, levelArray);
+    indexAllLevels(plataforma,levelsDirec, "_level", &carpetaNiveles, levelArray);
     imprimirNIVELES(levelArray);
     int nivel;
     int nivel_found = 0;
@@ -1032,7 +969,7 @@ int main(){
     while(nivel_found == 0);
     int levelStatus;
     directory_t carpetaAssets = {};
-    loadDirectory("../game/assets", &carpetaAssets);   //ESTO HAY QUE CAMBIARLO ESTA HARCODEADO
+    loadDirectory(assetDirec, &carpetaAssets);   
     if(loadAllAssets(plataforma, &carpetaAssets) == -1){
         printf("Error no se pudieron cargar los assets\n");
         return -1;
