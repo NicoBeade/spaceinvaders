@@ -310,6 +310,9 @@ int displayRPI (argDisplay_t* argDisplayRPI){
             punto.y=naveUser->pos.y;
             drawSprite(punto,nave); //copia la nave en el buffer
         }
+        else{
+            printf("Err in displayRaspi.c, in fuction displayRPI: usrList cannot be NULL in displayRPI\n");
+        }
         
         aux = balasEnemigas;
 
