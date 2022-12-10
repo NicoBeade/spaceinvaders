@@ -166,7 +166,6 @@ void fillLeaderboardMenu(menu_t * menuLeaderboard){
 
 
 static int selectPlayInicio(void){
-    printf("Select Play Inicio\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -178,7 +177,6 @@ static int selectPlayInicio(void){
 }
 
 static int selectLevels(void){
-    printf("Select Levels\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -189,7 +187,6 @@ static int selectLevels(void){
 }
 
 static int selectVolume(void){
-    printf("Select Volume\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -200,7 +197,6 @@ static int selectVolume(void){
 }
 
 static int selectQuitGame(void){
-    printf("Select Quit Game\n");
     #ifdef RASPI
     velDispAnimation = 1;
     clearDisplay();
@@ -210,7 +206,6 @@ static int selectQuitGame(void){
 }
 
 static int selectResume(void){
-    printf("Select Resume\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -221,7 +216,6 @@ static int selectResume(void){
 }
 
 static int selectRestartLevel(void){
-    printf("Select Restart Level\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -232,7 +226,6 @@ static int selectRestartLevel(void){
 }
 
 static int selectNextLevel(void){
-    printf("Select Restart Level\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -254,13 +247,11 @@ static int selectNextLevel(void){
     
     if(GAME_STATUS.nivelActual >= levelArrayLen(levelArray)){//Si se llego al ultimo nivel.
         GAME_STATUS.nivelActual -= 1;
-        printf("Se alcanzo el ultimo nivel\n");
     }
     return 0;
 }
 
 static int selectMainMenu(void){
-    printf("Select Main Menu\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -272,7 +263,6 @@ static int selectMainMenu(void){
 }
 
 static int selectLeaderboard(void){
-    printf("Select Leaderboard\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
@@ -283,17 +273,14 @@ static int selectLeaderboard(void){
 }
 
 static int selectSaveScore(void){
-    printf("Select Save Score\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif
     GAME_STATUS.pantallaActual = SAVE_SCORE;
-    printf("Save score saliendo\n");
     return 0;
 }
 
 static int backMenuAnterior(void){
-    printf("Select Back Menu Anterior\n");
     #ifdef RASPI
     velDispAnimation = 1;
     #endif

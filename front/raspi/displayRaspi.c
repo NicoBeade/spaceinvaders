@@ -94,7 +94,7 @@ static void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en di
                 pAux.x = p.x+i;
                 pAux.y = p.y+j;
                 if(pAux.x>DISP_MAX||pAux.y>DISP_MAX){
-                    printf("Fuera de rango de impresion en algun pixel de la nave");
+                    printf("Fuera de rango de impresion en algun pixel de la nave\n");
                 }
                 disp_write(pAux,D_ON); //Actualiza el buffer          
             }
@@ -264,7 +264,7 @@ int displayRPI (argDisplay_t* argDisplayRPI){
                     drawSprite(punto,pablo2);
                     break;
                 
-                default: printf("Se esta queriendo imprimir como alien algo que no es un alien");
+                default: printf("Se esta queriendo imprimir como alien algo que no es un alien\n");
                     break;
                 
             }   

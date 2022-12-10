@@ -5,7 +5,7 @@
 
 static int locateInLeaderboard(leaderboard_t, int score); //localiza la fila en la que debe ir el puntaje
 static int detectThreeLetter(char*); //AUX. detecta si el nombre ingresado tiene mas de tres letras
-void printLeaderboard(leaderboard_t); //AUX. imprime el arreglo parseado de scores
+static void printLeaderboard(leaderboard_t); //AUX. imprime el arreglo parseado de scores
 
 
 void parseScore(leaderboard_t leaderboard){ 
@@ -93,11 +93,8 @@ static int locateInLeaderboard(leaderboard_t leaderboard, int score){
     }
 
     if(located == 0){
-        printf("No se encontro posicion en el top\n");
-        printf("El score que se busco fue %d\n",score);
         return POS_LEADERBOARD_NOT_FOUND;
     } 
-    printf("La posicion en el top encontrada es la %d\n",posInTop);
     return posInTop-1;
 }
 
@@ -111,7 +108,7 @@ static int detectThreeLetter(char* name){
     return 0;
 }
 
-void printLeaderboard(leaderboard_t leaderboard){
+static void printLeaderboard(leaderboard_t leaderboard){
     for (int i = 0; i<10; i++){
         printf("%s\n", leaderboard[i]);
     }
