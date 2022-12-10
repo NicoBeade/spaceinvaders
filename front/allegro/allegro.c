@@ -79,6 +79,8 @@ void * allegroThread (void * dataIn){
     al_destroy_thread(tdisplay);
     al_destroy_thread(tkeyboard);
 
+    al_destroy_event_queue(event_queue);
+
     pthread_exit(0);
     
 }

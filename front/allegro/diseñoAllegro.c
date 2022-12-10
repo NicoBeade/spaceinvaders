@@ -53,9 +53,9 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/titleMM.png", X_MAX/2 - 50, 0);
     };
 
-    salida.textoList=addText(salida.textoList, data->dataInGame[0], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2 - 100); //Se muestra la cantidad de vidas actuales
-    salida.textoList=addText(salida.textoList, data->dataInGame[1], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2);
-    salida.textoList=addText(salida.textoList, data->dataInGame[2], mediumF, 5 * X_MAX/8 + 20, Y_MAX/2 + 100);
+    salida.textoList=addText(salida.textoList, data->dataInGame[0], mediumF, X_MAX - 200, Y_MAX - 50); //Se muestra la cantidad de vidas actuales
+    salida.textoList=addText(salida.textoList, data->dataInGame[1], mediumF, 20, Y_MAX - 50);
+    salida.textoList=addText(salida.textoList, data->dataInGame[2], mediumF, X_MAX/2 - 104, Y_MAX - 50);
 
 
     lists->spriteList= salida.spriteList;
@@ -310,16 +310,20 @@ sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite
  * ********************************************************************************************************************************************************/
 
 //Prepara las listas para mostrar los datos ingame
-texto_t * levelAllegro(texto_t * toText, char * score, char * vidas ){
+texto_t * levelAllegro(texto_t * toText, char * score, char * vidas, char * nivelActual ){
 
     texto_t * temp = toText;
 
     //Añade las vidas
-    temp = addText(temp, vidas, mediumF, X_MAX - 50, Y_MAX - 50); 
-    temp = addText(temp, "Lives :", mediumF, X_MAX - 200, Y_MAX - 50);
+    temp = addText(temp, vidas, mediumF, X_MAX - 53, Y_MAX - 50); 
+    temp = addText(temp, "Lives:", mediumF, X_MAX - 200, Y_MAX - 50);
 
     //Añade el score
     temp = addText(temp, score, mediumF, 20, Y_MAX - 50);
+
+    //Añade el nivel actual
+    temp = addText(temp, nivelActual, mediumF, X_MAX/2 + 51 , Y_MAX - 50); 
+    temp = addText(temp, "Level:", mediumF, X_MAX/2 - 104, Y_MAX - 50);
 
     return temp;
 }

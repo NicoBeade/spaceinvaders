@@ -131,7 +131,7 @@ int displayHandler(argDisplay_t * dataIn);
 /*******Diseño de menues************/
 
 //levelAllegro: esta funcion de encarga de preparar las listas para la reproduccion de los niveles
-texto_t * levelAllegro(texto_t * toText, char * score, char * vidas );
+texto_t * levelAllegro(texto_t * toText, char * score, char * vidas, char * nivelActual );
 //refresca los datos del jugador
 void refreshDatos( char * toScore, char * toVidas, int score, int vidas);
 

@@ -301,9 +301,9 @@ int main(void)
 
             #ifdef ALLEGRO
             if(UsrList != NULL){
-                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[0], "Lives: %d" , UsrList->lives );
-                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[1], "Score: %d" , scoreInstantaneo);
-                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[2], "Level: %d" , GAME_STATUS.nivelActual );
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[0], "Lives:    %d" , UsrList->lives );
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[1], "%d" , scoreInstantaneo);
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[2], "Level:    %d" , GAME_STATUS.nivelActual );
             }
             else{
                 for(int i = 0; i<3; i++){
@@ -1101,8 +1101,9 @@ static void *levelHandlerThread(void *data)
     #ifdef ALLEGRO
     char vidas[2] = {(*(menu->naveUsr))->lives + '0', 0};
     char score[7] = {'0', '0', '0', '0', '0', '0', 0};
+    char level[2] = {GAME_STATUS.nivelActual + '0', 0};
     sem_wait(&SEM_GAME);
-    toText = levelAllegro(toText, score, vidas);
+    toText = levelAllegro(toText, score, vidas, level);
     sem_post(&SEM_GAME);
     #endif
     while (menu->exitStatus)
