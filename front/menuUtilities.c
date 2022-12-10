@@ -36,7 +36,7 @@ static int backMenuAnterior(void);
 static int selectNothing(void);
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/
-gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .pantallaAnterior = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .usrLives = MAX_USR_LIVES, .exitStatus = 1};
+gameStatus_t GAME_STATUS = { .pantallaActual = MENU, .nivelActual = 0 , .menuActual = 0, .menuAnterior = -1, .inGame = 0, .usrLives = MAX_USR_LIVES, .exitStatus = 1};
 game_t menuGame = { &KEYS, NULL, NULL, NULL, 0, NULL, NULL}; //Estructura del level handler.
 
 /*******************************************************************************************************************************************

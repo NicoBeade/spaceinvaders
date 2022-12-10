@@ -368,8 +368,6 @@ int main(void)
 
         case START_LEVEL: //-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
-            GAME_STATUS.pantallaAnterior = START_LEVEL;
-
             GAME_STATUS.inGame = 1;
 
             sem_wait(&SEM_MENU);
@@ -402,13 +400,20 @@ int main(void)
             velBalas = levelSettings.velBalas;
             printf("Vel Balas in StartLEVEL %d   LEVELNO %d\n", velBalas,GAME_STATUS.nivelActual);
 
-            UsrList->lives = GAME_STATUS.usrLives; // Vidas del usuario en el nivel
+            if(UsrList != NULL){
+                UsrList->lives = GAME_STATUS.usrLives; // Vidas del usuario en el nivel
+            }
+            else{
+                printf("Err in spaceInvares.c, in main, START_LEVEL: UsrList cannot be NULL after loading level\n");
+            }
 
             menuGame.naveUsr = &UsrList; // Carga el struct utilizado en levelHandlerThread
             menuGame.levelSettings = &levelSettings;
             menuGame.balasUsr = &balasUsr;
             menuGame.exitStatus = 1;
             menuGame.scoreInstantaneo = &scoreInstantaneo;
+
+            printf("Loaded menuGame\n");
 
             // Inicializa los threads encargados de controlar el juego.
             argMoveAlien_t argMoveAlien = {&levelSettings, &alienList, &UsrList, &score, audioCallback};
@@ -419,17 +424,17 @@ int main(void)
             pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
             pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
             pthread_create(&colliderT, NULL, colliderThread, &argCollider);
+            printf("Started gameThreads\n");
 
             pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame); // Se inicializa el thread de level handler con el nivel indicado.
+            printf("Started levelHandler\n");
             pthread_join(levelHandlerT, NULL);                                   // Espera hasta que se cree un menu.
 
             sem_post(&SEM_MENU);
 
             break;
 
-        case IN_GAME: //--------------------------   IN_GAME: Entra a este caso cuando se reanuda un nivel.      -------------------------------------------------------------------
-
-            GAME_STATUS.pantallaAnterior = IN_GAME;
+        case IN_GAME: //--------------------------   IN_GAME: Entra a este caso cuando se reanuda un nivel.      -------------------------------------------------------------------Z
 
             sem_wait(&SEM_MENU);
             pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame); // Se inicializa el thread de level handler con el nivel indicado.

@@ -63,6 +63,7 @@ typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada o
 #define VEL_DISP_ANIMATION 3000     //Velocidades de animaciones
 #define VEL_TITILEO 200
 #define BARRIDO_LETRA 1000  
+#define WAIT_SEEP_MENU 900
 
 #define MAX_SPRITES 200
 
@@ -454,7 +455,7 @@ void* textAnimMenu(void* argTextAnimMenu){
     pthread_join(drawingSwipeT, NULL);
     
 
-    usleep(900 * U_SEC2M_SEC);//Espera medio segundo.
+    usleep(WAIT_SEEP_MENU * U_SEC2M_SEC);//Espera medio segundo.
 
     if(velDispAnimation != 1){
         velDispAnimation = VEL_DISP_ANIMATION;
