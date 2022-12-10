@@ -89,7 +89,7 @@ typedef struct{
     int actualOp;      //Opcion acutal
     int nextOp;        //Nueva opcion
     menu_t * menu;     //Datos del menu actual
-    int menuActual;
+    int volumenActual; //Volumen Actual
 
 }changeOptionData_t;
 
@@ -155,7 +155,7 @@ TextObj_t * allegroLiderboard(menu_t * data, TextObj_t * lists);
 //allegroVolume: Esta funcion se encarga de preparar las listas para mostrar el menu del volumen
 TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual);
 //changeVolume: Esta funcon se encarga de actualizar el menu del volumen
-sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual);
+void changeVolume(void * data);
 
 /*******Manejo de listas************/
 

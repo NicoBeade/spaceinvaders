@@ -114,7 +114,7 @@ menu_t menuLeaderboard = { &KEYS , {selectNothing, selectNothing, selectNothing,
                       {"1. 00000   ", "2. 00000   ", "3. 00000   ", "4. 00000   ", "5. 00000   ", "6. 00000   ", "7. 00000   ", "8. 00000   ", "9. 00000   ", "10. 00000   "},
                       {{0}},
                       "",  
-                      10 , 1 , changeOption };//Estructura del menu de pausa.
+                      10 , 1 , NULL };//Estructura del menu de pausa.
 
 menu_t menuLevels   = { &KEYS , {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}, backMenuAnterior, 
                       {"Nivel 1", "Nivel 2", "Nivel 3", "Nivel 4", "Nivel 5", "Nivel 6", "Nivel 7", "Nivel 8", "Nivel 9", "Nivel 10", "Nivel 11", "Nivel 12", "Nivel 13", "Nivel 14", "Nivel 15", "Nivel 16", "Nivel 17", "Nivel 18", "Nivel 19", "Nivel 20"},
@@ -126,7 +126,7 @@ menu_t menuVolume = { &KEYS , {backMenuAnterior, backMenuAnterior, backMenuAnter
                       {"00 ", "01 ", "02 ", "03 ", "04 ", "05 ", "06 ", "07 ", "08 ", "09 ", "10 "}, 
                       {{0}},
                       "Volume", 
-                      11 , 1 , changeOption };//Estructura del menu de seleccionar volumen.
+                      11 , 1 , changeVolume };//Estructura del menu de seleccionar volumen.
 #endif
 /*******************************************************************************************************************************************
 *******************************************************************************************************************************************/

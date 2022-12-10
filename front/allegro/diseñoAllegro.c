@@ -67,57 +67,53 @@ TextObj_t * allegroMenu(menu_t * data, TextObj_t * lists){
 //Esta funcion realiza la animacion de cambio de opcion
 void changeOption(void * dataIn){
 
-
     if(!dataIn){
         printf("puntero a datos NULL\n");
     }
         
     changeOptionData_t * data = (changeOptionData_t *) dataIn;
 
-    if(data->menuActual != AVOLUMEN){
-        texto_t * puntero = (*data->toText);
+        texto_t * puntero = *data->toText;
         sprite_t * sprite = *data->toSprite;
         
         int i = 0;
         int esc = 0; //Esta variable se encarga de saber si hay que subir o bajar las opciones
 
-        if(data->menuActual != ALEADERBOARD){
-            if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
+        if(data->actualOp == 0 && data->nextOp == ((data->menu)->cantOpciones)-1){
 
-                esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo
+            esc = -(data->menu)->cantOpciones + 1; //Si estoy en la primer opcion tengo que subir todo
 
-            }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
+        }else if(data->actualOp == ((data->menu)->cantOpciones)-1 && data->nextOp == 0){
 
-                esc = (data->menu)->cantOpciones - 1; //Si estoy en la ultima opcion tengo que bajar todo
+            esc = (data->menu)->cantOpciones - 1; //Si estoy en la ultima opcion tengo que bajar todo
 
-            }else if(data->nextOp > data->actualOp){ //En las otras situaciones muevo todo un lugar para arriba o abajo
+        }else if(data->nextOp > data->actualOp){ //En las otras situaciones muevo todo un lugar para arriba o abajo
 
-                esc = -1; 
+            esc = -1; 
 
-            }else{
+        }else{
 
-                esc = 1;
+            esc = 1;
 
-            }
-            
-            for(i = 0; i < (data->menu)->cantOpciones; i++ ){
-                //Recorro la lista
-                puntero->posy += esc * ESPACIADOMENU; //Muevo todo segun la variable esc
-
-                if(i == data->actualOp){
-                    puntero->posx-= SELECTOR; //La opcion actual la muevo hacia la izquierda
-                    puntero->fuente = mediumF; //Reduzco el tamaño de letras
-                }
-                if(i == data->nextOp){
-                    puntero->posx += SELECTOR; //La nueva opcion la muevo hacia la derecha
-                    puntero->fuente = largeF; //Incremento el tamaño de letras
-                }
-                puntero = puntero->next;
-            }
-
-            sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
         }
-    }
+            
+        for(i = 0; i < (data->menu)->cantOpciones; i++ ){
+            //Recorro la lista
+            puntero->posy += esc * ESPACIADOMENU; //Muevo todo segun la variable esc
+
+            if(i == data->actualOp){
+                puntero->posx-= SELECTOR; //La opcion actual la muevo hacia la izquierda
+                puntero->fuente = mediumF; //Reduzco el tamaño de letras
+            }
+            if(i == data->nextOp){
+                puntero->posx += SELECTOR; //La nueva opcion la muevo hacia la derecha
+                puntero->fuente = largeF; //Incremento el tamaño de letras
+            }
+            puntero = puntero->next;
+        }
+
+        sprite->direccion = ((data->menu)->spritesDir)[data->nextOp];
+    
 }
 
 /***********************************************************************************************************************************************************
@@ -274,7 +270,7 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
     salida.textoList = addText(salida.textoList, data->textOpciones[volumenActual], bigF , (X_MAX*0.3) - (volumeLen + 1)*40, Y_MAX * 0.4);
 
     //Se agregan las barras que muestran el menu
-    for(int i =0; i< volumenActual; i++){
+    for(int i =0; i< 10; i++){
         salida.spriteList = addSprite(salida.spriteList, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
     }
     //Se agrega el titulo
@@ -286,21 +282,31 @@ TextObj_t * allegroVolume(menu_t * data, TextObj_t * lists, int volumenActual){
     return lists;
 }
 
-sprite_t * changeVolume(menu_t * data, texto_t * listText, sprite_t * listSprite, int volumenActual){
+void changeVolume(void * dataIn){
 
-    if(!listText){
-        printf("puntero a lista de textos NULL\n");
+    if(!dataIn){
+        printf("puntero a datos NULL\n");
     }
-    listText->texto = data->textOpciones[volumenActual]; //cambia el texto en pantalla
+        
+    changeOptionData_t * data = (changeOptionData_t *) dataIn;
 
-    listSprite = emptySprite(listSprite); //Limpia la lista de sprites borrando las barras
+    texto_t * texto = *data->toText;
+    sprite_t * sprite = *data->toSprite;
+
+    texto->texto = (data->menu)->textOpciones[data->volumenActual]; //cambia el texto en pantalla
     
     //Vuelve a crear la lista en funcion del menu actual
-    for(int i =0; i< volumenActual; i++){
-        listSprite = addSprite(listSprite, "game/spritesAllegro/volumeBar.png", X_MAX * 0.3 + 50* i, Y_MAX * 0.4);
+    for(int i =0; i< 10; i++){
+        if(i >= data->volumenActual){
+            sprite->posx = X_MAX;
+        }else{
+            sprite->posx = X_MAX * 0.3 + 50* i;
+        }
+
+        sprite = sprite->next;
     }
 
-    return listSprite;
+    return;
 }
 
 /***********************************************************************************************************************************************************

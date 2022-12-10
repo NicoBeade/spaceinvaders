@@ -602,22 +602,18 @@ static void *menuHandlerThread(void *data)
     #ifdef ALLEGRO
     int preSelect = 0; // Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
     float volumenActual = 0;
-    int menuActualAllegro = 0;
     sem_wait(&SEM_MENU);
 
     if (GAME_STATUS.menuActual == MENU_VOLUME){
         volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
         stopMusicAllegro();
         allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
-        menuActualAllegro = AVOLUMEN;
     }
     else if (GAME_STATUS.menuActual == MENU_LEADERBOARD){
         allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
-        menuActualAllegro = ALEADERBOARD;
     }
     else{
         allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
-        menuActualAllegro = ADEFAULT;
     }
     toText = allegroList->textoList;
     screenObjects = allegroList->spriteList;
@@ -660,19 +656,20 @@ static void *menuHandlerThread(void *data)
                 #endif
 
                 #ifdef ALLEGRO
-
-                changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
-                stopSweep = 4;
-
+                
                 if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
-                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
-                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                     (menu->audioCallback)(SELECT_MENU);
                 }
+                volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, volumenActual};
+                stopSweep = 4;
+
                 #endif
 
-                (menu->changeOption)(&argChangeOption); // Cambia la opcion
+                if(menu->changeOption != NULL){
+                    (menu->changeOption)(&argChangeOption); // Cambia la opcion
+                }
 
                 if (GAME_STATUS.menuActual != MENU_VOLUME){ // Decide si hay que ejecutar el sonido de swap menu.
                     (menu->audioCallback)(SWAP_MENU);
@@ -702,18 +699,20 @@ static void *menuHandlerThread(void *data)
                 #endif
 
                 #ifdef ALLEGRO
-                changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
-                stopSweep = 4;
 
                 if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
-                    volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
-                    screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                     (menu->audioCallback)(SELECT_MENU);
                 }
+                volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
+                changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, volumenActual};
+                stopSweep = 4;
+
                 #endif
 
-                (menu->changeOption)(&argChangeOption); // Cambia la opcion
+                if(menu->changeOption != NULL){
+                    (menu->changeOption)(&argChangeOption); // Cambia la opcion
+                }
 
                 if (GAME_STATUS.menuActual != MENU_VOLUME){ // Decide si hay que ejecutar el sonido de swap menu.
                     (menu->audioCallback)(SWAP_MENU);
