@@ -546,7 +546,7 @@ static void *menuHandlerThread(void *data)
     {
         select = (menu->volumeCallback)(CHECK_AUDIO);
     }
-//*****************************************     Inicializa el thread que barre el display       *****************************
+//*****************************************     Inicializa el thread encargado del display       *****************************
     #ifdef RASPI
     unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 0 : 1;
 
@@ -562,8 +562,7 @@ static void *menuHandlerThread(void *data)
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-    if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
-    { // Si hay que rellenar utilizando el leaderBoard.
+    if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si hay que rellenar utilizando el leaderBoard.
         halfDispNameScore = &nameDispMenu;
         (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
     }
@@ -606,20 +605,17 @@ static void *menuHandlerThread(void *data)
     int menuActualAllegro = 0;
     sem_wait(&SEM_MENU);
 
-    if (GAME_STATUS.menuActual == MENU_VOLUME)
-    {
+    if (GAME_STATUS.menuActual == MENU_VOLUME){
         volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
         stopMusicAllegro();
         allegroList = allegroVolume(MENUES[GAME_STATUS.menuActual], allegroList, volumenActual);
         menuActualAllegro = AVOLUMEN;
     }
-    else if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
-    {
+    else if (GAME_STATUS.menuActual == MENU_LEADERBOARD){
         allegroList = allegroLiderboard(MENUES[GAME_STATUS.menuActual], allegroList);
         menuActualAllegro = ALEADERBOARD;
     }
-    else
-    {
+    else{
         allegroList = allegroMenu(MENUES[GAME_STATUS.menuActual], allegroList);
         menuActualAllegro = ADEFAULT;
     }
@@ -630,8 +626,7 @@ static void *menuHandlerThread(void *data)
     //***************************************************************************************************************************
 
     usleep(200 * U_SEC2M_SEC);
-    while (menu->exitStatus)
-    {
+    while (menu->exitStatus){
 
         usleep(10 * U_SEC2M_SEC);
         if ((timerTick % velMenu) == 0){
@@ -642,28 +637,24 @@ static void *menuHandlerThread(void *data)
             }
             #endif
 
-            if (SIGUIENTE && !stopSweep){ // Si se presiona para ir a la siguiente opcion
+            if (SIGUIENTE && !stopSweep){//-------------------------      Si se presiona para ir a la siguiente opcion.      --------------------------------------------
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
                 select += 1;
-                if (select == (menu->cantOpciones) && GAME_STATUS.menuActual != MENU_VOLUME)
-                { // Si llegamos a la ultima opcion pasamos a la primera
+                if (select == (menu->cantOpciones) && GAME_STATUS.menuActual != MENU_VOLUME){ // Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
                 }
-                else if (select == (menu->cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME)
-                {
+                else if (select == (menu->cantOpciones) && GAME_STATUS.menuActual == MENU_VOLUME){
                     select -= 1;
                 }
 
                 #ifdef RASPI
-                if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
-                { // Si hay que rellenar utilizando el leaderBoard.
+                if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = {&displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu->drawingOpciones)[select], (menu->textOpciones)[select], IZQUIERDA, notSwipe};
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                { // Si estamos en menu de volumen hay que subir el volumen
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
                 #endif
@@ -673,8 +664,7 @@ static void *menuHandlerThread(void *data)
                 changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
 
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                { // Si estamos en menu de volumen hay que subir el volumen
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
                     volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
@@ -684,34 +674,29 @@ static void *menuHandlerThread(void *data)
 
                 (menu->changeOption)(&argChangeOption); // Cambia la opcion
 
-                if (GAME_STATUS.menuActual != MENU_VOLUME)
-                { // Decide si hay que ejecutar el sonido de swap menu.
+                if (GAME_STATUS.menuActual != MENU_VOLUME){ // Decide si hay que ejecutar el sonido de swap menu.
                     (menu->audioCallback)(SWAP_MENU);
                 }
             }
 
-            if (ANTERIOR && !stopSweep){ // Si se presiona para ir a la opcion anterior
+            if (ANTERIOR && !stopSweep){//-------------------------      Si se presiona para ir a la opcion anterior.      --------------------------------------------
                 #ifdef ALLEGRO
                 preSelect = select;
                 #endif
                 select -= 1;
-                if (select < 0 && GAME_STATUS.menuActual != MENU_VOLUME)
-                { // Si llegamos a la ultima opcion pasamos a la primera
+                if (select < 0 && GAME_STATUS.menuActual != MENU_VOLUME){ // Si llegamos a la ultima opcion pasamos a la primera
                     select = (menu->cantOpciones) - 1;
                 }
-                else if (select < 0 && GAME_STATUS.menuActual == MENU_VOLUME)
-                {
+                else if (select < 0 && GAME_STATUS.menuActual == MENU_VOLUME){
                     select += 1;
                 }
 
                 #ifdef RASPI
-                if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
-                { // Si hay que rellenar utilizando el leaderBoard.
+                if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = {&displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu->drawingOpciones)[select], (menu->textOpciones)[select], DERECHA, notSwipe};
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                { // Si estamos en menu de volumen hay que subir el volumen
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
                 #endif
@@ -720,8 +705,7 @@ static void *menuHandlerThread(void *data)
                 changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
 
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                { // Si estamos en menu de volumen hay que subir el volumen
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
                     volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
@@ -731,45 +715,38 @@ static void *menuHandlerThread(void *data)
 
                 (menu->changeOption)(&argChangeOption); // Cambia la opcion
 
-                if (GAME_STATUS.menuActual != MENU_VOLUME)
-                { // Decide si hay que ejecutar el sonido de swap menu.
+                if (GAME_STATUS.menuActual != MENU_VOLUME){ // Decide si hay que ejecutar el sonido de swap menu.
                     (menu->audioCallback)(SWAP_MENU);
                 }
             }
 
-            if (PRESS_INPUT){ // Si se selecciona la opcion
+            if (PRESS_INPUT){//-------------------------      Si se selecciona la opcion.      -------------------------------------------- 
 
                 #ifdef ALLEGRO
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                {
+                if (GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->audioCallback)(MUSICA_JUEGO);
                 }
                 #endif
 
-                if (GAME_STATUS.menuActual == MENU_LEVELS)
-                {
+                if (GAME_STATUS.menuActual == MENU_LEVELS){
                     GAME_STATUS.nivelActual = select + 1;
                     GAME_STATUS.menuActual = START_LEVEL_MENU;
                     GAME_STATUS.menuAnterior = -1;
                     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
                     menu->exitStatus = 0;
                 }
-                else
-                {
+                else{
                     menu->exitStatus = (menu->selectOption[select])(); // Se llama al callback que indica que accion realizar al presionar dicha opcion.
                 }
-                if (menu->exitStatus == 0)
-                {
+                if (menu->exitStatus == 0){
                     (menu->audioCallback)(SELECT_MENU);
                 }
-                else
-                {
+                else{
                     (menu->audioCallback)(ERROR_MENU);
                 }
             }
-            if (ATRAS && GAME_STATUS.menuAnterior != -1){ // Si se quiere volver al menu anterior
-                if (GAME_STATUS.menuActual == MENU_VOLUME)
-                {
+            if (ATRAS && GAME_STATUS.menuAnterior != -1){//-------------------------      Si se quiere volver al menu anterior.      --------------------------------------------  
+                if (GAME_STATUS.menuActual == MENU_VOLUME){
                     (menu->audioCallback)(MUSICA_JUEGO);
                 }
                 (menu->audioCallback)(SELECT_MENU);
@@ -781,8 +758,7 @@ static void *menuHandlerThread(void *data)
         }
 
         #ifdef ALLEGRO
-        if (flagCloseGame)
-        {
+        if (flagCloseGame){
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
@@ -873,18 +849,16 @@ static void *saveScoreHandlerThread(void *data)
 
     usleep(200 * U_SEC2M_SEC);
 
-    while (menu->exitStatus)
-    {
+    while (menu->exitStatus){
         usleep(10 * U_SEC2M_SEC);
         if ((timerTick % velMenu) == 0){
             #ifdef ALLEGRO
-            if (stopSweep)
-            {
+            if (stopSweep){
                 stopSweep -= 1;
             }
             #endif
 
-            if (SIGUIENTESCORE && !stopSweep){ // Si se presiona para ir a la siguiente opcion
+            if (SIGUIENTESCORE && !stopSweep){//-------------------------      Si se presiona para ir a la siguiente opcion.      --------------------------------------------
                 #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
@@ -914,7 +888,7 @@ static void *saveScoreHandlerThread(void *data)
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ANTERIORSCORE && !stopSweep){ // Si se presiona para ir a la opcion anterior
+            if (ANTERIORSCORE && !stopSweep){//-------------------------      Si se presiona para ir a la opcion anterior.      --------------------------------------------
                 #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
@@ -944,7 +918,7 @@ static void *saveScoreHandlerThread(void *data)
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ARRIBA_INPUT && !stopSweep){ // Si se presiona para cambiar de letra hacia arriba
+            if (ARRIBA_INPUT && !stopSweep){//-------------------------      Si se presiona para cambiar de letra hacia arriba.      --------------------------------------------
                 #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
@@ -985,7 +959,7 @@ static void *saveScoreHandlerThread(void *data)
                 (*menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ABAJO_INPUT && !stopSweep){ // Si se presiona para cambiar de letra hacia abajo
+            if (ABAJO_INPUT && !stopSweep){//-------------------------      Si se presiona para cambiar de letra hacia abajo.      --------------------------------------------
                 #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
@@ -1027,7 +1001,7 @@ static void *saveScoreHandlerThread(void *data)
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (PRESS_INPUT){ // Si se selecciona la opcion
+            if (PRESS_INPUT){//-------------------------      Si se selecciona la opcion.      -------------------------------------------- 
                 int successAddScore;
                 leaderboard_t leaderboard;
                 parseScore(leaderboard); // Obtiene el valor actual del leaderboard
