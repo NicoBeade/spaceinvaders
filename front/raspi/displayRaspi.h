@@ -49,12 +49,6 @@ typedef struct{//Argumentos que recibe el thread de la animacion de barrido.
     unsigned char notSwipe;         //Indica si se debe realizar barrido.
 }argTextAnimMenu_t;
 
-typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
-    halfDisp_t* higerDispMenu;      //parte superior del display.
-    int direccion;
-    halfDisp_t* drawing;            //Dibujo a mostrar.
-}argSwipeDrawing_t;
-
 typedef struct{//Argumentos que recibe la funcion changeOption.
     pthread_t* threadMenu;          //Puntero al thread
     int* animStatus;                //Indicador de si se debe cambiar de texto

@@ -31,6 +31,13 @@
 #include <string.h>
 
 
+typedef struct{//Argumentos que recibe el thread que muestra el dibujo de cada opcion.
+    halfDisp_t* higerDispMenu;      //parte superior del display.
+    int direccion;
+    halfDisp_t* drawing;            //Dibujo a mostrar.
+}argSwipeDrawing_t;
+
+
 /*******************************************************************************************************************************************
  * 
                                      ___                     _                   _              

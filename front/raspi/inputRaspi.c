@@ -36,11 +36,11 @@ void* inputRPIThread(void* argInputRPI){
     while(*(data->exitStatus)){
 
         usleep(10 * U_SEC2M_SEC);//Espera 10mS para igualar el tiempo del timer.
-        sem_wait(&SEM_DRIVER);
+        //sem_wait(&SEM_DRIVER);
         joy_update();
         coordJoy = joy_get_coord();//Obtiene las coordenadas del joystick.
         switchJoy =  joy_get_switch();
-        sem_post(&SEM_DRIVER);
+        //sem_post(&SEM_DRIVER);
 
         //Si el joystick se mueve, indico ese valor en los campos de la variable keys.
         (data->KEYS) -> x = (coordJoy.x <= JOY_ACTIVE_NEG) ? -1 : ( (coordJoy.x >= JOY_ACTIVE_POS) ? 1 : 0); 

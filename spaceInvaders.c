@@ -288,7 +288,7 @@ int main(void)
         {          // Esta seccion del codigo se encarga de inicializar los threads correctos dependiendo de la pantalla
                    // actual y de la opcion seleccionada en algun menu.
         case MENU: //-------------------------------------    MENU:  Entra a este caso cuando el programa se encuentra en cualquier menu.    ------------------------------------
-#ifdef RASPI
+            #ifdef RASPI
             if (GAME_STATUS.menuActual == MENU_PAUSA)
             {
                 sprintf(menuPausa.textOpciones[0], "%s%d%s%d    ", "Resume   Score > ", scoreInstantaneo, "   Lives > ", UsrList->lives);
@@ -297,7 +297,22 @@ int main(void)
             {
                 sprintf(menuWonLevel.textOpciones[0], "%s%d%s%d    ", "Won Level   Score > ", score, "   Lives > ", UsrList->lives);
             }
-#endif
+            #endif
+
+            #ifdef ALLEGRO
+            if(UsrList != NULL){
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[0], "Lives: %d" , UsrList->lives );
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[1], "Score: %d" , scoreInstantaneo);
+                sprintf((MENUES[GAME_STATUS.menuActual]->dataInGame)[2], "Level: %d" , GAME_STATUS.nivelActual );
+            }
+            else{
+                for(int i = 0; i<3; i++){
+                    for(int j = 0; j<10; j++){
+                        MENUES[GAME_STATUS.menuActual]->dataInGame[i][j] = 0;
+                    }
+                }
+            }
+            #endif
 
             if (GAME_STATUS.menuActual == MENU_INICIO)
             {
@@ -326,13 +341,13 @@ int main(void)
 
             sem_wait(&SEM_GAME); // Pausa la ejecucion del juego.
 
-#ifdef RASPI
+            #ifdef RASPI
             sprintf(stringWithScore, "%d    ", scoreInstantaneo);
-#endif
+            #endif
 
-#ifdef ALLEGRO
+            #ifdef ALLEGRO
             sprintf(stringWithScore, "%d", scoreInstantaneo);
-#endif
+            #endif
 
             saveScore_t saveScore = {&KEYS, stringWithScore, scoreInstantaneo, 1, 3, audioCallback};
 
@@ -381,6 +396,7 @@ int main(void)
             velAliens = levelSettings.velAliens; // Inicializa la velocidad de los aliens y las balas para el nivel.
             velMothership = levelSettings.velMothership;
             velBalas = levelSettings.velBalas;
+            printf("Vel Balas in StartLEVEL %d   LEVELNO %d\n", velBalas,GAME_STATUS.nivelActual);
 
             UsrList->lives = GAME_STATUS.usrLives; // Vidas del usuario en el nivel
 
@@ -458,8 +474,8 @@ int main(void)
             {
                 GAME_STATUS.pantallaActual = MENU; // Se pasa al menu correspondiente.
             }
-		delAllObjType();
-		directory_t carpetaAssets = {};
+		    delAllObjType();
+		    directory_t carpetaAssets = {};
     		loadDirectory(ASSETSDIR, &carpetaAssets);
     		loadAllAssets(platform, &carpetaAssets);
     		levelStatus = loadLevel(0, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
@@ -540,20 +556,20 @@ static void *menuHandlerThread(void *data)
         select = (menu->volumeCallback)(CHECK_AUDIO);
     }
 //*****************************************     Inicializa el thread que barre el display       *****************************
-#ifdef RASPI
+    #ifdef RASPI
     unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 0 : 1;
 
     halfDisp_t *halfDispNameScore;
 
     halfDisp_t nameDispMenu = {// Matriz para almacenar el nombre del jugador a mostrar.
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                               {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
     if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
     { // Si hay que rellenar utilizando el leaderBoard.
@@ -563,38 +579,37 @@ static void *menuHandlerThread(void *data)
 
     pthread_t displayMenuT;
     halfDisp_t higherDispMenu = {// Parte superior del display
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
     halfDisp_t lowerDispMenu = {// Parte inferior del display
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
     int animStatus = 1;
 
     argTextAnimMenu_t argTextAnimMenu = {(menu->textOpciones)[select], &lowerDispMenu, &higherDispMenu, (menu->drawingOpciones)[select], IZQUIERDA, &animStatus, notSwipe};
 
     pthread_create(&displayMenuT, NULL, DISP_ANIM_MENU, &argTextAnimMenu);
-#endif
+    #endif
 
-    if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
-    { // Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
+    if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si estamos en el menu del leaderboard hay que llenar el texto de los menues con los puntajes
         fillLeaderboardMenu(menu);
     }
 
-#ifdef ALLEGRO
+    #ifdef ALLEGRO
     int preSelect = 0; // Esta variable se utiliza para almacenar el valor previo de opcion seleccionada a la ahora de cambiarlo.
     float volumenActual = 0;
     int menuActualAllegro = 0;
@@ -620,7 +635,7 @@ static void *menuHandlerThread(void *data)
     toText = allegroList->textoList;
     screenObjects = allegroList->spriteList;
     sem_post(&SEM_MENU);
-#endif
+    #endif
     //***************************************************************************************************************************
 
     usleep(200 * U_SEC2M_SEC);
@@ -628,21 +643,18 @@ static void *menuHandlerThread(void *data)
     {
 
         usleep(10 * U_SEC2M_SEC);
-        if ((timerTick % velMenu) == 0)
-        {
+        if ((timerTick % velMenu) == 0){
 
-#ifdef ALLEGRO
-            if (stopSweep)
-            {
+            #ifdef ALLEGRO
+            if (stopSweep){
                 stopSweep -= 1;
             }
-#endif
+            #endif
 
-            if (SIGUIENTE && !stopSweep)
-            { // Si se presiona para ir a la siguiente opcion
-#ifdef ALLEGRO
+            if (SIGUIENTE && !stopSweep){ // Si se presiona para ir a la siguiente opcion
+                #ifdef ALLEGRO
                 preSelect = select;
-#endif
+                #endif
                 select += 1;
                 if (select == (menu->cantOpciones) && GAME_STATUS.menuActual != MENU_VOLUME)
                 { // Si llegamos a la ultima opcion pasamos a la primera
@@ -653,7 +665,7 @@ static void *menuHandlerThread(void *data)
                     select -= 1;
                 }
 
-#ifdef RASPI
+                #ifdef RASPI
                 if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
                 { // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
@@ -663,9 +675,9 @@ static void *menuHandlerThread(void *data)
                 { // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(SUBIR_AUDIO);
                 }
-#endif
+                #endif
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
 
                 changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
@@ -677,7 +689,7 @@ static void *menuHandlerThread(void *data)
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                     (menu->audioCallback)(SELECT_MENU);
                 }
-#endif
+                #endif
 
                 (menu->changeOption)(&argChangeOption); // Cambia la opcion
 
@@ -687,11 +699,10 @@ static void *menuHandlerThread(void *data)
                 }
             }
 
-            if (ANTERIOR && !stopSweep)
-            { // Si se presiona para ir a la opcion anterior
-#ifdef ALLEGRO
+            if (ANTERIOR && !stopSweep){ // Si se presiona para ir a la opcion anterior
+                #ifdef ALLEGRO
                 preSelect = select;
-#endif
+                #endif
                 select -= 1;
                 if (select < 0 && GAME_STATUS.menuActual != MENU_VOLUME)
                 { // Si llegamos a la ultima opcion pasamos a la primera
@@ -702,7 +713,7 @@ static void *menuHandlerThread(void *data)
                     select += 1;
                 }
 
-#ifdef RASPI
+                #ifdef RASPI
                 if (GAME_STATUS.menuActual == MENU_LEADERBOARD)
                 { // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
@@ -712,9 +723,9 @@ static void *menuHandlerThread(void *data)
                 { // Si estamos en menu de volumen hay que subir el volumen
                     (menu->volumeCallback)(BAJAR_AUDIO);
                 }
-#endif
+                #endif
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 changeOptionData_t argChangeOption = {&toText, &screenObjects, preSelect, select, menu, menuActualAllegro};
                 stopSweep = 4;
 
@@ -725,7 +736,7 @@ static void *menuHandlerThread(void *data)
                     screenObjects = changeVolume(MENUES[GAME_STATUS.menuActual], toText, screenObjects, volumenActual);
                     (menu->audioCallback)(SELECT_MENU);
                 }
-#endif
+                #endif
 
                 (menu->changeOption)(&argChangeOption); // Cambia la opcion
 
@@ -735,15 +746,14 @@ static void *menuHandlerThread(void *data)
                 }
             }
 
-            if (PRESS_INPUT)
-            { // Si se selecciona la opcion
+            if (PRESS_INPUT){ // Si se selecciona la opcion
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 if (GAME_STATUS.menuActual == MENU_VOLUME)
                 {
                     (menu->audioCallback)(MUSICA_JUEGO);
                 }
-#endif
+                #endif
 
                 if (GAME_STATUS.menuActual == MENU_LEVELS)
                 {
@@ -766,8 +776,7 @@ static void *menuHandlerThread(void *data)
                     (menu->audioCallback)(ERROR_MENU);
                 }
             }
-            if (ATRAS && GAME_STATUS.menuAnterior != -1)
-            { // Si se quiere volver al menu anterior
+            if (ATRAS && GAME_STATUS.menuAnterior != -1){ // Si se quiere volver al menu anterior
                 if (GAME_STATUS.menuActual == MENU_VOLUME)
                 {
                     (menu->audioCallback)(MUSICA_JUEGO);
@@ -775,32 +784,31 @@ static void *menuHandlerThread(void *data)
                 (menu->audioCallback)(SELECT_MENU);
                 menu->exitStatus = (menu->backMenuAnterior)(); // Se llama al callback que indica que accion realizar al volver hacia atras.
             }
-            else if (ATRAS && GAME_STATUS.menuAnterior == -1)
-            {
+            else if (ATRAS && GAME_STATUS.menuAnterior == -1){
                 (menu->audioCallback)(ERROR_MENU);
             }
         }
 
-#ifdef ALLEGRO
+        #ifdef ALLEGRO
         if (flagCloseGame)
         {
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
-#endif
+        #endif
     }
-#ifdef RASPI
+    #ifdef RASPI
     animStatus = 0;
     pthread_join(displayMenuT, NULL);
-#endif
+    #endif
 
-#ifdef ALLEGRO
+    #ifdef ALLEGRO
     sem_wait(&SEM_MENU);
     toText = emptyText(toText);
     screenObjects = emptySprite(screenObjects);
     KEYS.press = 0;
     sem_post(&SEM_MENU);
-#endif
+    #endif
 
     pthread_exit(0);
 }
@@ -817,12 +825,12 @@ static void *saveScoreHandlerThread(void *data)
 
     char letraActual[4] = {'A', 'A', 'A', 0}; // En este struct se almacena la letra que se esta mostrando actualmente en cada posicion.
 
-#ifdef ALLEGRO
+    #ifdef ALLEGRO
     char letras[15][2] = {"8", "9", "A", "B", "C", "8", "9", "A", "B", "C", "8", "9", "A", "B", "C"}; // Array para almacenar las letras que se muestran en pantalla
-#endif
+    #endif
 
 //*****************************************     Inicializa el thread que barre el display       *****************************
-#ifdef RASPI
+    #ifdef RASPI
     char letraAnterior;
     unsigned char notSwipe = (GAME_STATUS.menuActual == MENU_VOLUME) ? 0 : 1;
     char titilar = 1;           // Flag que indica si se debe titilar la letra.
@@ -830,24 +838,24 @@ static void *saveScoreHandlerThread(void *data)
 
     pthread_t displayMenuT, titileoT;
     halfDisp_t higherDispMenu = {// Parte superior del display
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
     halfDisp_t lowerDispMenu = {// Parte inferior del display
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
     int animStatus = 1;
 
@@ -859,7 +867,7 @@ static void *saveScoreHandlerThread(void *data)
 
     letterFlash_t letterFlash = {&letraActual[select], &higherDispMenu, &posLetra, &titilar};
     pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash); // Inicia el thread encargado de hacer titilar las letras.
-#endif
+    #endif
 
 #ifdef ALLEGRO
     allegroList = allegroScore(allegroList, menu->puntaje, letras);
@@ -877,100 +885,93 @@ static void *saveScoreHandlerThread(void *data)
     while (menu->exitStatus)
     {
         usleep(10 * U_SEC2M_SEC);
-        if ((timerTick % velMenu) == 0)
-        {
-#ifdef ALLEGRO
+        if ((timerTick % velMenu) == 0){
+            #ifdef ALLEGRO
             if (stopSweep)
             {
                 stopSweep -= 1;
             }
-#endif
+            #endif
 
-            if (SIGUIENTESCORE && !stopSweep)
-            { // Si se presiona para ir a la siguiente opcion
-#ifdef RASPI
+            if (SIGUIENTESCORE && !stopSweep){ // Si se presiona para ir a la siguiente opcion
+                #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
                 posLetra.x += 4;
-#endif
+                #endif
 
                 select += 1;
 
-                if (select == (menu->cantOpciones))
-                { // Si llegamos a la ultima opcion pasamos a la primera
+                if (select == (menu->cantOpciones)){ // Si llegamos a la ultima opcion pasamos a la primera
                     select = 0;
-#ifdef RASPI
+                    #ifdef RASPI
                     posLetra.x = 4;
-#endif
+                    #endif
                 }
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 screenObjects = changeCol(screenObjects, select);
                 stopSweep = 4;
-#endif
+                #endif
 
-#ifdef RASPI
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
                 titilar = 1;                                                      // Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash); // Inicia el thread encargado de hacer titilar las letras.
-#endif
+                #endif
 
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ANTERIORSCORE && !stopSweep)
-            { // Si se presiona para ir a la opcion anterior
-#ifdef RASPI
+            if (ANTERIORSCORE && !stopSweep){ // Si se presiona para ir a la opcion anterior
+                #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
                 posLetra.x -= 4;
-#endif
+                #endif
 
                 select -= 1;
 
-                if (select < 0)
-                { // Si llegamos a la primer opcion pasamos a al ultima
+                if (select < 0){ // Si llegamos a la primer opcion pasamos a al ultima
                     select = (menu->cantOpciones) - 1;
-#ifdef RASPI
+                    #ifdef RASPI
                     posLetra.x = 12;
-#endif
+                    #endif
                 }
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 screenObjects = changeCol(screenObjects, select);
                 stopSweep = 4;
-#endif
+                #endif
 
-#ifdef RASPI
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
                 titilar = 1;                                                      // Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash); // Inicia el thread encargado de hacer titilar las letras.
-#endif
+                #endif
 
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ARRIBA_INPUT && !stopSweep)
-            { // Si se presiona para cambiar de letra hacia arriba
-#ifdef RASPI
+            if (ARRIBA_INPUT && !stopSweep){ // Si se presiona para cambiar de letra hacia arriba
+                #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
-#endif
+                #endif
 
                 letraActual[select] += 1; // Apunta a la siguiente letra.
 
-#ifdef RASPI
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
-#endif
+                #endif
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 changeLetra(letras, select, 1);
                 stopSweep = 4;
-#endif
+                #endif
 
-                switch (letraActual[select])
-                { // Chequea que no se pase de los caracteres posibles.
+                switch (letraActual[select]){ // Chequea que no se pase de los caracteres posibles.
                 case 'Z' + 1:
                     letraActual[select] = ' ';
                     break;
@@ -983,37 +984,35 @@ static void *saveScoreHandlerThread(void *data)
                     break;
                 }
 
-#ifdef RASPI
+                #ifdef RASPI
                 titilar = 0;                                                      // Dejamos de titilar la letra
                 barridoLetra(letraAnterior, letraActual[select], 1, posLetra);    // Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;                                                      // Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash); // Inicia el thread encargado de hacer titilar las letras.
-#endif
+                #endif
 
                 (*menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (ABAJO_INPUT && !stopSweep)
-            { // Si se presiona para cambiar de letra hacia abajo
-#ifdef RASPI
+            if (ABAJO_INPUT && !stopSweep){ // Si se presiona para cambiar de letra hacia abajo
+                #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
                 pthread_join(titileoT, NULL);
                 letraAnterior = letraActual[select];
-#endif
+                #endif
 
                 letraActual[select] -= 1; // Apunta a la siguiente letra.
 
-#ifdef RASPI
+                #ifdef RASPI
                 letterFlash.letra = &letraActual[select];
-#endif
+                #endif
 
-#ifdef ALLEGRO
+                #ifdef ALLEGRO
                 changeLetra(letras, select, -1);
                 stopSweep = 4;
-#endif
+                #endif
 
-                switch (letraActual[select])
-                { // Chequea que no se pase de los caracteres posibles.
+                switch (letraActual[select]){ // Chequea que no se pase de los caracteres posibles.
                 case 'A' - 1:
                     letraActual[select] = '9';
                     break;
@@ -1026,19 +1025,18 @@ static void *saveScoreHandlerThread(void *data)
                     break;
                 }
 
-#ifdef RASPI
+                #ifdef RASPI
                 titilar = 0; // Dejamos de titilar la letra
 
                 barridoLetra(letraAnterior, letraActual[select], -1, posLetra);   // Realiza un barrido para mostrar la nueva letra.
                 titilar = 1;                                                      // Comenzamos a titilar de vuelta.
                 pthread_create(&titileoT, NULL, letterFlashThread, &letterFlash); // Inicia el thread encargado de hacer titilar las letras.
-#endif
+                #endif
 
                 (menu->audioCallback)(SWEEP_LETRA);
             }
 
-            if (PRESS_INPUT)
-            { // Si se selecciona la opcion
+            if (PRESS_INPUT){ // Si se selecciona la opcion
                 int successAddScore;
                 leaderboard_t leaderboard;
                 parseScore(leaderboard); // Obtiene el valor actual del leaderboard
@@ -1067,28 +1065,28 @@ static void *saveScoreHandlerThread(void *data)
                 stopSweep = 4;
             }
         }
-#ifdef ALLEGRO
+        #ifdef ALLEGRO
         if (flagCloseGame)
         {
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
-#endif
+        #endif
     }
-#ifdef RASPI
+    #ifdef RASPI
     animStatus = 0;
     titilar = 0;
     pthread_join(titileoT, NULL);
     pthread_join(displayMenuT, NULL);
-#endif
+    #endif
 
-#ifdef ALLEGRO
+    #ifdef ALLEGRO
     sem_wait(&SEM_MENU);
     toText = emptyText(toText);
     screenObjects = emptySprite(screenObjects);
     KEYS.press = 0;
     sem_post(&SEM_MENU);
-#endif
+    #endif
 
     pthread_exit(0);
 }
@@ -1100,28 +1098,28 @@ static void *levelHandlerThread(void *data)
 
     game_t *menu = (game_t *)data;
 
-#ifdef ALLEGRO
+    #ifdef ALLEGRO
     char vidas[2] = {(*(menu->naveUsr))->lives + '0', 0};
     char score[7] = {'0', '0', '0', '0', '0', '0', 0};
     sem_wait(&SEM_GAME);
     toText = levelAllegro(toText, score, vidas);
     sem_post(&SEM_GAME);
-#endif
+    #endif
     while (menu->exitStatus)
     {
 
-#ifdef ALLEGRO
+        #ifdef ALLEGRO
         refreshDatos(score, vidas, *(menu->scoreInstantaneo), (*(menu->naveUsr))->lives);
-#endif
+        #endif
         if (PRESS_INPUT)
         {                                        // Si se presiono el joystick se debe pausar el juego.
             GAME_STATUS.menuActual = MENU_PAUSA; // Indica que se pauso el juego.
             GAME_STATUS.pantallaActual = MENU;
 
             menu->exitStatus = 0; // Indica que hay que salir del level Handler
-#ifdef ALLEGRO
+            #ifdef ALLEGRO
             KEYS.press = 0;
-#endif
+            #endif
         }
         usleep(10 * U_SEC2M_SEC);
         if (((timerTick % velInputGameShoot) == 0) && menu->exitStatus)
@@ -1158,13 +1156,13 @@ static void *levelHandlerThread(void *data)
                 moveNaveUsuario(menu->naveUsr, menu->levelSettings, IZQUIERDA);
             }
         }
-#ifdef ALLEGRO
+        #ifdef ALLEGRO
         if (flagCloseGame)
         {
             GAME_STATUS.pantallaActual = QUIT_GAME;
             menu->exitStatus = 0;
         }
-#endif
+        #endif
     }
 
     pthread_exit(0);
@@ -1437,24 +1435,20 @@ void *displayHandlerThread(void *argDisplay)
 
     argDisplay_t *data = (argDisplay_t *)argDisplay;
 
-    while (GAME_STATUS.exitStatus)
-    {
+    while (GAME_STATUS.exitStatus){
 
         usleep(10 * U_SEC2M_SEC); // Espera 10mS para igualar el tiempo del timer.
-        if ((timerTick % FPS) == 0)
-        {
-#ifdef ALLEGRO
-            if (GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE)
-            {
+        if ((timerTick % FPS) == 0){
+            #ifdef ALLEGRO
+            if (GAME_STATUS.pantallaActual == MENU || GAME_STATUS.pantallaActual == SAVE_SCORE){
                 sem_wait(&SEM_MENU);
                 data->pantalla = 0;
                 display(argDisplay);
                 sem_post(&SEM_MENU);
             }
-#endif
+            #endif
 
-            if ((GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME))
-            {
+            if ((GAME_STATUS.pantallaActual == START_LEVEL || GAME_STATUS.pantallaActual == IN_GAME)){
                 sem_wait(&SEM_GAME);
                 data->pantalla = 1;
                 if (GAME_STATUS.inGame == 1)
