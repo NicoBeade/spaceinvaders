@@ -5,7 +5,7 @@
 
 static int locateInLeaderboard(leaderboard_t, int score); //localiza la fila en la que debe ir el puntaje
 static int detectThreeLetter(char*); //AUX. detecta si el nombre ingresado tiene mas de tres letras
-static void printLeaderboard(leaderboard_t); //AUX. imprime el arreglo parseado de scores
+void printLeaderboard(leaderboard_t); //AUX. imprime el arreglo parseado de scores
 
 
 void parseScore(leaderboard_t leaderboard){ 
@@ -108,7 +108,7 @@ static int detectThreeLetter(char* name){
     return 0;
 }
 
-static void printLeaderboard(leaderboard_t leaderboard){
+void printLeaderboard(leaderboard_t leaderboard){
     for (int i = 0; i<10; i++){
         printf("%s\n", leaderboard[i]);
     }
