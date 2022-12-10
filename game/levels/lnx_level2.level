@@ -1,6 +1,6 @@
 maxMShipXLevel      3
 ;------------------ALIENS FILA 1-------------------
-
+velBalas 10
 ALIEN
     type  11
     posX  150
@@ -133,7 +133,6 @@ BARRERA
     posX  725
     posY  500
 END
-velBalas			5
 
 ASSET_MODIFY    14 ;modifico la mothership
     shootProb 2

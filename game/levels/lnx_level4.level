@@ -162,7 +162,6 @@ BARRERA
     posX  677
     posY  500
 END
-velBalas			5
 
 ASSET_MODIFY    14 ;modifico la mothership
     shootProb 2
