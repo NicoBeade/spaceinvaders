@@ -19,8 +19,9 @@ ASSET_MODIFY    13 ;modifico los aliens
 END
 
 ASSET_MODIFY    1 ;modifico el usuario
-    velocidad -10
-    maxBullets +=1
+    velocidad *=16
+    velocidad /=10
+    maxBullets 1
 END
 
 ALIEN
