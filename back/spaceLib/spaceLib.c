@@ -515,11 +515,14 @@ int moveNaveUsuario(object_t ** naveUsuario, level_setting_t* levelSettings, int
         return -1;
     }
     int velocidad = assetUsr->velocidad;
+    if(velocidad < 0){  //Si la direccion esta invertida
+        direccion = (direccion == DERECHA)? IZQUIERDA : DERECHA;
+    }
     if( direccion == DERECHA && ((*naveUsuario) -> pos.x <= levelSettings->xMax - assetUsr->ancho) ){//Si se tiene que mover para la derecha y no llego al limite
-        (*naveUsuario) -> pos.x += velocidad;//Desplaza la nave
+        (*naveUsuario) -> pos.x += ABS(velocidad);//Desplaza la nave
     }
     else if( direccion == IZQUIERDA && ((*naveUsuario) -> pos.x >= levelSettings->xMin) ){//Si se tiene que mover para la izquierda y no llego al limite
-        (*naveUsuario) -> pos.x -= velocidad;//Desplaza la nave
+        (*naveUsuario) -> pos.x -= ABS(velocidad);//Desplaza la nave
     }
     return 0;
 }
