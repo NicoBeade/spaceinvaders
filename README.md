@@ -1,7 +1,7 @@
 # Space Invaders
 Este es el trabajo final de Programacion I. Consiste en un Space Invaders programado en C multiplataforma que puede ser corrido desde una RaspberryPi o bien desde un ordenador con sistema operativo Linux, utilizando la libreria allegro.
 
-## Como instalar
+## Instalación
 Para jugar se debe clonar el repositorio y seguir los siguientes pasos:
 
 ### Linux:
