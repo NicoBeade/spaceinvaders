@@ -30,6 +30,14 @@
 #include "../../back/spaceLib/score/score.h"
 #include <string.h>
 
+#define DISP_MAX 15
+#define DISP_MIN 0
+#define ALTO_SPRITE 2
+#define ANCHO_SPRITE 3
+#define ALTO_LETRA 8
+#define ANCHO_LETRA 4
+
+
 sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
 
 int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
@@ -80,12 +88,14 @@ void dispInit(void){
 static void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en display un enemigo en un sprite dados en la posicion p
     uint8_t i,j;
     dcoord_t pAux;
-    for (i=0 ; i<=2 ; i++){
-        for(j=0 ; j<=1 ; j++){
+    for (i=0 ; i<ANCHO_SPRITE ; i++){
+        for(j=0 ; j<ALTO_SPRITE ; j++){
             if (alien [j][i] == 1){
                 pAux.x = p.x+i;
                 pAux.y = p.y+j;
-                if(pAux.x>15||pAux.y>15)printf("Fuera de rango de impresion en algun pixel de la nave");
+                if(pAux.x>DISP_MAX||pAux.y>DISP_MAX){
+                    printf("Fuera de rango de impresion en algun pixel de la nave");
+                }
                 disp_write(pAux,D_ON); //Actualiza el buffer          
             }
         }
@@ -95,8 +105,8 @@ static void drawSprite(dcoord_t p, sprite_t alien){ //Esta funcion imprime en di
 static void clearBuffer(void){ //Esta limpia el buffer
     uint8_t i,j;
     dcoord_t pAux;
-    for (i=0 ; i<16 ; i++){
-        for(j=0 ; j<16 ; j++){
+    for (i=0 ; i<=DISP_MAX ; i++){
+        for(j=0 ; j<=DISP_MAX ; j++){
             pAux.x = i;
             pAux.y = j;
             disp_write(pAux, D_OFF); //Actualiza el buffer          
@@ -107,8 +117,8 @@ static void clearBuffer(void){ //Esta limpia el buffer
 static void printLetter(caracteres_t letter, dcoord_t coordenada){ //imprime una letra barriendo los 32 pixeles de una matriz de 8X4
     int i,j;
     dcoord_t punto;
-    for (i=0; i<8; i++){
-        for (j=0; j<4; j++){
+    for (i=0; i<ALTO_LETRA; i++){
+        for (j=0; j<ANCHO_LETRA; j++){
             punto.x=j+coordenada.x;
             punto.y=i+coordenada.y;
             if (letter [i][j]==1){
@@ -137,8 +147,8 @@ static void printHalfDisp(halfDisp_t halfDispSprite, char mitad){ //imprime la m
         return;
     }
     dcoord_t punto;
-    for (i=0; i<8; i++){
-        for (j=0; j<16; j++){
+    for (i=0; i<((DISP_MAX+1)/2); i++){
+        for (j=0; j<=DISP_MAX; j++){
             punto.x=j;
             punto.y=i+offset;
             if (halfDispSprite [i][j]==1){
@@ -208,7 +218,7 @@ int displayRPI (argDisplay_t* argDisplayRPI){
             punto.x=aliens->pos.x; //se definen posiciones en x y en y de los aliens, tomando como pivote la esquina superior izquierda
             punto.y=aliens->pos.y;
 
-            if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            if (punto.x>DISP_MAX||punto.y>DISP_MAX||punto.x<DISP_MIN||punto.y<DISP_MIN){
                 printf("Fuera de rango de impresion en la nave\n"); //chequeo de pixel a imprimir
                 fueraDeRango = 1;
             }
@@ -272,7 +282,7 @@ int displayRPI (argDisplay_t* argDisplayRPI){
 
             punto.x=balasEnemigas->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
             punto.y=balasEnemigas->pos.y;
-            if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            if (punto.x>DISP_MAX||punto.y>DISP_MAX||punto.x<DISP_MIN||punto.y<DISP_MIN){
                 printf("Fuera de rango de impresion en la bala enemiga \n"); //chequea de pixel a imprimir
                 fueraDeRango = 1;
             }
@@ -288,7 +298,7 @@ int displayRPI (argDisplay_t* argDisplayRPI){
 
             punto.x=balasUsr->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
             punto.y=balasUsr->pos.y;
-            if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            if (punto.x>DISP_MAX||punto.y>DISP_MAX||punto.x<DISP_MIN||punto.y<DISP_MIN){
                 printf("Fuera de rango de impresion en la bala aliada\n"); //chequea de pixel a imprimir
                 fueraDeRango = 1;
             }
@@ -304,7 +314,7 @@ int displayRPI (argDisplay_t* argDisplayRPI){
 
             punto.x=barriers->pos.x; //se definen posiciones en x y en y de las balas, tomando como pivote la esquina superior izquierda
             punto.y=barriers->pos.y;
-            if (punto.x>15||punto.y>15||punto.x<0||punto.y<0){
+            if (punto.x>DISP_MAX||punto.y>DISP_MAX||punto.x<DISP_MIN||punto.y<DISP_MIN){
                 printf("Fuera de rango de impresion de las barreras\n"); //chequea de pixel a imprimir
                 fueraDeRango = 1;
             }
@@ -317,15 +327,15 @@ int displayRPI (argDisplay_t* argDisplayRPI){
         punto.y=0;
 
         if(*(argDisplayRPI->mothership) != NULL){
-            if(mothership->pos.x>=0&&mothership->pos.x<=15){
+            if(mothership->pos.x>=DISP_MIN&&mothership->pos.x<=DISP_MAX){
                 punto.x=mothership->pos.x;
                 disp_write(punto,D_ON);
             }
-            if(mothership->pos.x+1>=0&&mothership->pos.x+1<=15){
+            if(mothership->pos.x+1>=DISP_MIN&&mothership->pos.x+1<=DISP_MAX){
                 punto.x=mothership->pos.x+1;
                 disp_write(punto,D_ON);
             }    
-            if(mothership->pos.x+2>=0&&mothership->pos.x+2<=15){
+            if(mothership->pos.x+2>=DISP_MIN&&mothership->pos.x+2<=DISP_MAX){
                 punto.x=mothership->pos.x+2;
                 disp_write(punto,D_ON);
             }
@@ -688,20 +698,6 @@ void* letterFlashThread(void* data){
     pthread_exit(0);
 }
 
-/*
-static void printTerminalMatrix(uint8_t matriz[8][4]){
-    int i,j;
-    printf("------------------------\n");
-    for(i = 0 ; i < 8 ; i++){
-        for(j = 0 ; j < 4 ; j ++){
-            printf("%s",matriz[i][j]?"██":"  "); 
-        }
-        printf("\n");
-
-    }
-    printf("------------------------\n");
-    return;
-}*/
 
 //BARRIDO LETRA: recibe la primer y segunda letra a barrer, el sentido del barrido y la coordenada a imprimir el barrido
 //Esta funcion hace el barrido vertical de las letras en el display 
