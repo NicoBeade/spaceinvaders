@@ -368,8 +368,6 @@ int main(void)
 
         case START_LEVEL: //-----------------------------    START_LEVEL: Entra a este caso cuando se crea un nivel.     ---------------------------------------------------------
 
-            GAME_STATUS.inGame = 1;
-
             sem_wait(&SEM_MENU);
 
             int levelStatus = loadLevel(GAME_STATUS.nivelActual, levelArray, &levelSettings, &(platform[0]), &alienList, &UsrList, &barrerasList);
@@ -414,6 +412,7 @@ int main(void)
             menuGame.scoreInstantaneo = &scoreInstantaneo;
 
             printf("Loaded menuGame\n");
+            GAME_STATUS.inGame = 1;
 
             // Inicializa los threads encargados de controlar el juego.
             argMoveAlien_t argMoveAlien = {&levelSettings, &alienList, &UsrList, &score, audioCallback};
