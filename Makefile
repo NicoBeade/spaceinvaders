@@ -7,7 +7,7 @@ mainRaspi: inputRaspi.o displayRaspi.o spaceLib.o levelLoader.o score.o menuUtil
 inputRaspi.o: front/raspi/inputRaspi.c front/raspi/inputRaspi.h back/spaceLib/spaceLib.h
 	gcc -c -g front/raspi/inputRaspi.c -Wall -o inputRaspi.o 
 
-displayRaspi.o: front/raspi/displayRaspi.c front/raspi/displayRaspi.h back/spaceLib/spaceLib.h spaceLib/score/score.h
+displayRaspi.o: front/raspi/displayRaspi.c front/raspi/displayRaspi.h back/spaceLib/spaceLib.h back/spaceLib/score/score.h
 	gcc -c -g front/raspi/displayRaspi.c -Wall -o displayRaspi.o 
 
 sprites.o: front/raspi/sprites.h front/raspi/sprites.c
