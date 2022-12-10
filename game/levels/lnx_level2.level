@@ -1,6 +1,6 @@
 maxMShipXLevel      3
 ;------------------ALIENS FILA 1-------------------
-velBalas 10
+velBalas +=-1
 ALIEN
     type  11
     posX  150

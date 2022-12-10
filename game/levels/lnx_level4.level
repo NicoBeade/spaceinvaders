@@ -1,4 +1,5 @@
 velAliens			50
+velBalas +=-1
 ;------------------ALIENS FILA 1-------------------
 
 ASSET_MODIFY    11 ;modifico los aliens
