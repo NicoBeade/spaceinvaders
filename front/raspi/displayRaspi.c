@@ -30,17 +30,42 @@
 #include "../../back/spaceLib/score/score.h"
 #include <string.h>
 
-#define DISP_MAX 15
+
+/*******************************************************************************************************************************************
+ * 
+                                     ___                     _                   _              
+                                    / __|  ___   _ _    ___ | |_   __ _   _ _   | |_   ___   ___
+                                   | (__  / _ \ | ' \  (_-< |  _| / _` | | ' \  |  _| / -_) (_-<
+                                    \___| \___/ |_||_| /__/  \__| \__,_| |_||_|  \__| \___| /__/
+                                                                                                                                                            
+ * 
+ ******************************************************************************************************************************************/
+
+#define DISP_MAX 15                 //Tamanyos
 #define DISP_MIN 0
 #define ALTO_SPRITE 2
 #define ANCHO_SPRITE 3
 #define ALTO_LETRA 8
 #define ANCHO_LETRA 4
 
+#define OFFSETLETRA 0               //Constantes para desreferenciar letras
+#define OFFSETALIEN 39
+#define OFFSETCHARESP 36
+#define OFFSETNUM 26
 
-sem_t SEM_DRIVER;   //Semaforo que regula que no se pisen los drivers
+#define VEL_DISP_ANIMATION 3000     //Velocidades de animaciones
+#define VEL_TITILEO 200
+#define BARRIDO_LETRA 1000  
 
-int velDispAnimation = 2;       //Velocidad a la que se realiza el barrido del display durante un menu
+#define MAX_SPRITES 200
+
+
+sem_t SEM_DRIVER;                   //Semaforo que regula que no se pisen los drivers
+
+int velDispAnimation = 2;           //Velocidad a la que se realiza el barrido del display durante un menu
+/*******************************************************************************************************************************************
+*******************************************************************************************************************************************/
+
 
 
 /*******************************************************************************************************************************************

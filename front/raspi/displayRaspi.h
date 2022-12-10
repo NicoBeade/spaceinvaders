@@ -106,22 +106,9 @@ typedef struct {
 
 #define FPS 4 //tasa de refresco del display
 
-#define VEL_DISP_ANIMATION 3000
-
-#define OFFSETLETRA 0
-#define OFFSETALIEN 39
-#define OFFSETCHARESP 36
-#define OFFSETNUM 26
-
-#define VEL_TITILEO 200
-
-#define MAX_SPRITES 200
-
 #define IZQUIERDA -1        //Constantes utilizadas para indicar la direccion en la que se deben mover los aliens.
 #define DERECHA 1
 #define ABAJO 2
-
-#define BARRIDO_LETRA 1000  //Velocidad del barrido de la letra
 
 #define U_SEC2M_SEC 1000    //Conversion de micro segundos a milisegundos.
 /*******************************************************************************************************************************************
