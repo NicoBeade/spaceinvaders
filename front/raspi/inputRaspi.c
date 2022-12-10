@@ -23,7 +23,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <semaphore.h>
-#include "../../back/spaceLib/spaceLib.h"
+
 
 
 void* inputRPIThread(void* argInputRPI){
