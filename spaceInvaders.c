@@ -396,7 +396,6 @@ int main(void)
             velAliens = levelSettings.velAliens; // Inicializa la velocidad de los aliens y las balas para el nivel.
             velMothership = levelSettings.velMothership;
             velBalas = levelSettings.velBalas;
-            printf("Vel Balas in StartLEVEL %d   LEVELNO %d\n", velBalas,GAME_STATUS.nivelActual);
 
             if(UsrList != NULL){
                 UsrList->lives = GAME_STATUS.usrLives; // Vidas del usuario en el nivel
@@ -732,6 +731,9 @@ static void *menuHandlerThread(void *data){
                     GAME_STATUS.menuAnterior = -1;
                     GAME_STATUS.pantallaActual = DESTROY_LEVEL;
                     menu->exitStatus = 0;
+                    #ifdef RASPI
+                    velDispAnimation = 1;
+                    #endif
                 }
                 else{
                     menu->exitStatus = (menu->selectOption[select])(); // Se llama al callback que indica que accion realizar al presionar dicha opcion.

@@ -838,7 +838,6 @@ int loadLevel(int levelNo, level_t levelArray[], level_setting_t * levelSettings
                         return -1;
                     }
                     fila = readAssetModifiers(fila+1, assetID); //Se leen los modificadores del asset
-                    printf("ASSETMODIFIER\n");
                     if(fila == -1){
                         printf("Error in levelLoader.c, loadLevel function : Couldn't modify Asset %d in file %s\n", assetID, levelFile);
                         return -1;
@@ -943,7 +942,7 @@ int main(int argc, char *argv[]){
         if(strlen(plataforma) != 3){
             printf("Error introduzca plataforma valida\n");
         }
-        printf("Introduzca la plataforma\n");
+        printf("Introduzca la plataforma (rpi / lnx):\n");
         scanf("%s", plataforma);  
     }
     while(strlen(plataforma) != 3);
