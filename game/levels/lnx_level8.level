@@ -93,44 +93,6 @@ USUARIO
     posY 650
 END
 
-;------------------BARRERAS------------------
-
-BARRERA
-    type  22
-    posX  100
-    posY  500
-END
-
-BARRERA
-    type  21
-    posX  154
-    posY  500
-END
-
-BARRERA
-    type  22
-    posX  700
-    posY  500
-END
-
-BARRERA
-    type  21
-    posX  754
-    posY  500
-END
-
-BARRERA
-    type  22
-    posX  400
-    posY  500
-END
-
-BARRERA
-    type  21
-    posX  454
-    posY  500
-END
-
 velBalas			5
 
 ASSET_MODIFY    14 ;modifico la mothership
