@@ -305,9 +305,11 @@ int displayRPI (argDisplay_t* argDisplayRPI){
         }
         aliens=aux; //devuelve aliens al principio de la lista
 
-        punto.x=naveUser->pos.x; //posicion en x y en y de la nave
-        punto.y=naveUser->pos.y;
-        drawSprite(punto,nave); //copia la nave en el buffer
+        if(naveUser != NULL){
+            punto.x=naveUser->pos.x; //posicion en x y en y de la nave
+            punto.y=naveUser->pos.y;
+            drawSprite(punto,nave); //copia la nave en el buffer
+        }
         
         aux = balasEnemigas;
 

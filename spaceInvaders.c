@@ -411,7 +411,6 @@ int main(void)
             menuGame.exitStatus = 1;
             menuGame.scoreInstantaneo = &scoreInstantaneo;
 
-            printf("Loaded menuGame\n");
             GAME_STATUS.inGame = 1;
 
             // Inicializa los threads encargados de controlar el juego.
@@ -423,10 +422,8 @@ int main(void)
             pthread_create(&mothershipT, NULL, moveMothershipThread, &argMoveMothership);
             pthread_create(&moveBalaT, NULL, moveBalaThread, &argMoveBala);
             pthread_create(&colliderT, NULL, colliderThread, &argCollider);
-            printf("Started gameThreads\n");
 
             pthread_create(&levelHandlerT, NULL, levelHandlerThread, &menuGame); // Se inicializa el thread de level handler con el nivel indicado.
-            printf("Started levelHandler\n");
             pthread_join(levelHandlerT, NULL);                                   // Espera hasta que se cree un menu.
 
             sem_post(&SEM_MENU);
