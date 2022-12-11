@@ -1,17 +1,26 @@
-velBalas 3
+ASSET_MODIFY    11 ;modifico la mothership
+    shootProb 2
+    score 5000
+END
 
 maxMShipXLevel      3
 ;------------------ALIENS FILA 1-------------------
 
 ALIEN
     type  11
-    posX  150
+    posX  550
     posY  100
 END
 
 ALIEN
     type  11
-    posX  250
+    posX  650
+    posY  100
+END
+
+ALIEN
+    type  11
+    posX  750
     posY  100
 END
 
@@ -27,39 +36,41 @@ END
 
 BARRERA
     type  22
-    posX  121
+    posX  100
     posY  500
 END
 
 BARRERA
     type  21
-    posX  175
+    posX  154
     posY  500
 END
 
 BARRERA
     type  22
-    posX  396
+    posX  700
     posY  500
 END
 
 BARRERA
     type  21
-    posX  450
+    posX  754
     posY  500
 END
 
 BARRERA
     type  22
-    posX  671
+    posX  400
     posY  500
 END
 
 BARRERA
     type  21
-    posX  725
+    posX  454
     posY  500
 END
+
+velBalas			5
 
 ASSET_MODIFY    14 ;modifico la mothership
     shootProb 2

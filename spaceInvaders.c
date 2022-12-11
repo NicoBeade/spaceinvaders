@@ -643,20 +643,21 @@ static void *menuHandlerThread(void *data){
                     select -= 1;
                 }
 
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
+                    (menu->volumeCallback)(SUBIR_AUDIO);
+                }
+
                 #ifdef RASPI
                 if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = {&displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu->drawingOpciones)[select], (menu->textOpciones)[select], IZQUIERDA, notSwipe};
-                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
-                    (menu->volumeCallback)(SUBIR_AUDIO);
-                }
+                
                 #endif
 
                 #ifdef ALLEGRO
 
                 if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
-                    (menu->volumeCallback)(SUBIR_AUDIO);
                     (menu->audioCallback)(SELECT_MENU);
                 }
                 volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
@@ -686,20 +687,19 @@ static void *menuHandlerThread(void *data){
                     select += 1;
                 }
 
+                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
+                    (menu->volumeCallback)(BAJAR_AUDIO);
+                }
+
                 #ifdef RASPI
                 if (GAME_STATUS.menuActual == MENU_LEADERBOARD){ // Si hay que rellenar utilizando el leaderBoard.
                     (menu->drawingOpciones)[select] = getLeaderBoardName(halfDispNameScore, select);
                 }
                 argChangeOption_t argChangeOption = {&displayMenuT, &animStatus, &lowerDispMenu, &higherDispMenu, (menu->drawingOpciones)[select], (menu->textOpciones)[select], DERECHA, notSwipe};
-                if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
-                    (menu->volumeCallback)(BAJAR_AUDIO);
-                }
                 #endif
 
                 #ifdef ALLEGRO
-
                 if (GAME_STATUS.menuActual == MENU_VOLUME){ // Si estamos en menu de volumen hay que subir el volumen
-                    (menu->volumeCallback)(BAJAR_AUDIO);
                     (menu->audioCallback)(SELECT_MENU);
                 }
                 volumenActual = (menu->volumeCallback)(CHECK_AUDIO);
