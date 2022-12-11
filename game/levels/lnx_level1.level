@@ -1,3 +1,5 @@
+velBalas 3
+
 maxMShipXLevel      3
 ;------------------ALIENS FILA 1-------------------
 
@@ -10,36 +12,6 @@ END
 ALIEN
     type  11
     posX  250
-    posY  100
-END
-
-ALIEN
-    type  11
-    posX  350
-    posY  100
-END
-
-ALIEN
-    type  11
-    posX  450
-    posY  100
-END
-
-ALIEN
-    type  11
-    posX  550
-    posY  100
-END
-
-ALIEN
-    type  11
-    posX  650
-    posY  100
-END
-
-ALIEN
-    type  11
-    posX  750
     posY  100
 END
 
