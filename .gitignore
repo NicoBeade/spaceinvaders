@@ -54,6 +54,8 @@ dkms.conf
 /outputAllegro.o
 /score.o 
 /spaceLib.o 
+/spaceInvadersAllegro
+/diseñoAllegro.o
 
 
 
