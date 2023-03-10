@@ -200,10 +200,10 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
     int balaID;
     int score;
     int aliado;
-    char * sprite1;
-    char * sprite2;
-    char * sprite3;
-    char * sprite4;
+    int sprite1;
+    int sprite2;
+    int sprite3;
+    int sprite4;
     char * shootSound;
     char * deathSound;
     //Se crean variables auxiliares que indican si se encontro cada campo
@@ -270,7 +270,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite1 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite1 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
+            sprite1 = strcmp(decodedFile[paramNo].parameter, "NULL")? atoi(decodedFile[paramNo].value) : 0;
             sprite1_found++;
         }
         else if(sprite2_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite2") == 0){
@@ -278,7 +278,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite2 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite2 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
+            sprite2 = strcmp(decodedFile[paramNo].parameter, "NULL")? atoi(decodedFile[paramNo].value) : 0;
             sprite2_found++;
         }
         else if(sprite3_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite3") == 0){
@@ -286,7 +286,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite3 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite3 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
+            sprite3 = strcmp(decodedFile[paramNo].parameter, "NULL")? atoi(decodedFile[paramNo].value) : 0;
             sprite3_found++;
         }
         else if(sprite4_found == 0 && strcmp(decodedFile[paramNo].parameter, "sprite4") == 0){
@@ -294,7 +294,7 @@ int loadAsset(char * file){     //Funcion que carga un asset recibiendo el addre
                 printf("Error in levelLoader.c, loadAsset function : sprite4 file directory overpassed the max of %d characters\n", MAX_SPRITE_FILE_LENGTH);
                 return -1;
             }
-            sprite4 = strcmp(decodedFile[paramNo].parameter, "NULL")? &(decodedFile[paramNo].value)[0] : NULL;
+            sprite4 = strcmp(decodedFile[paramNo].parameter, "NULL")? atoi(decodedFile[paramNo].value): 0;
             sprite4_found++;
         }
         else if(shootSound_found == 0 && strcmp(decodedFile[paramNo].parameter, "shootSound") == 0){
@@ -509,40 +509,16 @@ int readAssetModifiers(int paramNo, int AssetID){   //Recibe el nombre del archi
             assetModified->aliado = atoi(decodedFile[fila].value);
         }
         else if(strcmp(decodedFile[fila].parameter, "sprite1") == 0 && strlen(decodedFile[fila].value) > 0){
-            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
-                strcpy(assetModified->sprite1,decodedFile[fila].value);//Se copia el path
-            }
-            else{
-                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 1 %s\n", (decodedFile[fila].value));
-                return -1;   
-            } 
+            assetModified->sprite1 = atoi(decodedFile[fila].value);//Se copia el path   
         }
         else if(strcmp(decodedFile[fila].parameter, "sprite2") == 0 && strlen(decodedFile[fila].value) > 0){
-            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
-                strcpy(assetModified->sprite2,decodedFile[fila].value);//Se copia el path
-            }
-            else{
-                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 2 %s\n", (decodedFile[fila].value));
-                return -1;   
-            }
+            assetModified->sprite2 = atoi(decodedFile[fila].value);//Se copia el path 
         }
         else if(strcmp(decodedFile[fila].parameter, "sprite3") == 0 && strlen(decodedFile[fila].value) > 0){
-            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
-                strcpy(assetModified->sprite3,decodedFile[fila].value);//Se copia el path
-            }
-            else{
-                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 3 %s\n", (decodedFile[fila].value));
-                return -1;   
-            }
+            assetModified->sprite3 = atoi(decodedFile[fila].value);//Se copia el path 
         }
         else if(strcmp(decodedFile[fila].parameter, "sprite4") == 0 && strlen(decodedFile[fila].value) > 0){
-            if(strlen(decodedFile[fila].value) < MAX_SPRITE_FILE_LENGTH){
-                strcpy(assetModified->sprite4,decodedFile[fila].value);//Se copia el path
-            }
-            else{
-                printf("Error in levelLoader.c, readAssetModifiers function : too many characters in sprite 4 %s\n", (decodedFile[fila].value));
-                return -1;   
-            }
+            assetModified->sprite4 = atoi(decodedFile[fila].value);//Se copia el path 
         }
     }
     if(decodedFile[fila].parameter[0] == 0 && strcmp(decodedFile[fila].parameter, "END") != 0){

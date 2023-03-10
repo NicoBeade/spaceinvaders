@@ -6,10 +6,10 @@ initLives 4
 shootProb 0
 maxBullets 0
 balaID 0
-sprite1 game/spritesAllegro/barreraD1.png
-sprite2 game/spritesAllegro/barreraD2.png
-sprite3 game/spritesAllegro/barreraD3.png
-sprite4 game/spritesAllegro/barreraD4.png
+sprite1 10
+sprite2 11
+sprite3 12
+sprite4 13
 score 0
 deathSound NULL
 shootSound NULL

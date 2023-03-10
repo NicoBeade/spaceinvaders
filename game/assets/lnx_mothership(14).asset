@@ -6,10 +6,10 @@ initLives 1
 shootProb 3
 maxBullets 0
 balaID 0
-sprite1 game/spritesAllegro/naveNodriza.png
-sprite2 game/spritesAllegro/naveNodriza.png
-sprite3 NULL
-sprite4 NULL
+sprite1 18
+sprite2 19
+sprite3 18
+sprite4 19
 score 500
 deathSound 0
 shootSound 0

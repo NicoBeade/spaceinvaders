@@ -6,10 +6,10 @@ initLives 2		;Vidas iniciales
 shootProb 10	;Probabilidad de disparo
 maxBullets 5	;Cantidad maxima de balas
 balaID 31		;ID correspondiente a la bala que dispara
-sprite1 game/spritesAllegro/alien11.png
-sprite2 game/spritesAllegro/alien12.png
-sprite3 NULL
-sprite4 NULL
+sprite1 0
+sprite2 1
+sprite3 0
+sprite4 1
 score 150
 deathSound 0
 shootSound 0

@@ -6,10 +6,10 @@ initLives 2
 shootProb 40
 maxBullets 13
 balaID 31
-sprite1 game/spritesAllegro/alien31.png
-sprite2 game/spritesAllegro/alien32.png
-sprite3 NULL
-sprite4 NULL
+sprite1 4
+sprite2 5
+sprite3 4
+sprite4 5
 score 300
 deathSound 0
 shootSound 0

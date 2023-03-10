@@ -24,6 +24,7 @@
 static ALLEGRO_FONT * fuentes[FONTMAX] = {0};   //Array de fuentes
 static float generalVolume = 0.8;               //Volumen general
 static int idQeue[20];                          //Qeue de sonidos a reproducir
+static ALLEGRO_BITMAP * bitmaps[21] = {0};
 
 /***********************************************************************************************************************************************************
  * 
@@ -53,6 +54,8 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     al_init_primitives_addon();
 
     display = al_create_display(X_MAX,Y_MAX);                       //Se crea el display
+
+    INITBITMAPS
 
     //Inicializacion de las fuentes
     fuentes[smallF] = al_load_ttf_font("game/spaceInv.ttf", 20, 0); //fuente small
@@ -194,6 +197,9 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
     for(i = AUDIOMAX; i < MUSICAMAX - AUDIOMAX; i++){
         al_destroy_sample(musica[i].sample);    //Se destruyen las canciones
     }
+    for(i = 0; i < 21; i++){
+        al_destroy_bitmap(bitmaps[i]);    //Se destruyen los bitmaps
+    }
     al_uninstall_audio();
     pthread_exit(0);
 }
@@ -215,12 +221,12 @@ void * displayt (ALLEGRO_THREAD * thr, void * dataIn){
 /*****************ENTIDADES**********************/
 int showEntity(object_t * entity){
   
-    ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
+    //ALLEGRO_BITMAP * image = NULL;      //Se crea un bitmap donde guardar la imagen
 
     //Se busca la direccion del sprite
     objectType_t * asset = getObjType(entity->type);
     
-    char * sprite;
+    int sprite;
     
     //Se selecciona el sprite segun la instancia de animacion
     if(entity->animationStatus == 2){
@@ -236,22 +242,10 @@ int showEntity(object_t * entity){
         sprite = asset->sprite1;
     }
 
-    if (sprite == NULL){
-        return -1;
-    }
-    else{
-        image = al_load_bitmap(sprite);    //Se carga en el bitmap
-    }
     
-    //Si no se pudo cargar salta error
-    if (!image) {
-        al_destroy_bitmap(image);
-        return -1;
-    }
+    al_draw_bitmap(bitmaps[sprite], entity->pos.x, entity->pos.y, 0);     //Se dibuja en el display
 
-    al_draw_bitmap(image, entity->pos.x, entity->pos.y, 0);     //Se dibuja en el display
-
-    al_destroy_bitmap(image);       //Se eleimina la imagen
+    //al_destroy_bitmap(image);       //Se eleimina la imagen
 
     return 0;
 }

@@ -92,10 +92,10 @@ typedef struct{
 	int shootProb;      //Probabilidad de disparo del tipo de objeto
     int maxBullets;     //Cantidad maxima de balas del escuadron
     int balaID;         //ID del objectType de la bala asociada a este objeto
-    char sprite1[MAX_SPRITE_FILE_LENGTH];    //Sprite 1
-    char sprite2[MAX_SPRITE_FILE_LENGTH];    //Sprite 2
-    char sprite3[MAX_SPRITE_FILE_LENGTH];    //Sprite 3
-    char sprite4[MAX_SPRITE_FILE_LENGTH];    //Sprite 4
+    int sprite1;        //Sprite 1
+    int sprite2;        //Sprite 2
+    int sprite3;        //Sprite 3
+    int sprite4;        //Sprite 4
     int score;          //Almacena el puntaje del usuario y cuanto puntaje vale matar a cada alien
     char shootSound[MAX_SOUND_FILE_LENGTH]; //Sonido de disparo
     char deathSound[MAX_SOUND_FILE_LENGTH]; //Sonido de muerte
@@ -162,7 +162,7 @@ signed char* collider(level_setting_t * levelSettings, object_t ** alienList, ob
 //*****************OBJTYPES
 void imprimirARRAY(void);																							//Muestra el array de tipos de objetos en stdout
 objectType_t * getObjType(int id);																					//Devuelve el puntero al tipo de objeto deseado	
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * sprite4, char * deathSound, char * shootSound, int score, int aliado);
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, int sprite1, int sprite2, int sprite3, int sprite4, char * deathSound, char * shootSound, int score, int aliado);
 int delObjType(int id);			                                                                             //Elimina de heap la lista creada.    																					//Elimina un tipo de objeto
 int delAllObjType(void);
 

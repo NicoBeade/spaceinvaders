@@ -903,7 +903,7 @@ static int collision(vector_t balaPos, int balaType, vector_t objectPos, int obj
 
 static objectType_t objtypes[MAX_CANT_OBJTIPOS] = {{.id=NONEOBJTYPEID}};    //Se inicializa un array de objectTypes 
 
-int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, char * sprite1, char * sprite2, char * sprite3, char * sprite4, char * deathSound, char * shootSound, int score, int aliado){
+int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootProb, int maxBullets, int balaID, int sprite1, int sprite2, int sprite3, int sprite4, char * deathSound, char * shootSound, int score, int aliado){
     if(id == NONEOBJTYPEID){    //Si el id ingresado es 0 entonces deuvuelve error
         printf("Err in gameLib, addObjType function: id cannot be NONEOBJTYPEID = %d, please change the id value in the function call\n", NONEOBJTYPEID);
         return 0;
@@ -929,10 +929,10 @@ int addObjType(int id, int vel, int ancho, int alto, int initLives, int shootPro
         (objtypes[index]).balaID=balaID;
         (objtypes[index]).score=score;
         (objtypes[index]).aliado=aliado;
-        memcpy((objtypes[index]).sprite1, sprite1, MAX_SPRITE_FILE_LENGTH);
-        memcpy((objtypes[index]).sprite2, sprite2, MAX_SPRITE_FILE_LENGTH);
-        memcpy((objtypes[index]).sprite3, sprite3, MAX_SPRITE_FILE_LENGTH);
-        memcpy((objtypes[index]).sprite4, sprite4, MAX_SPRITE_FILE_LENGTH);
+        (objtypes[index]).sprite1=sprite1;
+        (objtypes[index]).sprite2=sprite2;
+        (objtypes[index]).sprite3=sprite3;
+        (objtypes[index]).sprite4=sprite4;
         memcpy((objtypes[index]).shootSound, shootSound, MAX_SOUND_FILE_LENGTH);
         memcpy((objtypes[index]).deathSound, deathSound, MAX_SOUND_FILE_LENGTH);
         (objtypes[index+1]).id=NONEOBJTYPEID;   //El ultimo lo rellena con vacio
@@ -984,7 +984,7 @@ int delAllObjType(void){   //Se eliminan todos los objType
 void imprimirARRAY(void){
     int index;
     for(index = 0; index<MAX_CANT_OBJTIPOS && (objtypes[index]).id != NONEOBJTYPEID; index++){      //Se recorre el arreglo hasta encontrar el object type indicado
-        printf("TIPO N: %d\n\tID: %d\n\tAliado?: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %s\n\tSPRITE2: %s\n\tSPRITE3: %s\n\tSPRITE4: %s\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id,(objtypes[index]).aliado, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).sprite4,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
+        printf("TIPO N: %d\n\tID: %d\n\tAliado?: %d\n\tVELOCIDAD: %d\n\tANCHO: %d\n\tALTO: %d\n\tINITLIVES: %d\n\tSHOOTPROB: %d\n\tSPRITE1: %d\n\tSPRITE2: %d\n\tSPRITE3: %d\n\tSPRITE4: %d\n\tSHOOTSOUND: %s\n\tDEATHSOUND: %s\n\tSCORE: %d\n",index, (objtypes[index]).id,(objtypes[index]).aliado, (objtypes[index]).velocidad, (objtypes[index]).ancho,(objtypes[index]).alto, (objtypes[index]).initLives, (objtypes[index]).shootProb,(objtypes[index]).sprite1,(objtypes[index]).sprite2, (objtypes[index]).sprite3,(objtypes[index]).sprite4,(objtypes[index]).shootSound,(objtypes[index]).deathSound,(objtypes[index]).score);
     }
 }
 
